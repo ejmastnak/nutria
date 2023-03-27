@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('name');
+            $table->string('longname');
+            $table->boolean('is_mass');
+            $table->boolean('is_volume');
         });
     }
 
