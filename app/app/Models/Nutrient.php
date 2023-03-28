@@ -5,9 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Unit extends Model
+class Nutrient extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $table = 'units';
+    protected $table = 'nutrients';
+
+    public function unit() {
+        return $this->belongsTo(Unit::class, 'unit_id', 'id');
+    }
 }
