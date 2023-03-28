@@ -1,0 +1,22 @@
+{
+  "tasks": [
+    {
+      "name": "Run HTTP server",
+      "cmd": "http-server build/html",
+      "tags": ["serve"],
+      "count": 1
+    },
+    {
+      "name": "Build docs",
+      "cmd": "make html",
+      "tags": ["build"],
+      "count": 2
+    },
+    {
+      "name": "Open browser",
+      "cmd": "xdg-open http://127.0.0.1:8080",
+      "tags": ["view"],
+      "count": 3
+    }
+  ]
+}
