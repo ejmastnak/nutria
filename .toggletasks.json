@@ -1,0 +1,10 @@
+{
+  "tasks": [
+    {
+      "name": "Run SQL script",
+      "cmd": "psql -d diet < ${file}",
+      "tags": ["compile"],
+      "count": 2
+    }
+  ]
+}
