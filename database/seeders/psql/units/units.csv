@@ -1,0 +1,16 @@
+# name,longname,is_mass,is_volume
+g,gram,True,False
+mg,milligram,False,False
+ug,microgram,False,False
+kcal,kilocalorie,False,False
+kJ,kilojoule,False,False
+IU,international unit,False,False
+mg NE,milligram niacin equivalent,False,False
+ug DFE,microgram dietary folate equivalent,False,False
+ug RAE,microgram retinol activity equivalent,False,False
+oz,ounce,True,False
+ml,milliliter,False,True
+l,liter,False,True
+fl oz,fluid ounce,False,True
+cup,cup,False,True
+qt,quart,False,True
