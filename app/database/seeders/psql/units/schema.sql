@@ -1,6 +1,6 @@
 -- Creates table structure for units table
 drop table if exists units cascade;
-create table units (
+create table if not exists units (
   id integer primary key generated always as identity,
   name text not null,
   longname text not null,

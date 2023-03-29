@@ -1,7 +1,7 @@
 -- Creates table structure for normalized version of the ingredient_nutrients table
 drop table if exists ingredient_nutrients cascade;
 
-create table ingredient_nutrients (
+create table if not exists ingredient_nutrients (
   id int primary key generated always as identity,
   ingredient_id integer not null references ingredients(id) on delete cascade,
   nutrient_id integer not null references nutrients(id),

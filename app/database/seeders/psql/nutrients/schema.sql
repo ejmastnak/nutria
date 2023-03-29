@@ -2,7 +2,7 @@
 -- into Laravel project
 drop table if exists nutrients cascade;
 
-create table nutrients (
+create table if not exists nutrients (
   id integer primary key,  -- use FDC id from SR database
   name text not null,
   display_name text not null,
