@@ -1,0 +1,15 @@
+{
+  "name": "MealsOnly",
+  "food_list_items": [
+    {
+      "ingredient_id": null,
+      "meal_id": 1,
+      "mass_in_grams": 50
+    },
+    {
+      "ingredient_id": null,
+      "meal_id": 1,
+      "mass_in_grams": 50
+    }
+  ]
+}

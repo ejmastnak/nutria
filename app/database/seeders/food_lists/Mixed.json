@@ -1,0 +1,16 @@
+{
+  "name": "Mixed",
+  "food_list_items": [
+    {
+      "ingredient": "Bananas, raw",
+      "ingredient_id": 6435,
+      "meal_id": null,
+      "mass_in_grams": 50
+    },
+    {
+      "ingredient_id": null,
+      "meal_id": 1,
+      "mass_in_grams": 50
+    }
+  ]
+}
