@@ -1,0 +1,15 @@
+{
+  "name": "Mango",
+  "ingredients": [
+    {
+      "ingredient": "Mangos, raw",
+      "ingredient_id": 2399,
+      "mass_in_grams": 50
+    },
+    {
+      "ingredient": "Mangos, raw",
+      "ingredient_id": 2399,
+      "mass_in_grams": 50
+    }
+  ]
+}
