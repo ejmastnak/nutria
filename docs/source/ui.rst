@@ -9,28 +9,136 @@ Actions:
 - View nutrient profiles
 - Create stuff
 
-Create stuff
-------------
+CRUD
+----
 
-Home: Create stuff
-^^^^^^^^^^^^^^^^^^
+Home
+^^^^
 
-Create/edit:
+Links to CRUD pages for:
 
 - Ingredients
 - Meals
 - Food lists
 - RDI profile
 
-Each of ingredients, meals, and food lists Create and Edit pages should have both "Save" and (immediately) "Save and profile".
+Ingredient CRUD
+^^^^^^^^^^^^^^^
 
-Each Create page should have an option to clone an existing model instance, e.g. create new ingredient based on existing ingredient (nutrient values prefilled, then just tweak a few values). 
+**Index**
 
-CRUDs
-^^^^^
+- Ingredient name (links to Show page) and category ``ingredient_category_id`` (maybe) for each ingredient
+- Filter by: name and category
 
-Ingredients, Meals, Food lists, and RDI profile I think can all be standard CRUD with Index, Create/Edit.
-Similar to e.g. Landmark CRUD.
+**Show**
+
+- Ingredient name
+- Category ``ingredient_category_id`` (maybe)
+- Density ``grams_per_milliliter`` (if applicable)
+- Nutrient profile for 100 grams of ingredient
+
+**Create**
+
+- "Clone from existing ingredient" button
+- Form satisfying specification in :ref:`Features: Create an Ingredient <feature-create-ingredient>`
+- Save button
+- Save and profile button
+- Cancel button (back)
+
+**Edit**
+
+- Form satisfying specification in :ref:`Features: Create an Ingredient <feature-create-ingredient>`, prefilled with current values.
+- Save button
+- Save and profile button
+- Cancel button (back)
+
+Meal CRUD
+^^^^^^^^^
+
+**Index**
+
+- Meal name (links to Show page) for each meal
+- Filter by: name
+
+**Show**
+
+- Meal name
+- Name, amount, and unit (in originally specified units) of each ingredient
+- "Compute nutrient profile" button for default quantity of meal
+  (Or just show nutrient profile if it's inexpensive to compute)
+
+**Create**
+
+- "Clone from existing meal" button
+- Form satisfying specification in :ref:`Features: Create a Meal <feature-create-meal>`
+- Save button
+- Save and profile button
+- Cancel button (back)
+
+**Edit**
+
+- Form satisfying specification in :ref:`Features: Create a Meal <feature-create-meal>`, prefilled with current values
+- Save button
+- Save and profile button
+- Cancel button (back)
+
+Food List CRUD
+^^^^^^^^^^^^^^
+
+**Index**
+
+- Food list name (links to Show page) for each food list
+- Filter by: name
+
+**Show**
+
+- Food list name
+- Nutrient name, rdi amount, and rdi unit (in nutrient's preferred unit) of each RDI profile nutrient
+
+**Create**
+
+- "Clone from existing RDI profile" button
+- Form satisfying specification in :ref:`Features: Create an RDI Profile <feature-create-rdi-profile>`
+- Save button
+- Save and profile button
+- Cancel button (back)
+
+**Edit**
+
+- Form satisfying specification in :ref:`Features: Create an RDI Profile <feature-create-rdi-profile>`, prefilled with current values
+- Save button
+- Save and profile button
+- Cancel button (back)
+
+RDI Profile CRUD
+^^^^^^^^^^^^^^^^
+
+**Index**
+
+- RDI profile name (links to Show page) for each RDI profile
+- Filter by: name
+
+**Show**
+
+- RDI profile name
+- Name, amount, and unit (in originally specified units) of each food list item
+- "Compute nutrient profile" button
+  (Or just show nutrient profile if it's inexpensive to compute)
+
+**Create**
+
+- "Clone from existing food list" button
+- Form satisfying specification in :ref:`Features: Create a Food List <feature-create-food-list>`
+- Save button
+- Save and profile button
+- Cancel button (back)
+
+**Edit**
+
+- Form satisfying specification in :ref:`Features: Create a Food List <feature-create-food-list>`, prefilled with current values
+- Save button
+- Save and profile button
+- Cancel button (back)
 
 Nutrient profiles
 -----------------

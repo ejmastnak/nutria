@@ -1,6 +1,8 @@
 Features
 ========
 
+.. _feature-create-ingredient:
+
 Create an ingredient
 --------------------
 
@@ -35,6 +37,8 @@ A request would look something like
     ]
   }
 
+.. _feature-create-meal:
+
 Create a meal
 -------------
 
@@ -58,6 +62,8 @@ Request looks like:
       }
     ]
   }
+
+.. _feature-create-food-list:
 
 Create a food list
 ------------------
@@ -101,6 +107,8 @@ Request send to backend would be the array of ``food_list_items``.
       }
     ]
   }
+
+.. _feature-create-rdi-profile:
 
 Create an RDI profile
 ---------------------
