@@ -34,7 +34,7 @@ Ingredient CRUD
 
 - Ingredient name
 - Category ``ingredient_category_id`` (maybe)
-- Density ``grams_per_milliliter`` (if applicable)
+- Density ``density_g_per_ml`` (if applicable)
 - Nutrient profile for 100 grams of ingredient
 
 **Create**
@@ -63,7 +63,7 @@ Meal CRUD
 **Show**
 
 - Meal name
-- Name, amount, and unit (in originally specified units) of each ingredient
+- Name, amount, and unit (in originally specified units) of each meal ingredient
 - "Compute nutrient profile" button for default quantity of meal
   (Or just show nutrient profile if it's inexpensive to compute)
 
@@ -93,19 +93,21 @@ Food List CRUD
 **Show**
 
 - Food list name
-- Nutrient name, rdi amount, and rdi unit (in nutrient's preferred unit) of each RDI profile nutrient
+- Name, amount, and unit (in originally specified units) of all food list ingredients
+- Name, amount, and unit (in originally specified units) of all food list meals
+- Nutrient profile of food list
 
 **Create**
 
-- "Clone from existing RDI profile" button
-- Form satisfying specification in :ref:`Features: Create an RDI Profile <feature-create-rdi-profile>`
+- "Clone from existing food list profile" button
+- Form satisfying specification in :ref:`Features: Create a Food List <feature-create-food-list>`
 - Save button
 - Save and profile button
 - Cancel button (back)
 
 **Edit**
 
-- Form satisfying specification in :ref:`Features: Create an RDI Profile <feature-create-rdi-profile>`, prefilled with current values
+- Form satisfying specification in :ref:`Features: Create a Food List <feature-create-food-list>` prefilled with current values
 - Save button
 - Save and profile button
 - Cancel button (back)
@@ -128,14 +130,14 @@ RDI Profile CRUD
 **Create**
 
 - "Clone from existing food list" button
-- Form satisfying specification in :ref:`Features: Create a Food List <feature-create-food-list>`
+- Form satisfying specification in :ref:`Features: Create an RDI Profile <feature-create-rdi-profile>`
 - Save button
 - Save and profile button
 - Cancel button (back)
 
 **Edit**
 
-- Form satisfying specification in :ref:`Features: Create a Food List <feature-create-food-list>`, prefilled with current values
+- Form satisfying specification in :ref:`Features: Create an RDI Profile <feature-create-rdi-profile>` prefilled with current values
 - Save button
 - Save and profile button
 - Cancel button (back)

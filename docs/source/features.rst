@@ -28,7 +28,7 @@ A request would look something like
   {
     "name": "Foo",
     "category_id": null,
-    "grams_per_milliliter": null,
+    "density_g_per_ml": null,
     "nutrients": [
       {
         "nutrient_id": 0,

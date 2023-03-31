@@ -153,4 +153,5 @@ Documentation
    database
    ui
    validation
+   nutrient-profiles
 

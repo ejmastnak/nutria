@@ -16,5 +16,5 @@ Problem areas include:
 
 - Meal amounts in food lists can only be expressed in units of mass.
 
-Have a densitites table with columns ``ingredient_id``, ``grams_per_milliliter``.
+Have a densitites table with columns ``ingredient_id``, ``density_g_per_ml``.
 And a ``ingredient->density`` relationship.

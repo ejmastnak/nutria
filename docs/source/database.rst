@@ -66,7 +66,7 @@ Ingredient
 - ``fdc_id``
 - ``name``
 - ``ingredient_category_id``
-- ``grams_per_milliliter``
+- ``density_g_per_ml``
 
 Ingredient Nutrient
 ^^^^^^^^^^^^^^^^^^^

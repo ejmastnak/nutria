@@ -14,7 +14,7 @@ Incoming request looks like
   {
     "name": "Foo",
     "category_id": null,
-    "grams_per_milliliter": null,
+    "density_g_per_ml": null,
     "nutrients": [
       {
         "nutrient_id": 0,
@@ -27,14 +27,14 @@ Incoming request looks like
 
 - ``name`` is a string with sane min and max length.
 - ``category_id``, is either null or present in ``ingredient_categories,id``
-- ``grams_per_milliliter`` is either null or a positive float 
+- ``density_g_per_ml`` is either null or a positive float 
 - ``nutrients`` is an array and contains exactly one item for each record in ``nutrients`` table
 - ``nutrients.*.nutrient_id`` is present in ``nutrients,id``
 - ``nutrients.*.amount_per_100g`` is a positive float
 
 **Create**
 
-- an ``ingredient`` record with null ``fdc_id`` and given ``name``, ``ingredient_category_id``, and ``grams_per_milliliter``.
+- an ``ingredient`` record with null ``fdc_id`` and given ``name``, ``ingredient_category_id``, and ``density_g_per_ml``.
 - a ``ingredient_nutrient`` record for each element in supplied ``nutrients`` with:
 
   - ``ingredient_id`` of ``ingredient`` record
@@ -169,10 +169,10 @@ Computing mass in grams for ingredients
 
 Input: ``ingredient_id``, ``ammount``, ``unit_id``
 
-- If supplied ``unit_id`` is a unit of volume and supplied ``ingredient_id`` does not have a ``grams_per_milliliter`` column, fail validation.
+- If supplied ``unit_id`` is a unit of volume and supplied ``ingredient_id`` does not have a ``density_g_per_ml`` column, fail validation.
 - If supplied ``unit_id`` is a unit of mass, multiply supplied ``amount`` by ``amount_in_grams`` column of ``to_grams`` table record for which ``foreign_unit_id`` equals supplied ``unit_id``
 - If supplied ``unit_id`` is a unit of volume, multiply supplied ``amount`` by ``amount_in_milliliters`` column of ``to_milliliters`` table record for which ``foreign_unit_id`` equals supplied ``unit_id``.
-  Then multiply result by ``grams_per_milliliter`` value for supplied ``ingredient_id``.
+  Then multiply result by ``density_g_per_ml`` value for supplied ``ingredient_id``.
 
 Computing mass in grams for meals
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
