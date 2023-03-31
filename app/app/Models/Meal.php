@@ -11,6 +11,6 @@ class Meal extends Model
     public $timestamps = false;
 
     public function meal_ingredients() {
-        return $this->hasMany(MealIngredient::class, 'meal_ingredient_id', 'id');
+        return $this->hasMany(MealIngredient::class, 'meal_id', 'id');
     }
 }

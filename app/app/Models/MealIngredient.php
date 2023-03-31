@@ -13,4 +13,8 @@ class MealIngredient extends Model
     public function meal() {
         return $this->belongsTo(Meal::class, 'meal_id', 'id');
     }
+
+    public function unit() {
+        return $this->belongsTo(Unit::class, 'unit_id', 'id');
+    }
 }

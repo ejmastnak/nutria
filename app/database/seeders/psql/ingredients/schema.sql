@@ -12,5 +12,5 @@ create table if not exists ingredients (
   fdc_id int null,
   name text not null,
   ingredient_category_id integer null references ingredient_categories(id),
-  grams_per_milliliter decimal(10, 6) null
+  density_g_per_ml decimal(10, 6) null
 );
