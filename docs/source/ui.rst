@@ -123,9 +123,7 @@ RDI Profile CRUD
 **Show**
 
 - RDI profile name
-- Name, amount, and unit (in originally specified units) of each food list item
-- "Compute nutrient profile" button
-  (Or just show nutrient profile if it's inexpensive to compute)
+- Name, RDI value, and unit (in nutrient's preferred units) of each RdiProfileNutrient
 
 **Create**
 
