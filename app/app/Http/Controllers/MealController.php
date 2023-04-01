@@ -54,7 +54,7 @@ class MealController extends Controller
     public function edit(Meal $meal)
     {
         // Load name, amount, and unit (along with necessary intermediate
-        // relationship) of each meal ingredient
+        // relationships) of each meal ingredient
         $meal->load(['meal_ingredients:meal_id,ingredient_id,amount,unit_id']);
         return Inertia::render('Meals/Edit', [
           'meal' => $meal

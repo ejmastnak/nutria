@@ -17,4 +17,8 @@ class FoodListIngredient extends Model
     public function ingredient() {
         return $this->belongsTo(Ingredient::class, 'ingredient_id', 'id');
     }
+
+    public function unit() {
+        return $this->belongsTo(Unit::class, 'unit_id', 'id');
+    }
 }

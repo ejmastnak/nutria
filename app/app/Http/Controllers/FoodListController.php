@@ -39,8 +39,19 @@ class FoodListController extends Controller
      */
     public function show(FoodList $foodList)
     {
+        // Load name, amount, and unit (along with necessary intermediate
+        // relationships) of each food list ingredient and food list meal.
+        $foodList->load([
+            'food_list_ingredients:id,ingredient_id,food_list_id,amount,unit_id',
+            'food_list_ingredients.ingredient:id,name',
+            'food_list_ingredients.unit:id,name',
+            'food_list_meals:id,meal_id,food_list_id,amount,unit_id',
+            'food_list_meals.meal:id,name',
+            'food_list_meals.unit:id,name'
+        ]);
         return Inertia::render('FoodLists/Show', [
-          'foodLists' => FoodList::all()
+            'foodLists' => FoodList::all(),
+            'nutrient_profile' => NutrientProfileController::profileFoodList($foodList)
         ]);
     }
 
@@ -49,7 +60,20 @@ class FoodListController extends Controller
      */
     public function edit(FoodList $foodList)
     {
-        //
+        // Load name, amount, and unit (along with necessary intermediate
+        // relationships) of each food list ingredient and food list meal.
+        $foodList->load([
+            'food_list_ingredients:id,ingredient_id,food_list_id,amount,unit_id',
+            'food_list_ingredients.ingredient:id,name',
+            'food_list_ingredients.unit:id,name',
+            'food_list_meals:id,meal_id,food_list_id,amount,unit_id',
+            'food_list_meals.meal:id,name',
+            'food_list_meals.unit:id,name'
+        ]);
+        return Inertia::render('FoodLists/Show', [
+            'foodLists' => FoodList::all(),
+            'nutrient_profile' => NutrientProfileController::profileFoodList($foodList)
+        ]);
     }
 
     /**
