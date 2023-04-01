@@ -11,6 +11,6 @@ class RdiProfile extends Model
     public $timestamps = false;
 
     public function rdi_profile_nutrients() {
-        return $this->hasMany(RdiProfileNutrient::class, 'nutrient_profile_id', 'id');
+        return $this->hasMany(RdiProfileNutrient::class, 'rdi_profile_id', 'id');
     }
 }

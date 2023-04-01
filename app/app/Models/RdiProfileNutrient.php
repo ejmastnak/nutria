@@ -13,4 +13,8 @@ class RdiProfileNutrient extends Model
     public function rdi_profile() {
         return $this->belongsTo(RdiProfile::class, 'rdi_profile_id', 'id');
     }
+
+    public function nutrient() {
+        return $this->belongsTo(Nutrient::class, 'nutrient_id', 'id');
+    }
 }
