@@ -62,7 +62,7 @@ Incoming request looks like
 **Validate**
 
 - ``name`` is a string with sane min and max length.
-- ``ingredients`` is an array with at least one item (and e.g. less than 1000 items)
+- ``ingredients`` is an array with at least one item (and e.g. fewer than 1000 items)
 - ``ingredients.*.ingredient_id`` is present in ``ingredients,id``
 - ``ingredients.*.amount`` is a positive float
 - ``ingredients.*.unit_id`` is present in ``units,id``
@@ -87,9 +87,15 @@ Incoming request looks like
   
   {
     "name": "Foo",
-    "food_list_items": [
+    "food_list_ingredients": [
       {
         "ingredient_id": 0,
+        "amount": 0.0,
+        "unit_id": 0
+      }
+    ],
+    "food_list_meals": [
+      {
         "meal_id": 0,
         "amount": 0.0,
         "unit_id": 0
@@ -100,20 +106,21 @@ Incoming request looks like
 **Validate**
 
 - ``name`` is a string with sane min and max length.
-- ``food_list_items`` is an array with at least one item (and e.g. less than 1000 items)
-- ``food_list_items.*.ingredient_id`` is either null or present in ``ingredients,id``
-- ``food_list_items.*.meal_id`` is either null or present in ``meals,id``
-- ``food_list_items.*.amount`` is a positive float
-- ``food_list_items.*.unit_id`` is present in ``units,id``
+- ``food_list_ingredients`` is an array with at least one item *if* ``food_list_meals`` is empty (and e.g. fewer than 1000 items)
+- ``food_list_ingredients.*.ingredient_id`` is a required integer present in ``ingredients,id``
+- ``food_list_ingredients.*.amount`` is a positive float
+- ``food_list_ingredients.*.unit_id`` i a required integer present in ``units,id``
+- ``food_list_meals`` is an array with at least one item *if* ``food_list_ingredients`` is empty (and e.g. fewer than 1000 items)
+- ``food_list_meals.*.meal_id`` is a required integer present in ``meals,id``
+- ``food_list_meals.*.amount`` is a positive float
+- ``food_list_meals.*.unit_id`` i a required integer present in ``units,id``
 
 **Create**
 
 - a ``food_list`` record with given ``name``
-- a ``food_list_ingredient`` or ``food_list_meal`` record for each element in supplied ``food_list_items``
+- a ``food_list_ingredient`` or ``food_list_meal`` record for each respective element in supplied ``food_list_ingredients`` and ``food_list_meals``.
 
-Processing ``food_list_items``:
-
-- **Ingredients:** If ``meal_id`` is null and ``ingredient_id`` exists in ``ingredients,id``, create ``food_list_ingredient`` record with
+- **Ingredients:** For each ``food_list_ingredients`` element create a ``food_list_ingredient`` record with
 
   - ``food_list_id`` of ``food_list`` record
   - supplied ``ingredient_id``
@@ -121,15 +128,13 @@ Processing ``food_list_items``:
   - supplied ``unit_id``
   - ``mass_in_grams`` computed from supplied ``amount``, ``unit_id``, and ``ingredient_id``
 
-- **Meals:** If ``ingredient_id`` is null and ``meal_id`` exists in ``meals,id``, create ``food_list_meal`` record with:
+- **Meals:** For each ``food_list_meals`` element create a ``food_list_meal`` record with
 
   - ``food_list_id`` of ``food_list`` record
   - supplied ``meal_id``
   - supplied ``amount``
   - supplied ``unit_id``
   - ``mass_in_grams`` computed from supplied ``amount``, ``unit_id``
-
-- **Otherwise:** fail validation
 
 RDI profile
 ^^^^^^^^^^^

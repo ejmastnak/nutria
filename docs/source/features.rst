@@ -73,34 +73,43 @@ User must specify:
 - Which foods
 - How much of each food.
 
-UI: Use a buffer array of ``food_list_items``.
-Support deleting items from buffer and changing amount and unit, but not name.
+UI: Use a buffer array of ``food_list_ingredients`` and ``food_list_meals``.
+Support deleting items from buffers and changing amount and unit, but not name.
 
-Have one small form with fuzzy search text input, amount text input, and unit select menu that adds items to ``food_list_items``.
+Have one small form with fuzzy search text input, amount text input, and unit select menu that adds meals/ingredients to respective buffers.
 
-Structure of a ``food_list_item``:
+Structure of a ``food_list_ingredient`` and ``food_list_meal``:
 
-.. code-block:: javascript
+.. code-block:: json
   
   {
-    // One of ``ingredient_id`` or ``meal_id`` is null, which tells you if the
-    // item is an ingredient or meal.
     "id": 0,
     "ingredient_id": 0,
+    "amount": 0.0,
+    "unit_id": 0
+  },
+  {
+    "id": 0,
     "meal_id": 0,
     "amount": 0.0,
     "unit_id": 0
   }
 
-Request send to backend would be the array of ``food_list_items``.
+Request send to backend would take the form
 
-.. code-block:: javascript
+.. code-block:: json
   
   {
     "name": "Foo",
-    "food_list_items": [
+    "food_list_ingredients": [
       {
         "ingredient_id": 0,
+        "amount": 0.0,
+        "unit_id": 0
+      }
+    ],
+    "food_list_meals": [
+      {
         "meal_id": 0,
         "amount": 0.0,
         "unit_id": 0
