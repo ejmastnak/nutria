@@ -104,8 +104,8 @@ class MealController extends Controller
         $num_nutrients = Nutrient::count();
         $request->validate([
             'name' => ['required', 'min:1', 'max:500'],
-            'ingredients' => ['required', 'array', 'min:1', 'min:500'],
-            'ingredients.*.ingredient_id' => ['required', 'integer', 'in:nutrients,id'],
+            'ingredients' => ['required', 'array', 'min:1', 'max:500'],
+            'ingredients.*.ingredient_id' => ['required', 'integer', 'in:ingredients,id'],
             'ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
             'ingredients.*.unit_id' => ['required', 'integer', 'in:units,id'],
         ]);

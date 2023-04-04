@@ -91,4 +91,77 @@ class FoodListController extends Controller
     {
         //
     }
+
+    /**
+     * Incoming request takes the form
+     *
+     * {
+     *   "name": "Foo",
+     *   "food_list_ingredients": [
+     *     {
+     *       "ingredient_id": 0,
+     *       "amount": 0.0,
+     *       "unit_id": 0
+     *     }
+     *   ],
+     *   "food_list_meals": [
+     *     {
+     *       "meal_id": 0,
+     *       "amount": 0.0,
+     *       "unit_id": 0
+     *     }
+     *   ]
+     * }
+     *
+     * Validation checks that:
+     *
+     * - name is a string with sane min and max length.
+     * - food_list_ingredients is an array with at least one item if food_list_meals is empty (and e.g. fewer than 1000 items)
+     * - food_list_ingredients.*.ingredient_id is a required integer present in ingredients,id
+     * - food_list_ingredients.*.amount is a positive float
+     * - food_list_ingredients.*.unit_id i a required integer present in units,id
+     * - food_list_meals is an array with at least one item if food_list_ingredients is empty (and e.g. fewer than 1000 items)
+     * - food_list_meals.*.meal_id is a required integer present in meals,id
+     * - food_list_meals.*.amount is a positive float
+     * - food_list_meals.*.unit_id i a required integer present in units,id
+
+     *      
+     */
+    public function validateStoreOrUpdateRequest(Request $request) {
+        $num_nutrients = Nutrient::count();
+        $request->validate([
+            'name' => ['required', 'min:1', 'max:500'],
+            'food_list_ingredients' => [
+                'required',
+                'array',
+                function ($attribute, $value, $fail) use($request) {
+                    // food_list_ingredients must contain at least one element
+                    // if food_list_meals is empty
+                    if (count($request['food_list_ingredients']) == 0 && count($request['food_list_meals']) == 0) {
+                        $fail('Include at least one ingredient.');
+                    }
+                },
+                'max:500'
+            ],
+            'food_list_ingredients.*.ingredient_id' => ['required', 'integer', 'in:ingredients,id'],
+            'food_list_ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
+            'food_list_ingredients.*.unit_id' => ['required', 'integer', 'in:units,id'],
+            'food_list_meals' => [
+                'required',
+                'array',
+                function ($attribute, $value, $fail) use($request) {
+                    // food_list_meals must contain at least one element if
+                    // food_list_ingredients is empty
+                    if (count($request['food_list_meals']) == 0 && count($request['food_list_ingredients']) == 0) {
+                        $fail('Include at least one meal.');
+                    }
+                },
+                'max:500'
+            ],
+            'food_list_meals.*.meal_id' => ['required', 'integer', 'in:meals,id'],
+            'food_list_meals.*.amount' => ['required', 'numeric', 'gt:0'],
+            'food_list_meals.*.unit_id' => ['required', 'integer', 'in:units,id'],
+        ]);
+    }
+
 }
