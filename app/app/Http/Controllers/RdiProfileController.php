@@ -76,4 +76,36 @@ class RdiProfileController extends Controller
     {
         //
     }
+
+    /**
+     * Incoming request takes the form
+     *
+     * {
+     *   "name": "Foo",
+     *   "nutrients": [
+     *     {
+     *       "nutrient_id": 0,
+     *       "rdi": 0.0
+     *     }
+     *   ]
+     * }
+     *
+     * Validation checks that:
+     *
+     * - name is a string with sane min and max length.
+     * - nutrients is an array and contains exactly one item for each record in nutrients table
+     * - nutrients.*.nutrient_id is present in nutrients,id
+     * - nutrients.*.rdi is a positive float
+     *      
+     */
+    public function validateStoreOrUpdateRequest(Request $request) {
+        $num_nutrients = Nutrient::count();
+        $request->validate([
+            'name' => ['required', 'min:1', 'max:500'],
+            'nutrients' => ['required', 'array', 'min:' . $num_nutrients, 'max:' . $num_nutrients,],
+            'nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'in:nutrients,id'],
+            'nutrients.*.rdi' => ['required', 'numeric', 'gt:0'],
+        ]);
+    }
+
 }

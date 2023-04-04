@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ingredient;
+use App\Models\Nutrient;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -72,5 +73,42 @@ class IngredientController extends Controller
     public function destroy(Ingredient $ingredient)
     {
         //
+    }
+
+    /**
+     * Incoming request takes the form
+     *
+     * {
+     *   "name": "Foo",
+     *   "category_id": null,
+     *   "density_g_per_ml": null,
+     *   "nutrients": [
+     *     {
+     *       "nutrient_id": 0,
+     *       "amount_per_100g": 0.0
+     *     }
+     *   ]
+     * }
+     *
+     * Validation checks that:
+     *
+     * - name is a string with sane min and max length.
+     * - category_id, is either null or present in ingredient_categories,id
+     * - density_g_per_ml is either null or a positive float
+     * - nutrients is an array and contains exactly one item for each record in nutrients table
+     * - nutrients.*.nutrient_id is present in nutrients,id
+     * - nutrients.*.amount_per_100g is a positive float
+     *      
+     */
+    public function validateStoreOrUpdateRequest(Request $request) {
+        $num_nutrients = Nutrient::count();
+        $request->validate([
+            'name' => ['required', 'min:1', 'max:500'],
+            'category_id' => ['nullable', 'integer', 'in:ingredient_categories,id'],
+            'density_g_per_ml' => ['nullable', 'numeric', 'gt:0'],
+            'nutrients' => ['required', 'array', 'min:' . $num_nutrients, 'max:' . $num_nutrients,],
+            'nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'in:nutrients,id'],
+            'nutrients.*.amount_per_100g' => ['required', 'numeric', 'gt:0'],
+        ]);
     }
 }

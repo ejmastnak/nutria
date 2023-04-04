@@ -76,4 +76,39 @@ class MealController extends Controller
     {
         //
     }
+
+    /**
+     * Incoming request takes the form
+     *
+     * {
+     *   "name": "Foo",
+     *   "ingredients": [
+     *     {
+     *       "ingredient_id": 0,
+     *       "amount": 0.0,
+     *       "unit_id": 0
+     *     }
+     *   ]
+     * }
+     *
+     * Validation checks that:
+     *
+     * - name is a string with sane min and max length.
+     * - ingredients is an array with at least one item and a sane maximum length
+     * - ingredients.*.ingredient_id is present in ingredients,id
+     * - ingredients.*.amount is a positive float
+     * - ingredients.*.unit_id is present in units,id
+     *      
+     */
+    public function validateStoreOrUpdateRequest(Request $request) {
+        $num_nutrients = Nutrient::count();
+        $request->validate([
+            'name' => ['required', 'min:1', 'max:500'],
+            'ingredients' => ['required', 'array', 'min:1', 'min:500'],
+            'ingredients.*.ingredient_id' => ['required', 'integer', 'in:nutrients,id'],
+            'ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
+            'ingredients.*.unit_id' => ['required', 'integer', 'in:units,id'],
+        ]);
+    }
+
 }
