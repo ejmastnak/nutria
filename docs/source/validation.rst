@@ -87,8 +87,8 @@ Update Ingredient
   - given ``nutrient_id`` 
   - given ``amount_per_100g``
 
-Create Meal
-^^^^^^^^^^^
+Create or Update Meal
+^^^^^^^^^^^^^^^^^^^^^
 
 **Incoming request**
 
@@ -96,8 +96,10 @@ Create Meal
     
   {
     "name": "Foo",
-    "ingredients": [
+    "meal_ingredients": [
       {
+        "id": 0.0,
+        "ingredient_id": 0.0,
         "amount": 0.0,
         "unit_id": 0
       }
@@ -107,9 +109,11 @@ Create Meal
 **Validate**
 
 - ``name`` is a string with sane min and max length.
-- ``ingredients`` is a required array with at least one item (and e.g. fewer than 1000 items)
-- ``ingredients.*.amount`` is a required positive float
-- ``ingredients.*.unit_id`` is a required integer present in ``units,id``
+- ``meal_ingredients`` is a required array with at least one item (and fewer than e.g. 1000 items)
+- ``meal_ingredients.*.id`` is either negative (for create) or a positive integer in ``meal_ingredients,id``
+- ``meal_ingredients.*.ingredient_id`` is a required integer present in ``ingredients,id``
+- ``meal_ingredients.*.amount`` is a required positive float
+- ``meal_ingredients.*.unit_id`` is a required integer present in ``units,id``
 
 **Create**
 
@@ -122,36 +126,10 @@ Create Meal
   - supplied ``unit_id``
   - ``mass_in_grams`` computed from supplied ``amount``, ``unit_id``, and potentially (for volume units) ``density_g_per_ml`` of ingredient specified by ``ingredient_id``
 
-Update Meal
-^^^^^^^^^^^
-
-**Incoming request**
-
-.. code-block:: json
-    
-  {
-    "name": "Foo",
-    "ingredients": [
-      {
-        "ingredient_id": 0,
-        "amount": 0.0,
-        "unit_id": 0
-      }
-    ]
-  }
-
-**Validate**
-
-- ``name`` as for create
-- ``ingredients`` as for create
-- ``ingredients.*.ingredient_id`` is a required integer present in ``ingredients,id``
-- ``ingredients.*.amount`` as for create
-- ``ingredients.*.unit_id`` as for create
-
 **Update**
 
-- Existing ``meal`` record (found with Laravel dependency injected meal id) with supplied ``name``
-- For all ``meal_ingredient`` objects in both ``meal_ingredients`` DB table and in request (based on ``meal_id`` value), update:
+- Update ``name`` column of existing ``meal`` record
+- For all ``meal_ingredient`` objects that occur in both ``meal_ingredients`` DB table and in request (based on ``meal_ingredients.*.id`` value), update:
 
   - ``meal_id`` of ``meal`` record
   - supplied ``ingredient_id``
@@ -159,9 +137,9 @@ Update Meal
   - supplied ``unit_id``
   - ``mass_in_grams`` computed from supplied ``amount``, ``unit_id``, and potentially (for volume units) ``density_g_per_ml`` of ingredient specified by ``ingredient_id``
 
-- For all ``meal_ingredient`` objects in request and not in DB table, create a new ``meal_ingredient`` record with supplied values.
+- For all ``meal_ingredient`` objects in request and not in DB table, create a new ``meal_ingredient`` record with supplied values as in Create.
 
-- Delete all ``meal_ingredient`` records in ``meal_ingredients`` DB table and not in request
+- Delete all ``meal_ingredient`` records in ``meal_ingredients`` DB table but not in request
 
 Food list
 ^^^^^^^^^
