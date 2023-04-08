@@ -124,7 +124,7 @@ class IngredientController extends Controller
             ]);
         }
 
-        return Redirect::route('ingredients.index')->with('message', 'Success! Ingredient created successfully.');
+        return Redirect::route('ingredients.index')->with('message', 'Success! Ingredient updated successfully.');
     }
 
     /**

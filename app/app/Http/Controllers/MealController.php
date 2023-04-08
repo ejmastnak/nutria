@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Meal;
+use App\Models\MealIngredient;
 use Illuminate\Http\Request;
 use Inertia\Intertia;
 
@@ -31,7 +32,36 @@ class MealController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate request
+        $request->validate([
+            'name' => ['required', 'min:1', 'max:500'],
+            'meal_ingredients' => ['required', 'array', 'min:1', 'max:500'],
+            'meal_ingredients.*.ingredient_id' => ['required', 'integer', 'in:ingredients,id'],
+            'meal_ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
+            'meal_ingredients.*.unit_id' => ['required', 'integer', 'in:units,id'],
+        ]);
+
+        // Create meal
+        $meal = Meal::create([
+            'name' => $request['name'],
+        ]);
+
+        // TODO: compute mass_in_grams computed from supplied amount, unit_id,
+        // and potentially (for volume units) density_g_per_ml of ingredient
+        // specified by ingredient_id
+
+        // Create meal's MealIngredients
+        foreach ($request['meal_ingredients'] as $mi) {
+            MealIngredient::create([
+                'meal_id' => $meal->id,
+                'ingredient_id' => $mi['ingredient_id'],
+                'amount' => $mi['amount'],
+                'unit_id' => $mi['unit_id''],
+                'mass_in_grams' => 0
+            ]);
+        }
+
+        return Redirect::route('meals.index')->with('message', 'Success! Meal created successfully.');
     }
 
     /**
@@ -66,7 +96,38 @@ class MealController extends Controller
      */
     public function update(Request $request, Meal $meal)
     {
-        //
+        // Validate request
+        $request->validate([
+            'name' => ['required', 'min:1', 'max:500'],
+            'meal_ingredients' => ['required', 'array', 'min:1', 'max:500'],
+            'meal_ingredients.*.id' => ['required', 'integer', 'in:meal_ingredients,id'],
+            'meal_ingredients.*.ingredient_id' => ['required', 'integer', 'in:ingredients,id'],
+            'meal_ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
+            'meal_ingredients.*.unit_id' => ['required', 'integer', 'in:units,id'],
+        ]);
+
+        // Update meal
+        $meal->update([
+            'name' => $request['name'],
+        ]);
+
+        // TODO: compute mass_in_grams computed from supplied amount, unit_id,
+        // and potentially (for volume units) density_g_per_ml of ingredient
+        // specified by ingredient_id
+
+        // Update meal's MealIngredients
+        foreach ($request['meal_ingredients'] as $mi) {
+            $this_mi = MealIngredient::find($mi[$id]);
+            $this_mi->update([
+                'meal_id' => $meal->id,
+                'ingredient_id' => $mi['ingredient_id'],
+                'amount' => $mi['amount'],
+                'unit_id' => $mi['unit_id''],
+                'mass_in_grams' => 0
+            ]);
+        }
+
+        return Redirect::route('meals.index')->with('message', 'Success! Meal updated successfully.');
     }
 
     /**
@@ -77,31 +138,7 @@ class MealController extends Controller
         //
     }
 
-    /**
-     * Incoming request takes the form
-     *
-     * {
-     *   "name": "Foo",
-     *   "ingredients": [
-     *     {
-     *       "ingredient_id": 0,
-     *       "amount": 0.0,
-     *       "unit_id": 0
-     *     }
-     *   ]
-     * }
-     *
-     * Validation checks that:
-     *
-     * - name is a string with sane min and max length.
-     * - ingredients is an array with at least one item and a sane maximum length
-     * - ingredients.*.ingredient_id is present in ingredients,id
-     * - ingredients.*.amount is a positive float
-     * - ingredients.*.unit_id is present in units,id
-     *      
-     */
     public function validateStoreOrUpdateRequest(Request $request) {
-        $num_nutrients = Nutrient::count();
         $request->validate([
             'name' => ['required', 'min:1', 'max:500'],
             'ingredients' => ['required', 'array', 'min:1', 'max:500'],
