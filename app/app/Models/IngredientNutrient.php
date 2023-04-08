@@ -9,7 +9,7 @@ class IngredientNutrient extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $table = 'ingredient_nutrients';
+    protected $fillable = ['ingredient_id', 'nutrient_id', 'amount_per_100g'];
 
     public function ingredient() {
         return $this->belongsTo(Ingredient::class, 'ingredient_id', 'id');

@@ -9,7 +9,7 @@ class Ingredient extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $table = 'ingredients';
+    protected $fillable = ['name', 'fdc_id', 'ingredient_category_id', 'density_g_per_ml'];
 
     public function ingredient_category() {
         return $this->belongsTo(IngredientCategory::class, 'ingredient_category_id', 'id');
