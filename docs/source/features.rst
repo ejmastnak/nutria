@@ -3,8 +3,8 @@ Features
 
 .. _feature-create-ingredient:
 
-Create an ingredient
---------------------
+Create/update an ingredient
+---------------------------
 
 User must specify:
 
@@ -21,7 +21,7 @@ UI: table of all nutrients with three columns:
 
 Every amount field is initialized to zero, so user has the option to only specify a few nutrients of interest and leave the other nutrients blank.
 
-A request would look something like
+A request from frontend to backend would look something like
 
 .. code-block:: json
 
@@ -29,13 +29,16 @@ A request would look something like
     "name": "Foo",
     "category_id": null,
     "density_g_per_ml": null,
-    "nutrients": [
+    "ingredient_nutrients": [
       {
+        "id": null,
         "nutrient_id": 0,
         "amount_per_100g": 0.0
       }
     ]
   }
+
+The ``id`` of each ``ingredient_nutrients`` element would be ``null`` when creating ingredients and equal to the ``id`` of the corresponding ``IngredientNutrient`` record when updating ingredients.
 
 .. _feature-create-meal:
 

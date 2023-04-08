@@ -4,10 +4,10 @@ Validation
 CRUD
 ----
 
-Ingredient
-^^^^^^^^^^
+Create Ingredient
+^^^^^^^^^^^^^^^^^
 
-Incoming request looks like
+**Incoming request**
 
 .. code-block:: json
 
@@ -15,7 +15,7 @@ Incoming request looks like
     "name": "Foo",
     "category_id": null,
     "density_g_per_ml": null,
-    "nutrients": [
+    "ingredient_nutrients": [
       {
         "nutrient_id": 0,
         "amount_per_100g": 0.0
@@ -23,28 +23,109 @@ Incoming request looks like
     ]
   }
 
-**Validate**
+**Validatation**
 
-- ``name`` is a string with sane min and max length.
-- ``category_id``, is either null or present in ``ingredient_categories,id``
+- ``name`` is a required string with sane min and max length.
+- ``category_id``, is either null or an integer present in ``ingredient_categories,id``
 - ``density_g_per_ml`` is either null or a positive float 
-- ``nutrients`` is an array and contains exactly one item for each record in ``nutrients`` table
-- ``nutrients.*.nutrient_id`` is present in ``nutrients,id``
-- ``nutrients.*.amount_per_100g`` is a positive float
+- ``ingredient_nutrients`` is a required array and contains exactly one item for each record in ``nutrients`` table.
+  In practice: check that length of ``ingredient_nutrients`` equals ``Nutrient::count()`` and that ``ingredient_nutrients.*.nutrient_id`` values are distinct.
+- ``ingredient_nutrients.*.nutrient_id`` is a required integer present in ``nutrients,id``
+- ``ingredient_nutrients.*.amount_per_100g`` is a required positive float
 
 **Create**
 
-- an ``ingredient`` record with null ``fdc_id`` and given ``name``, ``ingredient_category_id``, and ``density_g_per_ml``.
-- a ``ingredient_nutrient`` record for each element in supplied ``nutrients`` with:
+- a new ``ingredient`` record with:
+
+  - given ``name``
+  - null ``fdc_id``
+  - given ``ingredient_category_id`` (possibly null)
+  - give ``density_g_per_ml`` (possibly null)
+
+- a new ``ingredient_nutrient`` record for each element in supplied ``nutrients`` with:
 
   - ``ingredient_id`` of ``ingredient`` record
   - given ``nutrient_id`` 
   - ``amount_per_100g``
 
-Meal
-^^^^
+Update Ingredient
+^^^^^^^^^^^^^^^^^
 
-Incoming request looks like
+**Incoming request**
+
+.. code-block:: json
+
+  {
+    "name": "Foo",
+    "category_id": null,
+    "density_g_per_ml": null,
+    "ingredient_nutrients": [
+      {
+        "id": 0,
+        "nutrient_id": 0,
+        "amount_per_100g": 0.0
+      }
+    ]
+  }
+
+**Validatation**
+
+- ``name`` as for create
+- ``category_id`` as for create
+- ``density_g_per_ml`` as for create
+- ``ingredient_nutrients`` is a optional array; if present, its max length is ``Nutrients::count()``.
+- ``ingredient_nutrients.*.id`` is a required integer present in ``ingredient_nutrients,id``
+- ``ingredient_nutrients.*.nutrient_id`` as for create
+- ``ingredient_nutrients.*.amount_per_100g`` as for create
+
+**Update**
+
+- Update existing ``ingredient`` record with given ``name``, ``fdc_id``, ``ingredient_category_id``, and ``density_g_per_ml``
+
+- For each ``ingredient_nutrient`` element look up corresponding ``IngredientNutrient`` record from supplied ``ingredient_nutrient['id']`` and update
+
+  - given ``nutrient_id`` 
+  - given ``amount_per_100g``
+
+Create Meal
+^^^^^^^^^^^
+
+**Incoming request**
+
+.. code-block:: json
+    
+  {
+    "name": "Foo",
+    "ingredients": [
+      {
+        "amount": 0.0,
+        "unit_id": 0
+      }
+    ]
+  }
+
+**Validate**
+
+- ``name`` is a string with sane min and max length.
+- ``ingredients`` is a required array with at least one item (and e.g. fewer than 1000 items)
+- ``ingredients.*.amount`` is a required positive float
+- ``ingredients.*.unit_id`` is a required integer present in ``units,id``
+
+**Create**
+
+- a new ``meal`` record with given ``name``
+- a new ``meal_ingredient`` record for each element in supplied ``ingredients`` with:
+
+  - ``meal_id`` of ``meal`` record
+  - supplied ``ingredient_id``
+  - supplied ``amount``
+  - supplied ``unit_id``
+  - ``mass_in_grams`` computed from supplied ``amount``, ``unit_id``, and potentially (for volume units) ``density_g_per_ml`` of ingredient specified by ``ingredient_id``
+
+Update Meal
+^^^^^^^^^^^
+
+**Incoming request**
 
 .. code-block:: json
     
@@ -61,27 +142,31 @@ Incoming request looks like
 
 **Validate**
 
-- ``name`` is a string with sane min and max length.
-- ``ingredients`` is an array with at least one item (and e.g. fewer than 1000 items)
-- ``ingredients.*.ingredient_id`` is present in ``ingredients,id``
-- ``ingredients.*.amount`` is a positive float
-- ``ingredients.*.unit_id`` is present in ``units,id``
+- ``name`` as for create
+- ``ingredients`` as for create
+- ``ingredients.*.ingredient_id`` is a required integer present in ``ingredients,id``
+- ``ingredients.*.amount`` as for create
+- ``ingredients.*.unit_id`` as for create
 
-**Create**
+**Update**
 
-- a ``meal`` record with given ``name``
-- a ``meal_ingredient`` record for each element in supplied ``ingredients`` with:
+- Existing ``meal`` record (found with Laravel dependency injected meal id) with supplied ``name``
+- For all ``meal_ingredient`` objects in both ``meal_ingredients`` DB table and in request (based on ``meal_id`` value), update:
 
   - ``meal_id`` of ``meal`` record
   - supplied ``ingredient_id``
   - supplied ``amount``
   - supplied ``unit_id``
-  - ``mass_in_grams`` computed from supplied ``amount``, ``unit_id``, and ``ingredient_id``
+  - ``mass_in_grams`` computed from supplied ``amount``, ``unit_id``, and potentially (for volume units) ``density_g_per_ml`` of ingredient specified by ``ingredient_id``
+
+- For all ``meal_ingredient`` objects in request and not in DB table, create a new ``meal_ingredient`` record with supplied values.
+
+- Delete all ``meal_ingredient`` records in ``meal_ingredients`` DB table and not in request
 
 Food list
 ^^^^^^^^^
 
-Incoming request looks like
+**Incoming request**
 
 .. code-block:: json
   
