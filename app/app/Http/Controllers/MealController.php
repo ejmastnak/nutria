@@ -15,7 +15,7 @@ class MealController extends Controller
     public function index()
     {
         return Inertia::render('Meals/Index', [
-          'meals' => Meal::all()
+            'meals' => Meal::all()
         ]);
     }
 
@@ -83,7 +83,7 @@ class MealController extends Controller
         // relationships) of each meal ingredient
         $meal->load(['meal_ingredients:meal_id,ingredient_id,amount,unit_id']);
         return Inertia::render('Meals/Edit', [
-          'meal' => $meal
+            'meal' => $meal
         ]);
     }
 
@@ -107,20 +107,47 @@ class MealController extends Controller
             'name' => $request['name'],
         ]);
 
-        // TODO: compute mass_in_grams computed from supplied amount, unit_id,
-        // and potentially (for volume units) density_g_per_ml of ingredient
-        // specified by ingredient_id
+        // Find ID of all MealIngredients already associated with this meal in DB
+        $dbMIs = $meal->meal_ingredients;
+        $dbIDs = array_map(function ($dbMI) { return $dbMI['id']; }, $dbMIs->toArray());
+        // Find ID of all MealIngredients associated with this meal in incoming request
+        $requestMIs = $request->meal_ingredients;
+        $requestIDs = array_map(function ($requestMI) { return $requestMI['id']; }, $requestMIs);
 
-        // Update meal's MealIngredients
-        foreach ($request['meal_ingredients'] as $mi) {
-            $this_mi = MealIngredient::find($mi[$id]);
-            $this_mi->update([
-                'meal_id' => $meal->id,
-                'ingredient_id' => $mi['ingredient_id'],
-                'amount' => $mi['amount'],
-                'unit_id' => $mi['unit_id''],
-                'mass_in_grams' => 0
-            ]);
+        // Delete all MealIngredients currently in DB but not in incoming request
+        foreach ($dbMIs as $dbMI) {
+            if (!in_array($dbMI['id'], $requestIDs)) {
+                $dbMI->delete();
+            }
+        }
+
+        // Create a new MealIngredient for any MealIngredient in request but not in DB
+        foreach ($requestMIs as $requestMI) {
+            if (!in_array($requestMI['id'], $dbIDs)) {
+                MealIngredient::create([
+                    'meal_id' => $meal->id,
+                    'ingredient_id' => $requestMI['ingredient_id'],
+                    'amount' => $requestMI['amount'],
+                    'unit_id' => $requestMI['unit_id''],
+                    'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($requestMI['amount'], $requestMI['unit_id'], $requestMI['ingredient_id'])
+                ]);
+            }
+        }
+
+        // Update any MealIngredient that appear in both DB and incoming
+        // request to reflect the state in request.
+        foreach ($dbMIs as $dbMI) {
+            // Is this dbMI also in requestMIs?
+            $key = array_search($dbMI['id'], $requestIDs);
+            if ($key !== false) {  // if a match was found
+                $dbMI->update([
+                    'meal_id' => $meal->id,
+                    'ingredient_id' => $requestMIs[$key]['ingredient_id'],
+                    'amount' => $requestMIs[$key]['amount'],
+                    'unit_id' => $requestMIs[$key]['unit_id''],
+                    'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($requestMIs[$key]['amount'], $requestMIs[$key]['unit_id'], $requestMIs[$key]['ingredient_id'])
+                ]);
+            }
         }
 
         return Redirect::route('meals.index')->with('message', 'Success! Meal updated successfully.');
