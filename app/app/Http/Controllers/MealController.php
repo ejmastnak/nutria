@@ -46,10 +46,6 @@ class MealController extends Controller
             'name' => $request['name'],
         ]);
 
-        // TODO: compute mass_in_grams computed from supplied amount, unit_id,
-        // and potentially (for volume units) density_g_per_ml of ingredient
-        // specified by ingredient_id
-
         // Create meal's MealIngredients
         foreach ($request['meal_ingredients'] as $mi) {
             MealIngredient::create([
@@ -57,7 +53,7 @@ class MealController extends Controller
                 'ingredient_id' => $mi['ingredient_id'],
                 'amount' => $mi['amount'],
                 'unit_id' => $mi['unit_id''],
-                'mass_in_grams' => 0
+                'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($mi['amount'], $mi['unit_id'], $mi['ingredient_id'])
             ]);
         }
 
