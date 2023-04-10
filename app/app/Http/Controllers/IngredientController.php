@@ -115,12 +115,12 @@ class IngredientController extends Controller
         ]);
 
         // Update ingredient's nutrients
-        foreach ($request['ingredient_nutrients'] as $in) {
-            $this_in = IngredientNutrient::find($in[$id]);
-            $this_in->update([
+        foreach ($request['ingredient_nutrients'] as $ing) {
+            $dbIng = IngredientNutrient::find($ing[$id]);
+            $dbIng->update([
                 'ingredient_id' => $ingredient->id,
-                'nutrient_id' => $in['nutrient_id'],
-                'amount_per_100g' => $in['amount_per_100g'],
+                'nutrient_id' => $ing['nutrient_id'],
+                'amount_per_100g' => $ing['amount_per_100g'],
             ]);
         }
 
