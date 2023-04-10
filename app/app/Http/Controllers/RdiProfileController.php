@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\RdiProfile;
+use App\Models\RdiProfileNutrient;
 use Illuminate\Http\Request;
 
 class RdiProfileController extends Controller
@@ -30,7 +31,30 @@ class RdiProfileController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate request
+        $num_nutrients = Nutrient::count();
+        $request->validate([
+            'name' => ['required', 'min:1', 'max:500'],
+            'rdi_profile_nutrients' => ['required', 'array', 'min:' . $num_nutrients, 'max:' . $num_nutrients,],
+            'rdi_profile_nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'in:nutrients,id'],
+            'rdi_profile_nutrients.*.rdi' => ['required', 'numeric', 'gt:0'],
+        ]);
+
+        // Create RdiProfile
+        $rdiProfile = RdiProfile::create([
+          'name' => $request->name
+        ]);
+
+        // Create RdiProfileNutrients
+        foreach ($request->rdi_profile_nutrients as $rdiPN) {
+            RdiProfileNutrient::create([
+                'rdi_profile_id' => $rdiProfile->id,
+                'nutrient_id' => $rdiPN['nutrient_id'],
+                'rdi' => $rdiPN['rdi']
+            ]);
+        }
+
+        return Redirect::route('rdi-profiles.index')->with('message', 'Success! RDI profile created successfully.');
     }
 
     /**
@@ -66,7 +90,32 @@ class RdiProfileController extends Controller
      */
     public function update(Request $request, RdiProfile $rdiProfile)
     {
-        //
+        // Validate request
+        $num_nutrients = Nutrient::count();
+        $request->validate([
+            'name' => ['required', 'min:1', 'max:500'],
+            'rdi_profile_nutrients' => ['required', 'array', 'max:' . $num_nutrients,],
+            'rdi_profile_nutrients.*.id' => ['required', 'integer', 'in:rdi_profile_nutrients,id'],
+            'rdi_profile_nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'in:nutrients,id'],
+            'rdi_profile_nutrients.*.rdi' => ['required', 'numeric', 'gt:0'],
+        ]);
+
+        // Update RdiProfile
+        $rdiProfile->update([
+          'name' => $request->name
+        ]);
+
+        // Update RdiProfileNutrients
+        foreach ($request->rdi_profile_nutrients as $rdiPN) {
+            $dbRdiPN = RdiProfileNutrient::find($rdiPN[$id]);
+            $dbRdiPN->update([
+                'rdi_profile_id' => $rdiProfile->id,
+                'nutrient_id' => $rdiPN['nutrient_id'],
+                'rdi' => $rdiPN['rdi']
+            ]);
+        }
+
+        return Redirect::route('rdi-profiles.index')->with('message', 'Success! RDI profile updated successfully.');
     }
 
     /**
@@ -76,36 +125,4 @@ class RdiProfileController extends Controller
     {
         //
     }
-
-    /**
-     * Incoming request takes the form
-     *
-     * {
-     *   "name": "Foo",
-     *   "nutrients": [
-     *     {
-     *       "nutrient_id": 0,
-     *       "rdi": 0.0
-     *     }
-     *   ]
-     * }
-     *
-     * Validation checks that:
-     *
-     * - name is a string with sane min and max length.
-     * - nutrients is an array and contains exactly one item for each record in nutrients table
-     * - nutrients.*.nutrient_id is present in nutrients,id
-     * - nutrients.*.rdi is a positive float
-     *      
-     */
-    public function validateStoreOrUpdateRequest(Request $request) {
-        $num_nutrients = Nutrient::count();
-        $request->validate([
-            'name' => ['required', 'min:1', 'max:500'],
-            'nutrients' => ['required', 'array', 'min:' . $num_nutrients, 'max:' . $num_nutrients,],
-            'nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'in:nutrients,id'],
-            'nutrients.*.rdi' => ['required', 'numeric', 'gt:0'],
-        ]);
-    }
-
 }
