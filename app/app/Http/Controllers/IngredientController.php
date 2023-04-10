@@ -119,8 +119,8 @@ class IngredientController extends Controller
             $this_in = IngredientNutrient::find($in[$id]);
             $this_in->update([
                 'ingredient_id' => $ingredient->id,
-                'nutrient_id' => $this_in['nutrient_id'],
-                'amount_per_100g' => $this_in['amount_per_100g'],
+                'nutrient_id' => $in['nutrient_id'],
+                'amount_per_100g' => $in['amount_per_100g'],
             ]);
         }
 
