@@ -110,7 +110,7 @@ Create or Update Meal
 
 - ``name`` is a string with sane min and max length.
 - ``meal_ingredients`` is a required array with at least one item (and fewer than e.g. 1000 items)
-- ``meal_ingredients.*.id`` is either negative (for create) or a positive integer in ``meal_ingredients,id``
+- ``meal_ingredients.*.id`` is either ignored (for create) or a positive integer in ``meal_ingredients,id``
 - ``meal_ingredients.*.ingredient_id`` is a required integer present in ``ingredients,id``
 - ``meal_ingredients.*.amount`` is a required positive float
 - ``meal_ingredients.*.unit_id`` is a required integer present in ``units,id``
@@ -152,6 +152,7 @@ Food list
     "name": "Foo",
     "food_list_ingredients": [
       {
+        "id": 0,
         "ingredient_id": 0,
         "amount": 0.0,
         "unit_id": 0
@@ -159,6 +160,7 @@ Food list
     ],
     "food_list_meals": [
       {
+        "id": 0,
         "meal_id": 0,
         "amount": 0.0,
         "unit_id": 0
@@ -170,10 +172,12 @@ Food list
 
 - ``name`` is a string with sane min and max length.
 - ``food_list_ingredients`` is an array with at least one item *if* ``food_list_meals`` is empty (and e.g. fewer than 1000 items)
+- ``food_list_ingredients.*.id`` is ignored for create and an integer present in ``food_list_ingredients,id`` for update
 - ``food_list_ingredients.*.ingredient_id`` is a required integer present in ``ingredients,id``
 - ``food_list_ingredients.*.amount`` is a positive float
 - ``food_list_ingredients.*.unit_id`` i a required integer present in ``units,id``
 - ``food_list_meals`` is an array with at least one item *if* ``food_list_ingredients`` is empty (and e.g. fewer than 1000 items)
+- ``food_list_meals.*.id`` is ignored for create and an integer present in ``food_list_meals,id`` for update
 - ``food_list_meals.*.meal_id`` is a required integer present in ``meals,id``
 - ``food_list_meals.*.amount`` is a positive float
 - ``food_list_meals.*.unit_id`` i a required integer present in ``units,id``
@@ -198,6 +202,14 @@ Food list
   - supplied ``amount``
   - supplied ``unit_id``
   - ``mass_in_grams`` computed from supplied ``amount``, ``unit_id``
+
+**Update**
+
+- Update ``name`` of existing ``food_list`` record
+
+- **Ingredients:** delete/create/update protocol using existing ``foodList->food_list_ingredients`` in database and supplied ``food_list_ingredients`` array.
+
+- **Meals:** delete/create/update protocol using existing ``foodList->food_list_meals`` in database and supplied ``food_list_meals`` array.
 
 RDI profile
 ^^^^^^^^^^^
