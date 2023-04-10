@@ -73,7 +73,7 @@ Update Ingredient
 - ``name`` as for create
 - ``category_id`` as for create
 - ``density_g_per_ml`` as for create
-- ``ingredient_nutrients`` is a optional array; if present, its max length is ``Nutrients::count()``.
+- ``ingredient_nutrients`` is a potentially empty array with max length equal to ``Nutrients::count()``.
 - ``ingredient_nutrients.*.id`` is a required integer present in ``ingredient_nutrients,id``
 - ``ingredient_nutrients.*.nutrient_id`` as for create
 - ``ingredient_nutrients.*.amount_per_100g`` as for create
@@ -211,8 +211,8 @@ Food list
 
 - **Meals:** delete/create/update protocol using existing ``foodList->food_list_meals`` in database and supplied ``food_list_meals`` array.
 
-RDI profile
-^^^^^^^^^^^
+Create RDI profile
+^^^^^^^^^^^^^^^^^^
 
 Incoming request looks like
 
@@ -220,7 +220,7 @@ Incoming request looks like
   
   {
     "name": "Foo",
-    "nutrients": [
+    "rdi_profile_nutrients": [
       {
         "nutrient_id": 0,
         "rdi": 0.0
@@ -231,18 +231,51 @@ Incoming request looks like
 **Validate**
 
 - ``name`` is a string with sane min and max length.
-- ``nutrients`` is an array and contains exactly one item for each record in ``nutrients`` table
-- ``nutrients.*.nutrient_id`` is present in ``nutrients,id``
-- ``nutrients.*.rdi`` is a positive float
+- ``rdi_profile_nutrients`` is an array and contains exactly one item for each record in ``nutrients`` table
+- ``rdi_profile_nutrients.*.nutrient_id`` is a required integer present in ``nutrients,id``
+- ``rdi_profile_nutrients.*.rdi`` is a positive float
 
 **Create**
 
 - ``rdi_profile`` record with supplied ``name``
-- For entry in ``nutrients``, create ``rdi_profile_nutrient`` record with
+- For each entry in ``rdi_profile_nutrients``, create ``rdi_profile_nutrient`` record with
 
   - ``rdi_profile_id`` of ``rdi_profile`` record
-  - supplied ``nutrient_id`` value (validate that ``nutrient_id`` exists in ``nutrients,id``)
-  - supplied ``rdi`` value (should be a positive float)
+  - supplied ``nutrient_id`` value
+  - supplied ``rdi`` value
+
+Update RDI profile
+^^^^^^^^^^^^^^^^^^
+
+Incoming request looks like
+
+.. code-block:: json
+  
+  {
+    "name": "Foo",
+    "rdi_profile_nutrients": [
+      {
+        "id": 0,
+        "nutrient_id": 0,
+        "rdi": 0.0
+      }
+    ]
+  }
+
+**Validate**
+
+- ``name`` is a string with sane min and max length.
+- ``rdi_profile_nutrients`` is a potentially empty array with max length equal to ``Nutrients::count()``.
+- ``rdi_profile_nutrients.*.nutrient_id`` is a required integer present in ``nutrients,id``
+- ``rdi_profile_nutrients.*.rdi`` is a positive float
+
+**Update**
+
+- ``rdi_profile`` record with supplied ``name``
+- For each entry in ``rdi_profile_nutrients``, look up corresponding ``rdi_profile_nutrient`` record based on ``rdi_profile_nutrients.*.rdi``, then update:
+
+  - ``nutrient_id`` with supplied ``nutrient_id``
+  - ``rdi`` with supplied ``rdi``
 
 Computing mass in grams for ingredients
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

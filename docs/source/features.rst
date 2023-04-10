@@ -146,7 +146,7 @@ A request would look something like
 
   {
     "name": "Foo",
-    "nutrients": [
+    "rdi_profile_nutrients": [
       {
         "nutrient_id": 0,
         "rdi": 0.0
