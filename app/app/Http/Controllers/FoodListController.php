@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\FoodList;
+use App\Models\FoodListIngredient;
+use App\Models\FoodListMeal;
 use Illuminate\Http\Request;
 use Inertia\Intertia;
 
@@ -31,7 +33,69 @@ class FoodListController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate request
+        $request->validate([
+            'name' => ['required', 'min:1', 'max:500'],
+            'food_list_ingredients' => [
+                'required',
+                'array',
+                function ($attribute, $value, $fail) use($request) {
+                    // food_list_ingredients must contain at least one element
+                    // if food_list_meals is empty
+                    if (count($request['food_list_ingredients']) == 0 && count($request['food_list_meals']) == 0) {
+                        $fail('Include at least one ingredient or meal.');
+                    }
+                },
+                'max:100'
+            ],
+            'food_list_ingredients.*.ingredient_id' => ['required', 'integer', 'in:ingredients,id'],
+            'food_list_ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
+            'food_list_ingredients.*.unit_id' => ['required', 'integer', 'in:units,id'],
+            'food_list_meals' => [
+                'required',
+                'array',
+                function ($attribute, $value, $fail) use($request) {
+                    // food_list_meals must contain at least one element if
+                    // food_list_ingredients is empty
+                    if (count($request['food_list_meals']) == 0 && count($request['food_list_ingredients']) == 0) {
+                        $fail('Include at least one meal or ingredient.');
+                    }
+                },
+                'max:100'
+            ],
+            'food_list_meals.*.meal_id' => ['required', 'integer', 'in:meals,id'],
+            'food_list_meals.*.amount' => ['required', 'numeric', 'gt:0'],
+            'food_list_meals.*.unit_id' => ['required', 'integer', 'in:units,id'],
+        ]);
+
+        // Create food list
+        $foodList = FoodList::create([
+            'name' => $request['name'],
+        ]);
+
+        // Create FoodListIngredients
+        foreach ($request['food_list_ingredients'] as $fli) {
+            FoodListIngredient::create([
+                'food_list_id' => $foodList->id,
+                'ingredient_id' => $fli['ingredient_id'],
+                'amount' => $fli['amount'],
+                'unit_id' => $fli['unit_id'],
+                'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($fli['amount'], $fli['unit_id'], $fli['ingredient_id'])
+            ])
+        }
+
+        // Create FoodListMeals
+        foreach ($request['food_list_meals'] as $flm) {
+            FoodListMeal::create([
+                'food_list_id' => $foodList->id,
+                'meal_id' => $flm['meal_id'],
+                'amount' => $flm['amount'],
+                'unit_id' => $flm['unit_id'],
+                'mass_in_grams' => UnitConversionController::to_grams($flm['amount'], $flm['unit_id'])
+            ])
+        }
+
+        return Redirect::route('food-lists.index')->with('message', 'Success! Food list created successfully.');
     }
 
     /**
@@ -81,54 +145,7 @@ class FoodListController extends Controller
      */
     public function update(Request $request, FoodList $foodList)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(FoodList $foodList)
-    {
-        //
-    }
-
-    /**
-     * Incoming request takes the form
-     *
-     * {
-     *   "name": "Foo",
-     *   "food_list_ingredients": [
-     *     {
-     *       "ingredient_id": 0,
-     *       "amount": 0.0,
-     *       "unit_id": 0
-     *     }
-     *   ],
-     *   "food_list_meals": [
-     *     {
-     *       "meal_id": 0,
-     *       "amount": 0.0,
-     *       "unit_id": 0
-     *     }
-     *   ]
-     * }
-     *
-     * Validation checks that:
-     *
-     * - name is a string with sane min and max length.
-     * - food_list_ingredients is an array with at least one item if food_list_meals is empty (and e.g. fewer than 1000 items)
-     * - food_list_ingredients.*.ingredient_id is a required integer present in ingredients,id
-     * - food_list_ingredients.*.amount is a positive float
-     * - food_list_ingredients.*.unit_id i a required integer present in units,id
-     * - food_list_meals is an array with at least one item if food_list_ingredients is empty (and e.g. fewer than 1000 items)
-     * - food_list_meals.*.meal_id is a required integer present in meals,id
-     * - food_list_meals.*.amount is a positive float
-     * - food_list_meals.*.unit_id i a required integer present in units,id
-
-     *      
-     */
-    public function validateStoreOrUpdateRequest(Request $request) {
-        $num_nutrients = Nutrient::count();
+        // Validate request
         $request->validate([
             'name' => ['required', 'min:1', 'max:500'],
             'food_list_ingredients' => [
@@ -138,11 +155,12 @@ class FoodListController extends Controller
                     // food_list_ingredients must contain at least one element
                     // if food_list_meals is empty
                     if (count($request['food_list_ingredients']) == 0 && count($request['food_list_meals']) == 0) {
-                        $fail('Include at least one ingredient.');
+                        $fail('Include at least one ingredient or meal.');
                     }
                 },
-                'max:500'
+                'max:100'
             ],
+            'food_list_ingredients.*.id' => ['required', 'integer', 'in:food_list_ingredients,id'],
             'food_list_ingredients.*.ingredient_id' => ['required', 'integer', 'in:ingredients,id'],
             'food_list_ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
             'food_list_ingredients.*.unit_id' => ['required', 'integer', 'in:units,id'],
@@ -153,15 +171,125 @@ class FoodListController extends Controller
                     // food_list_meals must contain at least one element if
                     // food_list_ingredients is empty
                     if (count($request['food_list_meals']) == 0 && count($request['food_list_ingredients']) == 0) {
-                        $fail('Include at least one meal.');
+                        $fail('Include at least one meal or ingredient.');
                     }
                 },
-                'max:500'
+                'max:100'
             ],
+            'food_list_meals.*.id' => ['required', 'integer', 'in:food_list_meals,id'],
             'food_list_meals.*.meal_id' => ['required', 'integer', 'in:meals,id'],
             'food_list_meals.*.amount' => ['required', 'numeric', 'gt:0'],
             'food_list_meals.*.unit_id' => ['required', 'integer', 'in:units,id'],
         ]);
+
+        // Update FoodList
+        $foodList->update([
+            'name' => $request['name'],
+        ]);
+
+        // ------------------------------------------------------------------ //
+        // Update FoodListIngredients
+        // ------------------------------------------------------------------ //
+        // Find ID of all FoodListIngredients already associated with this food list in DB
+        $dbFLIs = $foodList->food_list_ingredients;
+        $dbFLIIDS = array_map(function ($dbFLI) { return $dbFLI['id']; }, $dbFLIs->toArray());
+        // Find ID of all FoodListIngredients associated with this food list in incoming request
+        $requestFLIs = $request->food_list_ingredients;
+        $requestFLIIDs = array_map(function ($requestFLI) { return $requestFLI['id']; }, $requestFLIs);
+
+        // Delete all FoodListIngredients currently in DB but not in incoming request
+        foreach ($dbFLIs as $dbFLI) {
+            if (!in_array($dbFLI['id'], $requestFLIIDs)) {
+                $dbFLI->delete();
+            }
+        }
+
+        // Create a new FoodListIngredient for any FoodListIngredient in
+        // request but not in DB
+        foreach ($requestFLIs as $requestFLI) {
+            if (!in_array($requestFLI['id'], $dbFLIIDS)) {
+                FoodListIngredient::create([
+                    'food_list_id' => $foodList->id,
+                    'ingredient_id' => $requestFLI['ingredient_id'],
+                    'amount' => $requestFLI['amount'],
+                    'unit_id' => $requestFLI['unit_id''],
+                    'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($requestFLI['amount'], $requestFLI['unit_id'], $requestFLI['ingredient_id'])
+                ]);
+            }
+        }
+
+        // Update any FoodListIngredient that appear in both DB and incoming
+        // request to reflect the state in request.
+        foreach ($dbFLIs as $dbFLI) {
+            // Is this dbFLI also in requestFLIs?
+            $key = array_search($dbFLI['id'], $requestFLIIDs);
+            if ($key !== false) {  // if a match was found
+                $dbFLI->update([
+                    'food_list_id' => $foodList->id,
+                    'ingredient_id' => $requestFLIs[$key]['ingredient_id'],
+                    'amount' => $requestFLIs[$key]['amount'],
+                    'unit_id' => $requestFLIs[$key]['unit_id''],
+                    'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($requestFLIs[$key]['amount'], $requestFLIs[$key]['unit_id'], $requestFLIs[$key]['ingredient_id'])
+                ]);
+            }
+        }
+
+        // ------------------------------------------------------------------ //
+        // Update FoodListMeals
+        // ------------------------------------------------------------------ //
+        // Find ID of all FoodListMeals already associated with this food list in DB
+        $dbFLMs = $foodList->food_list_meals;
+        $dbFLMIDS = array_map(function ($dbFLM) { return $dbFLM['id']; }, $dbFLMs->toArray());
+        // Find ID of all FoodListMeals associated with this food list in
+        // incoming request
+        $requestFLMs = $request->food_list_meals;
+        $requestFLMIDs = array_map(function ($requestFLM) { return $requestFLM['id']; }, $requestFLMs);
+
+        // Delete all FoodListMeals currently in DB but not in incoming request
+        foreach ($dbFLMs as $dbFLM) {
+            if (!in_array($dbFLM['id'], $requestFLMIDs)) {
+                $dbFLM->delete();
+            }
+        }
+
+        // Create a new FoodListMeal for any FoodListMeals in request but not
+        // in DB
+        foreach ($requestFLMs as $requestFLM) {
+            if (!in_array($requestFLM['id'], $dbFLMIDS)) {
+                FoodListMeal::create([
+                    'food_list_id' => $foodList->id,
+                    'meal_id' => $requestFLM['meal_id'],
+                    'amount' => $requestFLM['amount'],
+                    'unit_id' => $requestFLM['unit_id''],
+                    'mass_in_grams' => UnitConversionController::to_grams($requestFLM['amount'], $requestFLM['unit_id'])
+                ]);
+            }
+        }
+
+        // Update any FoodListMeal that appears in both DB and incoming request
+        // to reflect the state in request.
+        foreach ($dbFLMs as $dbFLM) {
+            // Is this dbFLM also in requestFLMs?
+            $key = array_search($dbFLM['id'], $requestFLMIDs);
+            if ($key !== false) {  // if a match was found
+                $dbFLM->update([
+                    'food_list_id' => $foodList->id,
+                    'meal_id' => $requestFLMs[$key]['meal_id'],
+                    'amount' => $requestFLMs[$key]['amount'],
+                    'unit_id' => $requestFLMs[$key]['unit_id''],
+                    'mass_in_grams' => UnitConversionController::to_grams($requestFLMs[$key]['amount'], $requestFLMs[$key]['unit_id'])
+                ]);
+            }
+        }
+
+        return Redirect::route('food-lists.index')->with('message', 'Success! Food list updated successfully.');
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(FoodList $foodList)
+    {
+        //
+    }
 }
