@@ -1,7 +1,7 @@
 -- Display amount and PDV for nutrients in a given meal
 
 \timing on
-\set meal_id 3
+\set meal_id 1
 \set rdi_profile_id 1
 
 -- Print meal name
