@@ -42,7 +42,7 @@ class FoodListController extends Controller
                 function ($attribute, $value, $fail) use($request) {
                     // food_list_ingredients must contain at least one element
                     // if food_list_meals is empty
-                    if (count($request['food_list_ingredients']) == 0 && count($request['food_list_meals']) == 0) {
+                    if (count($request->food_list_ingredients) == 0 && count($request->food_list_meals) == 0) {
                         $fail('Include at least one ingredient or meal.');
                     }
                 },
@@ -57,7 +57,7 @@ class FoodListController extends Controller
                 function ($attribute, $value, $fail) use($request) {
                     // food_list_meals must contain at least one element if
                     // food_list_ingredients is empty
-                    if (count($request['food_list_meals']) == 0 && count($request['food_list_ingredients']) == 0) {
+                    if (count($request->food_list_meals) == 0 && count($request->food_list_ingredients) == 0) {
                         $fail('Include at least one meal or ingredient.');
                     }
                 },
@@ -70,11 +70,11 @@ class FoodListController extends Controller
 
         // Create food list
         $foodList = FoodList::create([
-            'name' => $request['name'],
+            'name' => $request->name,
         ]);
 
         // Create FoodListIngredients
-        foreach ($request['food_list_ingredients'] as $fli) {
+        foreach ($request->food_list_ingredients as $fli) {
             FoodListIngredient::create([
                 'food_list_id' => $foodList->id,
                 'ingredient_id' => $fli['ingredient_id'],
@@ -85,7 +85,7 @@ class FoodListController extends Controller
         }
 
         // Create FoodListMeals
-        foreach ($request['food_list_meals'] as $flm) {
+        foreach ($request->food_list_meals as $flm) {
             FoodListMeal::create([
                 'food_list_id' => $foodList->id,
                 'meal_id' => $flm['meal_id'],
@@ -154,7 +154,7 @@ class FoodListController extends Controller
                 function ($attribute, $value, $fail) use($request) {
                     // food_list_ingredients must contain at least one element
                     // if food_list_meals is empty
-                    if (count($request['food_list_ingredients']) == 0 && count($request['food_list_meals']) == 0) {
+                    if (count($request->food_list_ingredients) == 0 && count($request->food_list_meals) == 0) {
                         $fail('Include at least one ingredient or meal.');
                     }
                 },
@@ -170,7 +170,7 @@ class FoodListController extends Controller
                 function ($attribute, $value, $fail) use($request) {
                     // food_list_meals must contain at least one element if
                     // food_list_ingredients is empty
-                    if (count($request['food_list_meals']) == 0 && count($request['food_list_ingredients']) == 0) {
+                    if (count($request->food_list_meals) == 0 && count($request->food_list_ingredients) == 0) {
                         $fail('Include at least one meal or ingredient.');
                     }
                 },
@@ -184,7 +184,7 @@ class FoodListController extends Controller
 
         // Update FoodList
         $foodList->update([
-            'name' => $request['name'],
+            'name' => $request->name,
         ]);
 
         // ------------------------------------------------------------------ //

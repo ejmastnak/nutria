@@ -47,14 +47,14 @@ class IngredientController extends Controller
 
         // Create ingredient
         $ingredient = Ingredient::create([
-            'name' => $request['name'],
-            'fdc_id' => $request['fdc_id'],
-            'ingredient_category_id' => $request['ingredient_category_id'],
-            'density_g_per_ml' => $request['density_g_per_ml'],
+            'name' => $request->name,
+            'fdc_id' => $request->fdc_id,
+            'ingredient_category_id' => $request->ingredient_category_id,
+            'density_g_per_ml' => $request->density_g_per_ml,
         ]);
 
         // Create ingredient's nutrients
-        foreach ($request['ingredient_nutrients'] as $in) {
+        foreach ($request->ingredient_nutrients as $in) {
             IngredientNutrient::create([
                 'ingredient_id' => $ingredient->id,
                 'nutrient_id' => $in['nutrient_id'],
@@ -108,14 +108,14 @@ class IngredientController extends Controller
 
         // Update ingredient
         $ingredient->update([
-            'name' => $request['name'],
-            'fdc_id' => $request['fdc_id'],
-            'ingredient_category_id' => $request['ingredient_category_id'],
-            'density_g_per_ml' => $request['density_g_per_ml'],
+            'name' => $request->name,
+            'fdc_id' => $request->fdc_id,
+            'ingredient_category_id' => $request->ingredient_category_id,
+            'density_g_per_ml' => $request->density_g_per_ml,
         ]);
 
         // Update ingredient's nutrients
-        foreach ($request['ingredient_nutrients'] as $ing) {
+        foreach ($request->ingredient_nutrients as $ing) {
             $dbIng = IngredientNutrient::find($ing[$id]);
             $dbIng->update([
                 'ingredient_id' => $ingredient->id,

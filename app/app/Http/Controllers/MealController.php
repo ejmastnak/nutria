@@ -43,11 +43,11 @@ class MealController extends Controller
 
         // Create meal
         $meal = Meal::create([
-            'name' => $request['name'],
+            'name' => $request->name,
         ]);
 
         // Create meal's MealIngredients
-        foreach ($request['meal_ingredients'] as $mi) {
+        foreach ($request->meal_ingredients as $mi) {
             MealIngredient::create([
                 'meal_id' => $meal->id,
                 'ingredient_id' => $mi['ingredient_id'],
@@ -104,7 +104,7 @@ class MealController extends Controller
 
         // Update meal
         $meal->update([
-            'name' => $request['name'],
+            'name' => $request->name,
         ]);
 
         // Find ID of all MealIngredients already associated with this meal in DB
