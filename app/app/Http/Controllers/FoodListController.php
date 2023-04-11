@@ -91,7 +91,7 @@ class FoodListController extends Controller
                 'meal_id' => $flm['meal_id'],
                 'amount' => $flm['amount'],
                 'unit_id' => $flm['unit_id'],
-                'mass_in_grams' => UnitConversionController::to_grams($flm['amount'], $flm['unit_id'])
+                'mass_in_grams' => UnitConversionController::mass_to_grams($flm['amount'], $flm['unit_id'])
             ])
         }
 
@@ -261,7 +261,7 @@ class FoodListController extends Controller
                     'meal_id' => $requestFLM['meal_id'],
                     'amount' => $requestFLM['amount'],
                     'unit_id' => $requestFLM['unit_id''],
-                    'mass_in_grams' => UnitConversionController::to_grams($requestFLM['amount'], $requestFLM['unit_id'])
+                    'mass_in_grams' => UnitConversionController::mass_to_grams($requestFLM['amount'], $requestFLM['unit_id'])
                 ]);
             }
         }
@@ -277,7 +277,7 @@ class FoodListController extends Controller
                     'meal_id' => $requestFLMs[$key]['meal_id'],
                     'amount' => $requestFLMs[$key]['amount'],
                     'unit_id' => $requestFLMs[$key]['unit_id''],
-                    'mass_in_grams' => UnitConversionController::to_grams($requestFLMs[$key]['amount'], $requestFLMs[$key]['unit_id'])
+                    'mass_in_grams' => UnitConversionController::mass_to_grams($requestFLMs[$key]['amount'], $requestFLMs[$key]['unit_id'])
                 ]);
             }
         }
