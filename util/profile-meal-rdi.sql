@@ -5,13 +5,23 @@
 \set rdi_profile_id 1
 
 -- Print meal name
-select name from meals where id = :'meal_id';
+select id, name from meals where id = :'meal_id';
+
+-- Pring all ingredients in meals
+select
+  ingredients.name,
+  meal_ingredients.mass_in_grams
+from meal_ingredients 
+inner join ingredients
+  on meal_ingredients.ingredient_id
+  = ingredients.id
+where meal_ingredients.meal_id = :'meal_id';
 
 select
   nutrients.name as nutrient,
-  round(sum(meal_ingredients.mass_in_grams * ingredient_nutrients.amount_per_100g / 100), 2) as amount,
+  round(sum(ingredient_nutrients.amount_per_100g * meal_ingredients.mass_in_grams / 100), 2) as amount,
   units.name as unit,
-  round(sum(meal_ingredients.mass_in_grams * ingredient_nutrients.amount_per_100g / nullif(rdi_profile_nutrients.rdi, 0)), 1)  || '%' as pdv
+  round(sum(ingredient_nutrients.amount_per_100g * meal_ingredients.mass_in_grams / nullif(rdi_profile_nutrients.rdi, 0)), 1)  || '%' as pdv
 from ingredient_nutrients
 inner join meals
   on meals.id
