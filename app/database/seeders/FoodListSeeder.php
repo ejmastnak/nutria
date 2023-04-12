@@ -27,25 +27,26 @@ class FoodListSeeder extends Seeder
             $food_list = json_decode($json, true);
             $food_list_id = FoodList::create(['name' => $food_list['name']])->id;
 
-            foreach($food_list['food_list_items'] as $item) {
-                if($item['ingredient_id']) {
-                    FoodListIngredient::create([
-                        'food_list_id' => $food_list_id,
-                        'ingredient_id' => $item['ingredient_id'],
-                        'amount' => $item['mass_in_grams'],
-                        'unit_id' => $gram_id,
-                        'mass_in_grams' => $item['mass_in_grams'],
-                    ]);
-                } else if($item['meal_id']) {
-                    FoodListMeal::create([
-                        'food_list_id' => $food_list_id,
-                        'meal_id' => $item['meal_id'],
-                        'amount' => $item['mass_in_grams'],
-                        'unit_id' => $gram_id,
-                        'mass_in_grams' => $item['mass_in_grams'],
-                    ]);
-                }
+            foreach($food_list['food_list_ingredients'] as $fli) {
+                FoodListIngredient::create([
+                    'food_list_id' => $food_list_id,
+                    'ingredient_id' => $fli['ingredient_id'],
+                    'amount' => $fli['mass_in_grams'],
+                    'unit_id' => $gram_id,
+                    'mass_in_grams' => $fli['mass_in_grams'],
+                ]);
             }
+
+            foreach($food_list['food_list_meals'] as $flm) {
+                FoodListMeal::create([
+                    'food_list_id' => $food_list_id,
+                    'meal_id' => $flm['meal_id'],
+                    'amount' => $flm['mass_in_grams'],
+                    'unit_id' => $gram_id,
+                    'mass_in_grams' => $flm['mass_in_grams'],
+                ]);
+            }
+
         }
     }
 }

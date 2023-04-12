@@ -1,13 +1,14 @@
 {
   "name": "MealsOnly",
-  "food_list_items": [
+  "food_list_ingredients": [],
+  "food_list_meals": [
     {
-      "ingredient_id": null,
+      "name": "Banana meal",
       "meal_id": 1,
       "mass_in_grams": 50
     },
     {
-      "ingredient_id": null,
+      "name": "Banana meal",
       "meal_id": 1,
       "mass_in_grams": 50
     }
