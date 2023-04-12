@@ -1,13 +1,13 @@
 {
   "name": "Banana meal",
-  "ingredients": [
+  "meal_ingredients": [
     {
-      "ingredient": "Bananas, raw",
+      "name": "Bananas, raw",
       "ingredient_id": 6435,
       "mass_in_grams": 50
     },
     {
-      "ingredient": "Bananas, raw",
+      "name": "Bananas, raw",
       "ingredient_id": 6435,
       "mass_in_grams": 50
     }

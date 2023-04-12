@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('meals', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->decimal('mass_in_grams', 10, 3);
         });
     }
 

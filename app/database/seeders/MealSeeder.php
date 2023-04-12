@@ -23,17 +23,25 @@ class MealSeeder extends Seeder
 
         foreach(glob(__DIR__ . '/meals/*.json') as $file) {
             $json = file_get_contents($file);
-            $meal = json_decode($json, true);
-            $meal_id = Meal::create(['name' => $meal['name']])->id;
-            foreach($meal['ingredients'] as $ingredient) {
+            $meal_data = json_decode($json, true);
+            $meal_mass_in_grams = 0;
+            $meal = Meal::create([
+                'name' => $meal_data['name'],
+                'mass_in_grams' => $meal_mass_in_grams
+            ]);
+            foreach($meal_data['meal_ingredients'] as $mi) {
                 MealIngredient::create([
-                    'meal_id' => $meal_id,
-                    'ingredient_id' => $ingredient['ingredient_id'],
-                    'amount' => $ingredient['mass_in_grams'],
+                    'meal_id' => $meal->id,
+                    'ingredient_id' => $mi['ingredient_id'],
+                    'amount' => $mi['mass_in_grams'],
                     'unit_id' => $gram_id,
-                    'mass_in_grams' => $ingredient['mass_in_grams'],
+                    'mass_in_grams' => $mi['mass_in_grams'],
                 ]);
+                $meal_mass_in_grams += $mi['mass_in_grams'];
             }
+            $meal->update([
+              'mass_in_grams' => $meal_mass_in_grams
+            ]);
         }
     }
 }

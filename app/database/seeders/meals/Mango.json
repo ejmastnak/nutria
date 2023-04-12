@@ -1,13 +1,13 @@
 {
   "name": "Mango meal",
-  "ingredients": [
+  "meal_ingredients": [
     {
-      "ingredient": "Mangos, raw",
+      "name": "Mangos, raw",
       "ingredient_id": 2399,
       "mass_in_grams": 50
     },
     {
-      "ingredient": "Mangos, raw",
+      "name": "Mangos, raw",
       "ingredient_id": 2399,
       "mass_in_grams": 50
     }
