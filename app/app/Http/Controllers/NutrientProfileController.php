@@ -23,9 +23,9 @@ class NutrientProfileController extends Controller
         $query = "
         select
           nutrients.name as nutrient,
-        round((:ingredient_mass_in_g * ingredient_nutrients.amount_per_100g / 100), 2) as amount,
+          round(ingredient_nutrients.amount_per_100g, 2) as amount,
           units.name as unit,
-        round((:ingredient_mass_in_g * ingredient_nutrients.amount_per_100g / nullif(rdi_profile_nutrients.rdi, 0)), 1) as pdv
+          round((ingredient_nutrients.amount_per_100g / nullif(rdi_profile_nutrients.rdi, 0)) * 100, 1) || '%' as pdv
         from ingredient_nutrients
         inner join nutrients
           on nutrients.id
@@ -43,7 +43,6 @@ class NutrientProfileController extends Controller
         ";
 
         $result = DB::select($query, [
-            'ingredient_mass_in_g' => $ingredient_mass_in_grams,
             'rdi_profile_id' => $rdiProfileID,
             'ingredient_id' => $ingredient->id
         ]);
@@ -52,8 +51,17 @@ class NutrientProfileController extends Controller
 
     }
 
-    public static function profileMeal(Meal $meal) {
-        return;
+    public static function profileMeal(Meal $meal, $rdiProfileID) {
+        if (Meal::where('id', $meal->id)->doesntExist()) return [];
+        if (RdiProfile::where('id', $rdiProfileID)->doesntExist()) return [];
+
+        $query = " ";
+
+        $result = DB::select($query, [
+            'rdi_profile_id' => $rdiProfileID,
+        ]);
+
+        return $result;
     }
 
     public static function profileFoodList(FoodList $foodList) {

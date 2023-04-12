@@ -42,20 +42,26 @@ class MealController extends Controller
         ]);
 
         // Create meal
+        $meal_mass_in_grams = 0;
         $meal = Meal::create([
             'name' => $request->name,
+            'mass_in_grams' => $meal_mass_in_grams
         ]);
 
         // Create meal's MealIngredients
-        foreach ($request->meal_ingredients as $mi) {
-            MealIngredient::create([
+        foreach ($request->meal_ingredients as $mi_data) {
+            $mi = MealIngredient::create([
                 'meal_id' => $meal->id,
-                'ingredient_id' => $mi['ingredient_id'],
-                'amount' => $mi['amount'],
-                'unit_id' => $mi['unit_id''],
-                'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($mi['amount'], $mi['unit_id'], $mi['ingredient_id'])
+                'ingredient_id' => $mi_data['ingredient_id'],
+                'amount' => $mi_data['amount'],
+                'unit_id' => $mi_data['unit_id'],
+                'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($mi_data['amount'], $mi_data['unit_id'], $mi_data['ingredient_id'])
             ]);
+            $meal_mass_in_grams += $mi->mass_in_grams;
         }
+        $meal->update([
+          'mass_in_grams' => $meal_mass_in_grams
+        ]);
 
         return Redirect::route('meals.index')->with('message', 'Success! Meal created successfully.');
     }
@@ -102,10 +108,8 @@ class MealController extends Controller
             'meal_ingredients.*.unit_id' => ['required', 'integer', 'in:units,id'],
         ]);
 
-        // Update meal
-        $meal->update([
-            'name' => $request->name,
-        ]);
+        // Keep a running sum of constituent MealIngredient mass
+        $meal_mass_in_grams = 0;
 
         // Find ID of all MealIngredients already associated with this meal in DB
         $dbMIs = $meal->meal_ingredients;
@@ -124,13 +128,14 @@ class MealController extends Controller
         // Create a new MealIngredient for any MealIngredient in request but not in DB
         foreach ($requestMIs as $requestMI) {
             if (!in_array($requestMI['id'], $dbIDs)) {
-                MealIngredient::create([
+                $mi = MealIngredient::create([
                     'meal_id' => $meal->id,
                     'ingredient_id' => $requestMI['ingredient_id'],
                     'amount' => $requestMI['amount'],
                     'unit_id' => $requestMI['unit_id''],
                     'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($requestMI['amount'], $requestMI['unit_id'], $requestMI['ingredient_id'])
                 ]);
+                $meal_mass_in_grams += $mi->mass_in_grams;
             }
         }
 
@@ -147,8 +152,15 @@ class MealController extends Controller
                     'unit_id' => $requestMIs[$key]['unit_id''],
                     'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($requestMIs[$key]['amount'], $requestMIs[$key]['unit_id'], $requestMIs[$key]['ingredient_id'])
                 ]);
+                $meal_mass_in_grams += $dbMI->mass_in_grams;
             }
         }
+
+        // Update meal
+        $meal->update([
+            'name' => $request->name,
+            'mass_in_grams' => $meal_mass_in_grams,
+        ]);
 
         return Redirect::route('meals.index')->with('message', 'Success! Meal updated successfully.');
     }
