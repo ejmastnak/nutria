@@ -5,9 +5,9 @@ Some notes on computing nutrient profiles.
 
 Basic API is a ``NutrientProfileController`` controller supporting the functions
 
-- ``profileIngredient(Ingredient $ingredient, $mass_in_grams = 100)``
-- ``profileMeal(Meal) $meal)``
-- ``profileFoodList(FoodList) $foodList)``
+- ``profileIngredient($ingredientID, $rdiProfileID)``
+- ``profileMeal($mealID, $rdiProfileID)``
+- ``profileFoodList($foodListID, $rdiProfileID)``
 
 Each function returns an array of arrays with the structure
 
@@ -74,6 +74,14 @@ Just scale nutrient mass density per gram (``ingredient_nutrients.amount_per_100
   -- For arbitrary quantity of ingredient
   select round(((ingredient_nutrients.amount_per_100g / 100) * :'ingredient_mass_in_g'), 2) as amount
 
+**Testing in Laravel Tinker**
+
+.. code-block:: php
+
+  <?php
+  $i = App\Models\Ingredient::find(6435);
+  $result = App\Http\Controllers\NutrientProfileController::profileIngredient($i->id, 1);
+
 .. _profile-meal:
 
 Profile Meal
@@ -124,6 +132,15 @@ Just scale by this meal's mass in grams (``:'this_meal_mass_in_grams'``) relativ
   select round(sum((ingredient_nutrients.amount_per_100g / 100) * meal_ingredients.mass_in_grams * :'this_meal_mass_in_grams' / meals.mass_in_grams), 2) as amount,
 
 And you'd have to throw in a ``inner join meals on meals.id = :'meal_id'`` to get access to ``meals.mass_in_grams``.
+
+**Testing in Laravel Tinker**
+
+.. code-block:: php
+
+  <?php
+  $m = App\Models\Meal::find(1);
+  $result = App\Http\Controllers\NutrientProfileController::profileMeal($m->id, 1);
+
 
 Profile Food List
 -----------------
@@ -235,3 +252,11 @@ Comments:
 - Nutrient and unit name are only added at this final stage.
 - The union of the subqueries is arbitrarily called ``result``
 - Sums of ``result.amount`` and ``result.pdv`` are grouped by ``nutrients.id`` to get desired effect of summing FoodListIngredient and FoodListMeal contributions to nutrient amount and PDV for each nutrient.
+
+**Testing in Laravel Tinker**
+
+.. code-block:: php
+
+  <?php
+  $fl = App\Models\FoodList::find(3);
+  $result = App\Http\Controllers\NutrientProfileController::profileFoodList($fl->id, 1);
