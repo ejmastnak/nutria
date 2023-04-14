@@ -9,11 +9,10 @@ Actions:
 - View nutrient profiles
 - Create stuff
 
-CRUD
-----
+CRUD Home
+---------
 
-Home
-^^^^
+This is the home page for CRUD actions on Ingredients, Meals, Food Lists, and RDI Profiles.
 
 Links to CRUD pages for:
 
@@ -23,179 +22,135 @@ Links to CRUD pages for:
 - RDI profile
 
 Ingredient CRUD
-^^^^^^^^^^^^^^^
+---------------
 
-**Index**
+Index
+^^^^^
 
 - Ingredient name (links to Show page) and category ``ingredient_category_id`` (maybe) for each ingredient
 - Filter by: name and category
 
-**Show**
+Show
+^^^^
 
 - Ingredient name
 - Category ``ingredient_category_id`` (maybe)
 - Density ``density_g_per_ml`` (if applicable)
 - Nutrient profile for 100 grams of ingredient
 
-**Create**
+Create
+^^^^^^
 
 - "Clone from existing ingredient" button
-- Form satisfying specification in :ref:`Features: Create an Ingredient <feature-create-ingredient>`
+- Form satisfying specs in Ingredient Create validation.
 - Save button
 - Save and profile button
 - Cancel button (back)
 
-**Edit**
+Edit
+^^^^
 
-- Form satisfying specification in :ref:`Features: Create an Ingredient <feature-create-ingredient>`, prefilled with current values.
+- Form satisfying specs in Ingredient Update validation.
 - Save button
 - Save and profile button
 - Cancel button (back)
 
 Meal CRUD
-^^^^^^^^^
+---------
 
-**Index**
+Index
+^^^^^
 
 - Meal name (links to Show page) for each meal
 - Filter by: name
 
-**Show**
+Show
+^^^^
 
 - Meal name
 - Name, amount, and unit (in originally specified units) of each meal ingredient
 - "Compute nutrient profile" button for default quantity of meal
   (Or just show nutrient profile if it's inexpensive to compute)
 
-**Create**
+Create
+^^^^^^
 
 - "Clone from existing meal" button
-- Form satisfying specification in :ref:`Features: Create a Meal <feature-create-meal>`
+- Form satisfying specs in Meal Create validation.
 - Save button
 - Save and profile button
 - Cancel button (back)
 
-**Edit**
+Edit
+^^^^
 
-- Form satisfying specification in :ref:`Features: Create a Meal <feature-create-meal>`, prefilled with current values
+- Form satisfying specs in Meal Update validation.
 - Save button
 - Save and profile button
 - Cancel button (back)
 
 Food List CRUD
-^^^^^^^^^^^^^^
+--------------
 
-**Index**
+Index
+^^^^^
 
 - Food list name (links to Show page) for each food list
 - Filter by: name
 
-**Show**
+Show
+^^^^
 
 - Food list name
 - Name, amount, and unit (in originally specified units) of all food list ingredients
 - Name, amount, and unit (in originally specified units) of all food list meals
 - Nutrient profile of food list
 
-**Create**
+Create
+^^^^^^
 
 - "Clone from existing food list profile" button
-- Form satisfying specification in :ref:`Features: Create a Food List <feature-create-food-list>`
+- Form satisfying specs in Food List Create validation.
 - Save button
 - Save and profile button
 - Cancel button (back)
 
-**Edit**
+Edit
+^^^^
 
-- Form satisfying specification in :ref:`Features: Create a Food List <feature-create-food-list>` prefilled with current values
+- Form satisfying specs in Food List Update validation.
 - Save button
 - Save and profile button
 - Cancel button (back)
 
 RDI Profile CRUD
-^^^^^^^^^^^^^^^^
+----------------
 
-**Index**
+Index
+^^^^^
 
 - RDI profile name (links to Show page) for each RDI profile
 - Filter by: name
 
-**Show**
+Show
+^^^^
 
 - RDI profile name
 - Name, RDI value, and unit (in nutrient's preferred units) of each RdiProfileNutrient
 
-**Create**
+Create
+^^^^^^
 
 - "Clone from existing food list" button
-- Form satisfying specification in :ref:`Features: Create an RDI Profile <feature-create-rdi-profile>`
+- Form satisfying specs in RDI Profile Create validation.
 - Save button
 - Save and profile button
 - Cancel button (back)
 
-**Edit**
+Edit
+^^^^
 
-- Form satisfying specification in :ref:`Features: Create an RDI Profile <feature-create-rdi-profile>` prefilled with current values
+- Form satisfying specs in RDI Profile Update validation.
 - Save button
 - Save and profile button
 - Cancel button (back)
-
-Nutrient profiles
------------------
-
-Home: Nutrient profiles
-^^^^^^^^^^^^^^^^^^^^^^^
-
-View nutrient profile of:
-
-- An ingredient
-- A meal
-- A food list
-
-Profile an ingredient
-^^^^^^^^^^^^^^^^^^^^^
-
-- Which ingredient? (fuzzy search over ingredient)
-- How much?
-  Text input for amount.
-  Select for unit, with unit options dependent of ingredient supporting density.
-- RDI profile to use for computing PDV.
-
-Actions
-
-- "Compute profile" button
-- "Cancel" button (redirect back)
-- Create a "New ingredient" button
-
-Profile a meal
-^^^^^^^^^^^^^^
-
-- Which meal? (fuzzy search over meal)
-- How much?
-  Text input for mass.
-  Select for unit.
-  Default mass by default.
-- RDI profile to use for computing PDV.
-
-Actions
-
-- "Compute profile" button
-- "Cancel" button (redirect back)
-- Create a "New meal" button
-
-Profile a food list
-^^^^^^^^^^^^^^^^^^^
-
-- Which foods? (fuzzy search over meals and ingredients)
-  (Or use a new food list).
-- How much?
-  Text input for amount.
-  Select for unit, with possible units dependent on ingredient supporting density.
-  Default mass for meals by default.
-- RDI profile to use for computing PDV.
-
-Actions
-
-- "Compute profile" button
-- "Cancel" button (redirect back)
-- Create a "New food list" button
