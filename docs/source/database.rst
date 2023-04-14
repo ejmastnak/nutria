@@ -7,8 +7,6 @@ Tables
 ------
 
 - ``units``
-- ``to_grams``
-- ``to_milliliters``
 - ``ingredient_categories``
 - ``nutrients``
 - ``ingredients``
@@ -31,22 +29,6 @@ Unit
 - ``longname``
 - ``is_mass``
 - ``is_volume``
-
-to_grams
-^^^^^^^^
-
-Utility table for converting mass units to grams
-
-- ``foreign_unit_id`` id of a ``unit`` record with ``is_mass == true``
-- ``amount_in_grams`` the amount in grams of one unit of ``foreign_unit_id``.
-
-to_milliliters
-^^^^^^^^^^^^^^
-
-Utility table for converting volume units to milliliters
-
-- ``foreign_unit_id`` id of a ``unit`` record with ``is_volume == true``
-- ``amount_in_milliliters`` the amount in milliliters of one unit of ``foreign_unit_id``.
 
 Ingredient category
 ^^^^^^^^^^^^^^^^^^^
