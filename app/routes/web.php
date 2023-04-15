@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\IngredientController;
+use App\Http\Controllers\MealController;
+use App\Http\Controllers\FoodListController;
+use App\Http\Controllers\RdiProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -17,13 +21,13 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+    return Inertia::render('Home');
+})->name('home');
+
+Route::resource('ingredients', IngredientController::class);
+Route::resource('meals', MealController::class);
+Route::resource('food-lists', FoodListController::class);
+Route::resource('rdi-profiles', RdiProfileController::class);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
