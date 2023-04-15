@@ -16,7 +16,7 @@ const showingNavigationDropdown = ref(false);
     <div class="min-h-screen max-w-4xl mx-auto px-6">
       <nav class="max-w-4xl mx-auto border-b border-gray-100">
         <!-- Primary Navigation Menu -->
-        <div class="relative px-4 sm:pr-6 lg:pr-8">
+        <div class="relative px-2 sm:px-4 sm:pr-6 lg:pr-8">
 
           <div class="flex justify-between h-16">
 
@@ -185,7 +185,7 @@ const showingNavigationDropdown = ref(false);
       </header>
 
       <!-- Page Content -->
-      <main class="py-6">
+      <main class="py-6 px-2 sm:px-6">
         <slot />
       </main>
     </div>
