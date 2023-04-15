@@ -1,11 +1,10 @@
 Validation
 ==========
 
-CRUD
-----
+.. _validation-create-ingredient:
 
 Create Ingredient
-^^^^^^^^^^^^^^^^^
+-----------------
 
 **Incoming request**
 
@@ -48,8 +47,10 @@ Create Ingredient
   - given ``nutrient_id`` 
   - ``amount_per_100g``
 
+.. _validation-update-ingredient:
+
 Update Ingredient
-^^^^^^^^^^^^^^^^^
+-----------------
 
 **Incoming request**
 
@@ -87,8 +88,10 @@ Update Ingredient
   - given ``nutrient_id`` 
   - given ``amount_per_100g``
 
+.. _validation-crud-meal:
+
 Create or Update Meal
-^^^^^^^^^^^^^^^^^^^^^
+---------------------
 
 **Incoming request**
 
@@ -141,8 +144,10 @@ Create or Update Meal
 
 - Delete all ``meal_ingredient`` records in ``meal_ingredients`` DB table but not in request
 
-Food list
-^^^^^^^^^
+.. _validation-crud-food-list:
+
+Create or Update Food List
+--------------------------
 
 **Incoming request**
 
@@ -211,8 +216,10 @@ Food list
 
 - **Meals:** delete/create/update protocol using existing ``foodList->food_list_meals`` in database and supplied ``food_list_meals`` array.
 
+.. _validation-create-rdi-profile:
+
 Create RDI profile
-^^^^^^^^^^^^^^^^^^
+------------------
 
 Incoming request looks like
 
@@ -244,8 +251,10 @@ Incoming request looks like
   - supplied ``nutrient_id`` value
   - supplied ``rdi`` value
 
+.. _validation-update-rdi-profile:
+
 Update RDI profile
-^^^^^^^^^^^^^^^^^^
+------------------
 
 Incoming request looks like
 
@@ -277,6 +286,9 @@ Incoming request looks like
   - ``nutrient_id`` with supplied ``nutrient_id``
   - ``rdi`` with supplied ``rdi``
 
+Computing mass
+--------------
+
 Computing mass in grams for ingredients
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -295,11 +307,8 @@ Input: ``ammount``, ``unit_id``
 - If supplied ``unit_id`` is not a unit of mass, fail validation
 - Multiply supplied ``amount`` by ``amount_in_grams`` column of ``to_grams`` table record for which ``foreign_unit_id`` equals supplied ``unit_id``
 
-View nutrient profiles
-----------------------
-
 Ingredient nutrient profile
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+---------------------------
 
 Incoming request looks like
 
@@ -320,7 +329,7 @@ Incoming request looks like
 - ``rdi_profile_id`` exists in ``rdi_profiles,id``
 
 Meal nutrient profile
-^^^^^^^^^^^^^^^^^^^^^
+---------------------
 
 Incoming request looks like
 
@@ -341,7 +350,7 @@ Incoming request looks like
 - ``rdi_profile_id`` exists in ``rdi_profiles,id``
 
 Food list nutrient profile
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------
 
 Incoming request looks like
 
