@@ -149,7 +149,6 @@ Documentation
    :maxdepth: 2
    :caption: Contents:
 
-   features
    database
    ui
    validation
