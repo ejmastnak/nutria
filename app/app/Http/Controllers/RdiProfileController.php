@@ -64,7 +64,11 @@ class RdiProfileController extends Controller
     {
         // Load name, RDI value, and unit (in nutrient’s preferred units) 
         // of each RdiProfileNutrient
-        $rdiProfile->load('rdi_profile_nutrients:id,rdi_profile_id,nutrient_id,rdi', 'rdi_profile_nutrients.nutrient:id,display_name,unit_id', 'rdi_profile_nutrients.nutrient.unit:id,name');
+        $rdiProfile->load(
+            'rdi_profile_nutrients:id,rdi_profile_id,nutrient_id,rdi',
+            'rdi_profile_nutrients.nutrient:id,display_name,unit_id',
+            'rdi_profile_nutrients.nutrient.unit:id,name'
+        );
 
         return Inertia::render('RdiProfiles/Show', [
           'rdiProfile' => $rdiProfile
@@ -78,7 +82,11 @@ class RdiProfileController extends Controller
     {
         // Load name, RDI value, and unit (in nutrient’s preferred units) 
         // of each RdiProfileNutrient
-        $rdiProfile->load('rdi_profile_nutrients:id,rdi_profile_id,nutrient_id,rdi', 'rdi_profile_nutrients.nutrient:id,display_name,unit_id', 'rdi_profile_nutrients.nutrient.unit:id,name');
+        $rdiProfile->load(
+            'rdi_profile_nutrients:id,rdi_profile_id,nutrient_id,rdi',
+            'rdi_profile_nutrients.nutrient:id,display_name,unit_id',
+            'rdi_profile_nutrients.nutrient.unit:id,name'
+        );
 
         return Inertia::render('RdiProfiles/Edit', [
           'rdiProfile' => $rdiProfile

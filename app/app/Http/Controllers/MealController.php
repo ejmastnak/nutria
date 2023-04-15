@@ -73,7 +73,12 @@ class MealController extends Controller
     {
         // Load name, amount, and unit (along with necessary intermediate
         // relationship) of each meal ingredient
-        $meal->load(['meal_ingredients:meal_id,ingredient_id,amount,unit_id']);
+        $meal->load([
+            'meal_ingredients:meal_id,ingredient_id,amount,unit_id',
+            'meal_ingredients.meal:id,name',
+            'meal_ingredients.unit:id,name',
+        ]);
+
         return Inertia::render('Meals/Show', [
             'meal' => $meal,
             'nutrient_profile' => NutrientProfileController::profileMeal($meal)
@@ -87,7 +92,12 @@ class MealController extends Controller
     {
         // Load name, amount, and unit (along with necessary intermediate
         // relationships) of each meal ingredient
-        $meal->load(['meal_ingredients:meal_id,ingredient_id,amount,unit_id']);
+        $meal->load([
+            'meal_ingredients:meal_id,ingredient_id,amount,unit_id',
+            'meal_ingredients.ingredient:id,name',
+            'meal_ingredients.unit:id,name',
+        ]);
+
         return Inertia::render('Meals/Edit', [
             'meal' => $meal
         ]);

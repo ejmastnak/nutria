@@ -135,8 +135,7 @@ class FoodListController extends Controller
             'food_list_meals.unit:id,name'
         ]);
         return Inertia::render('FoodLists/Show', [
-            'foodLists' => FoodList::all(),
-            'nutrient_profile' => NutrientProfileController::profileFoodList($foodList)
+            'foodLists' => FoodList::all()
         ]);
     }
 

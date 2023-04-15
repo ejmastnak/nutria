@@ -83,7 +83,12 @@ class IngredientController extends Controller
     {
         // Load name, amount per 100 g of ingredient, and unit (along with
         // necessary intermediate relationship) of each ingredient nutrient
-        $ingredient->load(['ingredient_nutrients:id,ingredient_id,nutrient_id,amount_per_100g', 'ingredient_nutrients.nutrient:id,display_name,unit_id', 'ingredient_nutrients.nutrient.unit:id,name']);
+        $ingredient->load([
+            'ingredient_nutrients:id,ingredient_id,nutrient_id,amount_per_100g',
+            'ingredient_nutrients.nutrient:id,display_name,unit_id',
+            'ingredient_nutrients.nutrient.unit:id,name'
+        ]);
+
         return Inertia::render('Ingredients/Edit', [
             'ingredient' => $ingredient->only(['id', 'name', 'ingredient_category_id', 'density_g_per_ml', 'ingredient_nutrients']),
         ]);
