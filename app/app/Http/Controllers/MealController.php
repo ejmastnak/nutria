@@ -142,7 +142,7 @@ class MealController extends Controller
                     'meal_id' => $meal->id,
                     'ingredient_id' => $requestMI['ingredient_id'],
                     'amount' => $requestMI['amount'],
-                    'unit_id' => $requestMI['unit_id''],
+                    'unit_id' => $requestMI['unit_id'],
                     'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($requestMI['amount'], $requestMI['unit_id'], $requestMI['ingredient_id'])
                 ]);
                 $meal_mass_in_grams += $mi->mass_in_grams;
@@ -159,7 +159,7 @@ class MealController extends Controller
                     'meal_id' => $meal->id,
                     'ingredient_id' => $requestMIs[$key]['ingredient_id'],
                     'amount' => $requestMIs[$key]['amount'],
-                    'unit_id' => $requestMIs[$key]['unit_id''],
+                    'unit_id' => $requestMIs[$key]['unit_id'],
                     'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($requestMIs[$key]['amount'], $requestMIs[$key]['unit_id'], $requestMIs[$key]['ingredient_id'])
                 ]);
                 $meal_mass_in_grams += $dbMI->mass_in_grams;
