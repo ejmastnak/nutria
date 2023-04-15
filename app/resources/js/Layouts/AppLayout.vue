@@ -13,8 +13,8 @@ const showingNavigationDropdown = ref(false);
 
 <template>
   <div>
-    <div class="min-h-screen max-w-7xl mx-auto px-6">
-      <nav class="max-w-2xl mx-auto border-b border-gray-100">
+    <div class="min-h-screen max-w-4xl mx-auto px-6">
+      <nav class="max-w-4xl mx-auto border-b border-gray-100">
         <!-- Primary Navigation Menu -->
         <div class="relative px-4 sm:pr-6 lg:pr-8">
 
@@ -22,20 +22,20 @@ const showingNavigationDropdown = ref(false);
 
             <div class="flex">
               <!-- Navigation Links -->
-              <div class="flex space-x-8">
-                <NavLink :href="route('home')" :active="route().current('home')">
+              <div class="space-x-8 flex">
+                <NavLink :href="route('home')" :active="route().current('home')" >
                   Home
                 </NavLink>
-                <NavLink :href="route('ingredients.index')" :active="route().current('ingredients.index')">
+                <NavLink class="hidden sm:inline-flex" :href="route('ingredients.index')" :active="route().current('ingredients.index')" >
                   Ingredients
                 </NavLink>
-                <NavLink :href="route('meals.index')" :active="route().current('meals.index')">
+                <NavLink class="hidden sm:inline-flex" :href="route('meals.index')" :active="route().current('meals.index')">
                   Meals
                 </NavLink>
-                <NavLink :href="route('food-lists.index')" :active="route().current('food-lists.index')">
+                <NavLink class="hidden sm:inline-flex" :href="route('food-lists.index')" :active="route().current('food-lists.index')">
                   Food Lists
                 </NavLink>
-                <NavLink :href="route('rdi-profiles.index')" :active="route().current('rdi-profiles.index')">
+                <NavLink class="hidden sm:inline-flex" :href="route('rdi-profiles.index')" :active="route().current('rdi-profiles.index')">
                   RDI Profiles
                 </NavLink>
               </div>
@@ -84,14 +84,17 @@ const showingNavigationDropdown = ref(false);
               </div>
             </div>
             <!-- Log In for unauthenticated users -->
-            <div v-else class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150" >
+            <div 
+              v-else
+              class="hidden sm:inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
+            >
               <Link :href="route('login')">
                 Log In
               </Link>
             </div>
 
             <!-- Hamburger -->
-            <div v-if="$page.props.auth.user" class="-mr-2 flex items-center sm:hidden">
+            <div class="-mr-2 flex items-center sm:hidden">
               <button
                 @click="showingNavigationDropdown = !showingNavigationDropdown"
                 class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
@@ -125,13 +128,38 @@ const showingNavigationDropdown = ref(false);
 
         <!-- Responsive Navigation Menu -->
         <div
-          v-if="$page.props.auth.user"
           :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }"
           class="sm:hidden"
         >
 
+          <div class="pt-2 pb-3 space-y-1">
+
+            <ResponsiveNavLink :href="route('ingredients.index')" :active="route().current('ingredients.index')" >
+              Ingredients
+            </ResponsiveNavLink>
+            <ResponsiveNavLink :href="route('meals.index')" :active="route().current('meals.index')">
+              Meals
+            </ResponsiveNavLink>
+            <ResponsiveNavLink :href="route('food-lists.index')" :active="route().current('food-lists.index')">
+              Food Lists
+            </ResponsiveNavLink>
+            <ResponsiveNavLink :href="route('rdi-profiles.index')" :active="route().current('rdi-profiles.index')">
+              RDI Profiles
+            </ResponsiveNavLink>
+
+            <ResponsiveNavLink 
+              v-if="!$page.props.auth.user"
+              :href="route('login')"
+            >
+              Log In
+            </ResponsiveNavLink>
+          </div>
+
           <!-- Responsive Settings Options -->
-          <div class="pt-4 pb-1 border-t border-gray-200">
+          <div
+            v-if="$page.props.auth.user"
+            class="pt-4 pb-1 border-t border-gray-200"
+          >
             <div class="px-4">
               <div class="font-medium text-base text-gray-800">
                 {{ $page.props.auth.user.name }}
