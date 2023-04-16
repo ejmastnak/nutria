@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('is_free_tier')->default(true);
             $table->boolean('is_full_tier')->default(false);
+            $table->boolean('is_admin')->default(false);
         });
     }
 
@@ -24,6 +25,7 @@ return new class extends Migration {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('is_free_tier');
             $table->dropColumn('is_full_tier');
+            $table->dropColumn('is_admin');
         });
     }
 };
