@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ingredient;
 use App\Models\IngredientNutrient;
+use App\Models\IngredientCategory;
 use App\Models\Nutrient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -17,7 +18,9 @@ class IngredientController extends Controller
     public function index()
     {
         return Inertia::render('Ingredients/Index', [
-            'ingredients' => Ingredient::all(['id', 'name', 'ingredient_category_id']),
+            // 'ingredients' => Ingredient::all(['id', 'name', 'ingredient_category_id']),
+            'ingredients' => Ingredient::limit(20)->get(['id', 'name', 'ingredient_category_id']),
+            'ingredient_categories' => IngredientCategory::all(['id', 'name'])
         ]);
     }
 
