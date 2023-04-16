@@ -153,4 +153,5 @@ Documentation
    ui
    validation
    nutrient-profiles
+   auth
 
