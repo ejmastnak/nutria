@@ -8,6 +8,7 @@ use App\Models\IngredientCategory;
 use App\Models\Nutrient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class IngredientController extends Controller
@@ -18,8 +19,15 @@ class IngredientController extends Controller
     public function index()
     {
         return Inertia::render('Ingredients/Index', [
-            // 'ingredients' => Ingredient::all(['id', 'name', 'ingredient_category_id']),
-            'ingredients' => Ingredient::limit(20)->get(['id', 'name', 'ingredient_category_id']),
+            // 'ingredients' => Ingredient::where('user_id', null)->get(['id', 'name', 'ingredient_category_id']),
+            'ingredients' => Ingredient::where('ingredient_category_id', '11')
+                ->where('user_id', null)
+                ->limit(20)
+                ->with('ingredient_category:id,name')
+                ->get(['id', 'name', 'ingredient_category_id']),
+            'userIngredients' => Auth::user() ? Ingredient::where('user_id', Auth::user()->id)
+                ->with('ingredient_category:id,name')
+                ->get(['id', 'name', 'ingredient_category_id']) : [],
             'ingredient_categories' => IngredientCategory::all(['id', 'name'])
         ]);
     }
@@ -29,7 +37,17 @@ class IngredientController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Ingredients/Create');
+        $this->authorize('create', Ingredient::class);
+        $nutrients = Nutrient::get(['id', 'display_name', 'unit_id']);
+        $nutrients->load('unit:id,name');
+        return Inertia::render('Ingredients/Create', [
+            'ingredient_nutrients' => $nutrients->map(fn($nutrient) => [
+                'id' => 0,
+                'nutrient_id' => $nutrient->id,
+                'amount_per_100g' => 0.0,
+                'nutrient' => $nutrient
+            ])
+        ]);
     }
 
     /**
@@ -73,9 +91,20 @@ class IngredientController extends Controller
      */
     public function show(Ingredient $ingredient)
     {
+        $this->authorize('view', $ingredient);
+        $user = Auth::user();
+        $ingredient->load('ingredient_category:id,name');
         return Inertia::render('Ingredients/Show', [
-            'ingredient' => $ingredient->only(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
-            'nutrient_profile' => NutrientProfileController::profileIngredient($ingredient)
+            'ingredient' => $ingredient->only([
+                'id',
+                'name',
+                'ingredient_category_id',
+                'ingredient_category',
+                'density_g_per_ml'
+            ]),
+            'nutrient_profile' => NutrientProfileController::profileIngredient($ingredient->id),
+            "canEdit" => $user ? ($user->can('update', $ingredient)) : false,
+            "canDelete" => $user ? ($user->can('delete', $ingredient)) : false,
         ]);
     }
 
@@ -84,16 +113,16 @@ class IngredientController extends Controller
      */
     public function edit(Ingredient $ingredient)
     {
-        // Load name, amount per 100 g of ingredient, and unit (along with
-        // necessary intermediate relationship) of each ingredient nutrient
+        $this->authorize('update', $ingredient);
+        $user = Auth::user();
         $ingredient->load([
             'ingredient_nutrients:id,ingredient_id,nutrient_id,amount_per_100g',
             'ingredient_nutrients.nutrient:id,display_name,unit_id',
             'ingredient_nutrients.nutrient.unit:id,name'
         ]);
-
         return Inertia::render('Ingredients/Edit', [
             'ingredient' => $ingredient->only(['id', 'name', 'ingredient_category_id', 'density_g_per_ml', 'ingredient_nutrients']),
+            "canDelete" => $user ? ($user->can('delete', $ingredient)) : false,
         ]);
     }
 
