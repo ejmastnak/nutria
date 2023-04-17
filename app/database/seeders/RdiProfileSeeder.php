@@ -27,7 +27,6 @@ class RdiProfileSeeder extends Seeder
 
             $rdi_profile_id = RdiProfile::create([
                 'name' => $rdi_profile['name'],
-                'user_id' => 1,
             ])->id;
 
             foreach($rdi_profile['nutrients'] as $nutrient) {
