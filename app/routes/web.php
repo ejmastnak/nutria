@@ -55,17 +55,17 @@ Route::middleware('auth')->group(function () {
     Route::get('food-lists', [FoodListController::class, 'index'])->name('food-lists.index')->can('viewAll', FoodList::class);
     Route::get('food-lists/create', [FoodListController::class, 'create'])->name('food-lists.create')->can('create', FoodList::class);
     Route::post('food-lists', [FoodListController::class, 'store'])->name('food-lists.store')->can('create', FoodList::class);
-    Route::get('food-lists/{meal}/edit', [FoodListController::class, 'edit'])->name('food-lists.edit')->can('update', 'meal');
-    Route::put('food-lists/{meal}', [FoodListController::class, 'update'])->name('food-lists.update')->can('update', 'meal');
-    Route::delete('food-lists/{meal}', [FoodListController::class, 'destroy'])->name('food-lists.destroy')->can('delete', 'meal');
-    Route::get('food-lists/{meal}', [FoodListController::class, 'show'])->name('food-lists.show')->can('view', 'meal');
+    Route::get('food-lists/{food_list}/edit', [FoodListController::class, 'edit'])->name('food-lists.edit')->can('update', 'food_list');
+    Route::put('food-lists/{food_list}', [FoodListController::class, 'update'])->name('food-lists.update')->can('update', 'food_list');
+    Route::delete('food-lists/{food_list}', [FoodListController::class, 'destroy'])->name('food-lists.destroy')->can('delete', 'food_list');
+    Route::get('food-lists/{food_list}', [FoodListController::class, 'show'])->name('food-lists.show')->can('view', 'food_list');
 
     // RDI Profiles
     Route::get('rdi-profiles/create', [RdiProfileController::class, 'create'])->name('rdi-profiles.create')->can('create', RdiProfile::class);
     Route::post('rdi-profiles', [RdiProfileController::class, 'store'])->name('rdi-profiles.store')->can('create', RdiProfile::class);
-    Route::get('rdi-profiles/{meal}/edit', [RdiProfileController::class, 'edit'])->name('rdi-profiles.edit')->can('update', 'meal');
-    Route::put('rdi-profiles/{meal}', [RdiProfileController::class, 'update'])->name('rdi-profiles.update')->can('update', 'meal');
-    Route::delete('rdi-profiles/{meal}', [RdiProfileController::class, 'destroy'])->name('rdi-profiles.destroy')->can('delete', 'meal');
+    Route::get('rdi-profiles/{rdi_profile}/edit', [RdiProfileController::class, 'edit'])->name('rdi-profiles.edit')->can('update', 'rdi_profile');
+    Route::put('rdi-profiles/{rdi_profile}', [RdiProfileController::class, 'update'])->name('rdi-profiles.update')->can('update', 'rdi_profile');
+    Route::delete('rdi-profiles/{rdi_profile}', [RdiProfileController::class, 'destroy'])->name('rdi-profiles.destroy')->can('delete', 'rdi_profile');
 
 });
 
