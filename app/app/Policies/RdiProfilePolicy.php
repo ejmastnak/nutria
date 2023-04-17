@@ -30,15 +30,16 @@ class RdiProfilePolicy
      */
     public function viewAll(User $user): bool
     {
-        return $user->is_full_tier === 1;
+        return true;
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, RdiProfile $rdiProfile): bool
+    public function view(?User $user, RdiProfile $rdiProfile): bool
     {
-        return $rdiProfile->user_id === $user->id;
+        if (is_null($user)) return is_null($rdiProfile->user_id);
+        else return is_null($rdiProfile->user_id) || ($rdiProfile->user_id === $user->id);
     }
 
     /**

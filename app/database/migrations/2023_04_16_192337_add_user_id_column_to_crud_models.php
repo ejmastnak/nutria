@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
         });
         Schema::table('rdi_profiles', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
         });
     }
