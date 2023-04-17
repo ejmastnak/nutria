@@ -39,7 +39,7 @@ class RdiProfilePolicy
      */
     public function create(User $user): bool
     {
-        return ($user->is_admin === 1) || ($user->is_full_tier === 1);
+        return $user->is_admin || $user->is_full_tier;
     }
 
     /**

@@ -41,8 +41,8 @@ class IngredientPolicy
      */
     public function create(User $user): bool
     {
-        if (($user->is_admin === 1) || ($user->is_full_tier === 1)) return true;
-        else if ($user->is_free_tier === 1) {
+        if ($user->is_admin || $user->is_full_tier) return true;
+        else if ($user->is_free_tier) {
             $count = Ingredient::where('user_id', $user->id)->count();
             if ($count < self::MAX_FREE_TIER_INGREDIENTS) return true;
         }
