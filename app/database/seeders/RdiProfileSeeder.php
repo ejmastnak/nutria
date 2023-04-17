@@ -24,7 +24,11 @@ class RdiProfileSeeder extends Seeder
         foreach(glob(__DIR__ . '/rdi_profiles/*.json') as $file) {
             $json = file_get_contents($file);
             $rdi_profile = json_decode($json, true);
-            $rdi_profile_id = RdiProfile::create(['name' => $rdi_profile['name']])->id;
+
+            $rdi_profile_id = RdiProfile::create([
+                'name' => $rdi_profile['name'],
+                'user_id' => 1,
+            ])->id;
 
             foreach($rdi_profile['nutrients'] as $nutrient) {
 

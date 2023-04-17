@@ -27,7 +27,8 @@ class MealSeeder extends Seeder
             $meal_mass_in_grams = 0;
             $meal = Meal::create([
                 'name' => $meal_data['name'],
-                'mass_in_grams' => $meal_mass_in_grams
+                'mass_in_grams' => $meal_mass_in_grams,
+                'user_id' => 1
             ]);
             foreach($meal_data['meal_ingredients'] as $mi) {
                 MealIngredient::create([

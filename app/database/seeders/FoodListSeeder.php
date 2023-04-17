@@ -25,7 +25,11 @@ class FoodListSeeder extends Seeder
         foreach(glob(__DIR__ . '/food_lists/*.json') as $file) {
             $json = file_get_contents($file);
             $food_list = json_decode($json, true);
-            $food_list_id = FoodList::create(['name' => $food_list['name']])->id;
+
+            $food_list_id = FoodList::create([
+                'name' => $food_list['name'],
+                'user_id' => 1
+            ])->id;
 
             foreach($food_list['food_list_ingredients'] as $fli) {
                 FoodListIngredient::create([
