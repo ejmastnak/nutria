@@ -9,13 +9,13 @@ insert into nutrients(
 select
   sr.nutrient.id::int,
   sr.nutrient.name,
-  tmp_nutrient_whitelist.display_name,
+  tmp_nutrients.display_name,
   units.id
 from sr.nutrient
-inner join tmp_nutrient_whitelist
-  on tmp_nutrient_whitelist.name
+inner join tmp_nutrients
+  on tmp_nutrients.name
   like sr.nutrient.name
-  and tmp_nutrient_whitelist.id
+  and tmp_nutrients.id
   = sr.nutrient.id::int
 inner join units
   on units.name

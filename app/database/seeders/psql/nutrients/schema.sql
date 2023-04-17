@@ -8,9 +8,3 @@ create table if not exists nutrients (
   display_name text not null,
   unit_id integer not null references units(id)
 );
-
-create temporary table tmp_nutrient_whitelist (
-  id integer,  -- use FDC id from SR database
-  name text,
-  display_name text
-);

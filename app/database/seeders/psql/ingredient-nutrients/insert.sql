@@ -17,4 +17,5 @@ inner join nutrients
   on nutrients.id
   = sr.food_nutrient.nutrient_id::int;
 
+drop index if exists idx_ingredient_nutrients;
 create index idx_ingredient_nutrients on ingredient_nutrients(ingredient_id, nutrient_id);

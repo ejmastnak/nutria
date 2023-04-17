@@ -18,6 +18,7 @@ UNITS_CSV=$(CURDIR)/units/units.csv
 # Nutrients
 NUTRIENTS_WHITELIST_CSV=$(CURDIR)/nutrients/whitelist.csv
 NUTRIENTS_SCHEMA=$(CURDIR)/nutrients/schema.sql
+NUTRIENTS_TMP_SCHEMA=$(CURDIR)/nutrients/tmp-schema.sql
 NUTRIENTS_INSERT=$(CURDIR)/nutrients/insert.sql
 
 # Ingredients
@@ -56,21 +57,21 @@ seed_public: import_sr
 	# -------------------------------------------------------------------------- #
 	@echo "" >> $(SEED)
 	@echo $(SEP) >> $(SEED)
-	@echo "-- Create and populate units table" >> $(SEED)
+	@echo "-- Populate units table" >> $(SEED)
 	@echo $(SEP) >> $(SEED)
-	@cat $(UNITS_SCHEMA) >> $(SEED)
-	@echo "" >> $(SEED)
+	@echo "truncate table units restart identity cascade;" >> $(SEED)
 	@echo "\COPY units (name, longname, is_mass, is_volume) FROM $(UNITS_CSV) WITH DELIMITER ',' HEADER CSV;" >> $(SEED)
 	# -------------------------------------------------------------------------- #
 	# Nutrients
 	# -------------------------------------------------------------------------- #
 	@echo "" >> $(SEED)
 	@echo $(SEP) >> $(SEED)
-	@echo "-- Create and populate nutrient-related tables" >> $(SEED)
+	@echo "-- Populate nutrient-related tables" >> $(SEED)
 	@echo $(SEP) >> $(SEED)
-	@cat $(NUTRIENTS_SCHEMA) >> $(SEED)
+	@echo "truncate table nutrients restart identity cascade;" >> $(SEED)
+	@cat $(NUTRIENTS_TMP_SCHEMA) >> $(SEED)
 	@echo "" >> $(SEED)
-	@echo "\COPY tmp_nutrient_whitelist FROM $(NUTRIENTS_WHITELIST_CSV) WITH DELIMITER ',' HEADER CSV;" >> $(SEED)
+	@echo "\COPY tmp_nutrients FROM $(NUTRIENTS_WHITELIST_CSV) WITH DELIMITER ',' HEADER CSV;" >> $(SEED)
 	@echo "" >> $(SEED)
 	@cat $(NUTRIENTS_INSERT) >> $(SEED)
 	# -------------------------------------------------------------------------- #
@@ -78,20 +79,19 @@ seed_public: import_sr
 	# -------------------------------------------------------------------------- #
 	@echo "" >> $(SEED)
 	@echo $(SEP) >> $(SEED)
-	@echo "-- Create and populate ingredient-related tables" >> $(SEED)
+	@echo "-- Populate ingredient-related tables" >> $(SEED)
 	@echo $(SEP) >> $(SEED)
-	@cat $(INGREDIENTS_SCHEMA) >> $(SEED)
-	@echo "" >> $(SEED)
+	@echo "truncate table ingredients restart identity cascade;" >> $(SEED)
+	@echo "truncate table ingredient_categories restart identity cascade;" >> $(SEED)
 	@cat $(INGREDIENTS_INSERT) >> $(SEED)
 	# -------------------------------------------------------------------------- #
 	# Ingredients nutrients
 	# -------------------------------------------------------------------------- #
 	@echo "" >> $(SEED)
 	@echo $(SEP) >> $(SEED)
-	@echo "-- Create and populate ingredient_nutrients table" >> $(SEED)
+	@echo "-- Populate ingredient_nutrients table" >> $(SEED)
 	@echo $(SEP) >> $(SEED)
-	@cat $(INGREDIENT_NUTRIENTS_SCHEMA) >> $(SEED)
-	@echo "" >> $(SEED)
+	@echo "truncate table ingredient_nutrients restart identity cascade;" >> $(SEED)
 	@cat $(INGREDIENT_NUTRIENTS_INSERT) >> $(SEED)
 
 # Creates seed script
