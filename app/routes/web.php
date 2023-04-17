@@ -43,7 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('ingredients/{ingredient}', [IngredientController::class, 'destroy'])->name('ingredients.destroy')->can('delete', 'ingredient');
 
     // Meals
-    Route::get('meals', [MealController::class, 'index'])->name('meals.index')->can('viewAll', Meal::class);
+    Route::get('meals', [MealController::class, 'index'])->name('meals.index');
     Route::get('meals/create', [MealController::class, 'create'])->name('meals.create')->can('create', Meal::class);
     Route::post('meals', [MealController::class, 'store'])->name('meals.store')->can('create', Meal::class);
     Route::get('meals/{meal}/edit', [MealController::class, 'edit'])->name('meals.edit')->can('update', 'meal');
@@ -52,7 +52,7 @@ Route::middleware('auth')->group(function () {
     Route::get('meals/{meal}', [MealController::class, 'show'])->name('meals.show')->can('view', 'meal');
 
     // Food lists
-    Route::get('food-lists', [FoodListController::class, 'index'])->name('food-lists.index')->can('viewAll', FoodList::class);
+    Route::get('food-lists', [FoodListController::class, 'index'])->name('food-lists.index');
     Route::get('food-lists/create', [FoodListController::class, 'create'])->name('food-lists.create')->can('create', FoodList::class);
     Route::post('food-lists', [FoodListController::class, 'store'])->name('food-lists.store')->can('create', FoodList::class);
     Route::get('food-lists/{food_list}/edit', [FoodListController::class, 'edit'])->name('food-lists.edit')->can('update', 'food_list');
