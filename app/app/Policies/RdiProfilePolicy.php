@@ -26,6 +26,14 @@ class RdiProfilePolicy
     }
 
     /**
+     * Determine whether the user can view an index page of all models
+     */
+    public function viewAll(User $user): bool
+    {
+        return $user->is_full_tier === 1;
+    }
+
+    /**
      * Determine whether the user can view the model.
      */
     public function view(User $user, RdiProfile $rdiProfile): bool
