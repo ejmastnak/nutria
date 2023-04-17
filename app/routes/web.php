@@ -36,36 +36,36 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Ingredients
-    Route::get('ingredients/create', [IngredientController::class, 'create'])->name('ingredients.create')->can('create', Ingredient::class);
-    Route::post('ingredients', [IngredientController::class, 'store'])->name('ingredients.store')->can('create', Ingredient::class);
-    Route::get('ingredients/{ingredient}/edit', [IngredientController::class, 'edit'])->name('ingredients.edit')->can('update', 'ingredient');
-    Route::put('ingredients/{ingredient}', [IngredientController::class, 'update'])->name('ingredients.update')->can('update', 'ingredient');
-    Route::delete('ingredients/{ingredient}', [IngredientController::class, 'destroy'])->name('ingredients.destroy')->can('delete', 'ingredient');
+    Route::get('ingredients/create', [IngredientController::class, 'create'])->name('ingredients.create');
+    Route::post('ingredients', [IngredientController::class, 'store'])->name('ingredients.store');
+    Route::get('ingredients/{ingredient}/edit', [IngredientController::class, 'edit'])->name('ingredients.edit');
+    Route::put('ingredients/{ingredient}', [IngredientController::class, 'update'])->name('ingredients.update');
+    Route::delete('ingredients/{ingredient}', [IngredientController::class, 'destroy'])->name('ingredients.destroy');
 
     // Meals
     Route::get('meals', [MealController::class, 'index'])->name('meals.index');
-    Route::get('meals/create', [MealController::class, 'create'])->name('meals.create')->can('create', Meal::class);
-    Route::post('meals', [MealController::class, 'store'])->name('meals.store')->can('create', Meal::class);
-    Route::get('meals/{meal}/edit', [MealController::class, 'edit'])->name('meals.edit')->can('update', 'meal');
-    Route::put('meals/{meal}', [MealController::class, 'update'])->name('meals.update')->can('update', 'meal');
-    Route::delete('meals/{meal}', [MealController::class, 'destroy'])->name('meals.destroy')->can('delete', 'meal');
-    Route::get('meals/{meal}', [MealController::class, 'show'])->name('meals.show')->can('view', 'meal');
+    Route::get('meals/create', [MealController::class, 'create'])->name('meals.create');
+    Route::post('meals', [MealController::class, 'store'])->name('meals.store');
+    Route::get('meals/{meal}/edit', [MealController::class, 'edit'])->name('meals.edit');
+    Route::put('meals/{meal}', [MealController::class, 'update'])->name('meals.update');
+    Route::delete('meals/{meal}', [MealController::class, 'destroy'])->name('meals.destroy');
+    Route::get('meals/{meal}', [MealController::class, 'show'])->name('meals.show');
 
     // Food lists
     Route::get('food-lists', [FoodListController::class, 'index'])->name('food-lists.index');
-    Route::get('food-lists/create', [FoodListController::class, 'create'])->name('food-lists.create')->can('create', FoodList::class);
-    Route::post('food-lists', [FoodListController::class, 'store'])->name('food-lists.store')->can('create', FoodList::class);
-    Route::get('food-lists/{food_list}/edit', [FoodListController::class, 'edit'])->name('food-lists.edit')->can('update', 'food_list');
-    Route::put('food-lists/{food_list}', [FoodListController::class, 'update'])->name('food-lists.update')->can('update', 'food_list');
-    Route::delete('food-lists/{food_list}', [FoodListController::class, 'destroy'])->name('food-lists.destroy')->can('delete', 'food_list');
-    Route::get('food-lists/{food_list}', [FoodListController::class, 'show'])->name('food-lists.show')->can('view', 'food_list');
+    Route::get('food-lists/create', [FoodListController::class, 'create'])->name('food-lists.create');
+    Route::post('food-lists', [FoodListController::class, 'store'])->name('food-lists.store');
+    Route::get('food-lists/{food_list}/edit', [FoodListController::class, 'edit'])->name('food-lists.edit');
+    Route::put('food-lists/{food_list}', [FoodListController::class, 'update'])->name('food-lists.update');
+    Route::delete('food-lists/{food_list}', [FoodListController::class, 'destroy'])->name('food-lists.destroy');
+    Route::get('food-lists/{food_list}', [FoodListController::class, 'show'])->name('food-lists.show');
 
     // RDI Profiles
-    Route::get('rdi-profiles/create', [RdiProfileController::class, 'create'])->name('rdi-profiles.create')->can('create', RdiProfile::class);
-    Route::post('rdi-profiles', [RdiProfileController::class, 'store'])->name('rdi-profiles.store')->can('create', RdiProfile::class);
-    Route::get('rdi-profiles/{rdi_profile}/edit', [RdiProfileController::class, 'edit'])->name('rdi-profiles.edit')->can('update', 'rdi_profile');
-    Route::put('rdi-profiles/{rdi_profile}', [RdiProfileController::class, 'update'])->name('rdi-profiles.update')->can('update', 'rdi_profile');
-    Route::delete('rdi-profiles/{rdi_profile}', [RdiProfileController::class, 'destroy'])->name('rdi-profiles.destroy')->can('delete', 'rdi_profile');
+    Route::get('rdi-profiles/create', [RdiProfileController::class, 'create'])->name('rdi-profiles.create');
+    Route::post('rdi-profiles', [RdiProfileController::class, 'store'])->name('rdi-profiles.store');
+    Route::get('rdi-profiles/{rdi_profile}/edit', [RdiProfileController::class, 'edit'])->name('rdi-profiles.edit');
+    Route::put('rdi-profiles/{rdi_profile}', [RdiProfileController::class, 'update'])->name('rdi-profiles.update');
+    Route::delete('rdi-profiles/{rdi_profile}', [RdiProfileController::class, 'destroy'])->name('rdi-profiles.destroy');
 
 });
 
@@ -73,8 +73,8 @@ Route::middleware('auth')->group(function () {
 // The routes are intentionally defined last among the ingredients routes, since
 // e.g. the catch-all parameter `ingredients/{ingredients}` would otherwise
 // "capture" e.g. ingredients/create and ingredients/export
-Route::get('ingredients/{ingredient}', [IngredientController::class, 'show'])->name('ingredients.show')->can('view', 'ingredient');
-Route::get('rdi-profiles/{rdi_profile}', [RdiProfileController::class, 'show'])->name('rdi-profiles.show')->can('view', 'rdi_profile');
+Route::get('ingredients/{ingredient}', [IngredientController::class, 'show'])->name('ingredients.show');
+Route::get('rdi-profiles/{rdi_profile}', [RdiProfileController::class, 'show'])->name('rdi-profiles.show');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
