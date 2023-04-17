@@ -18,7 +18,7 @@ inner join ingredients
 where meal_ingredients.meal_id = :'meal_id';
 
 select
-  nutrients.name as nutrient,
+  nutrients.display_name as nutrient,
   round(sum((ingredient_nutrients.amount_per_100g / 100) * meal_ingredients.mass_in_grams), 2) as amount,
   units.name as unit,
   round(sum(ingredient_nutrients.amount_per_100g * meal_ingredients.mass_in_grams / nullif(rdi_profile_nutrients.rdi, 0)), 1) as pdv

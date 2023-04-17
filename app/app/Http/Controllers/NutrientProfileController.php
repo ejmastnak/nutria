@@ -16,13 +16,13 @@ class NutrientProfileController extends Controller
      *  Computes a NutrientProfile for 100g of the specified Ingredient using
      *  the specified RdiProfile.
      */
-    public static function profileIngredient($ingredientID, $rdiProfileID) {
+    public static function profileIngredient($ingredientID, $rdiProfileID=1) {
         if (Ingredient::where('id', $ingredientID)->doesntExist()) return [];
         if (RdiProfile::where('id', $rdiProfileID)->doesntExist()) return [];
 
         $query = "
         select
-          nutrients.name as nutrient,
+          nutrients.display_name as nutrient,
           round(ingredient_nutrients.amount_per_100g, 2) as amount,
           units.name as unit,
           round((ingredient_nutrients.amount_per_100g / nullif(rdi_profile_nutrients.rdi, 0)) * 100, 1) as pdv
@@ -56,7 +56,7 @@ class NutrientProfileController extends Controller
 
         $query = " 
         select
-          nutrients.name as nutrient,
+          nutrients.display_name as nutrient,
           round(sum((ingredient_nutrients.amount_per_100g / 100) * meal_ingredients.mass_in_grams), 2) as amount,
           units.name as unit,
           round(sum(ingredient_nutrients.amount_per_100g * meal_ingredients.mass_in_grams / nullif(rdi_profile_nutrients.rdi, 0)), 1) as pdv
@@ -95,7 +95,7 @@ class NutrientProfileController extends Controller
 
         $query = " 
         select
-          nutrients.name,
+          nutrients.display_name,
           sum(result.amount) as amount,
           units.name,
           sum(result.pdv) as pdv

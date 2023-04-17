@@ -8,7 +8,7 @@
 select id, name from ingredients where id = :'ingredient_id';
 
 select
-  nutrients.name as nutrient,
+  nutrients.display_name as nutrient,
   round(ingredient_nutrients.amount_per_100g, 2) as amount,
   units.name as unit,
   round((ingredient_nutrients.amount_per_100g / nullif(rdi_profile_nutrients.rdi, 0)) * 100, 1) as pdv

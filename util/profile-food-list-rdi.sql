@@ -28,7 +28,7 @@ inner join meals
 where food_list_meals.food_list_id = :'food_list_id';
 
 select
-  nutrients.name,
+  nutrients.display_name,
   sum(result.amount) as amount,
   units.name,
   sum(result.pdv) as pdv
