@@ -25,8 +25,9 @@ Route::get('/', function () {
 })->name('home');
 
 
-// This route is available to unauthenticated users
+// These routes are available to unauthenticated users
 Route::get('ingredients', [IngredientController::class, 'index'])->name('ingredients.index');
+Route::get('rdi-profiles', [RdiProfileController::class, 'index'])->name('rdi-profiles.index');
 
 Route::middleware('auth')->group(function () {
     // User profiles
@@ -60,21 +61,20 @@ Route::middleware('auth')->group(function () {
     Route::get('food-lists/{meal}', [FoodListController::class, 'show'])->name('food-lists.show')->can('view', 'meal');
 
     // RDI Profiles
-    Route::get('rdi-profiles', [RdiProfileController::class, 'index'])->name('rdi-profiles.index')->can('viewAll', RdiProfile::class);
     Route::get('rdi-profiles/create', [RdiProfileController::class, 'create'])->name('rdi-profiles.create')->can('create', RdiProfile::class);
     Route::post('rdi-profiles', [RdiProfileController::class, 'store'])->name('rdi-profiles.store')->can('create', RdiProfile::class);
     Route::get('rdi-profiles/{meal}/edit', [RdiProfileController::class, 'edit'])->name('rdi-profiles.edit')->can('update', 'meal');
     Route::put('rdi-profiles/{meal}', [RdiProfileController::class, 'update'])->name('rdi-profiles.update')->can('update', 'meal');
     Route::delete('rdi-profiles/{meal}', [RdiProfileController::class, 'destroy'])->name('rdi-profiles.destroy')->can('delete', 'meal');
-    Route::get('rdi-profiles/{meal}', [RdiProfileController::class, 'show'])->name('rdi-profiles.show')->can('view', 'meal');
 
 });
 
-// This route is available to unauthenticated users.
-// The route is intentionally defined last among the ingredients routes, since
-// the catch-all parameter `ingredients/{ingredients}` would otherwise
+// These routes are available to unauthenticated users.
+// The routes are intentionally defined last among the ingredients routes, since
+// e.g. the catch-all parameter `ingredients/{ingredients}` would otherwise
 // "capture" e.g. ingredients/create and ingredients/export
 Route::get('ingredients/{ingredient}', [IngredientController::class, 'show'])->name('ingredients.show')->can('view', 'ingredient');
+Route::get('rdi-profiles/{rdi_profile}', [RdiProfileController::class, 'show'])->name('rdi-profiles.show')->can('view', 'rdi_profile');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
