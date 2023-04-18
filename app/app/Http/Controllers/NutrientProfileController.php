@@ -50,7 +50,7 @@ class NutrientProfileController extends Controller
         return $result;
     }
 
-    public static function profileMeal($mealID, $rdiProfileID) {
+    public static function profileMeal($mealID, $rdiProfileID=1) {
         if (Meal::where('id', $mealID)->doesntExist()) return [];
         if (RdiProfile::where('id', $rdiProfileID)->doesntExist()) return [];
 

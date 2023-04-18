@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Meal;
+use App\Models\Ingredient;
 use App\Models\MealIngredient;
+use App\Models\IngredientCategory;
+use App\Models\Unit;
 use Illuminate\Http\Request;
-use Inertia\Intertia;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class MealController extends Controller
 {
@@ -15,7 +19,7 @@ class MealController extends Controller
     public function index()
     {
         return Inertia::render('Meals/Index', [
-            'meals' => Meal::all()
+            'meals' => Auth::user() ? Meal::where('user_id', Auth::user()->id)->get(['id', 'name']) : [],
         ]);
     }
 
@@ -24,7 +28,17 @@ class MealController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Meals/Create');
+        $this->authorize('create', Meal::class);
+        return Inertia::render('Meals/Create', [
+            'ingredients' => Ingredient::where('user_id', null)
+                ->with('ingredient_category:id')
+                ->get(['id', 'name', 'ingredient_category_id']),
+            'user_ingredients' => Auth::user() ? Ingredient::where('user_id', Auth::user()->id)
+                ->with('ingredient_category:id')
+                ->get(['id', 'name', 'ingredient_category_id']) : [],
+            'ingredient_categories' => IngredientCategory::all(['id', 'name']),
+            'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume'])
+        ]);
     }
 
     /**
@@ -71,17 +85,22 @@ class MealController extends Controller
      */
     public function show(Meal $meal)
     {
-        // Load name, amount, and unit (along with necessary intermediate
-        // relationship) of each meal ingredient
+        $this->authorize('view', $meal);
+        $user = Auth::user();
         $meal->load([
-            'meal_ingredients:meal_id,ingredient_id,amount,unit_id',
-            'meal_ingredients.meal:id,name',
+            'meal_ingredients:id,meal_id,ingredient_id,amount,unit_id',
+            'meal_ingredients.ingredient:id,name',
             'meal_ingredients.unit:id,name',
         ]);
-
         return Inertia::render('Meals/Show', [
-            'meal' => $meal,
-            'nutrient_profile' => NutrientProfileController::profileMeal($meal)
+            'meal' => $meal->only([
+                'id',
+                'name',
+                'meal_ingredients'
+            ]),
+            'nutrient_profile' => NutrientProfileController::profileMeal($meal->id),
+            "can_edit" => $user ? ($user->can('update', $meal)) : false,
+            "can_delete" => $user ? ($user->can('delete', $meal)) : false,
         ]);
     }
 
@@ -90,16 +109,24 @@ class MealController extends Controller
      */
     public function edit(Meal $meal)
     {
-        // Load name, amount, and unit (along with necessary intermediate
-        // relationships) of each meal ingredient
+        $this->authorize('update', $meal);
+        $user = Auth::user();
         $meal->load([
             'meal_ingredients:meal_id,ingredient_id,amount,unit_id',
             'meal_ingredients.ingredient:id,name',
             'meal_ingredients.unit:id,name',
         ]);
-
         return Inertia::render('Meals/Edit', [
-            'meal' => $meal
+            'meal' => $meal,
+            'ingredients' => Ingredient::where('user_id', null)
+                ->with('ingredient_category:id')
+                ->get(['id', 'name', 'ingredient_category_id']),
+            'user_ingredients' => Auth::user() ? Ingredient::where('user_id', Auth::user()->id)
+                ->with('ingredient_category:id')
+                ->get(['id', 'name', 'ingredient_category_id']) : [],
+            'ingredient_categories' => IngredientCategory::all(['id', 'name']),
+            'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
+            "can_delete" => $user ? ($user->can('delete', $meal)) : false
         ]);
     }
 
