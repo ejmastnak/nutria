@@ -35,27 +35,36 @@ Purpose: display an overview of all ingredients as an intermediate step to navig
         "ingredient_category_id": 0
       }
     ],
+    "user_ingredients": [
+      {
+        "id": 0,
+        "name": "Bar",
+        "ingredient_category_id": 0
+      }
+    ],
     "ingredient_categories": [
       {
         "id": 0,
-        "name": "Foo"
+        "name": "Baz"
       }
     ]
   }
 
 **UI**
 
-Table with columns for:
+User-created Ingredients in table with columns for:
 
 - Ingredient name (links to Show)
 - Ingredient category
-- Pencil icon (links to Edit)
-- Trash icon (links to Destroy)
+
+FDA Ingredients available via fuzzy search with N ~ 10 results---there are too many to display in a table.
 
 **Filters**
 
 - By ingredient name (fuzzy search filter)
 - By ingredient category (select)
+
+**Action:** Create 
 
 Show
 ^^^^
@@ -84,7 +93,9 @@ Purpose: display an ingredient's name, properties, and nutrient profile.
         "unit": "g",
         "pdv": 100
       }
-    ]
+    ],
+    "can_edit": false,
+    "can_delete": false
   }
 
 **UI:** Standard RDI profile table.
@@ -173,7 +184,8 @@ Edit
           }
         }
       ]
-    }
+    },
+    "can_delete": false
   }
 
 **Form:** See :ref:`Validation: Update an Ingredient <validation-update-ingredient>`
@@ -258,7 +270,9 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
         "unit": "Blop",
         "pdv": 0.0
       }
-    ]
+    ],
+    "can_edit": false,
+    "can_delete": false
   }
 
 **Links to:**
@@ -280,7 +294,7 @@ Create
 
 Purpose: create a new Meal
 
-**Props:** You need ``ingredients`` to use as MealIngredients and ``units`` to specify amount of each MealIngredient.
+**Props:** You need ``ingredients`` to use as MealIngredients, ``ingredient_categories`` for filtering Ingredients when searching, and ``units`` to specify amount of each MealIngredient.
 
 .. code-block:: json
 
@@ -291,10 +305,22 @@ Purpose: create a new Meal
         "name": "Foo"
       }
     ],
+    "user_ingredients": [
+      {
+        "id": 0,
+        "name": "Bar"
+      }
+    ],
+    "ingredient_categories": [
+      {
+        "id": 0,
+        "name": "Baz"
+      }
+    ],
     "units": [
       {
         "id": 0,
-        "name": "Bar",
+        "name": "Bop",
         "is_mass": true,
         "is_volume": false
       }
@@ -350,6 +376,18 @@ Edit
         "name": "Bop"
       }
     ],
+    "user_ingredients": [
+      {
+        "id": 0,
+        "name": "Bar"
+      }
+    ],
+    "ingredient_categories": [
+      {
+        "id": 0,
+        "name": "Baz"
+      }
+    ],
     "units": [
       {
         "id": 0,
@@ -357,7 +395,8 @@ Edit
         "is_mass": true,
         "is_volume": false
       }
-    ]
+    ],
+    "can_delete": false
   }
 
 **Form:** See :ref:`Validation: Create or Update a Meal <validation-crud-meal>`
@@ -458,7 +497,9 @@ Show
         "unit": "g",
         "pdv": 0.0
       }
-    ]
+    ],
+    "can_edit": false,
+    "can_delete": false
   }
 
 **UI:**
@@ -604,7 +645,8 @@ Purpose: update an existing new Food List
         "is_mass": true,
         "is_volume": false
       }
-    ]
+    ],
+    "can_delete": false
   }
 
 **Form:** See :ref:`Validation: Create or Update Food List <validation-crud-food-list>`
@@ -690,7 +732,9 @@ Purpose: display the RDI value for every nutrient in an RDI profile.
           }
         }
       }
-    ]
+    ],
+    "can_edit": false,
+    "can_delete": false
   }
 
 **UI:** RdiProfileNutrients in table with columns:
@@ -780,7 +824,8 @@ Purpose: update an existing RDI Profile.
           }
         }
       }
-    ]
+    ],
+    "can_delete": false
   }
 
 **Form:** See :ref:`Validation: Update an RDI Profile <validation-update-rdi-profile>`
