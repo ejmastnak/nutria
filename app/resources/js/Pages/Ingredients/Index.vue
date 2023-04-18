@@ -4,7 +4,7 @@ import { TrashIcon, PlusCircleIcon, MagnifyingGlassIcon, ArchiveBoxArrowDownIcon
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 const props = defineProps({
   ingredients: Array,
-  userIngredients: Array,
+  user_ingredients: Array,
   ingredient_categories: Array
 })
 </script>

@@ -25,7 +25,7 @@ class IngredientController extends Controller
                 ->limit(20)
                 ->with('ingredient_category:id,name')
                 ->get(['id', 'name', 'ingredient_category_id']),
-            'userIngredients' => Auth::user() ? Ingredient::where('user_id', Auth::user()->id)
+            'user_ingredients' => Auth::user() ? Ingredient::where('user_id', Auth::user()->id)
                 ->with('ingredient_category:id,name')
                 ->get(['id', 'name', 'ingredient_category_id']) : [],
             'ingredient_categories' => IngredientCategory::all(['id', 'name'])
@@ -103,8 +103,8 @@ class IngredientController extends Controller
                 'density_g_per_ml'
             ]),
             'nutrient_profile' => NutrientProfileController::profileIngredient($ingredient->id),
-            "canEdit" => $user ? ($user->can('update', $ingredient)) : false,
-            "canDelete" => $user ? ($user->can('delete', $ingredient)) : false,
+            "can_edit" => $user ? ($user->can('update', $ingredient)) : false,
+            "can_delete" => $user ? ($user->can('delete', $ingredient)) : false,
         ]);
     }
 
@@ -122,7 +122,7 @@ class IngredientController extends Controller
         ]);
         return Inertia::render('Ingredients/Edit', [
             'ingredient' => $ingredient->only(['id', 'name', 'ingredient_category_id', 'density_g_per_ml', 'ingredient_nutrients']),
-            "canDelete" => $user ? ($user->can('delete', $ingredient)) : false,
+            "can_delete" => $user ? ($user->can('delete', $ingredient)) : false,
         ]);
     }
 

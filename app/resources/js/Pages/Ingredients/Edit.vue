@@ -3,7 +3,7 @@ import { Head, Link } from '@inertiajs/vue3'
 
 const props = defineProps({
   ingredient: Object,
-  canDelete: Boolean
+  can_delete: Boolean
 })
 
 </script>
@@ -17,9 +17,9 @@ export default {
 
 <template>
   <div class="">
-    <Head title="New Ingredient" />
+    <Head title="Edit Ingredient" />
 
-    <h1 class="text-xl font-semibold">New Ingredient</h1>
+    <h1 class="text-xl font-semibold">Edit Ingredient</h1>
 
     <table class="mt-8 sm:table-fixed w-3/4 text-sm sm:text-base text-left text-gray-500">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50">

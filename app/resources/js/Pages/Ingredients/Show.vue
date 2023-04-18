@@ -7,8 +7,8 @@ import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
 const props = defineProps({
   ingredient: Object,
   nutrient_profile: Array,
-  canEdit: Boolean,
-  canDelete: Boolean
+  can_edit: Boolean,
+  can_delete: Boolean
 })
 
 </script>
@@ -35,7 +35,7 @@ export default {
       </PrimaryLinkButton>
 
       <SecondaryLinkButton
-        v-if="canEdit"
+        v-if="can_edit"
         class="ml-auto"
         :href="route('ingredients.edit', ingredient.id)"
       >
@@ -43,7 +43,7 @@ export default {
       </SecondaryLinkButton>
 
       <SecondaryLinkButton
-        v-if="canDelete"
+        v-if="can_delete"
         class="ml-auto"
         :href="route('ingredients.destroy', ingredient.id)"
         as="button"
