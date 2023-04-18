@@ -18,17 +18,22 @@ class IngredientController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
         return Inertia::render('Ingredients/Index', [
-            // 'ingredients' => Ingredient::where('user_id', null)->get(['id', 'name', 'ingredient_category_id']),
-            'ingredients' => Ingredient::where('ingredient_category_id', '11')
-                ->where('user_id', null)
-                ->limit(20)
+            // 'user_ingredients' => Auth::user() ? Ingredient::where('user_id', Auth::user()->id)
+            //     ->with('ingredient_category:id,name')
+            //     ->get(['id', 'name', 'ingredient_category_id']) : [],
+            'ingredients' => Ingredient::where('user_id', null)
                 ->with('ingredient_category:id,name')
                 ->get(['id', 'name', 'ingredient_category_id']),
-            'user_ingredients' => Auth::user() ? Ingredient::where('user_id', Auth::user()->id)
+            'user_ingredients' => Ingredient::where('ingredient_category_id', '11')
+                ->where('user_id', null)
+                ->skip(23)
+                ->limit(5)
                 ->with('ingredient_category:id,name')
-                ->get(['id', 'name', 'ingredient_category_id']) : [],
-            'ingredient_categories' => IngredientCategory::all(['id', 'name'])
+                ->get(['id', 'name', 'ingredient_category_id']),
+            'ingredient_categories' => IngredientCategory::all(['id', 'name']),
+            "can_create" => $user ? ($user->can('create', Ingredient::class)) : false,
         ]);
     }
 
