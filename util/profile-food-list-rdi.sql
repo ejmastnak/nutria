@@ -29,6 +29,7 @@ where food_list_meals.food_list_id = :'food_list_id';
 
 select
   nutrients.display_name,
+  nutrients.nutrient_category_id as nutrient_category_id,
   sum(result.amount) as amount,
   units.name,
   sum(result.pdv) as pdv

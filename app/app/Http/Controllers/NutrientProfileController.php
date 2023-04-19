@@ -23,6 +23,7 @@ class NutrientProfileController extends Controller
         $query = "
         select
           nutrients.display_name as nutrient,
+          nutrients.nutrient_category_id as nutrient_category_id,
           round(ingredient_nutrients.amount_per_100g, 2) as amount,
           units.name as unit,
           round((ingredient_nutrients.amount_per_100g / nullif(rdi_profile_nutrients.rdi, 0)) * 100, 0) as pdv
@@ -57,6 +58,7 @@ class NutrientProfileController extends Controller
         $query = " 
         select
           nutrients.display_name as nutrient,
+          nutrients.nutrient_category_id as nutrient_category_id,
           round(sum((ingredient_nutrients.amount_per_100g / 100) * meal_ingredients.mass_in_grams), 2) as amount,
           units.name as unit,
           round(sum(ingredient_nutrients.amount_per_100g * meal_ingredients.mass_in_grams / nullif(rdi_profile_nutrients.rdi, 0)), 0) as pdv
@@ -96,6 +98,7 @@ class NutrientProfileController extends Controller
         $query = " 
         select
           nutrients.display_name,
+          nutrients.nutrient_category_id as nutrient_category_id,
           sum(result.amount) as amount,
           units.name,
           sum(result.pdv) as pdv
