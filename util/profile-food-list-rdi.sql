@@ -36,7 +36,7 @@ from (
   select
     nutrients.id as nutrient_id,
     round(sum((ingredient_nutrients.amount_per_100g / 100) * food_list_ingredients.mass_in_grams), 2) as amount,
-    round(sum(ingredient_nutrients.amount_per_100g * food_list_ingredients.mass_in_grams / nullif(rdi_profile_nutrients.rdi, 0)), 1) as pdv
+    round(sum(ingredient_nutrients.amount_per_100g * food_list_ingredients.mass_in_grams / nullif(rdi_profile_nutrients.rdi, 0)), 0) as pdv
   from ingredient_nutrients
   inner join food_list_ingredients
     on ingredient_nutrients.ingredient_id
@@ -56,7 +56,7 @@ from (
   select
     nutrients.id as nutrient_id,
     round(sum((ingredient_nutrients.amount_per_100g / 100) * meal_ingredients.mass_in_grams * (food_list_meals.mass_in_grams / meals.mass_in_grams)), 2) as amount,
-    round(sum(ingredient_nutrients.amount_per_100g * (meal_ingredients.mass_in_grams / nullif(rdi_profile_nutrients.rdi, 0)) * (food_list_meals.mass_in_grams / meals.mass_in_grams)), 1) as pdv
+    round(sum(ingredient_nutrients.amount_per_100g * (meal_ingredients.mass_in_grams / nullif(rdi_profile_nutrients.rdi, 0)) * (food_list_meals.mass_in_grams / meals.mass_in_grams)), 0) as pdv
   from ingredient_nutrients
   inner join food_list_meals
     on food_list_meals.food_list_id
