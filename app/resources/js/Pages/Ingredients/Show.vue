@@ -10,6 +10,7 @@ import InputLabel from '@/Components/InputLabel.vue'
 const props = defineProps({
   ingredient: Object,
   nutrient_profile: Array,
+  nutrient_categories: Array,
   can_edit: Boolean,
   can_delete: Boolean
 })
@@ -27,79 +28,77 @@ export default {
 </script>
 
 <template>
-  <div class="">
+  <div class="w-fit">
     <Head title="Ingredient" />
 
-    <h1 class="text-2xl">{{ingredient.name}}</h1>
+    <div class="flex items-end">
 
-    <!-- Category and density information about ingredient -->
-    <section class="mt-1">
-      <div class="">
-        <span class="bg-blue-100 px-3 py-1 rounded-xl font-medium border border-gray-300 text-sm">{{ingredient.ingredient_category.name}}</span>
-      </div>
-      <!-- <div v-if="ingredient.density_g_per_ml" class=""> -->
-      <!--   Density: {{ingredient.density_g_per_ml}} -->
-      <!-- </div> -->
-    </section>
+      <div class="w-full">
+        <h1 class="text-xl w-2/3">{{ingredient.name}}</h1>
 
-    <section class="mt-8 w-fit">
-      <div class="flex text-baseline">
-        <h2 class="text-xl">
-          Nutrient profile
-        </h2>
-        <div class="ml-auto flex items-baseline text-gray-500 text-sm">
-          <p class="">For</p>
-          <div class="">
-            <InputLabel for="howManyGrams" value="Ingredient quantity" class="sr-only" />
-            <TextInput
-              id="howManyGrams"
-              type="number"
-              class="mt-1 mx-1 px-1 text-right text-sm w-16 block py-px"
-              v-model="howManyGrams"
-              required
-            />
-          </div>
-          <p class="">grams</p>
+        <!-- Ingredient category -->
+        <div class="mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
+          {{ingredient.ingredient_category.name}}
         </div>
       </div>
 
-      <NutrientProfile 
-        :nutrient_profile="nutrient_profile"
-        :howManyGrams="Number(howManyGrams)"
-        :defaultMassInGrams="Number(defaultMassInGrams)" 
-        class="mt-3"
-      />
-    </section>
+      <div class="ml-auto flex items-baseline text-gray-500 text-md">
+        <div class="">
+          <InputLabel for="howManyGrams" value="Ingredient quantity" class="sr-only" />
+          <TextInput
+            id="howManyGrams"
+            type="number"
+            min="0"
+            class="mt-1 mx-1.5 pl-1 pr-0 text-right text-lg w-20 font-bold block py-px"
+            v-model="howManyGrams"
+            required
+          />
+        </div>
+        <p class="">grams</p>
+      </div>
+
+    </div>
+
+
+    <NutrientProfile 
+      class="mt-8 w-full"
+      :nutrient_profile="nutrient_profile"
+      :nutrient_categories="nutrient_categories"
+      :howManyGrams="Number(howManyGrams)"
+      :defaultMassInGrams="Number(defaultMassInGrams)" 
+    />
+
+
 
 
     <!-- Buttons for Back, Edit, and Delete -->
-    <!-- <div class="mt-4"> -->
-    <!--   <PrimaryLinkButton -->
-    <!--     class="ml-auto" -->
-    <!--     :href="route('ingredients.index')" -->
-    <!--   > -->
-    <!--     Back -->
-    <!--   </PrimaryLinkButton> -->
-    <!---->
-    <!--   <SecondaryLinkButton -->
-    <!--     v-if="can_edit" -->
-    <!--     class="ml-auto" -->
-    <!--     :href="route('ingredients.edit', ingredient.id)" -->
-    <!--   > -->
-    <!--     Edit -->
-    <!--   </SecondaryLinkButton> -->
-    <!---->
-    <!--   <SecondaryLinkButton -->
-    <!--     v-if="can_delete" -->
-    <!--     class="ml-auto" -->
-    <!--     :href="route('ingredients.destroy', ingredient.id)" -->
-    <!--     as="button" -->
-    <!--     method="delete" -->
-    <!--   > -->
-    <!--     Delete -->
-    <!--   </SecondaryLinkButton> -->
-    <!---->
-    <!-- </div> -->
+    <div class="mt-4 flex">
+      <PrimaryLinkButton
+        class=""
+        :href="route('ingredients.index')"
+      >
+        Back
+      </PrimaryLinkButton>
+
+      <SecondaryLinkButton
+        v-if="can_edit"
+        class=""
+        :href="route('ingredients.edit', ingredient.id)"
+      >
+        Edit
+      </SecondaryLinkButton>
+
+      <SecondaryLinkButton
+        v-if="can_delete"
+        class=""
+        :href="route('ingredients.destroy', ingredient.id)"
+        as="button"
+        method="delete"
+      >
+        Delete
+      </SecondaryLinkButton>
+    </div>
+
 
   </div>
   </template>

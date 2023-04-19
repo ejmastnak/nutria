@@ -3,10 +3,13 @@ import fuzzysort from 'fuzzysort'
 import throttle from "lodash/throttle";
 import debounce from "lodash/debounce";
 
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
-import { TrashIcon, PlusCircleIcon, MagnifyingGlassIcon, ArchiveBoxArrowDownIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
+import { useRemember } from '@inertiajs/vue3'
+import { TrashIcon, PlusCircleIcon, MagnifyingGlassIcon, XMarkIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
+import InputLabel from '@/Components/InputLabel.vue'
 import ListboxFilter from '@/Shared/ListboxFilter.vue'
 
 const props = defineProps({
@@ -27,10 +30,31 @@ const fuzzysortOptions = {
   threshold: -10000    // don't return lower scores than this
 }
 
-const search = ref("")
+const search = ref(sessionStorage.getItem('ingredientsIndexSearchQuery') ?? "")
+const fdaIngredientSearch = ref(null)
+
+// Preserve scroll
+onMounted(() => {
+  if (search) {
+    filteredIngredients.value = fuzzysort.go(search.value.trim(), props.ingredients, fuzzysortOptions)
+  }
+})
+
+// const search = useRemember("")
 watch(search, throttle(function (value) {
   filteredIngredients.value = fuzzysort.go(value.trim(), props.ingredients, fuzzysortOptions)
-}, 400))
+}, 300))
+
+// Preserve search query between page visits
+onBeforeUnmount(() => {
+  sessionStorage.setItem('ingredientsIndexSearchQuery', search.value);
+})
+
+function resetSearch() {
+  search.value = ""
+  selectedCategories.value = []
+  fdaIngredientSearch.value.focus()
+}
 
 function deleteIngredient() {
   alert("Foo");
@@ -74,10 +98,10 @@ export default {
     </div>
 
     <!-- Ingredients in FDA database -->
-    <section class="mt-12 border border-gray-200 p-4 rounded-xl shadow-sm">
+    <section class="mt-12 border border-gray-200 p-4 rounded-xl shadow-sm bg-white">
       <h2 class="text-lg">Ingredients from the FDA database</h2>
 
-      <div class="flex flex-col sm:flex-row items-start px-2 py-4 bg-white">
+      <div class="flex flex-col sm:flex-row items-start sm:items-end px-2 py-4">
 
         <!-- Input for search -->
         <div class="sm:mr-3">
@@ -92,6 +116,7 @@ export default {
             <input 
               type="text"
               id="table-search"
+              ref="fdaIngredientSearch"
               class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 sm:w-64 md:w-80 lg:w-96 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" 
               v-model="search"
             />
@@ -99,26 +124,38 @@ export default {
         </div>
 
         <!-- Select menu for ingredient category -->
-        <div class="mt-2 sm:mt-0 sm:ml-2 w-full">
-          <ListboxFilter
-            :options="ingredient_categories"
-            labelText="Filter by type"
-            :modelValue="selectedCategories"
-            @update:modelValue="newValue => selectedCategories = newValue"
-            width="full"
-          />
+        <div class="flex items-end">
+          <div class="mt-2 sm:mt-0 sm:ml-2">
+            <ListboxFilter
+              :options="ingredient_categories"
+              labelText="Filter by type"
+              :modelValue="selectedCategories"
+              @update:modelValue="newValue => selectedCategories = newValue"
+              width="full min-w-[6rem] max-w-full"
+            />
+          </div>
+
+          <SecondaryButton
+            type="button"
+            class="normal-case font-normal !tracking-normal !text-sm !px-2 h-fit ml-2"
+            @click="resetSearch"
+          >
+            <XMarkIcon class="w-5 h-5" />
+          </SecondaryButton>
         </div>
+
+
       </div>
 
       <table
         v-show="filteredIngredients.length"
         class="mt-2 sm:table-fixed w-full text-sm sm:text-base text-left text-gray-500">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+        <thead class="text-xs text-gray-700 uppercase bg-blue-100">
           <tr>
-            <th scope="col" class="px-6 py-3 bg-gray-100">
+            <th scope="col" class="px-6 py-3">
               Name
             </th>
-            <th scope="col" class="px-6 py-3  w-4/12 bg-gray-200">
+            <th scope="col" class="px-6 py-3  w-4/12">
               Type
             </th>
           </tr>
@@ -127,12 +164,13 @@ export default {
           <tr 
             v-for="ingredient in filteredIngredients.map(fi => fi.obj)" :key="ingredient.id"
             v-show="selectedCategories.length === 0 || selectedCategories.includes(ingredient.ingredient_category_id)"
-            class="bg-white border-b"
+            class="border-b"
           >
             <td scope="row" class="px-5 py-4 font-medium text-gray-900">
               <Link
                 :href="route('ingredients.show', ingredient.id)"
                 class="text-gray-800 hover:text-blue-600 hover:underline"
+                preserve-state
               >
                 {{ingredient.name}}
               </Link>
@@ -147,7 +185,7 @@ export default {
     </section>
 
     <!-- User ingredients -->
-    <section v-if="user_ingredients.length" class="mt-16 border border-gray-200 shadow-sm p-4 rounded-xl" >
+    <section v-if="user_ingredients.length" class="mt-16 border border-gray-200 shadow-sm p-4 rounded-xl bg-white" >
       <h2 class="text-lg">Your ingredients</h2>
       <table class="mt-2 sm:table-fixed w-full text-sm sm:text-base text-left text-gray-500">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
@@ -164,7 +202,7 @@ export default {
         <tbody>
           <tr 
             v-for="ingredient in user_ingredients" :key="ingredient.id"
-            class="bg-white border-b"
+            class="border-b"
           >
             <td scope="row" class="px-5 py-"
             >
