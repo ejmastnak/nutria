@@ -16,7 +16,8 @@ UNITS_SCHEMA=$(CURDIR)/units/schema.sql
 UNITS_CSV=$(CURDIR)/units/units.csv
 
 # Nutrients
-NUTRIENTS_WHITELIST_CSV=$(CURDIR)/nutrients/whitelist.csv
+NUTRIENTS_CATEGORIES_CSV=$(CURDIR)/nutrients/nutrient-categories.csv
+NUTRIENTS_WHITELIST_CSV=$(CURDIR)/nutrients/nutrients.csv
 NUTRIENTS_SCHEMA=$(CURDIR)/nutrients/schema.sql
 NUTRIENTS_TMP_SCHEMA=$(CURDIR)/nutrients/tmp-schema.sql
 NUTRIENTS_INSERT=$(CURDIR)/nutrients/insert.sql
@@ -68,6 +69,9 @@ seed_public: import_sr
 	@echo $(SEP) >> $(SEED)
 	@echo "-- Populate nutrient-related tables" >> $(SEED)
 	@echo $(SEP) >> $(SEED)
+	@echo "truncate table nutrient_categories restart identity cascade;" >> $(SEED)
+	@echo "\COPY nutrient_categories (name) FROM $(NUTRIENTS_CATEGORIES_CSV) WITH DELIMITER ',' HEADER CSV;" >> $(SEED)
+	@echo "" >> $(SEED)
 	@echo "truncate table nutrients restart identity cascade;" >> $(SEED)
 	@cat $(NUTRIENTS_TMP_SCHEMA) >> $(SEED)
 	@echo "" >> $(SEED)

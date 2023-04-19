@@ -1,16 +1,18 @@
--- Populates the `nutrients` table.
--- Prerequisite: the `units` table is populated.
+-- Populates the nutrients table.
+-- Prerequisite: the units and nutrient_categories tables are populated.
 insert into nutrients(
   id,
   name,
   display_name,
-  unit_id
+  unit_id,
+  nutrient_category_id
 )
 select
   sr.nutrient.id::int,
   sr.nutrient.name,
   tmp_nutrients.display_name,
-  units.id
+  units.id,
+  nutrient_categories.id
 from sr.nutrient
 inner join tmp_nutrients
   on tmp_nutrients.name
@@ -19,7 +21,10 @@ inner join tmp_nutrients
   = sr.nutrient.id::int
 inner join units
   on units.name
-  ilike sr.nutrient.unit_name;
+  ilike sr.nutrient.unit_name
+inner join nutrient_categories
+  on nutrient_categories.name
+  ilike tmp_nutrients.nutrient_category_name;
 
 -- Manually add nutrient-specific units{{{
 -- UG RAE for Vitamin A

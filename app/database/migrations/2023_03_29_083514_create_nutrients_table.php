@@ -18,6 +18,8 @@ return new class extends Migration {
             $table->string('display_name');
             $table->unsignedBigInteger('unit_id');
             $table->foreign('unit_id')->references('id')->on('units');
+            $table->unsignedBigInteger('nutrient_category_id');
+            $table->foreign('nutrient_category_id')->references('id')->on('nutrient_categories')->cascadeOnDelete();
         });
     }
 
