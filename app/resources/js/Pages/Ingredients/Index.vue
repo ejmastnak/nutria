@@ -132,7 +132,7 @@ export default {
             <td scope="row" class="px-5 py-4 font-medium text-gray-900">
               <Link
                 :href="route('ingredients.show', ingredient.id)"
-                class="hover:underline hover:text-blue-700 rounded p-1"
+                class="text-gray-800 hover:text-blue-600 hover:underline"
               >
                 {{ingredient.name}}
               </Link>
@@ -167,6 +167,10 @@ export default {
             class="bg-white border-b"
           >
             <td scope="row" class="px-5 py-"
+            >
+              <Link
+                class="text-gray-800 hover:text-blue-600 hover:underline"
+                :href="route('ingredients.show', ingredient.id)"
               >
                 {{ingredient.name}}
               </Link>
@@ -179,7 +183,7 @@ export default {
 
                 <Link
                   class="mx-auto"
-                  :href="route'ingredients.edit', ingredient.id"
+                  :href="route('ingredients.edit', ingredient.id)"
                 >
                 <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
                 </Link>
