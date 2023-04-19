@@ -12,9 +12,9 @@ const showingNavigationDropdown = ref(false);
 </script>
 
 <template>
-  <div>
-    <div class="min-h-screen max-w-4xl mx-auto px-6">
-      <nav class="max-w-4xl mx-auto border-b border-gray-100">
+  <div class="bg-[#fefefe]">
+    <div class="min-h-screen max-w-6xl mx-auto px-6">
+      <nav class="max-w-6xl mx-auto border-b border-gray-100">
         <!-- Primary Navigation Menu -->
         <div class="relative px-2 sm:px-4 sm:pr-6 lg:pr-8">
 
