@@ -19,13 +19,15 @@ Each function returns an array of arrays with the structure
             "nutrient" => "Protein",
             "amount" => 25.0,
             "unit" => "g",
-            "pdv" => 50
+            "pdv" => 50,
+            "nutrient_category_id" => 0
         ),
         array(
             "nutrient" => "Energy",
             "amount" => 2000,
             "unit" => "kcal",
-            "pdv" => 100
+            "pdv" => 100,
+            "nutrient_category_id" => 0
         ),
     );
 
@@ -41,6 +43,7 @@ For 100 grams of ingredient:
 
   select
     nutrients.name as nutrient,
+    nutrients.nutrient_category_id as nutrient_category_id,
     round(ingredient_nutrients.amount_per_100g, 2) as amount,
     units.name as unit,
     round((ingredient_nutrients.amount_per_100g / nullif(rdi_profile_nutrients.rdi, 0)) * 100, 1) as pdv
@@ -91,6 +94,7 @@ Profile Meal
 
   select
     nutrients.name as nutrient,
+    nutrients.nutrient_category_id as nutrient_category_id,
     round(sum((ingredient_nutrients.amount_per_100g / 100) * meal_ingredients.mass_in_grams), 2) as amount,
     units.name as unit,
     round(sum(ingredient_nutrients.amount_per_100g * meal_ingredients.mass_in_grams / nullif(rdi_profile_nutrients.rdi, 0)), 1) as pdv
@@ -231,6 +235,7 @@ Combining the subqueries
 
   select
     nutrients.name,
+    nutrients.nutrient_category_id as nutrient_category_id,
     sum(result.amount) as amount,
     units.name,
     sum(result.pdv) as pdv

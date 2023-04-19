@@ -47,7 +47,8 @@ Purpose: display an overview of all ingredients as an intermediate step to navig
         "id": 0,
         "name": "Baz"
       }
-    ]
+    ],
+    "can_create": false
   }
 
 **UI**
@@ -89,6 +90,7 @@ Purpose: display an ingredient's name, properties, and nutrient profile.
     "nutrient_profile": [
       {
         "nutrient": "Baz",
+        "nutrient_category_id": 0,
         "amount": 42,
         "unit": "g",
         "pdv": 100
@@ -266,6 +268,7 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
     "nutrient_profile": [
       {
         "nutrient": "Bop",
+        "nutrient_category_id": 0,
         "amount": 0.0,
         "unit": "Blop",
         "pdv": 0.0
@@ -493,6 +496,7 @@ Show
     "nutrient_profile": [
       {
         "nutrient": "Bop",
+        "nutrient_category_id": 0,
         "amount": 0.0,
         "unit": "g",
         "pdv": 0.0

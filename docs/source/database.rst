@@ -30,8 +30,8 @@ Unit
 - ``is_mass``
 - ``is_volume``
 
-Ingredient category
-^^^^^^^^^^^^^^^^^^^
+Nutrient category
+^^^^^^^^^^^^^^^^^
 
 - ``name``
 
@@ -41,6 +41,12 @@ Nutrient
 - ``name``
 - ``display_name``
 - ``unit_id``
+- ``nutrient_category_id``
+
+Ingredient category
+^^^^^^^^^^^^^^^^^^^
+
+- ``name``
 
 Ingredient
 ^^^^^^^^^^
