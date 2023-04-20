@@ -11,6 +11,7 @@ import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import ListboxFilter from '@/Shared/ListboxFilter.vue'
+import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 const props = defineProps({
   ingredients: Array,
@@ -97,149 +98,196 @@ export default {
       </div>
     </div>
 
-    <!-- Ingredients in FDA database -->
-    <section class="mt-12 border border-gray-200 p-4 rounded-xl shadow-sm bg-white">
-      <h2 class="text-lg">Ingredients from the FDA database</h2>
+    <TabGroup :defaultIndex="0">
 
-      <div class="flex flex-col sm:flex-row items-start sm:items-end px-2 py-4">
+      <TabList class="mt-4 p-1 bg-gray-50 rounded-xl w-fit border border-gray-300 space-x-2">
+      
 
-        <!-- Input for search -->
-        <div class="sm:mr-3">
-          <label for="table-search" class="ml-1 text-sm text-gray-500">
-            Search by ingredient name
-          </label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <MagnifyingGlassIcon class="w-5 h-5 text-gray-500" />
+        <Tab as="template" v-slot="{ selected }">
+          <button
+            class="px-4 py-2 rounded-md text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"
+            :class="{
+            'bg-blue-500 text-white': selected,
+            'bg-gray-50 text-black hover:bg-blue-50 ': !selected 
+          }" >
+            FDA Ingredients
+          </button>
+        </Tab>
+
+        <Tab as="template" v-slot="{ selected }">
+          <button
+            class="px-4 py-2 rounded-md text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"
+            :class="{
+            'bg-blue-500 text-white': selected,
+            'bg-gray-50 text-black hover:bg-blue-50 ': !selected 
+          }" >
+            Your Ingredients
+          </button>
+        </Tab>
+
+      </TabList>
+
+      <TabPanels class="mt-2">
+
+        <!-- Ingredients in FDA database -->
+        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-xl">
+          <section class="border border-gray-200 p-4 rounded-xl shadow-sm bg-white">
+            <h2 class="text-lg">Ingredients from the FDA database</h2>
+
+            <div class="flex flex-col sm:flex-row items-start sm:items-end px-2 py-4">
+
+              <!-- Input for search -->
+              <div class="sm:mr-3">
+                <label for="table-search" class="ml-1 text-sm text-gray-500">
+                  Search by ingredient name
+                </label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <MagnifyingGlassIcon class="w-5 h-5 text-gray-500" />
+                  </div>
+
+                  <input 
+                    type="text"
+                    id="table-search"
+                    ref="fdaIngredientSearch"
+                    class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 sm:w-64 md:w-80 lg:w-96 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" 
+                    v-model="search"
+                  />
+                </div>
+              </div>
+
+              <!-- Select menu for ingredient category -->
+              <div class="flex items-end">
+                <div class="mt-2 sm:mt-0 sm:ml-2">
+                  <ListboxFilter
+                    :options="ingredient_categories"
+                    labelText="Filter by type"
+                    :modelValue="selectedCategories"
+                    @update:modelValue="newValue => selectedCategories = newValue"
+                    width="full min-w-[6rem] max-w-full"
+                  />
+                </div>
+
+                <div class="">
+                  <label for="clear-ingredient-filters" class="sr-only">
+                    Clear filter
+                  </label>
+                  <SecondaryButton
+                    type="button"
+                    id="clear-ingredient-filters"
+                    class="normal-case font-normal !tracking-normal !text-sm !px-2 h-fit ml-2"
+                    @click="resetSearch"
+                  >
+                    <XMarkIcon class="w-5 h-5" />
+                  </SecondaryButton>
+                </div>
+              </div>
+
+
             </div>
 
-            <input 
-              type="text"
-              id="table-search"
-              ref="fdaIngredientSearch"
-              class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 sm:w-64 md:w-80 lg:w-96 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" 
-              v-model="search"
-            />
-          </div>
-        </div>
-
-        <!-- Select menu for ingredient category -->
-        <div class="flex items-end">
-          <div class="mt-2 sm:mt-0 sm:ml-2">
-            <ListboxFilter
-              :options="ingredient_categories"
-              labelText="Filter by type"
-              :modelValue="selectedCategories"
-              @update:modelValue="newValue => selectedCategories = newValue"
-              width="full min-w-[6rem] max-w-full"
-            />
-          </div>
-
-          <SecondaryButton
-            type="button"
-            class="normal-case font-normal !tracking-normal !text-sm !px-2 h-fit ml-2"
-            @click="resetSearch"
-          >
-            <XMarkIcon class="w-5 h-5" />
-          </SecondaryButton>
-        </div>
-
-
-      </div>
-
-      <table
-        v-show="filteredIngredients.length"
-        class="mt-2 sm:table-fixed w-full text-sm sm:text-base text-left text-gray-500">
-        <thead class="text-xs text-gray-700 uppercase bg-blue-100">
-          <tr>
-            <th scope="col" class="px-6 py-3">
-              Name
-            </th>
-            <th scope="col" class="px-6 py-3  w-4/12">
-              Type
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr 
-            v-for="ingredient in filteredIngredients.map(fi => fi.obj)" :key="ingredient.id"
-            v-show="selectedCategories.length === 0 || selectedCategories.includes(ingredient.ingredient_category_id)"
-            class="border-b"
-          >
-            <td scope="row" class="px-5 py-4 font-medium text-gray-900">
-              <Link
-                :href="route('ingredients.show', ingredient.id)"
-                class="text-gray-800 hover:text-blue-600 hover:underline"
-                preserve-state
-              >
-                {{ingredient.name}}
-              </Link>
-            </td>
-            <td class="px-6 py-4">
-              {{ingredient.ingredient_category.name}}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-    </section>
-
-    <!-- User ingredients -->
-    <section v-if="user_ingredients.length" class="mt-16 border border-gray-200 shadow-sm p-4 rounded-xl bg-white" >
-      <h2 class="text-lg">Your ingredients</h2>
-      <table class="mt-2 sm:table-fixed w-full text-sm sm:text-base text-left text-gray-500">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-          <tr>
-            <th scope="col" class="px-6 py-3 bg-blue-100">
-              Name
-            </th>
-            <th scope="col" class="px-6 py-3  w-3/12 bg-blue-200">
-              Type
-            </th>
-            <th scope="col" class="px-6 py-3  w-1/12 bg-blue-100" />
-          </tr>
-        </thead>
-        <tbody>
-          <tr 
-            v-for="ingredient in user_ingredients" :key="ingredient.id"
-            class="border-b"
-          >
-            <td scope="row" class="px-5 py-"
-            >
-              <Link
-                class="text-gray-800 hover:text-blue-600 hover:underline"
-                :href="route('ingredients.show', ingredient.id)"
-              >
-                {{ingredient.name}}
-              </Link>
-            </td>
-            <td class="px-6 py-4">
-              {{ingredient.ingredient_category.name}}
-            </td>
-            <td>
-              <div class="flex items-center px-1.5">
-
-                <Link
-                  class="mx-auto"
-                  :href="route('ingredients.edit', ingredient.id)"
+            <table
+              v-show="filteredIngredients.length"
+              class="mt-2 sm:table-fixed w-full text-sm sm:text-base text-left text-gray-500">
+              <thead class="text-xs text-gray-700 uppercase bg-blue-100">
+                <tr>
+                  <th scope="col" class="px-6 py-3">
+                    Name
+                  </th>
+                  <th scope="col" class="px-6 py-3  w-4/12">
+                    Type
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr 
+                  v-for="ingredient in filteredIngredients.map(fi => fi.obj)" :key="ingredient.id"
+                  v-show="selectedCategories.length === 0 || selectedCategories.includes(ingredient.ingredient_category_id)"
+                  class="border-b"
                 >
-                <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
-                </Link>
+                  <td scope="row" class="px-5 py-4 font-medium text-gray-900">
+                    <Link
+                      :href="route('ingredients.show', ingredient.id)"
+                      class="text-gray-800 hover:text-blue-600 hover:underline"
+                      preserve-state
+                    >
+                      {{ingredient.name}}
+                    </Link>
+                  </td>
+                  <td class="px-6 py-4">
+                    {{ingredient.ingredient_category.name}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </TabPanel>
 
-                <button 
-                  type="button" 
-                  @click="deleteIngredient"
-                  class="mx-auto"
+        <!-- User ingredients -->
+        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-xl">
+          <section v-if="user_ingredients.length" class="border border-gray-200 shadow-sm p-4 rounded-xl bg-white" >
+            <h2 class="text-lg">Your ingredients</h2>
+            <table class="mt-2 sm:table-fixed w-full text-sm sm:text-base text-left text-gray-500">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-3 bg-blue-100">
+                    Name
+                  </th>
+                  <th scope="col" class="px-6 py-3  w-3/12 bg-blue-200">
+                    Type
+                  </th>
+                  <th scope="col" class="px-6 py-3  w-1/12 bg-blue-100" />
+                </tr>
+              </thead>
+              <tbody>
+                <tr 
+                  v-for="ingredient in user_ingredients" :key="ingredient.id"
+                  class="border-b"
                 >
-                  <TrashIcon class="w-5 h-5 hover:text-red-700" />
-                </button>
+                  <td scope="row" class="px-5 py-"
+                  >
+                    <Link
+                      class="text-gray-800 hover:text-blue-600 hover:underline"
+                      :href="route('ingredients.show', ingredient.id)"
+                    >
+                      {{ingredient.name}}
+                    </Link>
+                  </td>
+                  <td class="px-6 py-4">
+                    {{ingredient.ingredient_category.name}}
+                  </td>
+                  <td>
+                    <div class="flex items-center px-1.5">
 
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+                      <Link
+                        class="mx-auto"
+                        :href="route('ingredients.edit', ingredient.id)"
+                      >
+                      <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
+                      </Link>
+
+                      <button 
+                        type="button" 
+                        @click="deleteIngredient"
+                        class="mx-auto"
+                      >
+                        <TrashIcon class="w-5 h-5 hover:text-red-700" />
+                      </button>
+
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </TabPanel>
+
+      </TabPanels>
+    </TabGroup>
+
+
+
+
 
   </div>
   </template>
