@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { router } from '@inertiajs/vue3'
 import { Head, Link } from '@inertiajs/vue3'
 import NutrientProfile from '@/Shared/NutrientProfile.vue'
 import FuzzyCombobox from '@/Shared/FuzzyCombobox.vue'
@@ -13,6 +14,7 @@ const props = defineProps({
   ingredient: Object,
   nutrient_profile: Array,
   nutrient_categories: Array,
+  ingredients: Array,
   can_edit: Boolean,
   can_delete: Boolean
 })
@@ -20,7 +22,11 @@ const props = defineProps({
 const howManyGrams = ref("100");
 const defaultMassInGrams = 100
 
-const fuzzyTest = ref({})
+const searchIngredient = ref({})
+
+function search() {
+  router.get(route('ingredients.show', searchIngredient.value.id))
+}
 
 </script>
 
@@ -62,12 +68,16 @@ export default {
         Delete
       </Link>
 
-      <FuzzyCombobox
+      <form
+        @submit.prevent="search"
         class="!ml-auto"
-        labelText="Search for another ingredient"
-        :options="nutrient_categories"
-        v-model="fuzzyTest"
-      />
+      >
+        <FuzzyCombobox
+          labelText="Search for another ingredient"
+          :options="ingredients"
+          v-model="searchIngredient"
+        />
+      </form>
 
     </div>
 

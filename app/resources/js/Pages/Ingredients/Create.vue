@@ -29,6 +29,5 @@ export default {
       :nutrient_categories="nutrient_categories"
       :create="true"
     />
-
   </div>
 </template>

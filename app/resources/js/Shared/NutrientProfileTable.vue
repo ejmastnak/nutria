@@ -20,7 +20,7 @@ const gradient = [
 ]
 
 function bg(pdv) {
-  // Linearly maps the PDV range [0, 100] to the index range 
+  // Linearly maps the PDV range [0, 100] to the index range
   // [0, gradient.length - 2], reserving gradient[gradient.length - 1]  for PDV
   // values over 100.
   if (pdv < 0) return gradient[0];
@@ -52,24 +52,24 @@ function round(num, scaleBy=100) {
           <th scope="col" class="px-4 py-3 bg-blue-100 text-right">
             Amount
           </th>
-          <th scope="col" class="px-4 py-3 bg-blue-50 text-right">
-            PDV
+          <th scope="col" class="px-4 py-3 bg-blue-50 text-right whitespace-nowrap">
+            % DV
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr 
+        <tr
           v-for="nutrient in nutrient_profile"
           class="border-t text-gray-600"
         >
-          <td scope="row" class="px-5 py-2">
+          <td scope="row" class="px-4 py-2">
             {{nutrient.nutrient}}
           </td>
-          <td class="px-4 py-2 text-right">
+          <td class="px-3 py-2 text-right whitespace-nowrap">
             {{round(scale(nutrient.amount))}}
             {{nutrient.unit}}
           </td>
-          <td class="px-4 py-2 text-right font-medium text-gray-700" :class="bg(scale(nutrient.pdv))">
+          <td class="px-3 py-2 text-right font-medium text-gray-700" :class="bg(scale(nutrient.pdv))">
             {{round(scale(nutrient.pdv), scaleBy=1)}}<span class="ml-px">%</span>
           </td>
         </tr>

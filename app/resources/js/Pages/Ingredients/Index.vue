@@ -99,15 +99,15 @@ export default {
 
     <TabGroup :defaultIndex="0">
 
-      <TabList class="mt-4 p-1 bg-gray-50 rounded-xl w-fit border border-gray-300 space-x-2">
+      <TabList class="mt-4 rounded-xl w-fit border-b space-x-2">
 
 
         <Tab as="template" v-slot="{ selected }">
           <button
-            class="px-4 py-2 rounded-md text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"
+            class="px-4 py-2 text-sm text-gray-600 focus:outline-none focus:border-b-2 focus:border-blue-500 transition ease-in-out duration-150"
             :class="{
-            'bg-blue-500 text-white': selected,
-            'bg-gray-50 text-black hover:bg-blue-50 ': !selected
+            'text-gray-800 font-semibold border-b-2 border-blue-500': selected,
+            'hover:border-b-2 hover:border-gray-300': !selected
           }" >
             FDA Ingredients
           </button>
@@ -115,10 +115,10 @@ export default {
 
         <Tab as="template" v-slot="{ selected }">
           <button
-            class="px-4 py-2 rounded-md text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"
+            class="px-4 py-2 text-sm text-gray-600 focus:outline-none focus:border-b-2 focus:border-blue-500 transition ease-in-out duration-150"
             :class="{
-            'bg-blue-500 text-white': selected,
-            'bg-gray-50 text-black hover:bg-blue-50 ': !selected
+            'text-gray-800 font-semibold border-b-2 border-blue-500': selected,
+            'hover:border-b-2 hover:border-gray-300': !selected
           }" >
             Your Ingredients
           </button>
