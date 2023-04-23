@@ -1,3 +1,11 @@
+<!--
+https://headlessui.com/vue/listbox
+A select component (aka Listbox in Headless UI parlance) supporting multiple
+selected items.
+Input: an array of objects with an `id` and `name` key.
+Output: an array of the `id` properties of all selected objects
+-->
+
 <script setup>
 import { ref, computed } from 'vue'
 import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/outline'
@@ -26,7 +34,7 @@ const emit = defineEmits([
 </script>
 
 <template>
-  
+
   <Listbox
     :modelValue="modelValue"
     @update:modelValue="value => emit('update:modelValue', value)"
@@ -36,7 +44,9 @@ const emit = defineEmits([
       {{labelText}}
     </ListboxLabel>
     <ListboxButton :class="width" class="flex text-left bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 px-4 py-2">
-        <span class="mr-2">{{ modelValue.length === 0 ? "All" : options[modelValue[0] - 1].name }}{{ modelValue.length > 1 ? "..." : ""}}</span>
+      <span class="mr-2">
+        {{ modelValue.length === 0 ? "All" : options[modelValue[0] - 1].name }}{{ modelValue.length > 1 ? "..." : ""}}
+      </span>
       <ChevronDownIcon class="ml-auto w-5 h-5 text-gray-500" />
     </ListboxButton>
     <ListboxOptions :class="width" class="absolute mt-0.5 text-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
@@ -48,14 +58,14 @@ const emit = defineEmits([
         v-slot="{ active, selected }"
       >
         <li :class="{
-            'flex': true,
-            'items-center': true,
-            'px-4': true,
-            'py-1.5': true,
-            'bg-blue-500 text-white': active,
-            'text-gray-500': !selected,
-            'font-bold': selected,
-          }"
+          'flex': true,
+          'items-center': true,
+          'px-4': true,
+          'py-1.5': true,
+          'bg-blue-500 text-white': active,
+          'text-gray-500': !selected,
+          'font-bold': selected,
+        }"
         >
           {{ option.name }}
           <CheckIcon class="ml-auto w-5 h-5" v-show="selected" />

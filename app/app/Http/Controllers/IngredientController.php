@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ingredient;
 use App\Models\IngredientNutrient;
 use App\Models\IngredientCategory;
+use App\Models\NutrientCategory;
 use App\Models\Nutrient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -43,15 +44,25 @@ class IngredientController extends Controller
     public function create()
     {
         $this->authorize('create', Ingredient::class);
-        $nutrients = Nutrient::get(['id', 'display_name', 'unit_id']);
+        $nutrients = Nutrient::get(['id', 'display_name', 'unit_id', 'nutrient_category_id']);
         $nutrients->load('unit:id,name');
         return Inertia::render('Ingredients/Create', [
-            'ingredient_nutrients' => $nutrients->map(fn($nutrient) => [
-                'id' => 0,
-                'nutrient_id' => $nutrient->id,
-                'amount_per_100g' => 0.0,
-                'nutrient' => $nutrient
-            ])
+            'ingredient' => [
+                'id' => null,
+                "name" => null,
+                "ingredient_category_id" => null,
+                "ingredient_category" => null,
+                "density_g_per_ml" => null,
+                'ingredient_nutrients' => $nutrients->map(fn($nutrient) => [
+                    'id' => 0,
+                    'nutrient_id' => $nutrient->id,
+                    'amount_per_100g' => 0.0,
+                    'nutrient' => $nutrient,
+                    'nutrient_category_id' => $nutrient->nutrient_category_id
+                ])
+            ],
+            'ingredient_categories' => IngredientCategory::all(['id', 'name']),
+            'nutrient_categories' => NutrientCategory::all(['id', 'name'])
         ]);
     }
 
@@ -64,7 +75,7 @@ class IngredientController extends Controller
         $num_nutrients = Nutrient::count();
         $request->validate([
             'name' => ['required', 'min:1', 'max:500'],
-            'category_id' => ['nullable', 'integer', 'in:ingredient_categories,id'],
+            'ingredient_category_id' => ['nullable', 'integer', 'in:ingredient_categories,id'],
             'density_g_per_ml' => ['nullable', 'numeric', 'gt:0'],
             'ingredient_nutrients' => ['required', 'array', 'min:' . $num_nutrients, 'max:' . $num_nutrients],
             'ingredient_nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'in:nutrients,id'],
@@ -108,6 +119,7 @@ class IngredientController extends Controller
                 'density_g_per_ml'
             ]),
             'nutrient_profile' => NutrientProfileController::profileIngredient($ingredient->id),
+            'nutrient_categories' => NutrientCategory::all(['id', 'name']),
             "can_edit" => $user ? ($user->can('update', $ingredient)) : false,
             "can_delete" => $user ? ($user->can('delete', $ingredient)) : false,
         ]);
@@ -140,7 +152,7 @@ class IngredientController extends Controller
         $num_nutrients = Nutrient::count();
         $request->validate([
             'name' => ['required', 'min:1', 'max:500'],
-            'category_id' => ['nullable', 'integer', 'in:ingredient_categories,id'],
+            'ingredient_category_id' => ['nullable', 'integer', 'in:ingredient_categories,id'],
             'density_g_per_ml' => ['nullable', 'numeric', 'gt:0'],
             'ingredient_nutrients' => ['required', 'array', 'max:' . $num_nutrients],
             'ingredient_nutrients.*.id' => ['required', 'distinct', 'integer', 'in:ingredient_nutrients,id'],

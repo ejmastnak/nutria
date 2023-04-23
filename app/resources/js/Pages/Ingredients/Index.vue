@@ -34,14 +34,13 @@ const fuzzysortOptions = {
 const search = ref(sessionStorage.getItem('ingredientsIndexSearchQuery') ?? "")
 const fdaIngredientSearch = ref(null)
 
-// Preserve scroll
+// Preserve ingredient search from previous visit to this page
 onMounted(() => {
   if (search) {
     filteredIngredients.value = fuzzysort.go(search.value.trim(), props.ingredients, fuzzysortOptions)
   }
 })
 
-// const search = useRemember("")
 watch(search, throttle(function (value) {
   filteredIngredients.value = fuzzysort.go(value.trim(), props.ingredients, fuzzysortOptions)
 }, 300))
@@ -87,7 +86,7 @@ export default {
       <div class="flex flex-col ml-auto w-fit">
 
         <!-- New ingredient button -->
-        <PrimaryLinkButton 
+        <PrimaryLinkButton
           :href="route('ingredients.create')"
           class="flex ml-auto items-center py-2.0 sm:py-2.5 mt-1 normal-case"
           :class="{'!bg-blue-200': !can_create}"
@@ -101,14 +100,14 @@ export default {
     <TabGroup :defaultIndex="0">
 
       <TabList class="mt-4 p-1 bg-gray-50 rounded-xl w-fit border border-gray-300 space-x-2">
-      
+
 
         <Tab as="template" v-slot="{ selected }">
           <button
             class="px-4 py-2 rounded-md text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"
             :class="{
             'bg-blue-500 text-white': selected,
-            'bg-gray-50 text-black hover:bg-blue-50 ': !selected 
+            'bg-gray-50 text-black hover:bg-blue-50 ': !selected
           }" >
             FDA Ingredients
           </button>
@@ -119,7 +118,7 @@ export default {
             class="px-4 py-2 rounded-md text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"
             :class="{
             'bg-blue-500 text-white': selected,
-            'bg-gray-50 text-black hover:bg-blue-50 ': !selected 
+            'bg-gray-50 text-black hover:bg-blue-50 ': !selected
           }" >
             Your Ingredients
           </button>
@@ -146,11 +145,11 @@ export default {
                     <MagnifyingGlassIcon class="w-5 h-5 text-gray-500" />
                   </div>
 
-                  <input 
+                  <input
                     type="text"
                     id="table-search"
                     ref="fdaIngredientSearch"
-                    class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 sm:w-64 md:w-80 lg:w-96 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" 
+                    class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 sm:w-64 md:w-80 lg:w-96 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                     v-model="search"
                   />
                 </div>
@@ -200,7 +199,7 @@ export default {
                 </tr>
               </thead>
               <tbody>
-                <tr 
+                <tr
                   v-for="ingredient in filteredIngredients.map(fi => fi.obj)" :key="ingredient.id"
                   v-show="selectedCategories.length === 0 || selectedCategories.includes(ingredient.ingredient_category_id)"
                   class="border-b"
@@ -240,7 +239,7 @@ export default {
                 </tr>
               </thead>
               <tbody>
-                <tr 
+                <tr
                   v-for="ingredient in user_ingredients" :key="ingredient.id"
                   class="border-b"
                 >
@@ -266,8 +265,8 @@ export default {
                       <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
                       </Link>
 
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         @click="deleteIngredient"
                         class="mx-auto"
                       >

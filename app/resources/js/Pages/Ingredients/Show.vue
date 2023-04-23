@@ -2,8 +2,10 @@
 import { ref } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
 import NutrientProfile from '@/Shared/NutrientProfile.vue'
+import FuzzyCombobox from '@/Shared/FuzzyCombobox.vue'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 
@@ -18,6 +20,8 @@ const props = defineProps({
 const howManyGrams = ref("100");
 const defaultMassInGrams = 100
 
+const fuzzyTest = ref({})
+
 </script>
 
 <script>
@@ -29,16 +33,59 @@ export default {
 
 <template>
   <div class="w-fit">
-    <Head title="Ingredient" />
+    <Head :title="ingredient.name" />
 
-    <div class="flex items-end">
+    <div class="flex items-center space-x-8 -mt-2 border border-gray-300 p-1 px-4 rounded-xl">
+
+      <Link
+        :href="route('ingredients.index')"
+        class="hover:underline hover:text-blue-500"
+      >
+        All <span class="hidden sm:inline"> ingredients</span>
+      </Link>
+
+      <Link
+        v-if="can_edit"
+        class="hover:underline hover:text-blue-500"
+        :href="route('ingredients.edit', ingredient.id)"
+      >
+        Edit
+      </Link>
+
+      <Link
+        v-if="can_delete"
+        class="hover:underline hover:text-blue-500"
+        :href="route('ingredients.destroy', ingredient.id)"
+        as="button"
+        method="delete"
+      >
+        Delete
+      </Link>
+
+      <FuzzyCombobox
+        class="!ml-auto"
+        labelText="Search for another ingredient"
+        :options="nutrient_categories"
+        v-model="fuzzyTest"
+      />
+
+    </div>
+
+    <div class="mt-10 flex items-end">
 
       <div class="w-full">
+
         <h1 class="text-xl w-2/3">{{ingredient.name}}</h1>
 
         <!-- Ingredient category -->
-        <div class="mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
-          {{ingredient.ingredient_category.name}}
+        <div class="flex">
+          <div class="mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
+            Ingredient
+          </div>
+
+          <div class="ml-2 mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
+            {{ingredient.ingredient_category.name}}
+          </div>
         </div>
       </div>
 
@@ -59,46 +106,13 @@ export default {
 
     </div>
 
-
-    <NutrientProfile 
-      class="mt-8 w-full"
+    <NutrientProfile
+      class="mt-10 w-full"
       :nutrient_profile="nutrient_profile"
       :nutrient_categories="nutrient_categories"
       :howManyGrams="Number(howManyGrams)"
-      :defaultMassInGrams="Number(defaultMassInGrams)" 
+      :defaultMassInGrams="Number(defaultMassInGrams)"
     />
 
-
-
-
-    <!-- Buttons for Back, Edit, and Delete -->
-    <div class="mt-4 flex">
-      <PrimaryLinkButton
-        class=""
-        :href="route('ingredients.index')"
-      >
-        Back
-      </PrimaryLinkButton>
-
-      <SecondaryLinkButton
-        v-if="can_edit"
-        class=""
-        :href="route('ingredients.edit', ingredient.id)"
-      >
-        Edit
-      </SecondaryLinkButton>
-
-      <SecondaryLinkButton
-        v-if="can_delete"
-        class=""
-        :href="route('ingredients.destroy', ingredient.id)"
-        as="button"
-        method="delete"
-      >
-        Delete
-      </SecondaryLinkButton>
-    </div>
-
-
   </div>
-  </template>
+</template>
