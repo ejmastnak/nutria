@@ -19,9 +19,9 @@ const props = defineProps({
 })
 
 const form = useForm({
-  name: props.create ? "" : props.ingredient.name,
-  ingredient_category_id : props.create ? 0 : props.ingredient.ingredient_category_id,
-  density_g_per_ml: props.create ? "" : (props.ingredient.density_g_per_ml ? props.ingredient.density_g_per_ml.toString() : ""),
+  name: props.ingredient.name ? props.ingredient.name : "",
+  ingredient_category_id: props.ingredient.ingredient_category_id ? props.ingredient.ingredient_category_id : 0,
+  density_g_per_ml: props.ingredient.density_g_per_ml ? props.ingredient.density_g_per_ml.toString : "",
   ingredient_nutrients: props.ingredient.ingredient_nutrients.map(nutrient => ({
     nutrient_id: nutrient.nutrient_id,
     nutrient_category_id: nutrient.nutrient.nutrient_category_id,
@@ -42,7 +42,7 @@ function submit() {
 const selectedCategory = ref({})
 
 onMounted(() => {
-  if (!props.create) {
+  if (form.ingredient_category_id) {
     // Set selectedCategory to the item in props.nutrient_categories whose id
     // equals props.ingredient.ingredient_category_id
     const idx = props.ingredient_categories.map(ic => ic.id).indexOf(props.ingredient.ingredient_category_id);
@@ -62,8 +62,8 @@ export default {
 <template>
 
   <form @submit.prevent="submit">
-    <section class="mt-4">
 
+    <section class="mt-4">
       <!-- Name -->
       <div class="w-full max-w-[40rem]">
         <InputLabel for="name" value="Name" />
@@ -168,7 +168,6 @@ export default {
       >
         Cancel
       </SecondaryLinkButton>
-
 
     </section>
 

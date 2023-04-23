@@ -6,11 +6,12 @@ import debounce from "lodash/debounce";
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
 import { useRemember } from '@inertiajs/vue3'
-import { TrashIcon, PlusCircleIcon, MagnifyingGlassIcon, XMarkIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
+import { TrashIcon, PlusCircleIcon, DocumentDuplicateIcon, MagnifyingGlassIcon, XMarkIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import ListboxFilter from '@/Shared/ListboxFilter.vue'
+import CloneExisting from './Partials/CloneExisting.vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 const props = defineProps({
@@ -19,6 +20,8 @@ const props = defineProps({
   ingredient_categories: Array,
   can_create: Boolean
 })
+
+const cloneExistingDialog = ref(null)
 
 // For filtering ingredients by category
 const selectedCategories = ref([])
@@ -54,6 +57,10 @@ function resetSearch() {
   search.value = ""
   selectedCategories.value = []
   fdaIngredientSearch.value.focus()
+}
+
+function cloneExistingIngredient() {
+
 }
 
 function deleteIngredient() {
@@ -92,8 +99,19 @@ export default {
           :class="{'!bg-blue-200': !can_create}"
         >
           <PlusCircleIcon class="w-6 h-6" />
-          <p class="ml-2 font-semibold text-base whitespace-nowrap">New <span class="hidden sm:inline">ingredient</span></p>
+          <p class="ml-2 font-semibold text-base whitespace-nowrap">New ingredient</p>
         </PrimaryLinkButton>
+
+        <!-- New ingredient button -->
+        <SecondaryButton
+          class="flex ml-auto items-center mt-1 normal-case"
+          :class="{'!text-gray-300': !can_create}"
+          @click="cloneExistingDialog.open()"
+        >
+          <DocumentDuplicateIcon class="w-6 h-6" />
+          <p class="ml-2 font-semibold text-base whitespace-nowrap">Clone existing</p>
+        </SecondaryButton>
+
       </div>
     </div>
 
@@ -106,9 +124,9 @@ export default {
           <button
             class="px-4 py-2 text-sm text-gray-600 focus:outline-none focus:border-b-2 focus:border-blue-500 transition ease-in-out duration-150"
             :class="{
-            'text-gray-800 font-semibold border-b-2 border-blue-500': selected,
-            'hover:border-b-2 hover:border-gray-300': !selected
-          }" >
+              'text-gray-800 font-semibold border-b-2 border-blue-500': selected,
+              'hover:border-b-2 hover:border-gray-300': !selected
+            }" >
             FDA Ingredients
           </button>
         </Tab>
@@ -117,9 +135,9 @@ export default {
           <button
             class="px-4 py-2 text-sm text-gray-600 focus:outline-none focus:border-b-2 focus:border-blue-500 transition ease-in-out duration-150"
             :class="{
-            'text-gray-800 font-semibold border-b-2 border-blue-500': selected,
-            'hover:border-b-2 hover:border-gray-300': !selected
-          }" >
+              'text-gray-800 font-semibold border-b-2 border-blue-500': selected,
+              'hover:border-b-2 hover:border-gray-300': !selected
+            }" >
             Your Ingredients
           </button>
         </Tab>
@@ -284,9 +302,7 @@ export default {
       </TabPanels>
     </TabGroup>
 
-
-
-
+    <CloneExisting ref="cloneExistingDialog" :ingredients="ingredients" />
 
   </div>
-  </template>
+</template>

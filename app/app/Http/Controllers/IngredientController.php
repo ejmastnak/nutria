@@ -67,6 +67,34 @@ class IngredientController extends Controller
     }
 
     /**
+     * Like create, but form prefilled with an existing Ingredient's values
+     */
+    public function clone(Ingredient $ingredient)
+    {
+        $this->authorize('create', Ingredient::class);
+
+        $ingredient->load([
+            'ingredient_nutrients:id,ingredient_id,nutrient_id,amount_per_100g',
+            'ingredient_nutrients.nutrient:id,display_name,nutrient_category_id,unit_id',
+            'ingredient_nutrients.nutrient.unit:id,name'
+        ]);
+
+        return Inertia::render('Ingredients/Create', [
+            'ingredient' => [
+                'id' => $ingredient['id'],
+                "name" => $ingredient['name'],
+                "ingredient_category_id" => $ingredient['ingredient_category_id'],
+                "ingredient_category" => $ingredient['ingredient_category'],
+                "density_g_per_ml" => $ingredient['density_g_per_ml'],
+                'ingredient_nutrients' => $ingredient['ingredient_nutrients']
+            ],
+            'ingredient_categories' => IngredientCategory::all(['id', 'name']),
+            'nutrient_categories' => NutrientCategory::all(['id', 'name'])
+        ]);
+
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -120,8 +148,8 @@ class IngredientController extends Controller
             ]),
             'nutrient_profile' => NutrientProfileController::profileIngredient($ingredient->id),
             'ingredients' => Ingredient::where('user_id', null)
-                ->with('ingredient_category:id,name')
-                ->get(['id', 'name', 'ingredient_category_id']),
+            ->with('ingredient_category:id,name')
+            ->get(['id', 'name', 'ingredient_category_id']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
             "can_edit" => $user ? ($user->can('update', $ingredient)) : false,
             "can_delete" => $user ? ($user->can('delete', $ingredient)) : false,
