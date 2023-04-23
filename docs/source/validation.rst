@@ -12,12 +12,12 @@ Create Ingredient
 
   {
     "name": "Foo",
-    "category_id": null,
+    "ingredient_category_id": null,
     "density_g_per_ml": null,
     "ingredient_nutrients": [
       {
         "nutrient_id": 0,
-        "amount_per_100g": 0.0
+        "amount_per_100g": "0.0"
       }
     ]
   }
@@ -25,7 +25,7 @@ Create Ingredient
 **Validatation**
 
 - ``name`` is a required string with sane min and max length.
-- ``category_id``, is either null or an integer present in ``ingredient_categories,id``
+- ``ingredient_category_id``, is either null or an integer present in ``ingredient_categories,id``
 - ``density_g_per_ml`` is either null or a positive float 
 - ``ingredient_nutrients`` is a required array and contains exactly one item for each record in ``nutrients`` table.
   In practice: check that length of ``ingredient_nutrients`` equals ``Nutrient::count()`` and that ``ingredient_nutrients.*.nutrient_id`` values are distinct.
@@ -58,13 +58,13 @@ Update Ingredient
 
   {
     "name": "Foo",
-    "category_id": null,
+    "ingredient_category_id": null,
     "density_g_per_ml": null,
     "ingredient_nutrients": [
       {
         "id": 0,
         "nutrient_id": 0,
-        "amount_per_100g": 0.0
+        "amount_per_100g": "0.0"
       }
     ]
   }
@@ -72,7 +72,7 @@ Update Ingredient
 **Validatation**
 
 - ``name`` as for create
-- ``category_id`` as for create
+- ``ingredient_category_id`` as for create
 - ``density_g_per_ml`` as for create
 - ``ingredient_nutrients`` is a potentially empty array with max length equal to ``Nutrients::count()``.
 - ``ingredient_nutrients.*.id`` is a required integer present in ``ingredient_nutrients,id``

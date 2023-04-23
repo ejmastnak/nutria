@@ -96,6 +96,12 @@ Purpose: display an ingredient's name, properties, and nutrient profile.
         "pdv": 100
       }
     ],
+    "nutrient_categories": [
+      {
+        "id": 0,
+        "name": "Bop"
+      }
+    ],
     "can_edit": false,
     "can_delete": false
   }
@@ -120,20 +126,40 @@ All we strictly need is ``nutrient_id``, ``nutrient.display_name``, and ``unit.n
 .. code-block:: json
 
   {
-    "ingredient_nutrients": [
-      {
-        "id": 0,
-        "nutrient_id": 0,
-        "amount_per_100g": 0.0,
-        "nutrient": {
-          "id": 0,
-          "display_name": "Baz",
-          "unit_id": 0,
-          "unit": {
+    "ingredient": {
+      "id": null,
+      "name": null,
+      "ingredient_category_id": null,
+      "ingredient_category": null,
+      "density_g_per_ml": null,
+      "ingredient_nutrients": [
+        {
+          "id": null,
+          "nutrient_id": 0,
+          "amount_per_100g": 0.0,
+          "nutrient_category_id": 0.0,
+          "nutrient": {
             "id": 0,
-            "name": "Bop"
+            "display_name": "Foo",
+            "unit_id": 0,
+            "unit": {
+              "id": 0,
+              "name": "Bar"
+            }
           }
         }
+      ]
+    },
+    "ingredient_categories": [
+      {
+        "id": 0,
+        "name": "Baz"
+      }
+    ],
+    "nutrient_categories": [
+      {
+        "id": 0,
+        "name": "Blap"
       }
     ]
   }
@@ -174,6 +200,7 @@ Edit
           "id": 0,
           "ingredient_id": 0,
           "nutrient_id": 0,
+          "nutrient_category_id": 0,
           "amount_per_100g": 0.0,
           "nutrient": {
             "id": 0,
@@ -187,6 +214,18 @@ Edit
         }
       ]
     },
+    "ingredient_categories": [
+      {
+        "id": 0,
+        "name": "Blap"
+      }
+    ],
+    "nutrient_categories": [
+      {
+        "id": 0,
+        "name": "Boop"
+      }
+    ],
     "can_delete": false
   }
 
@@ -272,6 +311,12 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
         "amount": 0.0,
         "unit": "Blop",
         "pdv": 0.0
+      }
+    ],
+    "nutrient_categories": [
+      {
+        "id": 0,
+        "name": "Blap"
       }
     ],
     "can_edit": false,
@@ -500,6 +545,12 @@ Show
         "amount": 0.0,
         "unit": "g",
         "pdv": 0.0
+      }
+    ],
+    "nutrient_categories": [
+      {
+        "id": 0,
+        "name": "Blap"
       }
     ],
     "can_edit": false,
