@@ -5,6 +5,7 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import FlashMessage from '@/Shared/FlashMessage.vue'
 import { Link } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
@@ -17,6 +18,8 @@ const showingNavigationDropdown = ref(false);
       <nav class="max-w-6xl mx-auto border-b border-gray-100">
         <!-- Primary Navigation Menu -->
         <div class="relative px-2 sm:px-4 sm:pr-6 lg:pr-8">
+
+          <FlashMessage :message="$page.props.flash.message" class="h-full" />
 
           <div class="flex justify-between h-16">
 
@@ -43,7 +46,7 @@ const showingNavigationDropdown = ref(false);
 
             <!-- Dropdown with Profile/Log Out links -->
             <!-- Only show for authenticated users -->
-            <div 
+            <div
               v-if="$page.props.auth.user"
               class="hidden sm:flex sm:items-center sm:ml-6"
             >
@@ -84,7 +87,7 @@ const showingNavigationDropdown = ref(false);
               </div>
             </div>
             <!-- Log In for unauthenticated users -->
-            <div 
+            <div
               v-else
               class="hidden sm:inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
             >
@@ -147,7 +150,7 @@ const showingNavigationDropdown = ref(false);
               RDI Profiles
             </ResponsiveNavLink>
 
-            <ResponsiveNavLink 
+            <ResponsiveNavLink
               v-if="!$page.props.auth.user"
               :href="route('login')"
             >
