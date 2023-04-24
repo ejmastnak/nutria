@@ -237,6 +237,15 @@ class IngredientController extends Controller
      */
     public function destroy(Ingredient $ingredient)
     {
-        //
+        if ($ingredient) {
+            $ingredient_category_id = $ingredient->ingredient_category_id;
+            $ingredient->delete();
+            // Also delete the ingredient's IngredientCategory if there
+            // are no remaining ingredients with this category
+            if(Ingredient::where('ingredient_category_id', $ingredient_category_id)->doesntExist()) {
+                IngredientCategory::find($country_id)->delete();
+            }
+        }
+        return Redirect::route('ingredients.index')->with('message', 'Success! Ingredient deleted successfully.');
     }
 }
