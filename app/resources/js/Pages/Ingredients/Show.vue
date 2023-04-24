@@ -2,8 +2,10 @@
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { Head, Link } from '@inertiajs/vue3'
+import { TrashIcon, DocumentDuplicateIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import NutrientProfile from '@/Shared/NutrientProfile.vue'
 import FuzzyCombobox from '@/Shared/FuzzyCombobox.vue'
+import DeleteDialog from '@/Shared/DeleteDialog.vue'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -23,8 +25,9 @@ const props = defineProps({
 const howManyGrams = ref("100");
 const defaultMassInGrams = 100
 
-const searchIngredient = ref({})
+const deleteDialog = ref(null)
 
+const searchIngredient = ref({})
 function search() {
   router.get(route('ingredients.show', searchIngredient.value.id))
 }
@@ -42,32 +45,43 @@ export default {
   <div class="w-fit">
     <Head :title="ingredient.name" />
 
-    <div class="flex items-center space-x-8 -mt-2 border border-gray-300 p-1 px-4 rounded-xl">
+    <div class="flex items-center space-x-4 -mt-2 border border-gray-300 p-1 px-4 rounded-xl">
 
       <Link
-        :href="route('ingredients.index')"
-        class="hover:underline hover:text-blue-500"
+        v-if="can_edit"
+        class="hover:underline hover:bg-blue-100 p-2 rounded-lg"
+        :href="route('ingredients.edit', ingredient.id)"
       >
-        All <span class="hidden sm:inline"> ingredients</span>
+      <div class="flex">
+        <PencilSquareIcon class="h-5 w-5 text-baseline text-gray-700" />
+        <p class="ml-1">Edit</p>
+      </div>
       </Link>
 
       <Link
         v-if="can_edit"
-        class="hover:underline hover:text-blue-500"
-        :href="route('ingredients.edit', ingredient.id)"
+        class="hover:underline hover:bg-blue-100 p-2 rounded-lg"
+        :href="route('ingredients.clone', ingredient.id)"
       >
-        Edit
+      <div class="flex">
+        <DocumentDuplicateIcon class="h-5 w-5 text-baseline text-gray-700" />
+        <p class="ml-1">Clone</p>
+      </div>
       </Link>
 
-      <Link
-        v-if="can_delete"
-        class="hover:underline hover:text-blue-500"
-        :href="route('ingredients.destroy', ingredient.id)"
-        as="button"
-        method="delete"
+      <button
+        v-if="can_edit"
+        type="button"
+        @click="deleteDialog.open(ingredient.id)"
+        class="hover:underline hover:bg-blue-100 p-2 rounded-lg"
       >
-        Delete
-      </Link>
+      <div class="flex">
+        <TrashIcon class="h-5 w-5 text-baseline text-gray-700" />
+        <p class="ml-1">Delete</p>
+      </div>
+      </button>
+
+
 
       <form
         @submit.prevent="search"
@@ -129,6 +143,8 @@ export default {
       :howManyGrams="Number(howManyGrams)"
       :defaultMassInGrams="Number(defaultMassInGrams)"
     />
+
+    <DeleteDialog ref="deleteDialog" deleteRoute="ingredients.destroy" thing="ingredient" />
 
   </div>
 </template>

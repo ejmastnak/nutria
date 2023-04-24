@@ -11,7 +11,8 @@ import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import ListboxFilter from '@/Shared/ListboxFilter.vue'
-import CloneExisting from './Partials/CloneExisting.vue'
+import DeleteDialog from '@/Shared/DeleteDialog.vue'
+import CloneExistingDialog from './Partials/CloneExistingDialog.vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 const props = defineProps({
@@ -22,6 +23,7 @@ const props = defineProps({
 })
 
 const cloneExistingDialog = ref(null)
+const deleteDialog = ref(null)
 
 // For filtering ingredients by category
 const selectedCategories = ref([])
@@ -286,7 +288,7 @@ export default {
 
                       <button
                         type="button"
-                        @click="deleteIngredient"
+                        @click="deleteDialog.open(ingredient.id)"
                         class="mx-auto"
                       >
                         <TrashIcon class="w-5 h-5 hover:text-red-700" />
@@ -303,7 +305,8 @@ export default {
       </TabPanels>
     </TabGroup>
 
-    <CloneExisting ref="cloneExistingDialog" :ingredients="ingredients" />
+    <CloneExistingDialog ref="cloneExistingDialog" :ingredients="ingredients" />
+    <DeleteDialog ref="deleteDialog" deleteRoute="ingredients.destroy" thing="ingredient" />
 
   </div>
 </template>
