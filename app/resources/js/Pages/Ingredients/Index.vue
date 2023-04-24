@@ -12,7 +12,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import ListboxFilter from '@/Shared/ListboxFilter.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
-import CloneExistingDialog from './Partials/CloneExistingDialog.vue'
+import CloneExistingDialog from '@/Shared/CloneExistingDialog.vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 const props = defineProps({
@@ -65,10 +65,6 @@ function cloneExistingIngredient() {
 
 }
 
-function deleteIngredient() {
-  alert("Foo");
-  // deleteDialog.openToConfirmDeletion(ingredient.obj.id)
-}
 </script>
 
 <script>
@@ -305,7 +301,14 @@ export default {
       </TabPanels>
     </TabGroup>
 
-    <CloneExistingDialog ref="cloneExistingDialog" :ingredients="ingredients" />
+    <CloneExistingDialog
+      ref="cloneExistingDialog"
+      :things="ingredients"
+      thing="ingredient"
+      label="Search for an ingredient to clone"
+      cloneRoute="ingredients.clone"
+    />
+
     <DeleteDialog ref="deleteDialog" deleteRoute="ingredients.destroy" thing="ingredient" />
 
   </div>

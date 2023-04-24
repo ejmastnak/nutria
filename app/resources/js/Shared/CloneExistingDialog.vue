@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from 'vue'
+import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import FuzzyCombobox from '@/Shared/FuzzyCombobox.vue'
 import {
@@ -13,16 +13,18 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 const props = defineProps({
-  ingredients: Array
+  things: Array,
+  thing: String,
+  label: String,
+  cloneRoute: String
 })
 
 defineExpose({open})
 
-const emit = defineEmits(['deletedALandmark'])
+const emit = defineEmits(['clone'])
 
 const isOpen = ref(false)
-
-const ingredientToClone = ref({})
+const thingToClone = ref({})
 
 function open() {
   isOpen.value = true
@@ -34,8 +36,8 @@ function cancel() {
 
 function clone() {
   isOpen.value = false
-  if (ingredientToClone.value.id) {
-    router.get(route('ingredients.clone', ingredientToClone.value.id))
+  if (thingToClone.value.id) {
+    router.get(route(props.cloneRoute, thingToClone.value.id))
   }
 }
 
@@ -46,17 +48,17 @@ function clone() {
     <div class="fixed inset-0 flex items-center justify-center p-4 bg-blue-50/80">
       <DialogPanel class="flex flex-col px-6 pt-6 w-full max-w-md rounded-lg bg-white shadow">
 
-        <DialogTitle class="text-lg font-bold text-gray-600">Clone ingredient</DialogTitle>
+        <DialogTitle class="text-lg font-bold text-gray-600">Clone {{thing}}</DialogTitle>
 
         <form
           @submit.prevent="clone"
           class="mb-4"
         >
           <FuzzyCombobox
-            labelText="Search for an ingredient to clone"
+            :labelText="label"
             class="w-96"
-            :options="ingredients"
-            v-model="ingredientToClone"
+            :options="things"
+            v-model="thingToClone"
           />
         </form>
 
