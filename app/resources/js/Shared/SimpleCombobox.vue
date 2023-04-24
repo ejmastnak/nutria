@@ -49,11 +49,6 @@ const filteredOptions = computed(() =>
     })
 )
 
-// Allow user to enter custom values
-const customOption = computed(() => {
-  return { id: -1, name: query.value };
-})
-
 </script>
 
 <template>
@@ -93,24 +88,6 @@ const customOption = computed(() => {
         }"
         >
           {{ option.name }}
-        </li>
-      </ComboboxOption>
-      <!-- A custom option entered by user -->
-      <ComboboxOption
-        v-if="filteredOptions.length === 0"
-        :value="customOption"
-        class="text-left cursor-pointer"
-        v-slot="{ active, selected }"
-      >
-        <li :class="{
-          'px-4': true,
-          'py-1.5': true,
-          'bg-blue-500 text-white': active,
-          'text-gray-500': !selected,
-          'font-bold': selected,
-        }"
-        >
-          {{ query }}
         </li>
       </ComboboxOption>
     </ComboboxOptions>

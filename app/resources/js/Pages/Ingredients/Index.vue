@@ -196,6 +196,7 @@ export default {
                     @click="resetSearch"
                   >
                     <XMarkIcon class="w-5 h-5" />
+                    <span class="text-gray-600 font-normal ml-1.5">Clear filter</span>
                   </SecondaryButton>
                 </div>
               </div>

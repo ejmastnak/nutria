@@ -16,6 +16,7 @@ const props = defineProps({
   nutrient_categories: Array,
   ingredients: Array,
   can_edit: Boolean,
+  can_create: Boolean,
   can_delete: Boolean
 })
 

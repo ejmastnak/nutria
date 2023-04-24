@@ -5,7 +5,8 @@ import CreateOrEdit from './Partials/CreateOrEdit.vue'
 const props = defineProps({
   ingredient: Object,
   ingredient_categories: Array,
-  nutrient_categories: Array
+  nutrient_categories: Array,
+  can_create: Boolean
 })
 
 </script>

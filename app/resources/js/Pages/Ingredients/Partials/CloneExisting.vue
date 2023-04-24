@@ -44,7 +44,7 @@ function clone() {
 <template>
   <Dialog :open="isOpen" @close="cancel" class="relative z-50">
     <div class="fixed inset-0 flex items-center justify-center p-4 bg-blue-50/80">
-      <DialogPanel class="flex flex-col px-6 pt-6 w-full max-w-sm rounded-lg bg-white shadow">
+      <DialogPanel class="flex flex-col px-6 pt-6 w-full max-w-md rounded-lg bg-white shadow">
 
         <DialogTitle class="text-lg font-bold text-gray-600">Clone ingredient</DialogTitle>
 
@@ -54,6 +54,7 @@ function clone() {
         >
           <FuzzyCombobox
             labelText="Search for an ingredient to clone"
+            class="w-96"
             :options="ingredients"
             v-model="ingredientToClone"
           />

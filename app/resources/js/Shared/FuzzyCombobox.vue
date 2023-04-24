@@ -81,7 +81,7 @@ watch(query, throttle(function (value) {
           </div>
 
           <ComboboxInput
-            class="block p-1 pl-10 border border-gray-300 rounded-md shadow-sm focus:border focus:border-blue-500"
+            class="block p-1 pl-10 border border-gray-300 rounded-md shadow-sm focus:border focus:border-blue-500 w-full"
             @change="query = $event.target.value"
             :displayValue="(option) => option.name"
           />

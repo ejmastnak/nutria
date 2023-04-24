@@ -44,6 +44,8 @@ class IngredientController extends Controller
     public function create()
     {
         $this->authorize('create', Ingredient::class);
+        $user = Auth::user();
+
         $nutrients = Nutrient::get(['id', 'display_name', 'unit_id', 'nutrient_category_id']);
         $nutrients->load('unit:id,name');
         return Inertia::render('Ingredients/Create', [
@@ -62,7 +64,8 @@ class IngredientController extends Controller
                 ])
             ],
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
-            'nutrient_categories' => NutrientCategory::all(['id', 'name'])
+            'nutrient_categories' => NutrientCategory::all(['id', 'name']),
+            "can_create" => $user ? ($user->can('create', Ingredient::class)) : false,
         ]);
     }
 
@@ -72,6 +75,7 @@ class IngredientController extends Controller
     public function clone(Ingredient $ingredient)
     {
         $this->authorize('create', Ingredient::class);
+        $user = Auth::user();
 
         $ingredient->load([
             'ingredient_nutrients:id,ingredient_id,nutrient_id,amount_per_100g',
@@ -89,7 +93,8 @@ class IngredientController extends Controller
                 'ingredient_nutrients' => $ingredient['ingredient_nutrients']
             ],
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
-            'nutrient_categories' => NutrientCategory::all(['id', 'name'])
+            'nutrient_categories' => NutrientCategory::all(['id', 'name']),
+            "can_create" => $user ? ($user->can('create', Ingredient::class)) : false,
         ]);
 
     }
@@ -99,15 +104,17 @@ class IngredientController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Ingredient::class);
+
         // Validate request
         $num_nutrients = Nutrient::count();
         $request->validate([
             'name' => ['required', 'min:1', 'max:500'],
-            'ingredient_category_id' => ['nullable', 'integer', 'in:ingredient_categories,id'],
+            'ingredient_category_id' => ['required', 'integer', 'exists:ingredient_categories,id'],
             'density_g_per_ml' => ['nullable', 'numeric', 'gt:0'],
             'ingredient_nutrients' => ['required', 'array', 'min:' . $num_nutrients, 'max:' . $num_nutrients],
-            'ingredient_nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'in:nutrients,id'],
-            'ingredient_nutrients.*.amount_per_100g' => ['required', 'numeric', 'gt:0'],
+            'ingredient_nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'exists:nutrients,id'],
+            'ingredient_nutrients.*.amount_per_100g' => ['required', 'numeric', 'gte:0'],
         ]);
 
         // Create ingredient
@@ -116,6 +123,7 @@ class IngredientController extends Controller
             'fdc_id' => $request->fdc_id,
             'ingredient_category_id' => $request->ingredient_category_id,
             'density_g_per_ml' => $request->density_g_per_ml,
+            'user_id' => $request->user()->id
         ]);
 
         // Create ingredient's nutrients
@@ -152,6 +160,7 @@ class IngredientController extends Controller
             ->get(['id', 'name', 'ingredient_category_id']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
             "can_edit" => $user ? ($user->can('update', $ingredient)) : false,
+            "can_create" => $user ? ($user->can('create', Ingredient::class)) : false,
             "can_delete" => $user ? ($user->can('delete', $ingredient)) : false,
         ]);
     }
@@ -176,9 +185,10 @@ class IngredientController extends Controller
                 'density_g_per_ml',
                 'ingredient_nutrients'
             ]),
-            "can_delete" => $user ? ($user->can('delete', $ingredient)) : false,
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
-            'nutrient_categories' => NutrientCategory::all(['id', 'name'])
+            'nutrient_categories' => NutrientCategory::all(['id', 'name']),
+            "can_delete" => $user ? ($user->can('delete', $ingredient)) : false,
+            "can_create" => $user ? ($user->can('create', Ingredient::class)) : false,
         ]);
     }
 
@@ -187,16 +197,18 @@ class IngredientController extends Controller
      */
     public function update(Request $request, Ingredient $ingredient)
     {
+        $this->authorize('update', $ingredient);
+
         // Validate request
         $num_nutrients = Nutrient::count();
         $request->validate([
             'name' => ['required', 'min:1', 'max:500'],
-            'ingredient_category_id' => ['nullable', 'integer', 'in:ingredient_categories,id'],
+            'ingredient_category_id' => ['integer', 'exists:ingredient_categories,id'],
             'density_g_per_ml' => ['nullable', 'numeric', 'gt:0'],
             'ingredient_nutrients' => ['required', 'array', 'max:' . $num_nutrients],
-            'ingredient_nutrients.*.id' => ['required', 'distinct', 'integer', 'in:ingredient_nutrients,id'],
-            'ingredient_nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'in:nutrients,id'],
-            'ingredient_nutrients.*.amount_per_100g' => ['required', 'numeric', 'gt:0'],
+            'ingredient_nutrients.*.id' => ['required', 'distinct', 'integer', 'exists:ingredient_nutrients,id'],
+            'ingredient_nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'exists:nutrients,id'],
+            'ingredient_nutrients.*.amount_per_100g' => ['required', 'numeric', 'gte:0'],
         ]);
 
         // Update ingredient

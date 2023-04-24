@@ -1,14 +1,14 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
-import { useForm } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3'
 import SimpleCombobox from '@/Shared/SimpleCombobox.vue'
 import TextInput from '@/Components/TextInput.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
 import InputLabel from '@/Components/InputLabel.vue'
-import InputError from '@/Components/InputError.vue';
+import InputError from '@/Components/InputError.vue'
 import IngredientNutrientTable from './IngredientNutrientTable.vue'
 
 const props = defineProps({
@@ -19,24 +19,30 @@ const props = defineProps({
 })
 
 const form = useForm({
-  name: props.ingredient.name ? props.ingredient.name : "",
-  ingredient_category_id: props.ingredient.ingredient_category_id ? props.ingredient.ingredient_category_id : 0,
+  name: props.ingredient.name ?? "",
+  ingredient_category_id: props.ingredient.ingredient_category_id ?? 0,
   density_g_per_ml: props.ingredient.density_g_per_ml ? props.ingredient.density_g_per_ml.toString : "",
-  ingredient_nutrients: props.ingredient.ingredient_nutrients.map(nutrient => ({
+  ingredient_nutrients: props.ingredient.ingredient_nutrients.map((nutrient, index) => ({
+    idx: index,
     nutrient_id: nutrient.nutrient_id,
     nutrient_category_id: nutrient.nutrient.nutrient_category_id,
     name: nutrient.nutrient.display_name,
     unit: nutrient.nutrient.unit.name,
     amount_per_100g: nutrient.amount_per_100g.toString()
   }))
-});
+})
 
 function back() {
-  history.back();
+  history.back()
 }
 
 function submit() {
-  alert("Foo!");
+  form.ingredient_category_id = selectedCategory.value.id
+  if (props.create) {
+    form.post(route('ingredients.store'))
+  } else {
+    form.put(route('ingredients.update', props.ingredient.id))
+  }
 }
 
 const selectedCategory = ref({})
@@ -45,15 +51,15 @@ onMounted(() => {
   if (form.ingredient_category_id) {
     // Set selectedCategory to the item in props.nutrient_categories whose id
     // equals props.ingredient.ingredient_category_id
-    const idx = props.ingredient_categories.map(ic => ic.id).indexOf(props.ingredient.ingredient_category_id);
-    selectedCategory.value = props.ingredient_categories[idx];
+    const idx = props.ingredient_categories.map(ic => ic.id).indexOf(props.ingredient.ingredient_category_id)
+    selectedCategory.value = props.ingredient_categories[idx]
   }
 })
 
 </script>
 
 <script>
-import AppLayout from "@/Layouts/AppLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue"
 export default {
   layout: AppLayout,
 }
@@ -85,7 +91,7 @@ export default {
           :modelValue="selectedCategory"
           @update:modelValue="newValue => selectedCategory = newValue"
         />
-        <InputError class="mt-2" :message="form.errors.name" />
+        <InputError class="mt-2" :message="form.errors.ingredient_category_id" />
       </div>
 
       <!-- Density -->
@@ -136,14 +142,18 @@ export default {
                 <td scope="row" class="px-5 py-2">
                   {{ingredient_nutrient.name}}
                 </td>
-                <td class="px-4 py-2 text-right flex items-baseline">
-                  <TextInput
-                    type="text"
-                    class="mt-1 block w-24 py-1 text-right"
-                    v-model="ingredient_nutrient.amount_per_100g"
-                    required
-                  />
-                  <span class="ml-2">{{ingredient_nutrient.unit}}</span>
+                <td class="px-4 py-2 text-right">
+                  <div class="flex items-baseline">
+                    <TextInput
+                      type="text"
+                      class="mt-1 block w-24 py-1 text-right"
+                      v-model="ingredient_nutrient.amount_per_100g"
+                      required
+                    />
+                    <span class="ml-2">{{ingredient_nutrient.unit}}</span>
+                  </div>
+                  <InputError class="mt-2 text-left" :message="form.errors['ingredient_nutrients.' + ingredient_nutrient.idx + '.nutrient_id']" />
+                  <InputError class="mt-2 text-left" :message="form.errors['ingredient_nutrients.' + ingredient_nutrient.idx + '.amount_per_100g']" />
                 </td>
               </tr>
             </tbody>
