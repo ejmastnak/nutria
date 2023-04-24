@@ -97,6 +97,11 @@ export default {
           <div class="ml-2 mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
             {{ingredient.ingredient_category.name}}
           </div>
+
+          <div v-if="ingredient.density_g_per_ml" class="ml-2 mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
+            {{ingredient.density_g_per_ml}} g/ml
+          </div>
+
         </div>
       </div>
 

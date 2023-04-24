@@ -21,16 +21,10 @@ class IngredientController extends Controller
     {
         $user = Auth::user();
         return Inertia::render('Ingredients/Index', [
-            // 'user_ingredients' => Auth::user() ? Ingredient::where('user_id', Auth::user()->id)
-            //     ->with('ingredient_category:id,name')
-            //     ->get(['id', 'name', 'ingredient_category_id']) : [],
-            'ingredients' => Ingredient::where('user_id', null)
+            'user_ingredients' => Auth::user() ? Ingredient::where('user_id', Auth::user()->id)
                 ->with('ingredient_category:id,name')
-                ->get(['id', 'name', 'ingredient_category_id']),
-            'user_ingredients' => Ingredient::where('ingredient_category_id', '11')
-                ->where('user_id', null)
-                ->skip(23)
-                ->limit(5)
+                ->get(['id', 'name', 'ingredient_category_id']) : [],
+            'ingredients' => Ingredient::where('user_id', null)
                 ->with('ingredient_category:id,name')
                 ->get(['id', 'name', 'ingredient_category_id']),
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
@@ -112,7 +106,7 @@ class IngredientController extends Controller
             'name' => ['required', 'min:1', 'max:500'],
             'ingredient_category_id' => ['required', 'integer', 'exists:ingredient_categories,id'],
             'density_g_per_ml' => ['nullable', 'numeric', 'gt:0'],
-            'ingredient_nutrients' => ['required', 'array', 'min:' . $num_nutrients, 'max:' . $num_nutrients],
+            'ingredient_nutrients' => ['required', 'array', 'max:' . $num_nutrients],
             'ingredient_nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'exists:nutrients,id'],
             'ingredient_nutrients.*.amount_per_100g' => ['required', 'numeric', 'gte:0'],
         ]);
@@ -135,7 +129,7 @@ class IngredientController extends Controller
             ]);
         }
 
-        return Redirect::route('ingredients.index')->with('message', 'Success! Ingredient created successfully.');
+        return Redirect::route('ingredients.show', $ingredient->id)->with('message', 'Success! Ingredient created successfully.');
     }
 
     /**
@@ -156,6 +150,7 @@ class IngredientController extends Controller
             ]),
             'nutrient_profile' => NutrientProfileController::profileIngredient($ingredient->id),
             'ingredients' => Ingredient::where('user_id', null)
+            ->orWhere('user_id', $user->id)
             ->with('ingredient_category:id,name')
             ->get(['id', 'name', 'ingredient_category_id']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
@@ -203,7 +198,7 @@ class IngredientController extends Controller
         $num_nutrients = Nutrient::count();
         $request->validate([
             'name' => ['required', 'min:1', 'max:500'],
-            'ingredient_category_id' => ['integer', 'exists:ingredient_categories,id'],
+            'ingredient_category_id' => ['required', 'integer', 'exists:ingredient_categories,id'],
             'density_g_per_ml' => ['nullable', 'numeric', 'gt:0'],
             'ingredient_nutrients' => ['required', 'array', 'max:' . $num_nutrients],
             'ingredient_nutrients.*.id' => ['required', 'distinct', 'integer', 'exists:ingredient_nutrients,id'],
@@ -221,15 +216,13 @@ class IngredientController extends Controller
 
         // Update ingredient's nutrients
         foreach ($request->ingredient_nutrients as $ing) {
-            $dbIng = IngredientNutrient::find($ing[$id]);
+            $dbIng = IngredientNutrient::find($ing['id']);
             $dbIng->update([
-                'ingredient_id' => $ingredient->id,
-                'nutrient_id' => $ing['nutrient_id'],
                 'amount_per_100g' => $ing['amount_per_100g'],
             ]);
         }
 
-        return Redirect::route('ingredients.index')->with('message', 'Success! Ingredient updated successfully.');
+        return Redirect::route('ingredients.show', $ingredient->id)->with('message', 'Success! Ingredient updated successfully.');
     }
 
     /**

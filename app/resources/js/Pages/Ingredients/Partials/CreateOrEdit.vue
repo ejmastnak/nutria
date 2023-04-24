@@ -21,14 +21,15 @@ const props = defineProps({
 const form = useForm({
   name: props.ingredient.name ?? "",
   ingredient_category_id: props.ingredient.ingredient_category_id ?? 0,
-  density_g_per_ml: props.ingredient.density_g_per_ml ? props.ingredient.density_g_per_ml.toString : "",
-  ingredient_nutrients: props.ingredient.ingredient_nutrients.map((nutrient, index) => ({
+  density_g_per_ml: props.ingredient.density_g_per_ml ? props.ingredient.density_g_per_ml.toString() : "",
+  ingredient_nutrients: props.ingredient.ingredient_nutrients.map((ingredient_nutrient, index) => ({
+    id: props.create ? 0 : ingredient_nutrient.id,
     idx: index,
-    nutrient_id: nutrient.nutrient_id,
-    nutrient_category_id: nutrient.nutrient.nutrient_category_id,
-    name: nutrient.nutrient.display_name,
-    unit: nutrient.nutrient.unit.name,
-    amount_per_100g: nutrient.amount_per_100g.toString()
+    nutrient_id: ingredient_nutrient.nutrient_id,
+    nutrient_category_id: ingredient_nutrient.nutrient.nutrient_category_id,
+    name: ingredient_nutrient.nutrient.display_name,
+    unit: ingredient_nutrient.nutrient.unit.name,
+    amount_per_100g: ingredient_nutrient.amount_per_100g.toString()
   }))
 })
 
@@ -112,52 +113,56 @@ export default {
     </section>
 
     <!-- Ingredient nutrient table -->
-    <section class="mt-8 grid grid-cols-1 lg:flex md:gap-x-8">
+    <section class="mt-8">
 
-      <div
-        v-for="nc in nutrient_categories"
-        :key="nc.id"
-        class="col-span-1"
-      >
+      <InputError :message="form.errors.ingredient_nutrients" />
 
-        <h2 class="text-lg">{{nc.name}}s</h2>
+      <div class="grid grid-cols-1 lg:flex md:gap-x-8">
+        <div
+          v-for="nc in nutrient_categories"
+          :key="nc.id"
+          class="col-span-1"
+        >
 
-        <div class="border border-gray-300 rounded-xl overflow-hidden w-fit">
-          <table class="text-sm sm:text-base text-left">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-              <tr>
-                <th scope="col" class="px-4 py-3 bg-blue-50">
-                  Nutrient
-                </th>
-                <th scope="col" class="px-4 py-3 bg-blue-100">
-                  Amount
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="ingredient_nutrient in form.ingredient_nutrients.filter(nutrient => nutrient.nutrient_category_id === nc.id)"
-                class="border-t text-gray-600"
-              >
-                <td scope="row" class="px-5 py-2">
-                  {{ingredient_nutrient.name}}
-                </td>
-                <td class="px-4 py-2 text-right">
-                  <div class="flex items-baseline">
-                    <TextInput
-                      type="text"
-                      class="mt-1 block w-24 py-1 text-right"
-                      v-model="ingredient_nutrient.amount_per_100g"
-                      required
-                    />
-                    <span class="ml-2">{{ingredient_nutrient.unit}}</span>
-                  </div>
-                  <InputError class="mt-2 text-left" :message="form.errors['ingredient_nutrients.' + ingredient_nutrient.idx + '.nutrient_id']" />
-                  <InputError class="mt-2 text-left" :message="form.errors['ingredient_nutrients.' + ingredient_nutrient.idx + '.amount_per_100g']" />
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <h2 class="text-lg">{{nc.name}}s</h2>
+
+          <div class="border border-gray-300 rounded-xl overflow-hidden w-fit">
+            <table class="text-sm sm:text-base text-left">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-4 py-3 bg-blue-50">
+                    Nutrient
+                  </th>
+                  <th scope="col" class="px-4 py-3 bg-blue-100">
+                    Amount
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="ingredient_nutrient in form.ingredient_nutrients.filter(nutrient => nutrient.nutrient_category_id === nc.id)"
+                  class="border-t text-gray-600"
+                >
+                  <td scope="row" class="px-5 py-2">
+                    {{ingredient_nutrient.name}}
+                  </td>
+                  <td class="px-4 py-2 text-right">
+                    <div class="flex items-baseline">
+                      <TextInput
+                        type="text"
+                        class="mt-1 block w-24 py-1 text-right"
+                        v-model="ingredient_nutrient.amount_per_100g"
+                        required
+                      />
+                      <span class="ml-2">{{ingredient_nutrient.unit}}</span>
+                    </div>
+                    <InputError class="mt-2 text-left" :message="form.errors['ingredient_nutrients.' + ingredient_nutrient.idx + '.nutrient_id']" />
+                    <InputError class="mt-2 text-left" :message="form.errors['ingredient_nutrients.' + ingredient_nutrient.idx + '.amount_per_100g']" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </section>
