@@ -43,7 +43,7 @@ function round(num, scaleBy=100) {
 
 <template>
   <div class="border border-gray-300 rounded-xl overflow-hidden">
-    <table class="text-sm sm:text-base text-left w-full">
+    <table class="text-left w-full">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
           <th scope="col" class="px-4 py-3 bg-blue-50">
@@ -60,7 +60,7 @@ function round(num, scaleBy=100) {
       <tbody>
         <tr
           v-for="nutrient in nutrient_profile"
-          class="border-t text-gray-600"
+          class="border-t text-gray-600 font-medium text-sm"
         >
           <td scope="row" class="px-4 py-2">
             {{nutrient.nutrient}}
@@ -69,7 +69,7 @@ function round(num, scaleBy=100) {
             {{round(scale(nutrient.amount))}}
             {{nutrient.unit}}
           </td>
-          <td class="px-3 py-2 text-right font-medium text-gray-700" :class="bg(scale(nutrient.pdv))">
+          <td class="px-3 py-2 text-right font-semibold text-gray-600" :class="bg(scale(nutrient.pdv))">
             {{round(scale(nutrient.pdv), scaleBy=1)}}<span class="ml-px">%</span>
           </td>
         </tr>
