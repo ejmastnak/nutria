@@ -40,4 +40,5 @@ inner join rdi_profile_nutrients
   = :'rdi_profile_id'
   and rdi_profile_nutrients.nutrient_id
   = ingredient_nutrients.nutrient_id
-group by nutrients.id, units.name;
+group by nutrients.id, units.name
+order by nutrients.display_order_id;

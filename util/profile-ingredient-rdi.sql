@@ -26,4 +26,4 @@ inner join rdi_profile_nutrients
   and rdi_profile_nutrients.nutrient_id
   = ingredient_nutrients.nutrient_id
 where ingredient_nutrients.ingredient_id=:'ingredient_id'
-order by nutrients.id;
+order by nutrients.display_order_id;

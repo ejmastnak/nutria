@@ -30,7 +30,7 @@ class NutrientProfileController extends Controller
         from ingredient_nutrients
         inner join nutrients
           on nutrients.id
-          = ingredient_nutrients.nutrient_id  
+          = ingredient_nutrients.nutrient_id
         inner join units
           on units.id
           = nutrients.unit_id
@@ -40,7 +40,7 @@ class NutrientProfileController extends Controller
           and rdi_profile_nutrients.nutrient_id
           = ingredient_nutrients.nutrient_id
         where ingredient_nutrients.ingredient_id=:ingredient_id
-        order by nutrients.id;
+        order by nutrients.display_order_id;
         ";
 
         $result = DB::select($query, [
@@ -55,7 +55,7 @@ class NutrientProfileController extends Controller
         if (Meal::where('id', $mealID)->doesntExist()) return [];
         if (RdiProfile::where('id', $rdiProfileID)->doesntExist()) return [];
 
-        $query = " 
+        $query = "
         select
           nutrients.display_name as nutrient,
           nutrients.nutrient_category_id as nutrient_category_id,
@@ -70,7 +70,7 @@ class NutrientProfileController extends Controller
           = :meal_id
         inner join nutrients
           on nutrients.id
-          = ingredient_nutrients.nutrient_id  
+          = ingredient_nutrients.nutrient_id
         inner join units
           on units.id
           = nutrients.unit_id
@@ -79,7 +79,8 @@ class NutrientProfileController extends Controller
           = :rdi_profile_id
           and rdi_profile_nutrients.nutrient_id
           = ingredient_nutrients.nutrient_id
-        group by nutrients.id, units.name;
+        group by nutrients.id, units.name
+        order by nutrients.display_order_id;
         ";
 
         $result = DB::select($query, [
@@ -95,7 +96,7 @@ class NutrientProfileController extends Controller
         if (RdiProfile::where('id', $rdiProfileID)->doesntExist()) return [];
 
 
-        $query = " 
+        $query = "
         select
           nutrients.display_name,
           nutrients.nutrient_category_id as nutrient_category_id,
@@ -115,7 +116,7 @@ class NutrientProfileController extends Controller
             = :food_list_id
           inner join nutrients
             on nutrients.id
-            = ingredient_nutrients.nutrient_id  
+            = ingredient_nutrients.nutrient_id
           inner join rdi_profile_nutrients
             on rdi_profile_nutrients.rdi_profile_id
             = :rdi_profile_id
@@ -141,7 +142,7 @@ class NutrientProfileController extends Controller
             = food_list_meals.meal_id
           inner join nutrients
             on nutrients.id
-            = ingredient_nutrients.nutrient_id  
+            = ingredient_nutrients.nutrient_id
           inner join rdi_profile_nutrients
             on rdi_profile_nutrients.rdi_profile_id
             = :rdi_profile_id
@@ -155,7 +156,8 @@ class NutrientProfileController extends Controller
         inner join units
           on units.id
           = nutrients.unit_id
-        group by nutrients.id, units.name;
+        group by nutrients.id, units.name
+        order by nutrients.display_order_id;
         ";
 
         $result = DB::select($query, [

@@ -86,4 +86,5 @@ inner join nutrients
 inner join units
   on units.id
   = nutrients.unit_id
-group by nutrients.id, units.name;
+group by nutrients.id, units.name
+order by nutrients.display_order_id;

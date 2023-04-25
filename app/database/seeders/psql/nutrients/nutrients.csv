@@ -1,35 +1,35 @@
 # id,name,display_name,nutrient_category_name,display_order_id
-1051,"Water","Water","Macronutrient",1
-1008,"Energy","Energy","Macronutrient",2
+1008,"Energy","Energy","Macronutrient",1
+1051,"Water","Water","Macronutrient",2
 1003,"Protein","Protein","Macronutrient",3
-1004,"Total lipid (fat)","Total fat","Macronutrient",4
-1005,"Carbohydrate, by difference","Carbohydrates","Macronutrient",5
-1079,"Fiber, total dietary","Dietary fiber","Macronutrient",6
-2000,"Sugars, total including NLEA","Sugars","Macronutrient",7
-1258,"Fatty acids, total saturated","Saturated fat","Macronutrient",8
-1292,"Fatty acids, total monounsaturated","Monounsaturated fat","Macronutrient",9
-1293,"Fatty acids, total polyunsaturated","Polyunsaturated fat","Macronutrient",10
-1253,"Cholesterol","Cholesterol","Macronutrient",11
+1005,"Carbohydrate, by difference","Carbohydrates","Macronutrient",4
+1079,"Fiber, total dietary","Dietary fiber","Macronutrient",5
+1004,"Total lipid (fat)","Total fat","Macronutrient",6
+1258,"Fatty acids, total saturated","Saturated fat","Macronutrient",7
+1292,"Fatty acids, total monounsaturated","Monounsaturated fat","Macronutrient",8
+1293,"Fatty acids, total polyunsaturated","Polyunsaturated fat","Macronutrient",9
+1253,"Cholesterol","Cholesterol","Macronutrient",10
+2000,"Sugars, total including NLEA","Sugars","Macronutrient",11
 1087,"Calcium, Ca","Calcium","Mineral",12
-1089,"Iron, Fe","Iron","Mineral",13
-1090,"Magnesium, Mg","Magnesium","Mineral",14
-1091,"Phosphorus, P","Phosphorus","Mineral",15
-1092,"Potassium, K","Potassium","Mineral",16
-1093,"Sodium, Na","Sodium","Mineral",17
-1095,"Zinc, Zn","Zinc","Mineral",18
-1098,"Copper, Cu","Copper","Mineral",19
-1101,"Manganese, Mn","Manganese","Mineral",20
-1103,"Selenium, Se","Selenium","Mineral",21
-1162,"Vitamin C, total ascorbic acid","Vitamin C","Vitamin",22
+1098,"Copper, Cu","Copper","Mineral",13
+1089,"Iron, Fe","Iron","Mineral",14
+1090,"Magnesium, Mg","Magnesium","Mineral",15
+1101,"Manganese, Mn","Manganese","Mineral",16
+1091,"Phosphorus, P","Phosphorus","Mineral",17
+1092,"Potassium, K","Potassium","Mineral",18
+1103,"Selenium, Se","Selenium","Mineral",19
+1093,"Sodium, Na","Sodium","Mineral",20
+1095,"Zinc, Zn","Zinc","Mineral",21
+1106,"Vitamin A, RAE","Vitamin A","Vitamin",22
 1165,"Thiamin","Vitamin B1","Vitamin",23
 1166,"Riboflavin","Vitamin B2","Vitamin",24
 1167,"Niacin","Vitamin B3","Vitamin",25
 1170,"Pantothenic acid","Vitamin B5","Vitamin",26
 1175,"Vitamin B-6","Vitamin B6","Vitamin",27
-1190,"Folate, DFE","Folate","Vitamin",28
-1180,"Choline, total","Choline","Vitamin",29
-1178,"Vitamin B-12","Vitamin B12","Vitamin",30
-1106,"Vitamin A, RAE","Vitamin A","Vitamin",31
-1109,"Vitamin E (alpha-tocopherol)","Vitamin E","Vitamin",32
-1114,"Vitamin D (D2 + D3)","Vitamin D","Vitamin",33
-1185,"Vitamin K (phylloquinone)","Vitamin K","Vitamin",34
+1178,"Vitamin B-12","Vitamin B12","Vitamin",28
+1162,"Vitamin C, total ascorbic acid","Vitamin C","Vitamin",29
+1114,"Vitamin D (D2 + D3)","Vitamin D","Vitamin",30
+1109,"Vitamin E (alpha-tocopherol)","Vitamin E","Vitamin",31
+1185,"Vitamin K (phylloquinone)","Vitamin K","Vitamin",32
+1190,"Folate, DFE","Folate","Vitamin",33
+1180,"Choline, total","Choline","Vitamin",34
