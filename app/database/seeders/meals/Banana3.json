@@ -1,0 +1,16 @@
+{
+  "name": "Banana meal",
+  "user_id": 3,
+  "meal_ingredients": [
+    {
+      "name": "Bananas, raw",
+      "ingredient_id": 6435,
+      "mass_in_grams": 50
+    },
+    {
+      "name": "Bananas, raw",
+      "ingredient_id": 6435,
+      "mass_in_grams": 50
+    }
+  ]
+}

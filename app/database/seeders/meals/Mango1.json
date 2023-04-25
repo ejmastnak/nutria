@@ -1,5 +1,6 @@
 {
   "name": "Mango meal",
+  "user_id": 1,
   "meal_ingredients": [
     {
       "name": "Mangos, raw",
