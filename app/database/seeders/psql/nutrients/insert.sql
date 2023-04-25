@@ -5,14 +5,16 @@ insert into nutrients(
   name,
   display_name,
   unit_id,
-  nutrient_category_id
+  nutrient_category_id,
+  display_order_id
 )
 select
   sr.nutrient.id::int,
   sr.nutrient.name,
   tmp_nutrients.display_name,
   units.id,
-  nutrient_categories.id
+  nutrient_categories.id,
+  tmp_nutrients.display_order_id
 from sr.nutrient
 inner join tmp_nutrients
   on tmp_nutrients.name
