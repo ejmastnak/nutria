@@ -70,7 +70,7 @@ export default {
       </Link>
 
       <button
-        v-if="can_edit"
+        v-if="can_delete"
         type="button"
         @click="deleteDialog.open(ingredient.id)"
         class="hover:underline hover:bg-blue-100 p-2 rounded-lg"
@@ -121,14 +121,13 @@ export default {
 
       <div class="ml-auto flex items-baseline text-gray-500 text-md">
         <div class="">
-          <InputLabel for="howManyGrams" value="Ingredient quantity" class="sr-only" />
+          <InputLabel for="howManyGrams" value="Ingredient mass" class="sr-only" />
           <TextInput
             id="howManyGrams"
             type="number"
             min="0"
             class="mt-1 mx-1.5 pl-1 pr-0 text-right text-lg w-20 font-bold block py-px"
             v-model="howManyGrams"
-            required
           />
         </div>
         <p class="">grams</p>

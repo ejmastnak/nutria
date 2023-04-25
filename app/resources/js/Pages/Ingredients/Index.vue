@@ -24,45 +24,64 @@ const props = defineProps({
 
 const cloneExistingDialog = ref(null)
 const deleteDialog = ref(null)
+const fdaSearchInput = ref(null)
+const userSearchInput = ref(null)
 
 // For filtering ingredients by category
-const selectedCategories = ref([])
+const selectedFdaCategories = ref([])
+const selectedUserCategories = ref([])
 
 // For fuzzy search over ingredient names
 const filteredIngredients = ref([])
+const filteredUserIngredients = ref([])
 const fuzzysortOptions = {
   key: 'name',
   limit: 25,        // don't return more results than this
   threshold: -10000    // don't return lower scores than this
 }
+const fuzzysortUserOptions = {
+  key: 'name',
+  all: true,
+  limit: 15,
+  threshold: -10000
+}
 
-const search = ref(sessionStorage.getItem('ingredientsIndexSearchQuery') ?? "")
-const fdaIngredientSearch = ref(null)
+const fdaSearchQuery = ref(sessionStorage.getItem('ingredientsIndexFdaSearchQuery') ?? "")
+const userSearchQuery = ref(sessionStorage.getItem('ingredientsIndexUserSearchQuery') ?? "")
 
 // Preserve ingredient search from previous visit to this page
 onMounted(() => {
-  if (search) {
-    filteredIngredients.value = fuzzysort.go(search.value.trim(), props.ingredients, fuzzysortOptions)
+  if (fdaSearchQuery) {
+    filteredIngredients.value = fuzzysort.go(fdaSearchQuery.value.trim(), props.ingredients, fuzzysortOptions)
+  }
+  if (userSearchQuery) {
+    filteredUserIngredients.value = fuzzysort.go(userSearchQuery.value.trim(), props.user_ingredients, fuzzysortUserOptions)
   }
 })
 
-watch(search, throttle(function (value) {
+watch(fdaSearchQuery, throttle(function (value) {
   filteredIngredients.value = fuzzysort.go(value.trim(), props.ingredients, fuzzysortOptions)
+}, 300))
+watch(userSearchQuery, throttle(function (value) {
+  filteredUserIngredients.value = fuzzysort.go(value.trim(), props.user_ingredients, fuzzysortUserOptions)
 }, 300))
 
 // Preserve search query between page visits
 onBeforeUnmount(() => {
-  sessionStorage.setItem('ingredientsIndexSearchQuery', search.value);
+  sessionStorage.setItem('ingredientsIndexFdaSearchQuery', fdaSearchQuery.value);
+  sessionStorage.setItem('ingredientsIndexUserSearchQuery', userSearchQuery.value);
 })
 
-function resetSearch() {
-  search.value = ""
-  selectedCategories.value = []
-  fdaIngredientSearch.value.focus()
+function resetFdaSearch() {
+  fdaSearchQuery.value = ""
+  selectedFdaCategories.value = []
+  fdaSearchInput.value.focus()
 }
 
-function cloneExistingIngredient() {
-
+function resetUserSearch() {
+  userSearchQuery.value = ""
+  selectedUserCategories.value = []
+  userSearchInput.value.focus()
 }
 
 </script>
@@ -100,7 +119,7 @@ export default {
           <p class="ml-2 font-semibold text-base whitespace-nowrap">New ingredient</p>
         </PrimaryLinkButton>
 
-        <!-- New ingredient button -->
+        <!-- Clone ingredient button -->
         <SecondaryButton
           class="flex ml-auto items-center mt-1 normal-case"
           :class="{'!text-gray-300': !can_create}"
@@ -153,7 +172,7 @@ export default {
 
               <!-- Input for search -->
               <div class="sm:mr-3">
-                <label for="table-search" class="ml-1 text-sm text-gray-500">
+                <label for="fda-search" class="ml-1 text-sm text-gray-500">
                   Search by ingredient name
                 </label>
                 <div class="relative">
@@ -163,10 +182,10 @@ export default {
 
                   <input
                     type="text"
-                    id="table-search"
-                    ref="fdaIngredientSearch"
+                    id="fda-search"
+                    ref="fdaSearchInput"
                     class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 sm:w-64 md:w-80 lg:w-96 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-                    v-model="search"
+                    v-model="fdaSearchQuery"
                   />
                 </div>
               </div>
@@ -177,28 +196,27 @@ export default {
                   <ListboxFilter
                     :options="ingredient_categories"
                     labelText="Filter by type"
-                    :modelValue="selectedCategories"
-                    @update:modelValue="newValue => selectedCategories = newValue"
+                    :modelValue="selectedFdaCategories"
+                    @update:modelValue="newValue => selectedFdaCategories = newValue"
                     width="full min-w-[6rem] max-w-full"
                   />
                 </div>
 
                 <div class="">
-                  <label for="clear-ingredient-filters" class="sr-only">
+                  <label for="clear-fda-filters" class="sr-only">
                     Clear filter
                   </label>
                   <SecondaryButton
                     type="button"
-                    id="clear-ingredient-filters"
+                    id="clear-fda-filters"
                     class="normal-case font-normal !tracking-normal !text-sm !px-2 h-fit ml-2"
-                    @click="resetSearch"
+                    @click="resetFdaSearch"
                   >
                     <XMarkIcon class="w-5 h-5" />
                     <span class="text-gray-600 font-normal ml-1.5">Clear filter</span>
                   </SecondaryButton>
                 </div>
               </div>
-
 
             </div>
 
@@ -218,7 +236,7 @@ export default {
               <tbody>
                 <tr
                   v-for="ingredient in filteredIngredients.map(fi => fi.obj)" :key="ingredient.id"
-                  v-show="selectedCategories.length === 0 || selectedCategories.includes(ingredient.ingredient_category_id)"
+                  v-show="selectedFdaCategories.length === 0 || selectedFdaCategories.includes(ingredient.ingredient_category_id)"
                   class="border-b"
                 >
                   <td scope="row" class="px-5 py-4 font-medium text-gray-900">
@@ -243,6 +261,56 @@ export default {
         <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-xl">
           <section v-if="user_ingredients.length" class="border border-gray-200 shadow-sm p-4 rounded-xl bg-white" >
             <h2 class="text-lg">Your ingredients</h2>
+
+            <div class="p-4 flex">
+              <div>
+
+                <label for="user-search" class="ml-1 text-sm text-gray-500">
+                  Search by ingredient name
+                </label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <MagnifyingGlassIcon class="w-5 h-5 text-gray-500" />
+                  </div>
+
+                  <input
+                    type="text"
+                    id="user-search"
+                    ref="userSearchInput"
+                    class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 sm:w-64 md:w-80 lg:w-96 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                    v-model="userSearchQuery"
+                  />
+                </div>
+              </div>
+
+              <div class="flex items-end">
+                <div class="mt-2 sm:mt-0 sm:ml-2">
+                  <ListboxFilter
+                    :options="ingredient_categories"
+                    labelText="Filter by type"
+                    :modelValue="selectedUserCategories"
+                    @update:modelValue="newValue => selectedUserCategories = newValue"
+                    width="full min-w-[6rem] max-w-full"
+                  />
+                </div>
+
+                <div class="">
+                  <label for="clear-user-filters" class="sr-only">
+                    Clear filter
+                  </label>
+                  <SecondaryButton
+                    type="button"
+                    id="clear-user-filters"
+                    class="normal-case font-normal !tracking-normal !text-sm !px-2 h-fit ml-2"
+                    @click="resetUserSearch"
+                  >
+                    <XMarkIcon class="w-5 h-5" />
+                    <span class="text-gray-600 font-normal ml-1.5">Clear filter</span>
+                  </SecondaryButton>
+                </div>
+              </div>
+            </div>
+
             <table class="mt-2 sm:table-fixed w-full text-sm sm:text-base text-left text-gray-500">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
@@ -257,11 +325,11 @@ export default {
               </thead>
               <tbody>
                 <tr
-                  v-for="ingredient in user_ingredients" :key="ingredient.id"
+                  v-for="ingredient in filteredUserIngredients.map(fi => fi.obj)" :key="ingredient.id"
+                  v-show="selectedUserCategories.length === 0 || selectedUserCategories.includes(ingredient.ingredient_category_id)"
                   class="border-b"
                 >
-                  <td scope="row" class="px-5 py-"
-                  >
+                  <td scope="row" class="px-5 py-4 font-medium text-gray-900">
                     <Link
                       class="text-gray-800 hover:text-blue-600 hover:underline"
                       :href="route('ingredients.show', ingredient.id)"
@@ -294,7 +362,28 @@ export default {
                   </td>
                 </tr>
               </tbody>
+              <p
+                v-show="filteredUserIngredients.filter((ing) => selectedUserCategories.length === 0 || selectedUserCategories.includes(ing.obj.ingredient_category_id)).length === 0"
+                class="px-6 py-4" >
+                No results found. Try a less restrictive filter or search?
+              </p>
             </table>
+          </section>
+          <section v-else class="p-4 text-gray-800 max-w-lg">
+            You haven't created any ingredients yet!
+            <span v-if="can_create">
+              Consider first
+              <Link :href="route('ingredients.create')" class="text-blue-500 hover:text-blue-600 hover:underline">creating a new ingredient</Link>
+              or
+              <button
+                type="button"
+                class="text-blue-500 hover:text-blue-600 hover:underline"
+                @click="cloneExistingDialog.open()"
+              >
+                cloning an existing ingredient.
+              </button>
+            </span>
+            <span v-else>You need to <Link :href="route('login')" class="text-blue-500 hover:text-blue-600 hover:underline">log in</Link> to create ingredients.</span>
           </section>
         </TabPanel>
 

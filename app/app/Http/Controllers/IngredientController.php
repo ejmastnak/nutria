@@ -151,7 +151,6 @@ class IngredientController extends Controller
             'nutrient_profile' => NutrientProfileController::profileIngredient($ingredient->id),
             'ingredients' => Ingredient::where('user_id', null)
             ->orWhere('user_id', $user ? $user->id : 0)
-            ->with('ingredient_category:id,name')
             ->get(['id', 'name', 'ingredient_category_id']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
             "can_edit" => $user ? ($user->can('update', $ingredient)) : false,

@@ -1,15 +1,36 @@
 <script setup>
+import { ref } from 'vue'
+import { router } from '@inertiajs/vue3'
 import { Head, Link } from '@inertiajs/vue3'
+import { TrashIcon, DocumentDuplicateIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import NutrientProfile from '@/Shared/NutrientProfile.vue'
+import FuzzyCombobox from '@/Shared/FuzzyCombobox.vue'
+import DeleteDialog from '@/Shared/DeleteDialog.vue'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
+import TextInput from '@/Components/TextInput.vue'
+import InputLabel from '@/Components/InputLabel.vue'
 
 const props = defineProps({
   meal: Object,
+  meals: Array,
   nutrient_profile: Array,
+  nutrient_categories: Array,
   can_edit: Boolean,
+  can_create: Boolean,
   can_delete: Boolean
 })
+
+const howManyGrams = ref("100");
+const defaultMassInGrams = props.meal.mass_in_grams
+
+const deleteDialog = ref(null)
+
+const searchMeal = ref({})
+function search() {
+  router.get(route('meals.show', searchMeal.value.id))
+}
 
 </script>
 
@@ -21,74 +42,97 @@ export default {
 </script>
 
 <template>
-  <div class="">
-    <Head title="Meal" />
+  <div class="w-fit">
 
-    <h1 class="text-xl font-semibold">{{meal.name}}</h1>
+    <Head :title="meal.name" />
 
-    <div class="">
-      <PrimaryLinkButton
-        class="ml-auto"
-        :href="route('meals.index')"
-      >
-        Back
-      </PrimaryLinkButton>
+    <div class="flex items-center space-x-4 -mt-2 border border-gray-300 p-1 px-4 rounded-xl">
 
-      <SecondaryLinkButton
+      <Link
         v-if="can_edit"
-        class="ml-auto"
+        class="hover:underline hover:bg-blue-100 p-2 rounded-lg"
         :href="route('meals.edit', meal.id)"
       >
-        Edit
-      </SecondaryLinkButton>
+      <div class="flex">
+        <PencilSquareIcon class="h-5 w-5 text-baseline text-gray-700" />
+        <p class="ml-1">Edit</p>
+      </div>
+      </Link>
 
-      <SecondaryLinkButton
-        v-if="can_delete"
-        class="ml-auto"
-        :href="route('meals.destroy', meal.id)"
-        as="button"
-        method="delete"
+      <Link
+        v-if="can_edit"
+        class="hover:underline hover:bg-blue-100 p-2 rounded-lg"
+        :href="route('meals.clone', meal.id)"
       >
-        Delete
-      </SecondaryLinkButton>
+      <div class="flex">
+        <DocumentDuplicateIcon class="h-5 w-5 text-baseline text-gray-700" />
+        <p class="ml-1">Clone</p>
+      </div>
+      </Link>
 
+      <button
+        v-if="can_delete"
+        type="button"
+        @click="deleteDialog.open(meal.id)"
+        class="hover:underline hover:bg-blue-100 p-2 rounded-lg"
+      >
+      <div class="flex">
+        <TrashIcon class="h-5 w-5 text-baseline text-gray-700" />
+        <p class="ml-1">Delete</p>
+      </div>
+      </button>
+
+      <form
+        @submit.prevent="search"
+        class="!ml-auto"
+      >
+        <FuzzyCombobox
+          labelText="Search for another meal"
+          :options="meals"
+          v-model="searchMeal"
+        />
+      </form>
 
     </div>
 
-    <table class="mt-8 sm:table-fixed w-3/4 text-sm sm:text-base text-left text-gray-500">
-      <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-        <tr>
-          <th scope="col" class="px-6 py-3 bg-blue-100">
-            Ingredient
-          </th>
-          <th scope="col" class="px-6 py-3 w-2/12 bg-blue-200 text-right">
-            Amount
-          </th>
-          <th scope="col" class="px-6 py-3  w-2/12 bg-blue-100">
-            Unit
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr 
-          v-for="meal_ingredient in meal.meal_ingredients"
-          :key="meal_ingredient.id"
-          class="bg-white border-b"
-        >
-          <td scope="row" class="px-5 py-2 font-medium text-gray-900">
-            {{meal_ingredient.ingredient.name}}
-          </td>
-          <td class="px-6 py-2 text-right">
-            {{meal_ingredient.amount}}
-          </td>
-          <td class="px-6 py-2">
-            {{meal_ingredient.unit.name}}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="mt-10 flex items-end">
 
-    <NutrientProfile :nutrient_profile="nutrient_profile" />
+      <div class="w-full">
+
+        <h1 class="text-xl w-2/3">{{meal.name}}</h1>
+
+        <!-- Meal pillbox label -->
+        <div class="mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
+          Meal
+        </div>
+      </div>
+
+      <!-- How many grams text input -->
+      <div class="ml-auto flex items-baseline text-gray-500 text-md">
+        <div class="">
+          <InputLabel for="howManyGrams" value="Meal mass" class="sr-only" />
+          <TextInput
+            id="howManyGrams"
+            type="number"
+            min="0"
+            class="mt-1 mx-1.5 pl-1 pr-0 text-right text-lg w-20 font-bold block py-px"
+            v-model="howManyGrams"
+          />
+        </div>
+        <p class="">grams</p>
+      </div>
+
+    </div>
+
+    <NutrientProfile
+      class="mt-10 w-full"
+      :nutrient_profile="nutrient_profile"
+      :nutrient_categories="nutrient_categories"
+      :howManyGrams="Number(howManyGrams)"
+      :defaultMassInGrams="Number(defaultMassInGrams)"
+    />
+
+    <DeleteDialog ref="deleteDialog" deleteRoute="meals.destroy" thing="meal" />
 
   </div>
-  </template>
+</template>

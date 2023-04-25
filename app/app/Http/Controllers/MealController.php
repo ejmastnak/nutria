@@ -6,7 +6,7 @@ use App\Models\Meal;
 use App\Models\Ingredient;
 use App\Models\MealIngredient;
 use App\Models\IngredientCategory;
-use App\Models\NutrientCategoryController;
+use App\Models\NutrientCategory;
 use App\Models\Unit;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -105,7 +105,8 @@ class MealController extends Controller
                 'meal_ingredients'
             ]),
             'nutrient_profile' => NutrientProfileController::profileMeal($meal->id),
-            'nutrient_categories' => NutrientCategoryController::all(['id', 'name']),
+            'meals' => Meal::where('user_id', $user ? $user->id : 0)->get(['id', 'name']),
+            'nutrient_categories' => NutrientCategory::all(['id', 'name']),
             "can_create" => $user ? ($user->can('create', Meal::class)) : false,
             "can_edit" => $user ? ($user->can('update', $meal)) : false,
             "can_delete" => $user ? ($user->can('delete', $meal)) : false,

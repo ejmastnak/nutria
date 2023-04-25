@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
     // Meals
     Route::get('meals', [MealController::class, 'index'])->name('meals.index');
     Route::get('meals/create', [MealController::class, 'create'])->name('meals.create');
+    Route::get('meals/{meal}/clone', [MealController::class, 'clone'])->name('meals.clone');
     Route::post('meals', [MealController::class, 'store'])->name('meals.store');
     Route::get('meals/{meal}/edit', [MealController::class, 'edit'])->name('meals.edit');
     Route::put('meals/{meal}', [MealController::class, 'update'])->name('meals.update');
