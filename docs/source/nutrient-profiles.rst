@@ -60,7 +60,7 @@ For 100 grams of ingredient:
     and rdi_profile_nutrients.nutrient_id
     = ingredient_nutrients.nutrient_id
   where ingredient_nutrients.ingredient_id=:'ingredient_id'
-  order by nutrients.id;
+  order by nutrients.display_order_id;
 
 Comments: 
 
@@ -115,7 +115,8 @@ Profile Meal
     = :'rdi_profile_id'
     and rdi_profile_nutrients.nutrient_id
     = ingredient_nutrients.nutrient_id
-  group by nutrients.id, units.name;
+  group by nutrients.id, units.name
+  order by nutrients.display_order_id;
 
 Comments: 
 
@@ -250,7 +251,8 @@ Combining the subqueries
   inner join units
     on units.id
     = nutrients.unit_id
-  group by nutrients.id, units.name;
+  group by nutrients.id, units.name
+  order by nutrients.display_order_id;
 
 Comments:
 
