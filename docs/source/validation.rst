@@ -12,7 +12,7 @@ Create Ingredient
 
   {
     "name": "Foo",
-    "ingredient_category_id": null,
+    "ingredient_category_id": 0,
     "density_g_per_ml": null,
     "ingredient_nutrients": [
       {
@@ -25,12 +25,12 @@ Create Ingredient
 **Validatation**
 
 - ``name`` is a required string with sane min and max length.
-- ``ingredient_category_id``, is either null or an integer present in ``ingredient_categories,id``
+- ``ingredient_category_id``, is a required integer present in ``ingredient_categories,id``
 - ``density_g_per_ml`` is either null or a positive float 
-- ``ingredient_nutrients`` is a required array and contains exactly one item for each record in ``nutrients`` table.
-  In practice: check that length of ``ingredient_nutrients`` equals ``Nutrient::count()`` and that ``ingredient_nutrients.*.nutrient_id`` values are distinct.
+- ``ingredient_nutrients`` is a potentially empty array with max length equal to ``Nutrients::count()``.
+  (My first instinct was for ``ingredient_nutrients`` to contain exactly one item for each record in ``nutrients`` table, but then you cannot clone FDA ingredients with missing nutrients)
 - ``ingredient_nutrients.*.nutrient_id`` is a required integer present in ``nutrients,id``
-- ``ingredient_nutrients.*.amount_per_100g`` is a required positive float
+- ``ingredient_nutrients.*.amount_per_100g`` is a required nonnegative float
 
 **Create**
 
@@ -38,7 +38,7 @@ Create Ingredient
 
   - given ``name``
   - null ``fdc_id``
-  - given ``ingredient_category_id`` (possibly null)
+  - given ``ingredient_category_id``
   - give ``density_g_per_ml`` (possibly null)
 
 - a new ``ingredient_nutrient`` record for each element in supplied ``nutrients`` with:
@@ -58,7 +58,7 @@ Update Ingredient
 
   {
     "name": "Foo",
-    "ingredient_category_id": null,
+    "ingredient_category_id": 0,
     "density_g_per_ml": null,
     "ingredient_nutrients": [
       {
@@ -71,13 +71,13 @@ Update Ingredient
 
 **Validatation**
 
-- ``name`` as for create
-- ``ingredient_category_id`` as for create
-- ``density_g_per_ml`` as for create
+- ``name`` is a required string with sane min and max length.
+- ``ingredient_category_id``, is a required integer present in ``ingredient_categories,id``
+- ``density_g_per_ml`` is either null or a positive float 
 - ``ingredient_nutrients`` is a potentially empty array with max length equal to ``Nutrients::count()``.
 - ``ingredient_nutrients.*.id`` is a required integer present in ``ingredient_nutrients,id``
-- ``ingredient_nutrients.*.nutrient_id`` as for create
-- ``ingredient_nutrients.*.amount_per_100g`` as for create
+- ``ingredient_nutrients.*.nutrient_id`` is a required integer present in ``nutrients,id``
+- ``ingredient_nutrients.*.amount_per_100g`` is a required nonnegative float
 
 **Update**
 
@@ -120,7 +120,7 @@ Create or Update Meal
 
 **Create**
 
-- a new ``meal`` record with given ``name``
+- a new ``meal`` record with given ``name`` and ``mass_in_grams`` initialized to zero
 - a new ``meal_ingredient`` record for each element in supplied ``ingredients`` with:
 
   - ``meal_id`` of ``meal`` record
@@ -128,10 +128,14 @@ Create or Update Meal
   - supplied ``amount``
   - supplied ``unit_id``
   - ``mass_in_grams`` computed from supplied ``amount``, ``unit_id``, and potentially (for volume units) ``density_g_per_ml`` of ingredient specified by ``ingredient_id``
+  - increment running sum of meal's ``mass_in_grams``
+
+- set ``meal``'s ``mass_in_grams`` to sum of all ``meal_ingredient``'s ``mass_in_grams``
 
 **Update**
 
 - Update ``name`` column of existing ``meal`` record
+- Temporarily reset ``meal``'s ``mass_in_grams`` to zero
 - For all ``meal_ingredient`` objects that occur in both ``meal_ingredients`` DB table and in request (based on ``meal_ingredients.*.id`` value), update:
 
   - ``meal_id`` of ``meal`` record
@@ -139,10 +143,13 @@ Create or Update Meal
   - supplied ``amount``
   - supplied ``unit_id``
   - ``mass_in_grams`` computed from supplied ``amount``, ``unit_id``, and potentially (for volume units) ``density_g_per_ml`` of ingredient specified by ``ingredient_id``
+  - increment running sum tracking meal's ``mass_in_grams``
 
-- For all ``meal_ingredient`` objects in request and not in DB table, create a new ``meal_ingredient`` record with supplied values as in Create.
+- For all ``meal_ingredient`` objects in request and not in DB table, create a new ``meal_ingredient`` record with supplied values as in Create and increment running sum tracking meal's ``mass_in_grams``.
 
 - Delete all ``meal_ingredient`` records in ``meal_ingredients`` DB table but not in request
+
+- set ``meal``'s ``mass_in_grams`` to sum of all ``meal_ingredient``'s ``mass_in_grams``
 
 .. _validation-crud-food-list:
 
@@ -189,7 +196,7 @@ Create or Update Food List
 
 **Create**
 
-- a ``food_list`` record with given ``name``
+- a ``food_list`` record with given ``name`` and ``mass_in_grams`` initialized to zero
 - a ``food_list_ingredient`` or ``food_list_meal`` record for each respective element in supplied ``food_list_ingredients`` and ``food_list_meals``.
 
 - **Ingredients:** For each ``food_list_ingredients`` element create a ``food_list_ingredient`` record with
@@ -199,6 +206,7 @@ Create or Update Food List
   - supplied ``amount``
   - supplied ``unit_id``
   - ``mass_in_grams`` computed from supplied ``amount``, ``unit_id``, and ``ingredient_id``
+  - increment running sum tracking food list's ``mass_in_grams``
 
 - **Meals:** For each ``food_list_meals`` element create a ``food_list_meal`` record with
 
@@ -207,10 +215,12 @@ Create or Update Food List
   - supplied ``amount``
   - supplied ``unit_id``
   - ``mass_in_grams`` computed from supplied ``amount``, ``unit_id``
+  - increment running sum tracking food list's ``mass_in_grams``
 
 **Update**
 
 - Update ``name`` of existing ``food_list`` record
+- Temporarily reset food list's ``mass_in_grams`` to zero
 
 - **Ingredients:** delete/create/update protocol using existing ``foodList->food_list_ingredients`` in database and supplied ``food_list_ingredients`` array.
 

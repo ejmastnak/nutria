@@ -69,6 +69,7 @@ Meal
 ^^^^
 
 - ``name``
+- ``mass_in_grams``
 
 Meal Ingredient
 ^^^^^^^^^^^^^^^
@@ -85,6 +86,7 @@ Food List
 ^^^^^^^^^
 
 - ``name``
+- ``mass_in_grams``
 
 Food List Ingredient
 ^^^^^^^^^^^^^^^^^^^^
