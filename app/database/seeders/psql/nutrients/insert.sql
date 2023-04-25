@@ -29,19 +29,19 @@ inner join nutrient_categories
 -- Manually add nutrient-specific units{{{
 -- UG RAE for Vitamin A
 -- "1106", "Vitamin A, RAE"
-update nutrients 
+update nutrients
 set unit_id = (select id from units where name ilike 'UG RAE')
 where nutrients.name ilike 'Vitamin A, RAE';
 
 -- UG DFE for Folate
 -- "1190", "Folate, DFE"
-update nutrients 
+update nutrients
 set unit_id = (select id from units where name ilike 'UG DFE')
 where nutrients.name ilike 'Folate, DFE';
 
 -- MG NE for Niacin
 -- "1167", "Niacin"
-update nutrients 
+update nutrients
 set unit_id = (select id from units where name ilike 'MG NE')
 where nutrients.name ilike 'Niacin';
 /*}}}*/

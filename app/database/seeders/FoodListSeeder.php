@@ -24,32 +24,39 @@ class FoodListSeeder extends Seeder
 
         foreach(glob(__DIR__ . '/food_lists/*.json') as $file) {
             $json = file_get_contents($file);
-            $food_list = json_decode($json, true);
-
-            $food_list_id = FoodList::create([
-                'name' => $food_list['name'],
+            $food_list_data = json_decode($json, true);
+            $food_list_mass_in_grams = 0;
+            $food_list = FoodList::create([
+                'name' => $food_list_data['name'],
+                'mass_in_grams' => $food_list_mass_in_grams,
                 'user_id' => 1
-            ])->id;
+            ]);
 
-            foreach($food_list['food_list_ingredients'] as $fli) {
+            foreach($food_list_data['food_list_ingredients'] as $fli) {
                 FoodListIngredient::create([
-                    'food_list_id' => $food_list_id,
+                    'food_list_id' => $food_list->id,
                     'ingredient_id' => $fli['ingredient_id'],
                     'amount' => $fli['mass_in_grams'],
                     'unit_id' => $gram_id,
                     'mass_in_grams' => $fli['mass_in_grams'],
                 ]);
+                $food_list_mass_in_grams += $fli['mass_in_grams'];
             }
 
-            foreach($food_list['food_list_meals'] as $flm) {
+            foreach($food_list_data['food_list_meals'] as $flm) {
                 FoodListMeal::create([
-                    'food_list_id' => $food_list_id,
+                    'food_list_id' => $food_list->id,
                     'meal_id' => $flm['meal_id'],
                     'amount' => $flm['mass_in_grams'],
                     'unit_id' => $gram_id,
                     'mass_in_grams' => $flm['mass_in_grams'],
                 ]);
+                $food_list_mass_in_grams += $flm['mass_in_grams'];
             }
+
+            $food_list->update([
+              'mass_in_grams' => $food_list_mass_in_grams
+            ]);
 
         }
     }
