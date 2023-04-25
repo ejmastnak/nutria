@@ -6,6 +6,7 @@ use App\Models\Meal;
 use App\Models\Ingredient;
 use App\Models\MealIngredient;
 use App\Models\IngredientCategory;
+use App\Models\NutrientCategoryController;
 use App\Models\Unit;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -18,8 +19,10 @@ class MealController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
         return Inertia::render('Meals/Index', [
             'meals' => Auth::user() ? Meal::where('user_id', Auth::user()->id)->get(['id', 'name']) : [],
+            "can_create" => $user ? ($user->can('create', Meal::class)) : false,
         ]);
     }
 
@@ -29,15 +32,14 @@ class MealController extends Controller
     public function create()
     {
         $this->authorize('create', Meal::class);
+        $user = Auth::user();
         return Inertia::render('Meals/Create', [
             'ingredients' => Ingredient::where('user_id', null)
-                ->with('ingredient_category:id')
-                ->get(['id', 'name', 'ingredient_category_id']),
-            'user_ingredients' => Auth::user() ? Ingredient::where('user_id', Auth::user()->id)
-                ->with('ingredient_category:id')
-                ->get(['id', 'name', 'ingredient_category_id']) : [],
+                ->orWhere('user_id', $user ? $user->id : 0)
+                ->get(['id', 'name', 'ingredient_category_id', 'user_id']),
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
-            'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume'])
+            'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
+            "can_create" => $user ? ($user->can('create', Meal::class)) : false,
         ]);
     }
 
@@ -46,6 +48,8 @@ class MealController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Meal::class);
+
         // Validate request
         $request->validate([
             'name' => ['required', 'min:1', 'max:500'],
@@ -85,6 +89,15 @@ class MealController extends Controller
      */
     public function show(Meal $meal)
     {
+
+        // // TODO
+        // 'meal' => [
+        //     'id' => $meal->id,
+        //     'name' => $meal->name,
+        //     'meal_ingredients' => $meal->meal_ingredients,
+        //     'mass' => $meal->mass()
+        // ]
+
         $this->authorize('view', $meal);
         $user = Auth::user();
         $meal->load([
@@ -99,6 +112,8 @@ class MealController extends Controller
                 'meal_ingredients'
             ]),
             'nutrient_profile' => NutrientProfileController::profileMeal($meal->id),
+            'nutrient_categories' => NutrientCategoryController::all(['id', 'name']),
+            "can_create" => $user ? ($user->can('create', Meal::class)) : false,
             "can_edit" => $user ? ($user->can('update', $meal)) : false,
             "can_delete" => $user ? ($user->can('delete', $meal)) : false,
         ]);
@@ -117,13 +132,14 @@ class MealController extends Controller
             'meal_ingredients.unit:id,name',
         ]);
         return Inertia::render('Meals/Edit', [
-            'meal' => $meal,
+            'meal' => $meal->only([
+                'id',
+                'name',
+                'meal_ingredients'
+            ]),
             'ingredients' => Ingredient::where('user_id', null)
-                ->with('ingredient_category:id')
-                ->get(['id', 'name', 'ingredient_category_id']),
-            'user_ingredients' => Auth::user() ? Ingredient::where('user_id', Auth::user()->id)
-                ->with('ingredient_category:id')
-                ->get(['id', 'name', 'ingredient_category_id']) : [],
+                ->orWhere('user_id', $user ? $user->id : 0)
+                ->get(['id', 'name', 'ingredient_category_id', 'user_id']),
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
             "can_delete" => $user ? ($user->can('delete', $meal)) : false
@@ -135,6 +151,36 @@ class MealController extends Controller
      */
     public function update(Request $request, Meal $meal)
     {
+        $this->authorize('update', $meal);
+
+        // Validate request
+        $request->validate([
+            'name' => ['required', 'min:1', 'max:500'],
+            'meal_ingredients' => ['required', 'array', 'min:1', 'max:500'],
+            'meal_ingredients.*.ingredient_id' => ['required', 'integer', 'in:ingredients,id'],
+            'meal_ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
+            'meal_ingredients.*.unit_id' => ['required', 'integer', 'in:units,id'],
+        ]);
+
+        // Create meal
+        $meal_mass_in_grams = 0;
+        $meal = Meal::create([
+            'name' => $request->name,
+            'mass_in_grams' => $meal_mass_in_grams
+        ]);
+
+        // Create meal's MealIngredients
+        foreach ($request->meal_ingredients as $mi_data) {
+            $mi = MealIngredient::create([
+                'meal_id' => $meal->id,
+                'ingredient_id' => $mi_data['ingredient_id'],
+                'amount' => $mi_data['amount'],
+                'unit_id' => $mi_data['unit_id'],
+                'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($mi_data['amount'], $mi_data['unit_id'], $mi_data['ingredient_id'])
+            ]);
+            $meal_mass_in_grams += $mi->mass_in_grams;
+        }
+        $meal->
         // Validate request
         $request->validate([
             'name' => ['required', 'min:1', 'max:500'],
