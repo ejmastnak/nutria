@@ -90,14 +90,6 @@ class MealController extends Controller
     public function show(Meal $meal)
     {
 
-        // // TODO
-        // 'meal' => [
-        //     'id' => $meal->id,
-        //     'name' => $meal->name,
-        //     'meal_ingredients' => $meal->meal_ingredients,
-        //     'mass' => $meal->mass()
-        // ]
-
         $this->authorize('view', $meal);
         $user = Auth::user();
         $meal->load([
@@ -109,6 +101,7 @@ class MealController extends Controller
             'meal' => $meal->only([
                 'id',
                 'name',
+                'mass_in_grams',
                 'meal_ingredients'
             ]),
             'nutrient_profile' => NutrientProfileController::profileMeal($meal->id),
@@ -153,34 +146,6 @@ class MealController extends Controller
     {
         $this->authorize('update', $meal);
 
-        // Validate request
-        $request->validate([
-            'name' => ['required', 'min:1', 'max:500'],
-            'meal_ingredients' => ['required', 'array', 'min:1', 'max:500'],
-            'meal_ingredients.*.ingredient_id' => ['required', 'integer', 'in:ingredients,id'],
-            'meal_ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
-            'meal_ingredients.*.unit_id' => ['required', 'integer', 'in:units,id'],
-        ]);
-
-        // Create meal
-        $meal_mass_in_grams = 0;
-        $meal = Meal::create([
-            'name' => $request->name,
-            'mass_in_grams' => $meal_mass_in_grams
-        ]);
-
-        // Create meal's MealIngredients
-        foreach ($request->meal_ingredients as $mi_data) {
-            $mi = MealIngredient::create([
-                'meal_id' => $meal->id,
-                'ingredient_id' => $mi_data['ingredient_id'],
-                'amount' => $mi_data['amount'],
-                'unit_id' => $mi_data['unit_id'],
-                'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($mi_data['amount'], $mi_data['unit_id'], $mi_data['ingredient_id'])
-            ]);
-            $meal_mass_in_grams += $mi->mass_in_grams;
-        }
-        $meal->
         // Validate request
         $request->validate([
             'name' => ['required', 'min:1', 'max:500'],
