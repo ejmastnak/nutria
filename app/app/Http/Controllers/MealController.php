@@ -36,7 +36,7 @@ class MealController extends Controller
         return Inertia::render('Meals/Create', [
             'ingredients' => Ingredient::where('user_id', null)
                 ->orWhere('user_id', $user ? $user->id : 0)
-                ->get(['id', 'name', 'ingredient_category_id', 'user_id']),
+                ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
             "can_create" => $user ? ($user->can('create', Meal::class)) : false,
@@ -133,7 +133,7 @@ class MealController extends Controller
             ]),
             'ingredients' => Ingredient::where('user_id', null)
                 ->orWhere('user_id', $user ? $user->id : 0)
-                ->get(['id', 'name', 'ingredient_category_id', 'user_id']),
+                ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
             "can_delete" => $user ? ($user->can('delete', $meal)) : false

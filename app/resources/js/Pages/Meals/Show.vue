@@ -46,6 +46,7 @@ export default {
 
     <Head :title="meal.name" />
 
+    <!-- Header bar with edit/clone/delete icons -->
     <div class="flex items-center space-x-4 -mt-2 border border-gray-300 p-1 px-4 rounded-xl">
 
       <Link
@@ -95,42 +96,85 @@ export default {
 
     </div>
 
-    <div class="mt-10 flex items-end">
+    <div class="mt-10">
 
-      <div class="w-full">
+      <h1 class="text-xl w-2/3">{{meal.name}}</h1>
 
-        <h1 class="text-xl w-2/3">{{meal.name}}</h1>
-
-        <!-- Meal pillbox label -->
-        <div class="mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
-          Meal
-        </div>
-      </div>
-
-      <!-- How many grams text input -->
-      <div class="ml-auto flex items-baseline text-gray-500 text-md">
-        <div class="">
-          <InputLabel for="howManyGrams" value="Meal mass" class="sr-only" />
-          <TextInput
-            id="howManyGrams"
-            type="number"
-            min="0"
-            class="mt-1 mx-1.5 pl-1 pr-0 text-right text-lg w-20 font-bold block py-px"
-            v-model="howManyGrams"
-          />
-        </div>
-        <p class="">grams</p>
+      <!-- Meal pillbox label -->
+      <div class="mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
+        Meal
       </div>
 
     </div>
 
-    <NutrientProfile
-      class="mt-10 w-full"
-      :nutrient_profile="nutrient_profile"
-      :nutrient_categories="nutrient_categories"
-      :howManyGrams="Number(howManyGrams)"
-      :defaultMassInGrams="Number(defaultMassInGrams)"
-    />
+    <!-- Table of meal ingredients -->
+    <div class="mt-8 text-gray-900">
+      <h2 class="text-lg">Meal ingredients</h2>
+
+      <table class="text-left w-full">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+          <tr>
+            <th scope="col" class="px-4 py-3 bg-blue-50">
+              Ingredient
+            </th>
+            <th scope="col" class="px-4 py-3 bg-blue-100 text-right">
+              Amount
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="meal_ingredient in meal.meal_ingredients"
+            class="border-t text-gray-600 font-medium text-sm"
+          >
+            <td scope="row" class="px-4 py-2">
+              <Link
+                :href="route('ingredients.show', meal_ingredient.ingredient_id)"
+                class="text-gray-800 hover:text-blue-600 hover:underline"
+              >
+                {{meal_ingredient.ingredient.name}}
+              </Link>
+            </td>
+            <td class="px-3 py-2 text-right whitespace-nowrap">
+              {{meal_ingredient.amount}}
+              {{meal_ingredient.unit.name}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+    <section class="mt-10">
+
+      <div class="flex">
+        <h2 class="text-lg">Nutrient profile</h2>
+
+        <!-- How many grams text input -->
+        <div class="ml-auto flex items-baseline text-gray-500 text-md">
+          <div class="">
+            <InputLabel for="howManyGrams" value="Meal mass" class="sr-only" />
+            <TextInput
+              id="howManyGrams"
+              type="number"
+              min="0"
+              class="mt-1 mx-1.5 pl-1 pr-0 text-right text-lg w-20 font-bold block py-px"
+              v-model="howManyGrams"
+            />
+          </div>
+          <p class="">grams</p>
+        </div>
+      </div>
+
+      <NutrientProfile
+        class="w-full mt-4"
+        :nutrient_profile="nutrient_profile"
+        :nutrient_categories="nutrient_categories"
+        :howManyGrams="Number(howManyGrams)"
+        :defaultMassInGrams="Number(defaultMassInGrams)"
+      />
+
+    </section>
 
     <DeleteDialog ref="deleteDialog" deleteRoute="meals.destroy" thing="meal" />
 

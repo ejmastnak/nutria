@@ -10,7 +10,7 @@ import { TrashIcon, PlusCircleIcon, DocumentDuplicateIcon, MagnifyingGlassIcon, 
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import InputLabel from '@/Components/InputLabel.vue'
-import ListboxFilter from '@/Shared/ListboxFilter.vue'
+import MultiselectListbox from '@/Shared/MultiselectListbox.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
 import CloneExistingDialog from '@/Shared/CloneExistingDialog.vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
@@ -193,7 +193,7 @@ export default {
               <!-- Select menu for ingredient category -->
               <div class="flex items-end">
                 <div class="mt-2 sm:mt-0 sm:ml-2">
-                  <ListboxFilter
+                  <MultiselectListbox
                     :options="ingredient_categories"
                     labelText="Filter by type"
                     :modelValue="selectedFdaCategories"
@@ -285,7 +285,7 @@ export default {
 
               <div class="flex items-end">
                 <div class="mt-2 sm:mt-0 sm:ml-2">
-                  <ListboxFilter
+                  <MultiselectListbox
                     :options="ingredient_categories"
                     labelText="Filter by type"
                     :modelValue="selectedUserCategories"

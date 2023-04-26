@@ -33,9 +33,7 @@ const form = useForm({
   }))
 })
 
-function back() {
-  history.back()
-}
+const selectedCategory = ref({})
 
 function submit() {
   form.ingredient_category_id = selectedCategory.value.id
@@ -45,8 +43,6 @@ function submit() {
     form.put(route('ingredients.update', props.ingredient.id))
   }
 }
-
-const selectedCategory = ref({})
 
 onMounted(() => {
   if (form.ingredient_category_id) {

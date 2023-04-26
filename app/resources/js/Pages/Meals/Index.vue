@@ -10,7 +10,6 @@ import { TrashIcon, PlusCircleIcon, DocumentDuplicateIcon, MagnifyingGlassIcon, 
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import InputLabel from '@/Components/InputLabel.vue'
-import ListboxFilter from '@/Shared/ListboxFilter.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
 import CloneExistingDialog from '@/Shared/CloneExistingDialog.vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
@@ -198,8 +197,6 @@ export default {
         </span>
         <span v-else>You need to <Link :href="route('login')" class="text-blue-500 hover:text-blue-600 hover:underline">log in</Link> to create meals.</span>
       </div>
-
-
 
     </section>
 

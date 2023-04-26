@@ -18,7 +18,7 @@ const props = defineProps({
       :key="nc.id"
       class="col-span-1 sm:w-3/4 md:2/3"
     >
-      <h2 class="text-lg">{{nc.name}}s</h2>
+      <h2 class="text-md text-gray-900">{{nc.name}}s</h2>
       <NutrientProfileTable
         :nutrient_profile="nutrient_profile.filter(nutrient => nutrient.nutrient_category_id === nc.id)"
         :howManyGrams="howManyGrams"

@@ -96,52 +96,59 @@ export default {
 
     </div>
 
-    <div class="mt-10 flex items-end">
+    <div class="mt-10">
 
-      <div class="w-full">
+      <h1 class="text-xl w-2/3">{{ingredient.name}}</h1>
 
-        <h1 class="text-xl w-2/3">{{ingredient.name}}</h1>
-
-        <!-- Ingredient category -->
-        <div class="flex">
-          <div class="mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
-            Ingredient
-          </div>
-
-          <div class="ml-2 mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
-            {{ingredient.ingredient_category.name}}
-          </div>
-
-          <div v-if="ingredient.density_g_per_ml" class="ml-2 mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
-            {{ingredient.density_g_per_ml}} g/ml
-          </div>
-
+      <!-- Ingredient category -->
+      <div class="flex">
+        <div class="mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
+          Ingredient
         </div>
+
+        <div class="ml-2 mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
+          {{ingredient.ingredient_category.name}}
+        </div>
+
+        <div v-if="ingredient.density_g_per_ml" class="ml-2 mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
+          {{ingredient.density_g_per_ml}} g/ml
+        </div>
+
       </div>
 
-      <div class="ml-auto flex items-baseline text-gray-500 text-md">
-        <div class="">
-          <InputLabel for="howManyGrams" value="Ingredient mass" class="sr-only" />
-          <TextInput
-            id="howManyGrams"
-            type="number"
-            min="0"
-            class="mt-1 mx-1.5 pl-1 pr-0 text-right text-lg w-20 font-bold block py-px"
-            v-model="howManyGrams"
-          />
-        </div>
-        <p class="">grams</p>
-      </div>
 
     </div>
 
-    <NutrientProfile
-      class="mt-10 w-full"
-      :nutrient_profile="nutrient_profile"
-      :nutrient_categories="nutrient_categories"
-      :howManyGrams="Number(howManyGrams)"
-      :defaultMassInGrams="Number(defaultMassInGrams)"
-    />
+    <section class="mt-10">
+
+      <div class="flex">
+        <h2 class="text-lg">Nutrient profile</h2>
+
+        <!-- How many grams text input -->
+        <div class="ml-auto flex items-baseline text-gray-500 text-md">
+          <div class="">
+            <InputLabel for="howManyGrams" value="Meal mass" class="sr-only" />
+            <TextInput
+              id="howManyGrams"
+              type="number"
+              min="0"
+              class="mt-1 mx-1.5 pl-1 pr-0 text-right text-lg w-20 font-bold block py-px"
+              v-model="howManyGrams"
+            />
+          </div>
+          <p class="">grams</p>
+        </div>
+      </div>
+
+      <NutrientProfile
+        class="w-full mt-4"
+        :nutrient_profile="nutrient_profile"
+        :nutrient_categories="nutrient_categories"
+        :howManyGrams="Number(howManyGrams)"
+        :defaultMassInGrams="Number(defaultMassInGrams)"
+      />
+
+    </section>
 
     <DeleteDialog ref="deleteDialog" deleteRoute="ingredients.destroy" thing="ingredient" />
 
