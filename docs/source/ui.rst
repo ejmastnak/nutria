@@ -51,21 +51,30 @@ Purpose: display an overview of all ingredients as an intermediate step to navig
     "can_create": false
   }
 
+- ``ingredients`` for search over FDA ingredients, which the user cannot edit
+- ``user_ingredients`` for listing of user-created ingredients
+- ``ingredient_categories`` for filtering ingredients by category
+- ``can_create`` to control display of "Create ingredient" and "Clone ingredient" button
+
 **UI**
+
+FDA Ingredients available via fuzzy search with N ~ 10 results---there are too many to display in a table.
 
 User-created Ingredients in table with columns for:
 
 - Ingredient name (links to Show)
 - Ingredient category
-
-FDA Ingredients available via fuzzy search with N ~ 10 results---there are too many to display in a table.
+- Pencil (Edit) and Trash can (Delete) icons
 
 **Filters**
 
 - By ingredient name (fuzzy search filter)
 - By ingredient category (select)
 
-**Action:** Create 
+**Links to:** 
+
+- Create new ingredient
+- Clone existing ingredient
 
 Show
 ^^^^
@@ -96,6 +105,13 @@ Purpose: display an ingredient's name, properties, and nutrient profile.
         "pdv": 100
       }
     ],
+    "ingredients": [
+      {
+        "id": 0,
+        "name": "Bop",
+        "ingredient_category_id": 0
+      }
+    ],
     "nutrient_categories": [
       {
         "id": 0,
@@ -103,16 +119,24 @@ Purpose: display an ingredient's name, properties, and nutrient profile.
       }
     ],
     "can_edit": false,
+    "can_create": false,
     "can_delete": false
   }
+
+- ``ingredient`` to display ingredient info
+- ``nutrient_profile`` to display ingredient's nutrient profile
+- ``ingredients`` for "Search for another ingredient" without having to go back to Ingredients/Index
+- ``nutrient_categories`` only to pass to NutrientProfile component to split up nutrient profile into vitamins, minerals, macronutrients.
+- ``can_edit``, ``can_create``, and ``can_delete`` to conditionally display edit, clone, and delete buttons.
 
 **UI:** Standard RDI profile table.
 
 **Links to:**
 
-- Ingredients Home
 - Edit
-- Destroy
+- Clone
+- Delete
+- Search for another ingredient
 
 Create
 ^^^^^^
@@ -120,8 +144,6 @@ Create
 Purpose: create a new Ingredient.
 
 **Props:**
-
-All we strictly need is ``nutrient_id``, ``nutrient.display_name``, and ``unit.name``, but I'm preserving the same structure used for Ingredients/Edit in the hope of creating a reusable prop.
 
 .. code-block:: json
 
@@ -160,9 +182,16 @@ All we strictly need is ``nutrient_id``, ``nutrient.display_name``, and ``unit.n
       {
         "id": 0,
         "name": "Blap"
-      }
+      },
+      "can_create": false
     ]
   }
+
+- ``ingredient`` is used by Edit and Clone, which share the CreateOrEdit component with Create.
+  Altough Create strictly needs only ``nutrient_id``, ``nutrient.display_name``, and ``unit.name``, I'm preserving the ``ingredient`` prop structure to be able to use the same CreateOrEdit component for Create.
+- ``ingredient_categories`` to allow user to choose the ingredient's category.
+- ``nutrient_category`` to split up IngredientNutrients into vitamins, minerals, and macronutrients.
+- ``can_create`` to conditionally display Clone from existing ingredient
 
 **Form:** See :ref:`Validation: Create an Ingredient <validation-create-ingredient>`
 
@@ -172,11 +201,11 @@ All we strictly need is ``nutrient_id``, ``nutrient.display_name``, and ``unit.n
 - Nutrient amount (text input), prefilled either to zero or value of cloned ingredient.
 - Nutrient unit (static text)
 
-**Actions:**
+**Links to:**
 
-- "Clone from existing ingredient" button
-- Cancel (back)
-- Save (redirects to Show)
+- Ingredients Index (Cancel)
+- Clone an existing ingredient
+- Store
 
 Edit
 ^^^^
@@ -190,10 +219,6 @@ Edit
       "id": 0,
       "name": "Foo",
       "ingredient_category_id": 0,
-      "ingredient_category": {
-        "ingredient_category_id": 0,
-        "name": "Bar"
-      },
       "density_g_per_ml": 0.0,
       "ingredient_nutrients": [
         {
@@ -226,8 +251,15 @@ Edit
         "name": "Boop"
       }
     ],
+    "can_create": false,
     "can_delete": false
   }
+
+- ``ingredient`` is used for current ingredient information
+- ``ingredient_categories`` to allow user to choose the ingredient's category.
+- ``nutrient_category`` to split up IngredientNutrients into vitamins, minerals, and macronutrients.
+- ``can_create`` and ``can_delete`` to conditionally display Clone and Delete buttons.
+
 
 **Form:** See :ref:`Validation: Update an Ingredient <validation-update-ingredient>`
 
@@ -237,10 +269,11 @@ Edit
 - Nutrient amount (text input), prefilled with current value in ``ingredient.ingredient_nutrients.amount_per_100g``
 - Nutrient unit (static text)
 
-**Actions**
+**Links to**
 
-- Save
+- Store
 - Delete
+- Clone this ingredient
 - Cancel
 
 Meal CRUD
@@ -261,8 +294,12 @@ Purpose: display an overview of all meals as an intermediate step to navigating 
         "id": 0,
         "name": "Foo",
       }
-    ]
+    ],
+    "can_create": false
   }
+
+- ``meals`` for search over meals
+- ``can_create`` to control display of "Create meal" and "Clone meal" button
 
 **UI**
 
@@ -273,6 +310,11 @@ Table with columns for:
 - Trash icon (links to Destroy)
 
 Filter by meal name (fuzzy search filter)
+
+**Links to:**
+
+- Create new ingredient
+- Clone existing ingredient
 
 Show
 ^^^^
@@ -289,6 +331,7 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
       "name": "Foo",
       "meal_ingredients": [
         {
+          "id": 0,
           "meal_id": 0,
           "ingredient_id": 0,
           "amount": 0.0,
@@ -313,6 +356,12 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
         "pdv": 0.0
       }
     ],
+    "meals": [
+      {
+        "id": 0,
+        "name": "Boop"
+      }
+    ],
     "nutrient_categories": [
       {
         "id": 0,
@@ -320,16 +369,17 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
       }
     ],
     "can_edit": false,
+    "can_create": false,
     "can_delete": false
   }
 
-**Links to:**
+- ``meal`` to display meal info
+- ``nutrient_profile`` to display meal's nutrient profile
+- ``meals`` for "Search for another meal"
+- ``nutrient_categories`` to split up nutrient profile into vitamins, minerals, macronutrients
+- ``can_edit``, ``can_create``, and ``can_delete`` to conditionally display edit, clone, and delete buttons.
 
-- Meals Home
-- Edit
-- Destroy
-
-**UI:** MealIngredients table in columns for:
+**UI:** MealIngredients table with columns for:
 
 - Ingredient name
 - Amount (in originally specified units)
@@ -337,12 +387,19 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
 
 Nutrient Profile table.
 
+**Links to:**
+
+- Edit
+- Clone
+- Delete
+- Search for another meal
+
 Create
 ^^^^^^
 
 Purpose: create a new Meal
 
-**Props:** You need ``ingredients`` to use as MealIngredients, ``ingredient_categories`` for filtering Ingredients when searching, and ``units`` to specify amount of each MealIngredient.
+**Props:**
 
 .. code-block:: json
 
@@ -351,29 +408,33 @@ Purpose: create a new Meal
       {
         "id": 0,
         "name": "Foo"
-      }
-    ],
-    "user_ingredients": [
-      {
-        "id": 0,
-        "name": "Bar"
+        "ingredient_category_id": 0,
+        "density_g_per_ml": null
       }
     ],
     "ingredient_categories": [
       {
         "id": 0,
-        "name": "Baz"
+        "name": "Bar"
       }
     ],
     "units": [
       {
         "id": 0,
-        "name": "Bop",
+        "name": "Baz",
         "is_mass": true,
         "is_volume": false
       }
-    ]
+    ],
+    "can_create": false
   }
+
+- ``ingredients`` (FDA *and* user ingredients) to use as MealIngredients.
+  ``density_g_per_ml`` to determine if ingredient amount can be specified in volume units.
+- ``ingredient_categories`` for filtering Ingredients when searching
+- ``units`` to specify amount of each MealIngredient.
+- ``can_create`` to conditionally display Clone from existing ingredient
+
 
 **Form:** See :ref:`Validation: Create or Update a Meal <validation-crud-meal>`
 
@@ -383,11 +444,11 @@ Purpose: create a new Meal
 - Ingredient mass (text input for number)
 - Unit (select)
 
-**Actions:**
+**Links to:**
 
-- Clone from existing meal
-- Save button
-- Cancel button (back)
+- Meals Index (Cancel)
+- Clone an existing meal
+- Store
 
 Edit
 ^^^^
@@ -402,6 +463,7 @@ Edit
       "name": "Foo",
       "meal_ingredients": [
         {
+          "id": 0,
           "meal_id": 0,
           "ingredient_id": 0,
           "amount": 0.0,
@@ -409,7 +471,7 @@ Edit
           "ingredient": {
             "id": 0,
             "name": "Bar",
-            "density_g_per_ml": 0.0
+            "density_g_per_ml": null
           },
           "unit": {
             "id": 0,
@@ -421,31 +483,35 @@ Edit
     "ingredients": [
       {
         "id": 0,
-        "name": "Bop"
-      }
-    ],
-    "user_ingredients": [
-      {
-        "id": 0,
-        "name": "Bar"
+        "name": "Bop",
+        "ingredient_category_id": 0,
+        "density_g_per_ml": null
       }
     ],
     "ingredient_categories": [
       {
         "id": 0,
-        "name": "Baz"
+        "name": "Blap"
       }
     ],
     "units": [
       {
         "id": 0,
-        "name": "Blap",
+        "name": "Boop",
         "is_mass": true,
         "is_volume": false
       }
     ],
+    "can_create": false,
     "can_delete": false
   }
+
+- ``meal`` to display current ingredient information
+- ``ingredients`` (FDA *and* user ingredients) to use as MealIngredients.
+  ``density_g_per_ml`` to determine if ingredient amount can be specified in volume units.
+- ``ingredient_categories`` for filtering Ingredients when searching
+- ``units`` to specify amount of each MealIngredient.
+- ``can_create`` and ``can_delete`` to conditionally display Clone and Delete buttons
 
 **Form:** See :ref:`Validation: Create or Update a Meal <validation-crud-meal>`
 
@@ -457,9 +523,10 @@ Edit
 
 **Actions:**
 
+- Store
 - Delete
-- Save
-- Cancel
+- Clone this meal
+- Cancel 
 
 Food List CRUD
 --------------
