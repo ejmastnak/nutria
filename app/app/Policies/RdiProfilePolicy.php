@@ -43,6 +43,18 @@ class RdiProfilePolicy
     }
 
     /**
+     * Determine whether the user can clone models.
+     */
+    public function clone(User $user, RdiProfile $rdiProfile): bool
+    {
+        if ($user->is_admin || $user->is_full_tier) {
+            return is_null($rdiProfile->user_id) || $rdiProfile->user_id === $user->id;
+        }
+        return false;
+    }
+
+
+    /**
      * Determine whether the user can update the model.
      */
     public function update(User $user, RdiProfile $rdiProfile): bool
