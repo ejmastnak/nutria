@@ -6,7 +6,8 @@ use App\Models\FoodList;
 use App\Models\FoodListIngredient;
 use App\Models\FoodListMeal;
 use Illuminate\Http\Request;
-use Inertia\Intertia;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class FoodListController extends Controller
 {
@@ -15,8 +16,10 @@ class FoodListController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
         return Inertia::render('FoodLists/Index', [
-          'foodLists' => FoodList::all()
+            'food_lists' => Auth::user() ? FoodList::where('user_id', Auth::user()->id)->get(['id', 'name']) : [],
+            'can_create' => $user ? ($user->can('create', FoodList::class)) : false,
         ]);
     }
 
