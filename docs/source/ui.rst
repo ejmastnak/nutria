@@ -183,7 +183,8 @@ Purpose: create a new Ingredient.
         "id": 0,
         "name": "Blap"
       },
-      "can_create": false
+      "can_create": false,
+      "clone": false
     ]
   }
 
@@ -191,7 +192,8 @@ Purpose: create a new Ingredient.
   Altough Create strictly needs only ``nutrient_id``, ``nutrient.display_name``, and ``unit.name``, I'm preserving the ``ingredient`` prop structure to be able to use the same CreateOrEdit component for Create.
 - ``ingredient_categories`` to allow user to choose the ingredient's category.
 - ``nutrient_category`` to split up IngredientNutrients into vitamins, minerals, and macronutrients.
-- ``can_create`` to conditionally display Clone from existing ingredient
+- ``can_create`` to conditionally display Clone button
+- ``clone`` to conditionally display "Cloned from Foo" message
 
 **Form:** See :ref:`Validation: Create an Ingredient <validation-create-ingredient>`
 
@@ -404,6 +406,7 @@ Purpose: create a new Meal
 .. code-block:: json
 
   {
+    "meal": null,
     "ingredients": [
       {
         "id": 0,
@@ -426,15 +429,17 @@ Purpose: create a new Meal
         "is_volume": false
       }
     ],
-    "can_create": false
+    "can_create": false,
+    "clone": false
   }
 
+- ``meal`` is not directly needed for Create, but is used for cloning meals.
 - ``ingredients`` (FDA *and* user ingredients) to use as MealIngredients.
   ``density_g_per_ml`` to determine if ingredient amount can be specified in volume units.
 - ``ingredient_categories`` for filtering Ingredients when searching
 - ``units`` to specify amount of each MealIngredient.
-- ``can_create`` to conditionally display Clone from existing ingredient
-
+- ``can_create`` to conditionally display Clone from existing meal
+- ``clone`` to conditionally display "Cloned from Foo" message
 
 **Form:** See :ref:`Validation: Create or Update a Meal <validation-crud-meal>`
 
@@ -506,7 +511,7 @@ Edit
     "can_delete": false
   }
 
-- ``meal`` to display current ingredient information
+- ``meal`` to display current meal information
 - ``ingredients`` (FDA *and* user ingredients) to use as MealIngredients.
   ``density_g_per_ml`` to determine if ingredient amount can be specified in volume units.
 - ``ingredient_categories`` for filtering Ingredients when searching
@@ -521,12 +526,12 @@ Edit
 - Ingredient mass (text input for number)
 - Unit (select)
 
-**Actions:**
+**Links to:**
 
 - Store
 - Delete
 - Clone this meal
-- Cancel 
+- Cancel
 
 Food List CRUD
 --------------
@@ -548,6 +553,9 @@ Purpose: display an overview of all food lists as an intermediate step to naviga
       }
     ]
   }
+
+- ``food_lists`` to show overview of food lists
+- ``can_create`` to control display of "Create food list" and "Clone existing food list"
 
 **UI**
 
@@ -614,6 +622,12 @@ Show
         "pdv": 0.0
       }
     ],
+    "food_lists": [
+      {
+        "id": 0,
+        "name": "Boop"
+      }
+    ],
     "nutrient_categories": [
       {
         "id": 0,
@@ -621,8 +635,15 @@ Show
       }
     ],
     "can_edit": false,
+    "can_create": false,
     "can_delete": false
   }
+
+- ``food_list`` to display food list info
+- ``nutrient_profile`` to display food list's nutrient profile
+- ``food_lists`` to "Search for another food list"
+- ``nutrient_categories`` to split up nutrient profile into vitamins, minerals, macronutrients
+- ``can_edit``, ``can_create``, and ``can_delete`` to conditionally display edit, clone, and delete buttons.
 
 **UI:**
 
@@ -640,43 +661,63 @@ FoodListMeals (if present) in table with columns:
 
 Nutrient profile table.
 
-**Actions:**
+**Links to:**
 
 - Edit
+- Clone
 - Delete
-- Back (e.g. to ingredients home)
+- Search for another food list
 
 Create
 ^^^^^^
 
 Purpose: create a new Food List
 
-**Props:** You need ``ingredients`` and ``meals`` to use as FoodListIngredients and FoodListMeals and ``units`` to specify amount of each ingredient/meal.
-
 .. code-block:: json
 
   {
+    "food_list": null,
     "ingredients": [
       {
         "id": 0,
-        "name": "Foo"
+        "name": "Foo",
+        "ingredient_category_id": 0,
+        "density_g_per_ml": null
       }
     ],
     "meals": [
       {
         "id": 0,
-        "name": "Bar"
+        "name": "Bar",
+        "mass_in_grams": 0.0
+      }
+    ],
+    "ingredient_categories": [
+      {
+        "id": 0,
+        "name": "Baz"
       }
     ],
     "units": [
       {
         "id": 0,
-        "name": "Baz",
+        "name": "Bop",
         "is_mass": true,
         "is_volume": false
       }
-    ]
+    ],
+    "can_create": false,
+    "clone": false
   }
+
+- ``food_list`` is not directly needed for Create, but is used for cloning food lists.
+- ``ingredients`` (FDA *and* user ingredients) to use as FoodListIngredients.
+  ``density_g_per_ml`` to determine if ingredient amount can be specified in volume units.
+- ``meals`` to use as FoodListMeals (pass ``mass_in_grams`` to use as default meal mass)
+- ``ingredient_categories`` for filtering Ingredients when searching
+- ``units`` to specify amount of each FoodListIngredient and FoodListMeal
+- ``can_create`` to conditionally display Clone from existing food list
+- ``clone`` to conditionally display "Cloned from Foo" message
 
 **Form:** See :ref:`Validation: Create or Update Food List <validation-crud-food-list>`
 
@@ -694,11 +735,11 @@ FoodListMeals in table with columns:
 - Meal mass (text input for number)
 - Unit (select over units)
 
-**Actions:**
+**Links to:**
 
+- Food list index (cancel)
 - Clone from existing Food List
-- Save button
-- Cancel button (back)
+- Store
 
 Edit
 ^^^^
@@ -722,7 +763,8 @@ Purpose: update an existing new Food List
           "unit_id": 0,
           "ingredient": {
             "id": 0,
-            "name": "Bar"
+            "name": "Bar",
+            "density_g_per_ml": null
           },
           "unit": {
             "id": 0,
@@ -751,25 +793,44 @@ Purpose: update an existing new Food List
     "ingredients": [
       {
         "id": 0,
-        "name": "Foo"
+        "name": "Foo",
+        "ingredient_category_id": 0,
+        "density_g_per_ml": null
       }
     ],
     "meals": [
       {
         "id": 0,
-        "name": "Bar"
+        "name": "Bar",
+        "mass_in_grams": 0.0
+      }
+    ],
+    "ingredient_categories": [
+      {
+        "id": 0,
+        "name": "Baz"
       }
     ],
     "units": [
       {
         "id": 0,
-        "name": "Baz",
+        "name": "Blap",
         "is_mass": true,
         "is_volume": false
       }
     ],
+    "can_create": false,
     "can_delete": false
   }
+
+- ``food_list`` to display current food list information
+- ``ingredients`` (FDA *and* user ingredients) to use as FoodListIngredients
+  ``density_g_per_ml`` to determine if ingredient amount can be specified in volume units.
+- ``meals`` to use as FoodListMeals
+- ``ingredient_categories`` for filtering Ingredients when searching
+- ``units`` to specify amount of each FoodListIngredient and FoodListMeal
+- ``can_create`` and ``can_delete`` to conditionally display Clone and Delete buttons
+
 
 **Form:** See :ref:`Validation: Create or Update Food List <validation-crud-food-list>`
 
@@ -787,10 +848,11 @@ FoodListMeals in table with columns:
 - Meal mass (text input for number)
 - Unit (select over units)
 
-**Actions:**
+**Links to:**
 
+- Store
 - Delete
-- Save
+- Clone this food list
 - Cancel
 
 RDI Profile CRUD
@@ -910,7 +972,7 @@ Purpose: create a new RDI Profile.
 - Nutrient amount (text input), prefilled either to zero or value from cloned RDI Profile.
 - Nutrient unit (static text)
 
-**Actions:**
+**Links to:**
 
 - "Clone from existing RDI Profile" button
 - Cancel
@@ -958,7 +1020,7 @@ Purpose: update an existing RDI Profile.
 - Nutrient amount (text input), prefilled either to current value
 - Nutrient unit (static text)
 
-**Actions:**
+**Links to:**
 
 - Save
 - Delete
