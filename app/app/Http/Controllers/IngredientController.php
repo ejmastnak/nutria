@@ -68,7 +68,7 @@ class IngredientController extends Controller
      */
     public function clone(Ingredient $ingredient)
     {
-        $this->authorize('create', Ingredient::class);
+        $this->authorize('clone', $ingredient);
         $user = Auth::user();
 
         $ingredient->load([
@@ -89,6 +89,7 @@ class IngredientController extends Controller
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
             "can_create" => $user ? ($user->can('create', Ingredient::class)) : false,
+            "clone" => true
         ]);
 
     }
@@ -237,7 +238,8 @@ class IngredientController extends Controller
             if(Ingredient::where('ingredient_category_id', $ingredient_category_id)->doesntExist()) {
                 IngredientCategory::find($country_id)->delete();
             }
+            return Redirect::route('ingredients.index')->with('message', 'Success! Ingredient deleted successfully.');
         }
-        return Redirect::route('ingredients.index')->with('message', 'Success! Ingredient deleted successfully.');
+        return Redirect::route('ingredients.index')->with('message', 'Failed to delete ingredient.');
     }
 }

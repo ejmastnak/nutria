@@ -22,8 +22,8 @@ const props = defineProps({
   can_delete: Boolean
 })
 
-const howManyGrams = ref("100");
 const defaultMassInGrams = props.meal.mass_in_grams
+const howManyGrams = ref(props.meal.mass_in_grams);
 
 const deleteDialog = ref(null)
 
@@ -42,7 +42,7 @@ export default {
 </script>
 
 <template>
-  <div class="w-fit">
+  <div>
 
     <Head :title="meal.name" />
 
@@ -100,9 +100,14 @@ export default {
 
       <h1 class="text-xl w-2/3">{{meal.name}}</h1>
 
-      <!-- Meal pillbox label -->
-      <div class="mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
-        Meal
+      <!-- Meal name and mass pillbox labels -->
+      <div class="flex mt-2">
+        <div class="bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
+          Meal
+        </div>
+        <div class="ml-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
+          {{meal.mass_in_grams}} g
+        </div>
       </div>
 
     </div>
@@ -111,7 +116,7 @@ export default {
     <div class="mt-8 text-gray-900">
       <h2 class="text-lg">Meal ingredients</h2>
 
-      <table class="text-left w-full">
+      <table v-if="meal.meal_ingredients.length" class="text-left w-full">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
             <th scope="col" class="px-4 py-3 bg-blue-50">
@@ -125,7 +130,7 @@ export default {
         <tbody>
           <tr
             v-for="meal_ingredient in meal.meal_ingredients"
-            class="border-t text-gray-600 font-medium text-sm"
+            class="border-t text-gray-600 font-medium"
           >
             <td scope="row" class="px-4 py-2">
               <Link
@@ -142,10 +147,11 @@ export default {
           </tr>
         </tbody>
       </table>
+      <p v-else class="mt-1 text-gray-700">This meal has no ingredients!</p>
 
     </div>
 
-    <section class="mt-10">
+    <section v-if="meal.meal_ingredients.length" class="mt-10">
 
       <div class="flex">
         <h2 class="text-lg">Nutrient profile</h2>
@@ -158,7 +164,7 @@ export default {
               id="howManyGrams"
               type="number"
               min="0"
-              class="mt-1 mx-1.5 pl-1 pr-0 text-right text-lg w-20 font-bold block py-px"
+              class="mt-1 mx-1.5 pl-1 pr-0 text-right text-lg w-24 font-bold block py-px"
               v-model="howManyGrams"
             />
           </div>

@@ -42,7 +42,7 @@ export default {
 </script>
 
 <template>
-  <div class="w-fit">
+  <div>
     <Head :title="ingredient.name" />
 
     <div class="flex items-center space-x-4 -mt-2 border border-gray-300 p-1 px-4 rounded-xl">

@@ -26,23 +26,35 @@ const gram = props.units[gramIdx]
 const searchIngredient = ref({})
 const form = useForm({
   name: props.meal ? props.meal.name : "",
-  meal_ingredients: props.meal ? props.meal.meal_ingredients : []
+  meal_ingredients: props.meal ? props.meal.meal_ingredients.map((meal_ingredient, index) => ({
+    idx: index,
+    id: meal_ingredient.id,
+    meal_id: meal_ingredient.meal_id,
+    ingredient_id: meal_ingredient.ingredient_id,
+    amount: meal_ingredient.amount,
+    unit_id: meal_ingredient.unit_id,
+    ingredient: meal_ingredient.ingredient,
+    unit: meal_ingredient.unit
+  })) : []
 })
+
+  // meal_ingredients: props.meal ? JSON.parse(JSON.stringify(props.meal.meal_ingredients)) : []
 
 var nextID = -1
 function addIngredient() {
   form.meal_ingredients.push({
-        "id": nextID,
-        "meal_id": 0,
-        "ingredient_id": 0,
-        "amount": "0.0",
-        "unit_id": 0,
-        "ingredient": {
-          "id": 0,
-          "name": "",
-          "density_g_per_ml": null
-        },
-        "unit": gram
+    "idx": form.meal_ingredients.length,
+    "id": nextID,
+    "meal_id": 0,
+    "ingredient_id": 0,
+    "amount": "0.0",
+    "unit_id": gram.id,
+    "ingredient": {
+      "id": 0,
+      "name": "",
+      "density_g_per_ml": null
+    },
+    "unit": gram
   });
   nextID -= 1;
 }
@@ -52,10 +64,12 @@ function updateMealIngredient(mealIngredient, newIngredient) {
   // specified in units of volume to an ingredient that does not have density,
   // reset ingredient's amount and unit to non-volume units.
   if (mealIngredient.unit.is_volume && mealIngredient.ingredient.density_g_per_ml && !newIngredient.density_g_per_ml) {
+    mealIngredient.ingredient_id = newIngredient.id
     mealIngredient.ingredient = newIngredient
     mealIngredient.amount = '0.0'
     mealIngredient.unit = gram
   } else {
+    mealIngredient.ingredient_id = newIngredient.id
     mealIngredient.ingredient = newIngredient
   }
 }
@@ -63,15 +77,16 @@ function updateMealIngredient(mealIngredient, newIngredient) {
 function deleteMealIngredient(id) {
   const idx = form.meal_ingredients.map(mi => mi.id).indexOf(id);
   form.meal_ingredients.splice(idx, 1);
+  // Eager update of meal ingredient indices (which are needed to associate
+  // individual meal ingredients with validation error messages)
+  form.meal_ingredients.forEach((meal_ingredient, idx) => meal_ingredient.idx = idx);
 }
 
 function submit() {
   if (props.create) {
-    alert("Create!");
-    // form.post(route('meals.store'))
+    form.post(route('meals.store'))
   } else {
-    // form.put(route('meals.update', props.meal.id))
-    alert("Update!");
+    form.put(route('meals.update', props.meal.id))
   }
 }
 
@@ -137,6 +152,8 @@ export default {
                 :modelValue="meal_ingredient.ingredient"
                 @update:modelValue="newValue => updateMealIngredient(meal_ingredient, newValue)"
               />
+              <InputError class="mt-2 text-left" :message="form.errors['meal_ingredients.' + meal_ingredient.idx + '.ingredient_id']" />
+              <InputError class="mt-2 text-left" :message="form.errors['meal_ingredients.' + meal_ingredient.idx + '.id']" />
             </td>
             <td class="px-4 py-2 text-right">
               <TextInput
@@ -145,14 +162,15 @@ export default {
                 v-model="meal_ingredient.amount"
                 required
               />
-              <!-- TODO: input errors for individual meal ingredients -->
+              <InputError class="mt-2 text-left" :message="form.errors['meal_ingredients.' + meal_ingredient.idx + '.amount']" />
             </td>
             <td class="px-4 py-2 text-right">
               <SimpleCombobox
                 :options="units.filter(unit => unit.is_mass || (meal_ingredient.ingredient.density_g_per_ml && unit.is_volume))"
                 :modelValue="meal_ingredient.unit"
-                @update:modelValue="newValue => meal_ingredient.unit = newValue"
+                @update:modelValue="newValue => (meal_ingredient.unit_id = newValue.id, meal_ingredient.unit = newValue)"
               />
+              <InputError class="mt-2 text-left" :message="form.errors['meal_ingredients.' + meal_ingredient.idx + '.unit_id']" />
             </td>
             <td class="px-4 py-2">
               <button
@@ -201,14 +219,6 @@ export default {
 
     </section>
 
-    <pre>
-      {{form.name}}
-    </pre>
-    <pre>
-      {{form.meal_ingredients}}
-    </pre>
-
   </form>
-
 
 </template>

@@ -10,6 +10,7 @@ use App\Models\NutrientCategory;
 use App\Models\Unit;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 
 class MealController extends Controller
@@ -34,12 +35,44 @@ class MealController extends Controller
         $this->authorize('create', Meal::class);
         $user = Auth::user();
         return Inertia::render('Meals/Create', [
+            'meal' => null,
             'ingredients' => Ingredient::where('user_id', null)
                 ->orWhere('user_id', $user ? $user->id : 0)
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
             "can_create" => $user ? ($user->can('create', Meal::class)) : false,
+        ]);
+    }
+
+    /**
+     * Like create, but form prefilled with an existing Meals's values
+     */
+    public function clone(Meal $meal)
+    {
+        $this->authorize('clone', $meal);
+        $user = Auth::user();
+
+        $meal->load([
+            'meal_ingredients:id,meal_id,ingredient_id,amount,unit_id',
+            'meal_ingredients.ingredient:id,name',
+            'meal_ingredients.unit:id,name',
+        ]);
+
+        return Inertia::render('Meals/Create', [
+            'meal' => $meal->only([
+                'id',
+                'name',
+                'meal_ingredients'
+            ]),
+            'ingredients' => Ingredient::where('user_id', null)
+                ->orWhere('user_id', $user ? $user->id : 0)
+                ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
+            'ingredient_categories' => IngredientCategory::all(['id', 'name']),
+            'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
+            "can_create" => $user ? ($user->can('create', Meal::class)) : false,
+            "can_delete" => $user ? ($user->can('delete', $meal)) : false,
+            "clone" => true
         ]);
     }
 
@@ -54,16 +87,17 @@ class MealController extends Controller
         $request->validate([
             'name' => ['required', 'min:1', 'max:500'],
             'meal_ingredients' => ['required', 'array', 'min:1', 'max:500'],
-            'meal_ingredients.*.ingredient_id' => ['required', 'integer', 'in:ingredients,id'],
+            'meal_ingredients.*.ingredient_id' => ['required', 'integer', 'exists:ingredients,id'],
             'meal_ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
-            'meal_ingredients.*.unit_id' => ['required', 'integer', 'in:units,id'],
+            'meal_ingredients.*.unit_id' => ['required', 'integer', 'exists:units,id'],
         ]);
 
         // Create meal
         $meal_mass_in_grams = 0;
         $meal = Meal::create([
             'name' => $request->name,
-            'mass_in_grams' => $meal_mass_in_grams
+            'mass_in_grams' => $meal_mass_in_grams,
+            'user_id' => $request->user()->id
         ]);
 
         // Create meal's MealIngredients
@@ -120,11 +154,13 @@ class MealController extends Controller
     {
         $this->authorize('update', $meal);
         $user = Auth::user();
+
         $meal->load([
-            'meal_ingredients:meal_id,ingredient_id,amount,unit_id',
+            'meal_ingredients:id,meal_id,ingredient_id,amount,unit_id',
             'meal_ingredients.ingredient:id,name',
             'meal_ingredients.unit:id,name',
         ]);
+
         return Inertia::render('Meals/Edit', [
             'meal' => $meal->only([
                 'id',
@@ -136,6 +172,7 @@ class MealController extends Controller
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
+            "can_create" => $user ? ($user->can('create', Meal::class)) : false,
             "can_delete" => $user ? ($user->can('delete', $meal)) : false
         ]);
     }
@@ -151,10 +188,10 @@ class MealController extends Controller
         $request->validate([
             'name' => ['required', 'min:1', 'max:500'],
             'meal_ingredients' => ['required', 'array', 'min:1', 'max:500'],
-            'meal_ingredients.*.id' => ['required', 'integer', 'in:meal_ingredients,id'],
-            'meal_ingredients.*.ingredient_id' => ['required', 'integer', 'in:ingredients,id'],
+            'meal_ingredients.*.id' => ['required', 'integer'],
+            'meal_ingredients.*.ingredient_id' => ['required', 'integer', 'exists:ingredients,id'],
             'meal_ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
-            'meal_ingredients.*.unit_id' => ['required', 'integer', 'in:units,id'],
+            'meal_ingredients.*.unit_id' => ['required', 'integer', 'exists:units,id'],
         ]);
 
         // Keep a running sum of constituent MealIngredient mass
@@ -211,7 +248,7 @@ class MealController extends Controller
             'mass_in_grams' => $meal_mass_in_grams,
         ]);
 
-        return Redirect::route('meals.index')->with('message', 'Success! Meal updated successfully.');
+        return Redirect::route('meals.show', $meal->id)->with('message', 'Success! Meal updated successfully.');
     }
 
     /**
@@ -219,14 +256,18 @@ class MealController extends Controller
      */
     public function destroy(Meal $meal)
     {
-        //
+        if ($meal) {
+            $meal->delete();
+            return Redirect::route('meals.index')->with('message', 'Success! Meal deleted successfully.');
+        }
+        return Redirect::route('meals.index')->with('message', 'Failed to delete meal.');
     }
 
     public function validateStoreOrUpdateRequest(Request $request) {
         $request->validate([
             'name' => ['required', 'min:1', 'max:500'],
             'ingredients' => ['required', 'array', 'min:1', 'max:500'],
-            'ingredients.*.ingredient_id' => ['required', 'integer', 'in:ingredients,id'],
+            'ingredients.*.ingredient_id' => ['required', 'integer', 'exists:ingredients,id'],
             'ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
             'ingredients.*.unit_id' => ['required', 'integer', 'in:units,id'],
         ]);

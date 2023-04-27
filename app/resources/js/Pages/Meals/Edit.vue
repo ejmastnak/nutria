@@ -8,10 +8,7 @@ const props = defineProps({
   ingredient_categories: Array,
   units: Array,
   can_create: Boolean,
-  clone: {
-    type: Boolean,
-    default: false
-  }
+  can_delete: Boolean
 })
 
 </script>
@@ -25,17 +22,16 @@ export default {
 
 <template>
   <div class="">
-    <Head title="New meal" />
+    <Head :title="'Edit ' + meal.name" />
 
-    <h1 class="text-xl font-semibold">New meal</h1>
-    <p v-if="clone && meal" class="text-gray-700">(Cloned from {{meal.name}})</p>
+    <h1 class="text-xl font-semibold">Edit {{meal.name}}</h1>
 
     <CreateOrEdit
       :meal="meal"
       :ingredients="ingredients"
       :ingredient_categories="ingredient_categories"
       :units="units"
-      :create="true"
+      :create="false"
     />
 
   </div>

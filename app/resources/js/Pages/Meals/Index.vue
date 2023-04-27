@@ -55,6 +55,12 @@ function resetSearch() {
   searchInput.value.focus()
 }
 
+// Updates filteredMeals after deleting an ingredient to ensure the meal
+// disappears from display
+function updateFuzzySearchOnDeletion(id) {
+  filteredMeals.value = fuzzysort.go(search.value.trim(), props.meals, fuzzysortOptions)
+}
+
 </script>
 
 <script>
@@ -208,7 +214,7 @@ export default {
       cloneRoute="meals.clone"
     />
 
-    <DeleteDialog ref="deleteDialog" deleteRoute="meals.destroy" thing="meal" />
+    <DeleteDialog ref="deleteDialog" deleteRoute="meals.destroy" thing="meal" @delete="updateFuzzySearchOnDeletion" />
 
   </div>
 </template>
