@@ -91,17 +91,16 @@ class NutrientProfileController extends Controller
         return $result;
     }
 
-    public static function profileFoodList($foodListID, $rdiProfileID) {
+    public static function profileFoodList($foodListID, $rdiProfileID=1) {
         if (FoodList::where('id', $foodListID)->doesntExist()) return [];
         if (RdiProfile::where('id', $rdiProfileID)->doesntExist()) return [];
 
-
         $query = "
         select
-          nutrients.display_name,
+          nutrients.display_name as nutrient,
           nutrients.nutrient_category_id as nutrient_category_id,
           sum(result.amount) as amount,
-          units.name,
+          units.name as unit,
           sum(result.pdv) as pdv
         from (
           select
