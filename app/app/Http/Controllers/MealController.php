@@ -135,7 +135,7 @@ class MealController extends Controller
             'nutrient_profile' => NutrientProfileController::profileMeal($meal->id),
             'meals' => Meal::where('user_id', $user ? $user->id : 0)->get(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
-            'can_create' => $user ? ($user->can('create', Meal::class)) : false,
+            'can_clone' => $user ? ($user->can('clone', $meal)) : false,
             'can_edit' => $user ? ($user->can('update', $meal)) : false,
             'can_delete' => $user ? ($user->can('delete', $meal)) : false,
         ]);

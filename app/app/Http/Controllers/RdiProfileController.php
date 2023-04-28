@@ -62,7 +62,7 @@ class RdiProfileController extends Controller
      */
     public function show(RdiProfile $rdiProfile)
     {
-        // Load name, RDI value, and unit (in nutrient’s preferred units) 
+        // Load name, RDI value, and unit (in nutrient’s preferred units)
         // of each RdiProfileNutrient
         $rdiProfile->load(
             'rdi_profile_nutrients:id,rdi_profile_id,nutrient_id,rdi',
@@ -80,7 +80,7 @@ class RdiProfileController extends Controller
      */
     public function edit(RdiProfile $rdiProfile)
     {
-        // Load name, RDI value, and unit (in nutrient’s preferred units) 
+        // Load name, RDI value, and unit (in nutrient’s preferred units)
         // of each RdiProfileNutrient
         $rdiProfile->load(
             'rdi_profile_nutrients:id,rdi_profile_id,nutrient_id,rdi',

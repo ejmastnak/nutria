@@ -18,7 +18,7 @@ const props = defineProps({
   nutrient_profile: Array,
   nutrient_categories: Array,
   can_edit: Boolean,
-  can_create: Boolean,
+  can_clone: Boolean,
   can_delete: Boolean
 })
 
@@ -60,7 +60,7 @@ export default {
       </Link>
 
       <Link
-        v-if="can_edit"
+        v-if="can_clone"
         class="hover:underline hover:bg-blue-100 p-2 rounded-lg"
         :href="route('food-lists.clone', food_list.id)"
       >

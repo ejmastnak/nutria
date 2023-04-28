@@ -36,11 +36,11 @@ const form = useForm({
   })) : []
 })
 
-var nextIngredientId = -1
+var nextMealIngredientID = -1
 function addMealIngredient() {
   form.meal_ingredients.push({
     "idx": form.meal_ingredients.length,
-    "id": nextIngredientId,
+    "id": nextMealIngredientID,
     "meal_id": 0,
     "ingredient_id": 0,
     "amount": "0.0",
@@ -52,7 +52,7 @@ function addMealIngredient() {
     },
     "unit": gram
   });
-  nextIngredientId -= 1;
+  nextMealIngredientID -= 1;
 }
 
 function updateMealIngredient(mealIngredient, newIngredient) {
