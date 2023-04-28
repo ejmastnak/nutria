@@ -40,12 +40,19 @@ class IngredientController extends Controller
         $this->authorize('create', Ingredient::class);
         $user = Auth::user();
 
-        $nutrients = Nutrient::get(['id', 'display_name', 'unit_id', 'nutrient_category_id']);
+        $nutrients = Nutrient::orderBy('display_order_id', 'asc')->get([
+            'id',
+            'display_name',
+            'unit_id',
+            'nutrient_category_id',
+            'display_order_id'
+        ]);
         $nutrients->load('unit:id,name');
+
         return Inertia::render('Ingredients/Create', [
             'ingredient' => [
                 'id' => null,
-                'name' => null,
+                'name' => "",
                 'ingredient_category_id' => null,
                 'ingredient_category' => null,
                 'density_g_per_ml' => null,
@@ -60,6 +67,7 @@ class IngredientController extends Controller
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
             'can_create' => $user ? $user->can('create', Ingredient::class) : false,
+            'clone' => false
         ]);
     }
 
@@ -71,8 +79,19 @@ class IngredientController extends Controller
         $this->authorize('clone', $ingredient);
         $user = Auth::user();
 
+        // The long query is to ensure ingredient_nutrients are ordered by
+        // nutrients.display_order_id
         $ingredient->load([
-            'ingredient_nutrients:id,ingredient_id,nutrient_id,amount_per_100g',
+            'ingredient_nutrients' => function($query) {
+                $query->select([
+                    'ingredient_nutrients.id',
+                    'ingredient_nutrients.ingredient_id',
+                    'ingredient_nutrients.nutrient_id',
+                    'ingredient_nutrients.amount_per_100g'
+                ])
+                ->join('nutrients', 'ingredient_nutrients.nutrient_id', '=', 'nutrients.id')
+                ->orderBy('nutrients.display_order_id', 'asc');
+            },
             'ingredient_nutrients.nutrient:id,display_name,nutrient_category_id,unit_id',
             'ingredient_nutrients.nutrient.unit:id,name'
         ]);
@@ -158,11 +177,24 @@ class IngredientController extends Controller
     {
         $this->authorize('update', $ingredient);
         $user = Auth::user();
+
+        // The long query is to ensure ingredient_nutrients are ordered by
+        // nutrients.display_order_id
         $ingredient->load([
-            'ingredient_nutrients:id,ingredient_id,nutrient_id,amount_per_100g',
+            'ingredient_nutrients' => function($query) {
+                $query->select([
+                    'ingredient_nutrients.id',
+                    'ingredient_nutrients.ingredient_id',
+                    'ingredient_nutrients.nutrient_id',
+                    'ingredient_nutrients.amount_per_100g'
+                ])
+                ->join('nutrients', 'ingredient_nutrients.nutrient_id', '=', 'nutrients.id')
+                ->orderBy('nutrients.display_order_id', 'asc');
+            },
             'ingredient_nutrients.nutrient:id,display_name,nutrient_category_id,unit_id',
             'ingredient_nutrients.nutrient.unit:id,name'
         ]);
+
         return Inertia::render('Ingredients/Edit', [
             'ingredient' => $ingredient->only([
                 'id',
