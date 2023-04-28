@@ -83,15 +83,7 @@ class MealController extends Controller
     public function store(Request $request)
     {
         $this->authorize('create', Meal::class);
-
-        // Validate request
-        $request->validate([
-            'name' => ['required', 'min:1', 'max:500'],
-            'meal_ingredients' => ['required', 'array', 'min:1', 'max:500'],
-            'meal_ingredients.*.ingredient_id' => ['required', 'integer', 'exists:ingredients,id'],
-            'meal_ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
-            'meal_ingredients.*.unit_id' => ['required', 'integer', 'exists:units,id'],
-        ]);
+        $this->validateStoreOrUpdateRequest($request);
 
         // Create meal
         $meal_mass_in_grams = 0;
@@ -185,16 +177,7 @@ class MealController extends Controller
     public function update(Request $request, Meal $meal)
     {
         $this->authorize('update', $meal);
-
-        // Validate request
-        $request->validate([
-            'name' => ['required', 'min:1', 'max:500'],
-            'meal_ingredients' => ['required', 'array', 'min:1', 'max:500'],
-            'meal_ingredients.*.id' => ['required', 'integer'],
-            'meal_ingredients.*.ingredient_id' => ['required', 'integer', 'exists:ingredients,id'],
-            'meal_ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
-            'meal_ingredients.*.unit_id' => ['required', 'integer', 'exists:units,id'],
-        ]);
+        $this->validateStoreOrUpdateRequest($request);
 
         // Keep a running sum of constituent MealIngredient mass
         $meal_mass_in_grams = 0;
@@ -268,10 +251,11 @@ class MealController extends Controller
     public function validateStoreOrUpdateRequest(Request $request) {
         $request->validate([
             'name' => ['required', 'min:1', 'max:500'],
-            'ingredients' => ['required', 'array', 'min:1', 'max:500'],
-            'ingredients.*.ingredient_id' => ['required', 'integer', 'exists:ingredients,id'],
-            'ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
-            'ingredients.*.unit_id' => ['required', 'integer', 'in:units,id'],
+            'meal_ingredients' => ['required', 'array', 'min:1', 'max:500'],
+            'meal_ingredients.*.id' => ['required', 'integer'],
+            'meal_ingredients.*.ingredient_id' => ['required', 'integer', 'exists:ingredients,id'],
+            'meal_ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
+            'meal_ingredients.*.unit_id' => ['required', 'integer', 'exists:units,id']
         ]);
     }
 

@@ -99,17 +99,7 @@ class IngredientController extends Controller
     public function store(Request $request)
     {
         $this->authorize('create', Ingredient::class);
-
-        // Validate request
-        $num_nutrients = Nutrient::count();
-        $request->validate([
-            'name' => ['required', 'min:1', 'max:500'],
-            'ingredient_category_id' => ['required', 'integer', 'exists:ingredient_categories,id'],
-            'density_g_per_ml' => ['nullable', 'numeric', 'gt:0'],
-            'ingredient_nutrients' => ['required', 'array', 'max:' . $num_nutrients],
-            'ingredient_nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'exists:nutrients,id'],
-            'ingredient_nutrients.*.amount_per_100g' => ['required', 'numeric', 'gte:0'],
-        ]);
+        $this->validateStoreOrUpdateRequest($request);
 
         // Create ingredient
         $ingredient = Ingredient::create([
@@ -192,18 +182,7 @@ class IngredientController extends Controller
     public function update(Request $request, Ingredient $ingredient)
     {
         $this->authorize('update', $ingredient);
-
-        // Validate request
-        $num_nutrients = Nutrient::count();
-        $request->validate([
-            'name' => ['required', 'min:1', 'max:500'],
-            'ingredient_category_id' => ['required', 'integer', 'exists:ingredient_categories,id'],
-            'density_g_per_ml' => ['nullable', 'numeric', 'gt:0'],
-            'ingredient_nutrients' => ['required', 'array', 'max:' . $num_nutrients],
-            'ingredient_nutrients.*.id' => ['required', 'distinct', 'integer', 'exists:ingredient_nutrients,id'],
-            'ingredient_nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'exists:nutrients,id'],
-            'ingredient_nutrients.*.amount_per_100g' => ['required', 'numeric', 'gte:0'],
-        ]);
+        $this->validateStoreOrUpdateRequest($request);
 
         // Update ingredient
         $ingredient->update([
@@ -216,9 +195,9 @@ class IngredientController extends Controller
         // Update ingredient's nutrients
         foreach ($request->ingredient_nutrients as $ing) {
             $dbIng = IngredientNutrient::find($ing['id']);
-            $dbIng->update([
-                'amount_per_100g' => $ing['amount_per_100g'],
-            ]);
+            if ($dbIng) {
+                $dbIng->update(['amount_per_100g' => $ing['amount_per_100g']]);
+            }
         }
 
         return Redirect::route('ingredients.show', $ingredient->id)->with('message', 'Success! Ingredient updated successfully.');
@@ -241,4 +220,18 @@ class IngredientController extends Controller
         }
         return Redirect::route('ingredients.index')->with('message', 'Failed to delete ingredient.');
     }
+
+    private function validateStoreOrUpdateRequest($request) {
+        $num_nutrients = Nutrient::count();
+        $request->validate([
+            'name' => ['required', 'min:1', 'max:500'],
+            'ingredient_category_id' => ['required', 'integer', 'exists:ingredient_categories,id'],
+            'density_g_per_ml' => ['nullable', 'numeric', 'gt:0'],
+            'ingredient_nutrients' => ['required', 'array', 'max:' . $num_nutrients],
+            'ingredient_nutrients.*.id' => ['required', 'distinct'],
+            'ingredient_nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'exists:nutrients,id'],
+            'ingredient_nutrients.*.amount_per_100g' => ['required', 'numeric', 'gte:0'],
+        ]);
+    }
+
 }
