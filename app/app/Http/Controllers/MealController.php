@@ -23,7 +23,7 @@ class MealController extends Controller
         $user = Auth::user();
         return Inertia::render('Meals/Index', [
             'meals' => Auth::user() ? Meal::where('user_id', Auth::user()->id)->get(['id', 'name']) : [],
-            "can_create" => $user ? ($user->can('create', Meal::class)) : false,
+            'can_create' => $user ? ($user->can('create', Meal::class)) : false,
         ]);
     }
 
@@ -41,12 +41,13 @@ class MealController extends Controller
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
-            "can_create" => $user ? ($user->can('create', Meal::class)) : false,
+            'can_create' => $user ? ($user->can('create', Meal::class)) : false,
+            'clone' => false
         ]);
     }
 
     /**
-     * Like create, but form prefilled with an existing Meals's values
+     * Like create, but form prefilled with an existing resource's values
      */
     public function clone(Meal $meal)
     {
@@ -70,9 +71,9 @@ class MealController extends Controller
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
-            "can_create" => $user ? ($user->can('create', Meal::class)) : false,
-            "can_delete" => $user ? ($user->can('delete', $meal)) : false,
-            "clone" => true
+            'can_create' => $user ? ($user->can('create', Meal::class)) : false,
+            'can_delete' => $user ? ($user->can('delete', $meal)) : false,
+            'clone' => true
         ]);
     }
 
@@ -123,14 +124,15 @@ class MealController extends Controller
      */
     public function show(Meal $meal)
     {
-
         $this->authorize('view', $meal);
         $user = Auth::user();
+
         $meal->load([
             'meal_ingredients:id,meal_id,ingredient_id,amount,unit_id',
             'meal_ingredients.ingredient:id,name',
             'meal_ingredients.unit:id,name',
         ]);
+
         return Inertia::render('Meals/Show', [
             'meal' => $meal->only([
                 'id',
@@ -141,9 +143,9 @@ class MealController extends Controller
             'nutrient_profile' => NutrientProfileController::profileMeal($meal->id),
             'meals' => Meal::where('user_id', $user ? $user->id : 0)->get(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
-            "can_create" => $user ? ($user->can('create', Meal::class)) : false,
-            "can_edit" => $user ? ($user->can('update', $meal)) : false,
-            "can_delete" => $user ? ($user->can('delete', $meal)) : false,
+            'can_create' => $user ? ($user->can('create', Meal::class)) : false,
+            'can_edit' => $user ? ($user->can('update', $meal)) : false,
+            'can_delete' => $user ? ($user->can('delete', $meal)) : false,
         ]);
     }
 
@@ -172,8 +174,8 @@ class MealController extends Controller
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
-            "can_create" => $user ? ($user->can('create', Meal::class)) : false,
-            "can_delete" => $user ? ($user->can('delete', $meal)) : false
+            'can_create' => $user ? ($user->can('create', Meal::class)) : false,
+            'can_delete' => $user ? ($user->can('delete', $meal)) : false
         ]);
     }
 

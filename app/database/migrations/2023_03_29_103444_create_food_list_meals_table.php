@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('food_list_meals', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('food_list_id');
-            $table->foreign('food_list_id')->references('id')->on('food_lists')->onDeleteCascade();
+            $table->foreign('food_list_id')->references('id')->on('food_lists')->cascadeOnDelete();
             $table->unsignedBigInteger('meal_id');
             $table->foreign('meal_id')->references('id')->on('meals');
             $table->decimal('amount', 10, 3);

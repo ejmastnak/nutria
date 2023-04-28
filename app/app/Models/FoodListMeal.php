@@ -9,6 +9,7 @@ class FoodListMeal extends Model
 {
     use HasFactory;
     public $timestamps = false;
+    protected $fillable = ['food_list_id', 'meal_id', 'amount', 'unit_id', 'mass_in_grams'];
 
     public function food_list() {
         return $this->belongsTo(FoodList::class, 'food_list_id', 'id');

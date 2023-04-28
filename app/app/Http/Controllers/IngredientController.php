@@ -64,7 +64,7 @@ class IngredientController extends Controller
     }
 
     /**
-     * Like create, but form prefilled with an existing Ingredient's values
+     * Like create, but form prefilled with an existing resource's values
      */
     public function clone(Ingredient $ingredient)
     {
@@ -91,7 +91,6 @@ class IngredientController extends Controller
             "can_create" => $user ? ($user->can('create', Ingredient::class)) : false,
             "clone" => true
         ]);
-
     }
 
     /**

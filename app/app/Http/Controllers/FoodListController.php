@@ -5,9 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\FoodList;
 use App\Models\FoodListIngredient;
 use App\Models\FoodListMeal;
+use App\Models\Ingredient;
+use App\Models\Meal;
+use App\Models\NutrientCategory;
+use App\Models\IngredientCategory;
+use App\Models\Unit;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class FoodListController extends Controller
 {
@@ -18,7 +24,7 @@ class FoodListController extends Controller
     {
         $user = Auth::user();
         return Inertia::render('FoodLists/Index', [
-            'food_lists' => Auth::user() ? FoodList::where('user_id', Auth::user()->id)->get(['id', 'name']) : [],
+            'food_lists' => Auth::user() ? FoodList::where('user_id', Auth::user()->id)->get(['id', 'name', 'mass_in_grams']) : [],
             'can_create' => $user ? ($user->can('create', FoodList::class)) : false,
         ]);
     }
@@ -28,7 +34,52 @@ class FoodListController extends Controller
      */
     public function create()
     {
-        return Inertia::render('FoodLists/Create');
+        $this->authorize('create', FoodList::class);
+        $user = Auth::user();
+
+        return Inertia::render('FoodLists/Create', [
+            'food_list' => null,
+            'ingredients' => Ingredient::where('user_id', null)
+                ->orWhere('user_id', $user ? $user->id : 0)
+                ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
+            'meals' => Meal::where('user_id', $user ? $user->id : 0)
+                ->get(['id', 'name', 'mass_in_grams']),
+            'ingredient_categories' => IngredientCategory::all(['id', 'name']),
+            'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
+            'can_create' => $user ? ($user->can('create', FoodList::class)) : false,
+            'clone' => false,
+        ]);
+    }
+
+    /**
+     * Like create, but form prefilled with an existing resource's values
+     */
+    public function clone(FoodList $foodList)
+    {
+        $this->authorize('create', $foodList);
+        $user = Auth::user();
+
+        $foodList->load([
+            'food_list_ingredients:id,ingredient_id,food_list_id,amount,unit_id',
+            'food_list_ingredients.ingredient:id,name,density_g_per_ml',
+            'food_list_ingredients.unit:id,name',
+            'food_list_meals:id,meal_id,food_list_id,amount,unit_id',
+            'food_list_meals.meal:id,name',
+            'food_list_meals.unit:id,name'
+        ]);
+
+        return Inertia::render('FoodLists/Create', [
+            'food_list' => $foodList->only(['id', 'name', 'food_list_ingredients', 'food_list_meals']),
+            'ingredients' => Ingredient::where('user_id', null)
+                ->orWhere('user_id', $user ? $user->id : 0)
+                ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
+            'meals' => Meal::where('user_id', $user ? $user->id : 0)
+                ->get(['id', 'name', 'mass_in_grams']),
+            'ingredient_categories' => IngredientCategory::all(['id', 'name']),
+            'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
+            'can_create' => $user ? ($user->can('create', FoodList::class)) : false,
+            'clone' => true,
+        ]);
     }
 
     /**
@@ -40,67 +91,69 @@ class FoodListController extends Controller
         $request->validate([
             'name' => ['required', 'min:1', 'max:500'],
             'food_list_ingredients' => [
-                'required',
                 'array',
                 function ($attribute, $value, $fail) use($request) {
                     // food_list_ingredients must contain at least one element
                     // if food_list_meals is empty
                     if (count($request->food_list_ingredients) == 0 && count($request->food_list_meals) == 0) {
-                        $fail('Include at least one ingredient or meal.');
+                        $fail('Include at least one ingredient or one meal.');
                     }
                 },
                 'max:100'
             ],
-            'food_list_ingredients.*.ingredient_id' => ['required', 'integer', 'in:ingredients,id'],
+            'food_list_ingredients.*.id' => ['required', 'integer'],
+            'food_list_ingredients.*.ingredient_id' => ['required', 'integer', 'exists:ingredients,id'],
             'food_list_ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
-            'food_list_ingredients.*.unit_id' => ['required', 'integer', 'in:units,id'],
+            'food_list_ingredients.*.unit_id' => ['required', 'integer', 'exists:units,id'],
             'food_list_meals' => [
-                'required',
                 'array',
                 function ($attribute, $value, $fail) use($request) {
                     // food_list_meals must contain at least one element if
                     // food_list_ingredients is empty
                     if (count($request->food_list_meals) == 0 && count($request->food_list_ingredients) == 0) {
-                        $fail('Include at least one meal or ingredient.');
+                        $fail('Include at least one meal or one ingredient.');
                     }
                 },
                 'max:100'
             ],
-            'food_list_meals.*.meal_id' => ['required', 'integer', 'in:meals,id'],
+            'food_list_meals.*.id' => ['required', 'integer'],
+            'food_list_meals.*.meal_id' => ['required', 'integer', 'exists:meals,id'],
             'food_list_meals.*.amount' => ['required', 'numeric', 'gt:0'],
-            'food_list_meals.*.unit_id' => ['required', 'integer', 'in:units,id'],
+            'food_list_meals.*.unit_id' => ['required', 'integer', 'exists:units,id'],
         ]);
 
         // Create food list
         $food_list_mass_in_grams = 0;
         $food_list = FoodList::create([
             'name' => $request->name,
-            'mass_in_grams' => $food_list_mass_in_grams
+            'mass_in_grams' => $food_list_mass_in_grams,
+            'user_id' => $request->user()->id
         ]);
 
         // Create FoodListIngredients
-        foreach ($request->food_list_ingredients as $fli) {
-            FoodListIngredient::create([
+        foreach ($request->food_list_ingredients as $fli_data) {
+            $fli = FoodListIngredient::create([
                 'food_list_id' => $food_list->id,
-                'ingredient_id' => $fli['ingredient_id'],
-                'amount' => $fli['amount'],
-                'unit_id' => $fli['unit_id'],
-                'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($fli['amount'], $fli['unit_id'], $fli['ingredient_id'])
+                'ingredient_id' => $fli_data['ingredient_id'],
+                'amount' => $fli_data['amount'],
+                'unit_id' => $fli_data['unit_id'],
+                'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($fli_data['amount'], $fli_data['unit_id'], $fli_data['ingredient_id'])
             ]);
             $food_list_mass_in_grams += $fli->mass_in_grams;
         }
 
         // Create FoodListMeals
-        foreach ($request->food_list_meals as $flm) {
-            FoodListMeal::create([
+        foreach ($request->food_list_meals as $flm_data) {
+            $flm = FoodListMeal::create([
                 'food_list_id' => $food_list->id,
-                'meal_id' => $flm['meal_id'],
-                'amount' => $flm['amount'],
-                'unit_id' => $flm['unit_id'],
-                'mass_in_grams' => UnitConversionController::mass_to_grams($flm['amount'], $flm['unit_id'])
+                'meal_id' => $flm_data['meal_id'],
+                'amount' => $flm_data['amount'],
+                'unit_id' => $flm_data['unit_id'],
+                'mass_in_grams' => UnitConversionController::mass_to_grams($flm_data['amount'], $flm_data['unit_id'])
             ]);
             $food_list_mass_in_grams += $flm->mass_in_grams;
         }
+
         $food_list->update([
           'mass_in_grams' => $food_list_mass_in_grams
         ]);
@@ -113,8 +166,9 @@ class FoodListController extends Controller
      */
     public function show(FoodList $foodList)
     {
-        // Load name, amount, and unit (along with necessary intermediate
-        // relationships) of each food list ingredient and food list meal.
+        $this->authorize('view', $foodList);
+        $user = Auth::user();
+
         $foodList->load([
             'food_list_ingredients:id,ingredient_id,food_list_id,amount,unit_id',
             'food_list_ingredients.ingredient:id,name',
@@ -123,9 +177,21 @@ class FoodListController extends Controller
             'food_list_meals.meal:id,name',
             'food_list_meals.unit:id,name'
         ]);
+
         return Inertia::render('FoodLists/Show', [
-            'foodLists' => FoodList::all(),
-            'nutrient_profile' => NutrientProfileController::profileFoodList($foodList)
+            'food_list' => $foodList->only([
+                'id',
+                'name',
+                'mass_in_grams',
+                'food_list_ingredients',
+                'food_list_meals'
+            ]),
+            'nutrient_profile' => NutrientProfileController::profileFoodList($foodList->id),
+            'food_lists' => FoodList::all(),
+            'nutrient_categories' => NutrientCategory::all(['id', 'name']),
+            'can_create' => $user ? ($user->can('create', FoodList::class)) : false,
+            'can_edit' => $user ? ($user->can('update', $foodList)) : false,
+            'can_delete' => $user ? ($user->can('delete', $foodList)) : false
         ]);
     }
 
@@ -134,18 +200,29 @@ class FoodListController extends Controller
      */
     public function edit(FoodList $foodList)
     {
-        // Load name, amount, and unit (along with necessary intermediate
-        // relationships) of each food list ingredient and food list meal.
+        $this->authorize('update', $foodList);
+        $user = Auth::user();
+
         $foodList->load([
             'food_list_ingredients:id,ingredient_id,food_list_id,amount,unit_id',
-            'food_list_ingredients.ingredient:id,name',
+            'food_list_ingredients.ingredient:id,name,density_g_per_ml',
             'food_list_ingredients.unit:id,name',
             'food_list_meals:id,meal_id,food_list_id,amount,unit_id',
             'food_list_meals.meal:id,name',
             'food_list_meals.unit:id,name'
         ]);
-        return Inertia::render('FoodLists/Show', [
-            'foodLists' => FoodList::all()
+
+        return Inertia::render('FoodLists/Edit', [
+            'food_list' => $foodList->only(['id', 'name', 'food_list_ingredients', 'food_list_meals']),
+            'ingredients' => Ingredient::where('user_id', null)
+                ->orWhere('user_id', $user ? $user->id : 0)
+                ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
+            'meals' => Meal::where('user_id', $user ? $user->id : 0)
+                ->get(['id', 'name', 'mass_in_grams']),
+            'ingredient_categories' => IngredientCategory::all(['id', 'name']),
+            'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
+            'can_create' => $user ? ($user->can('create', FoodList::class)) : false,
+            'can_delete' => $user ? ($user->can('delete', $foodList)) : false
         ]);
     }
 
@@ -158,37 +235,35 @@ class FoodListController extends Controller
         $request->validate([
             'name' => ['required', 'min:1', 'max:500'],
             'food_list_ingredients' => [
-                'required',
                 'array',
                 function ($attribute, $value, $fail) use($request) {
                     // food_list_ingredients must contain at least one element
                     // if food_list_meals is empty
                     if (count($request->food_list_ingredients) == 0 && count($request->food_list_meals) == 0) {
-                        $fail('Include at least one ingredient or meal.');
+                        $fail('Include at least one ingredient or one meal.');
                     }
                 },
                 'max:100'
             ],
-            'food_list_ingredients.*.id' => ['required', 'integer', 'in:food_list_ingredients,id'],
-            'food_list_ingredients.*.ingredient_id' => ['required', 'integer', 'in:ingredients,id'],
+            'food_list_ingredients.*.id' => ['required', 'integer'],
+            'food_list_ingredients.*.ingredient_id' => ['required', 'integer', 'exists:ingredients,id'],
             'food_list_ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
-            'food_list_ingredients.*.unit_id' => ['required', 'integer', 'in:units,id'],
+            'food_list_ingredients.*.unit_id' => ['required', 'integer', 'exists:units,id'],
             'food_list_meals' => [
-                'required',
                 'array',
                 function ($attribute, $value, $fail) use($request) {
                     // food_list_meals must contain at least one element if
                     // food_list_ingredients is empty
                     if (count($request->food_list_meals) == 0 && count($request->food_list_ingredients) == 0) {
-                        $fail('Include at least one meal or ingredient.');
+                        $fail('Include at least one meal or one ingredient.');
                     }
                 },
                 'max:100'
             ],
-            'food_list_meals.*.id' => ['required', 'integer', 'in:food_list_meals,id'],
-            'food_list_meals.*.meal_id' => ['required', 'integer', 'in:meals,id'],
+            'food_list_meals.*.id' => ['required', 'integer'],
+            'food_list_meals.*.meal_id' => ['required', 'integer', 'exists:meals,id'],
             'food_list_meals.*.amount' => ['required', 'numeric', 'gt:0'],
-            'food_list_meals.*.unit_id' => ['required', 'integer', 'in:units,id'],
+            'food_list_meals.*.unit_id' => ['required', 'integer', 'exists:units,id'],
         ]);
 
         // Keep a running sum of constituent ingredient and meal masses
@@ -307,6 +382,10 @@ class FoodListController extends Controller
      */
     public function destroy(FoodList $foodList)
     {
-        //
+        if ($foodList) {
+            $foodList->delete();
+            return Redirect::route('food-lists.index')->with('message', 'Success! Food list deleted successfully.');
+        }
+        return Redirect::route('food-lists.index')->with('message', 'Failed to delete food list.');
     }
 }

@@ -55,8 +55,8 @@ function resetSearch() {
   searchInput.value.focus()
 }
 
-// Updates filteredMeals after deleting an ingredient to ensure the meal
-// disappears from display
+// Updates filteredMeals after deleting a meal to ensure the meal disappears
+// from display
 function updateFuzzySearchOnDeletion(id) {
   filteredMeals.value = fuzzysort.go(search.value.trim(), props.meals, fuzzysortOptions)
 }
@@ -74,7 +74,7 @@ export default {
   <div class="">
     <Head title="Meals" />
 
-    <!-- Title and new landmark top row -->
+    <!-- Title and new meal top row -->
     <div class="flex">
 
       <div class="mr-2 p-1">
@@ -210,7 +210,7 @@ export default {
       ref="cloneExistingDialog"
       :things="meals"
       thing="meal"
-      label="Search for an meal to clone"
+      label="Search for a meal to clone"
       cloneRoute="meals.clone"
     />
 

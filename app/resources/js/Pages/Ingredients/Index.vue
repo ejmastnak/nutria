@@ -97,7 +97,7 @@ export default {
   <div class="">
     <Head title="Ingredients" />
 
-    <!-- Title and new landmark top row -->
+    <!-- Title and new ingredient top row -->
     <div class="flex">
 
       <div class="mr-2 p-1">

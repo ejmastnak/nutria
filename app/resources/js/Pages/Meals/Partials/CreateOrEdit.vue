@@ -11,7 +11,6 @@ import SecondaryButton from '@/Components/SecondaryButton.vue'
 import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import InputError from '@/Components/InputError.vue'
-import IngredientNutrientTable from './IngredientNutrientTable.vue'
 
 const props = defineProps({
   meal: Object,
@@ -23,7 +22,6 @@ const props = defineProps({
 
 const gramIdx = props.units.map(unit => unit.name).indexOf("g")
 const gram = props.units[gramIdx]
-const searchIngredient = ref({})
 const form = useForm({
   name: props.meal ? props.meal.name : "",
   meal_ingredients: props.meal ? props.meal.meal_ingredients.map((meal_ingredient, index) => ({
@@ -38,13 +36,11 @@ const form = useForm({
   })) : []
 })
 
-  // meal_ingredients: props.meal ? JSON.parse(JSON.stringify(props.meal.meal_ingredients)) : []
-
-var nextID = -1
-function addIngredient() {
+var nextIngredientId = -1
+function addMealIngredient() {
   form.meal_ingredients.push({
     "idx": form.meal_ingredients.length,
-    "id": nextID,
+    "id": nextIngredientId,
     "meal_id": 0,
     "ingredient_id": 0,
     "amount": "0.0",
@@ -56,7 +52,7 @@ function addIngredient() {
     },
     "unit": gram
   });
-  nextID -= 1;
+  nextIngredientId -= 1;
 }
 
 function updateMealIngredient(mealIngredient, newIngredient) {
@@ -187,19 +183,18 @@ export default {
 
       <!-- New ingredient button -->
       <div class="mt-2">
-
         <SecondaryButton
-          @click="addIngredient"
+          @click="addMealIngredient"
           class="flex items-center mt-1 normal-case !font-normal !text-sm !px-2"
         >
           <PlusCircleIcon class="w-5 h-5 text-gray-500" />
           <p class="ml-1.5 whitespace-nowrap">Add ingredient</p>
         </SecondaryButton>
-
       </div>
 
     </section>
 
+    <!-- Submit/cancel buttons -->
     <section class="mt-8">
 
       <PrimaryButton
