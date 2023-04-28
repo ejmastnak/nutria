@@ -1,5 +1,6 @@
 {
   "name": "fda",
+  "user_id": null,
   "nutrients": [
     {
       "nutrient_id": 1003,

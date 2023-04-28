@@ -20,13 +20,13 @@ class RdiProfileSeeder extends Seeder
         DB::table('rdi_profile_nutrients')->truncate();
         DB::table('rdi_profiles')->truncate();
 
-
         foreach(glob(__DIR__ . '/rdi_profiles/*.json') as $file) {
             $json = file_get_contents($file);
             $rdi_profile = json_decode($json, true);
 
             $rdi_profile_id = RdiProfile::create([
                 'name' => $rdi_profile['name'],
+                'user_id' => $rdi_profile['user_id'],
             ])->id;
 
             foreach($rdi_profile['nutrients'] as $nutrient) {
