@@ -119,7 +119,7 @@ Purpose: display an ingredient's name, properties, and nutrient profile.
       }
     ],
     "can_edit": false,
-    "can_create": false,
+    "can_clone": false,
     "can_delete": false
   }
 
@@ -127,7 +127,7 @@ Purpose: display an ingredient's name, properties, and nutrient profile.
 - ``nutrient_profile`` to display ingredient's nutrient profile
 - ``ingredients`` for "Search for another ingredient" without having to go back to Ingredients/Index
 - ``nutrient_categories`` only to pass to NutrientProfile component to split up nutrient profile into vitamins, minerals, macronutrients.
-- ``can_edit``, ``can_create``, and ``can_delete`` to conditionally display edit, clone, and delete buttons.
+- ``can_edit``, ``can_clone``, and ``can_delete`` to conditionally display edit, clone, and delete buttons.
 
 **UI:** Standard RDI profile table.
 
@@ -149,10 +149,10 @@ Purpose: create a new Ingredient.
 
   {
     "ingredient": {
-      "id": null,
-      "name": null,
-      "ingredient_category_id": null,
-      "ingredient_category": null,
+      "id": 0,
+      "name": "",
+      "ingredient_category_id": 0,
+      "ingredient_category": 0,
       "density_g_per_ml": null,
       "ingredient_nutrients": [
         {
@@ -188,8 +188,8 @@ Purpose: create a new Ingredient.
     ]
   }
 
-- ``ingredient`` is used by Edit and Clone, which share the CreateOrEdit component with Create.
-  Altough Create strictly needs only ``nutrient_id``, ``nutrient.display_name``, and ``unit.name``, I'm preserving the ``ingredient`` prop structure to be able to use the same CreateOrEdit component for Create.
+- ``ingredient`` is used by Edit and Clone, which share a CreateOrEdit component with Create.
+  Although Create strictly needs only ``nutrient_id``, ``nutrient.display_name``, and ``unit.name``, I'm preserving the ``ingredient`` prop structure to be able to use the same CreateOrEdit component for Create.
 - ``ingredient_categories`` to allow user to choose the ingredient's category.
 - ``nutrient_category`` to split up IngredientNutrients into vitamins, minerals, and macronutrients.
 - ``can_create`` to conditionally display Clone button
@@ -254,13 +254,14 @@ Edit
       }
     ],
     "can_create": false,
+    "can_clone": false,
     "can_delete": false
   }
 
 - ``ingredient`` is used for current ingredient information
 - ``ingredient_categories`` to allow user to choose the ingredient's category.
 - ``nutrient_category`` to split up IngredientNutrients into vitamins, minerals, and macronutrients.
-- ``can_create`` and ``can_delete`` to conditionally display Clone and Delete buttons.
+- ``can_create``, ``can_clone``, and ``can_delete`` to conditionally display Create, Clone and Delete buttons.
 
 
 **Form:** See :ref:`Validation: Update an Ingredient <validation-update-ingredient>`
@@ -275,6 +276,7 @@ Edit
 
 - Store
 - Delete
+- Create
 - Clone this ingredient
 - Cancel
 
@@ -371,7 +373,7 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
       }
     ],
     "can_edit": false,
-    "can_create": false,
+    "can_clone": false,
     "can_delete": false
   }
 
@@ -379,7 +381,7 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
 - ``nutrient_profile`` to display meal's nutrient profile
 - ``meals`` for "Search for another meal"
 - ``nutrient_categories`` to split up nutrient profile into vitamins, minerals, macronutrients
-- ``can_edit``, ``can_create``, and ``can_delete`` to conditionally display edit, clone, and delete buttons.
+- ``can_edit``, ``can_clone``, and ``can_delete`` to conditionally display edit, clone, and delete buttons.
 
 **UI:** MealIngredients table with columns for:
 
@@ -508,6 +510,7 @@ Edit
       }
     ],
     "can_create": false,
+    "can_clone": false,
     "can_delete": false
   }
 
@@ -516,7 +519,7 @@ Edit
   ``density_g_per_ml`` to determine if ingredient amount can be specified in volume units.
 - ``ingredient_categories`` for filtering Ingredients when searching
 - ``units`` to specify amount of each MealIngredient.
-- ``can_create`` and ``can_delete`` to conditionally display Clone and Delete buttons
+- ``can_create``, ``can_clone``, and ``can_delete`` to conditionally display Create, Clone and Delete buttons
 
 **Form:** See :ref:`Validation: Create or Update a Meal <validation-crud-meal>`
 
@@ -530,6 +533,7 @@ Edit
 
 - Store
 - Delete
+- Create
 - Clone this meal
 - Cancel
 
@@ -551,7 +555,8 @@ Purpose: display an overview of all food lists as an intermediate step to naviga
         "id": 0,
         "name": "Foo"
       }
-    ]
+    ],
+    "can_create": false
   }
 
 - ``food_lists`` to show overview of food lists
@@ -578,6 +583,7 @@ Show
     "food_list": {
       "id": 0,
       "name": "Foo",
+      "mass_in_grams": 0.0,
       "food_list_ingredients": [
         {
           "id": 0,
@@ -635,15 +641,15 @@ Show
       }
     ],
     "can_edit": false,
-    "can_create": false,
+    "can_clone": false,
     "can_delete": false
   }
 
-- ``food_list`` to display food list info
+- ``food_list`` to display food list info (``mass_in_grams`` to pass to NutrientProfile)
 - ``nutrient_profile`` to display food list's nutrient profile
 - ``food_lists`` to "Search for another food list"
 - ``nutrient_categories`` to split up nutrient profile into vitamins, minerals, macronutrients
-- ``can_edit``, ``can_create``, and ``can_delete`` to conditionally display edit, clone, and delete buttons.
+- ``can_edit``, ``can_clone``, and ``can_delete`` to conditionally display edit, clone, and delete buttons.
 
 **UI:**
 
@@ -820,6 +826,7 @@ Purpose: update an existing new Food List
       }
     ],
     "can_create": false,
+    "can_clone": false,
     "can_delete": false
   }
 
@@ -829,7 +836,7 @@ Purpose: update an existing new Food List
 - ``meals`` to use as FoodListMeals
 - ``ingredient_categories`` for filtering Ingredients when searching
 - ``units`` to specify amount of each FoodListIngredient and FoodListMeal
-- ``can_create`` and ``can_delete`` to conditionally display Clone and Delete buttons
+- ``can_clone``, ``can_create``, and ``can_delete`` to conditionally display Create, Clone, and Delete buttons
 
 
 **Form:** See :ref:`Validation: Create or Update Food List <validation-crud-food-list>`
@@ -852,6 +859,7 @@ FoodListMeals in table with columns:
 
 - Store
 - Delete
+- Create
 - Clone this food list
 - Cancel
 
@@ -871,10 +879,17 @@ Purpose: display an overview of all RDI profiles as an intermediate step to navi
     "rdi_profiles": [
       {
         "id": 0,
-        "name": "Foo"
+        "name": "Foo",
+        "can_edit": false,
+        "can_delete": false
       }
-    ]
+    ],
+    "can_create": false
   }
+
+- ``rdi_profiles`` to display all RDI profiles.
+  I'm merging built-in FDA RDI profile with user RDI profiles; ``can_edit`` and ``can_delete`` are to conditionally display edit/delete links for user profiles.
+- ``can_create`` to conditionally display Create and Clone buttons.
 
 **UI**
 
@@ -885,6 +900,11 @@ Table with columns for:
 - Trash icon (links to Destroy)
 
 Filter by RDI profile name (fuzzy search filter)
+
+**Links to:**
+
+- Create new profile
+- Clone existing
 
 Show
 ^^^^
@@ -898,28 +918,32 @@ Purpose: display the RDI value for every nutrient in an RDI profile.
   {
     "rdi_profile": {
       "id": 0,
-      "name": "Foo"
-    },
-    "rdi_profile_nutrients": [
-      {
-        "id": 0,
-        "rdi_profile_id": 0,
-        "nutrient_id": 0,
-        "rdi": 0.0,
-        "nutrient": {
+      "name": "Foo",
+      "rdi_profile_nutrients": [
+        {
           "id": 0,
-          "display_name": "Bar",
-          "unit_id": 0,
-          "unit": {
+          "rdi_profile_id": 0,
+          "nutrient_id": 0,
+          "rdi": 0.0,
+          "nutrient": {
             "id": 0,
-            "name": "Baz"
+            "display_name": "Bar",
+            "unit_id": 0,
+            "unit": {
+              "id": 0,
+              "name": "Baz"
+            }
           }
         }
-      }
-    ],
+      ]
+    },
     "can_edit": false,
+    "can_clone": false,
     "can_delete": false
   }
+
+- ``rdi_profile`` to display RDI profile info
+- ``can_edit``, ``can_clone``, and ``can_delete`` to conditionally display edit, clone, and delete buttons.
 
 **UI:** RdiProfileNutrients in table with columns:
 
@@ -931,38 +955,48 @@ It might also be interesting to display RDI value relative to FDA-recommended RD
 
 **Links to:**
 
-- RDI Profile Home
 - Edit
-- Destroy
+- Clone
+- Delete
+- Search for another RDI profile
 
 Create
 ^^^^^^
 
 Purpose: create a new RDI Profile.
 
-**Props:** All we strictly need is ``nutrient_id``, ``nutrient.display_name``, and ``unit.name``, but I'm preserving the same structure used for RdiProfiles/Edit in the hope of creating a reusable prop.
-
 .. code-block:: json
 
   {
-    "rdi_profile_nutrients": [
-      {
-        "id": 0,
-        "rdi_profile_id": 0,
-        "nutrient_id": 0,
-        "rdi": 0.0,
-        "nutrient": {
+    "rdi_profile": {
+      "id": 0,
+      "name": "",
+      "rdi_profile_nutrients": [
+        {
           "id": 0,
-          "display_name": "Foo",
-          "unit_id": 0,
-          "unit": {
+          "rdi_profile_id": 0,
+          "nutrient_id": 0,
+          "rdi": 0.0,
+          "nutrient": {
             "id": 0,
-            "name": "Bar"
+            "display_name": "Bar",
+            "unit_id": 0,
+            "unit": {
+              "id": 0,
+              "name": "Baz"
+            }
           }
         }
-      }
-    ]
+      ]
+    },
+    "can_create": false,
+    "clone": false
   }
+
+- ``rdi_profile`` is used by Edit and Clone, which share a CreateOrEdit component with Create.
+  Although Create strictly needs only ``nutrient_id``, ``nutrient.display_name``, and ``unit.name``, I'm preserving the ``rdi_profile`` prop structure to be able to use the same CreateOrEdit component for Create.
+- ``can_create`` to conditionally display Clone button
+- ``clone`` to conditionally display "Cloned from Foo" message
 
 **Form:** See :ref:`Validation: Create an RDI Profile <validation-create-rdi-profile>`
 
@@ -974,9 +1008,9 @@ Purpose: create a new RDI Profile.
 
 **Links to:**
 
-- "Clone from existing RDI Profile" button
-- Cancel
-- Save
+- Cancel (RDI profiles Index)
+- Clone an existing RDI profile
+- Store
 
 Edit
 ^^^^
@@ -990,27 +1024,32 @@ Purpose: update an existing RDI Profile.
   {
     "rdi_profile": {
       "id": 0,
-      "name": "Foo"
-    },
-    "rdi_profile_nutrients": [
-      {
-        "id": 0,
-        "rdi_profile_id": 0,
-        "nutrient_id": 0,
-        "rdi": 0.0,
-        "nutrient": {
+      "name": "Foo",
+      "rdi_profile_nutrients": [
+        {
           "id": 0,
-          "display_name": "Bar",
-          "unit_id": 0,
-          "unit": {
+          "rdi_profile_id": 0,
+          "nutrient_id": 0,
+          "rdi": 0.0,
+          "nutrient": {
             "id": 0,
-            "name": "Baz"
+            "display_name": "Bar",
+            "unit_id": 0,
+            "unit": {
+              "id": 0,
+              "name": "Baz"
+            }
           }
         }
-      }
-    ],
+      ]
+    },
+    "can_create": false,
+    "can_clone": false,
     "can_delete": false
   }
+
+- ``rdi_profile`` to display current RDI profile information
+- ``can_create``, ``can_clone`` and ``can_delete`` to conditionally display Create, Clone and Delete buttons.
 
 **Form:** See :ref:`Validation: Update an RDI Profile <validation-update-rdi-profile>`
 
@@ -1022,6 +1061,8 @@ Purpose: update an existing RDI Profile.
 
 **Links to:**
 
-- Save
+- Store
+- Create
+- Clone this RDI profile
 - Delete
 - Cancel
