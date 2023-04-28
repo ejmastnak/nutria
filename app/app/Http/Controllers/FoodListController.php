@@ -25,7 +25,7 @@ class FoodListController extends Controller
         $user = Auth::user();
         return Inertia::render('FoodLists/Index', [
             'food_lists' => Auth::user() ? FoodList::where('user_id', Auth::user()->id)->get(['id', 'name', 'mass_in_grams']) : [],
-            'can_create' => $user ? ($user->can('create', FoodList::class)) : false,
+            'can_create' => $user ? $user->can('create', FoodList::class) : false,
         ]);
     }
 
@@ -46,7 +46,7 @@ class FoodListController extends Controller
                 ->get(['id', 'name', 'mass_in_grams']),
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
-            'can_create' => $user ? ($user->can('create', FoodList::class)) : false,
+            'can_create' => $user ? $user->can('create', FoodList::class) : false,
             'clone' => false,
         ]);
     }
@@ -77,7 +77,7 @@ class FoodListController extends Controller
                 ->get(['id', 'name', 'mass_in_grams']),
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
-            'can_create' => $user ? ($user->can('create', FoodList::class)) : false,
+            'can_create' => $user ? $user->can('create', FoodList::class) : false,
             'clone' => true,
         ]);
     }
@@ -157,9 +157,9 @@ class FoodListController extends Controller
             'nutrient_profile' => NutrientProfileController::profileFoodList($foodList->id),
             'food_lists' => FoodList::all(),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
-            'can_clone' => $user ? ($user->can('clone', $foodList)) : false,
-            'can_edit' => $user ? ($user->can('update', $foodList)) : false,
-            'can_delete' => $user ? ($user->can('delete', $foodList)) : false
+            'can_clone' => $user ? $user->can('clone', $foodList) : false,
+            'can_edit' => $user ? $user->can('update', $foodList) : false,
+            'can_delete' => $user ? $user->can('delete', $foodList) : false
         ]);
     }
 
@@ -189,9 +189,9 @@ class FoodListController extends Controller
                 ->get(['id', 'name', 'mass_in_grams']),
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
-            'can_create' => $user ? ($user->can('create', FoodList::class)) : false,
-            'can_clone' => $user ? ($user->can('clone', $foodList)) : false,
-            'can_delete' => $user ? ($user->can('delete', $foodList)) : false
+            'can_create' => $user ? $user->can('create', FoodList::class) : false,
+            'can_clone' => $user ? $user->can('clone', $foodList) : false,
+            'can_delete' => $user ? $user->can('delete', $foodList) : false
         ]);
     }
 

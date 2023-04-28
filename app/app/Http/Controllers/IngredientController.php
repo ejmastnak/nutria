@@ -28,7 +28,7 @@ class IngredientController extends Controller
                 ->with('ingredient_category:id,name')
                 ->get(['id', 'name', 'ingredient_category_id']),
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
-            "can_create" => $user ? ($user->can('create', Ingredient::class)) : false,
+            'can_create' => $user ? $user->can('create', Ingredient::class) : false,
         ]);
     }
 
@@ -45,10 +45,10 @@ class IngredientController extends Controller
         return Inertia::render('Ingredients/Create', [
             'ingredient' => [
                 'id' => null,
-                "name" => null,
-                "ingredient_category_id" => null,
-                "ingredient_category" => null,
-                "density_g_per_ml" => null,
+                'name' => null,
+                'ingredient_category_id' => null,
+                'ingredient_category' => null,
+                'density_g_per_ml' => null,
                 'ingredient_nutrients' => $nutrients->map(fn($nutrient) => [
                     'id' => 0,
                     'nutrient_id' => $nutrient->id,
@@ -59,7 +59,7 @@ class IngredientController extends Controller
             ],
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
-            "can_create" => $user ? ($user->can('create', Ingredient::class)) : false,
+            'can_create' => $user ? $user->can('create', Ingredient::class) : false,
         ]);
     }
 
@@ -80,16 +80,16 @@ class IngredientController extends Controller
         return Inertia::render('Ingredients/Create', [
             'ingredient' => [
                 'id' => $ingredient['id'],
-                "name" => $ingredient['name'],
-                "ingredient_category_id" => $ingredient['ingredient_category_id'],
-                "ingredient_category" => $ingredient['ingredient_category'],
-                "density_g_per_ml" => $ingredient['density_g_per_ml'],
+                'name' => $ingredient['name'],
+                'ingredient_category_id' => $ingredient['ingredient_category_id'],
+                'ingredient_category' => $ingredient['ingredient_category'],
+                'density_g_per_ml' => $ingredient['density_g_per_ml'],
                 'ingredient_nutrients' => $ingredient['ingredient_nutrients']
             ],
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
-            "can_create" => $user ? ($user->can('create', Ingredient::class)) : false,
-            "clone" => true
+            'can_create' => $user ? $user->can('create', Ingredient::class) : false,
+            'clone' => true
         ]);
     }
 
@@ -143,9 +143,9 @@ class IngredientController extends Controller
             ->orWhere('user_id', $user ? $user->id : 0)
             ->get(['id', 'name', 'ingredient_category_id']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
-            "can_edit" => $user ? ($user->can('update', $ingredient)) : false,
-            "can_clone" => $user ? ($user->can('clone', $ingredient)) : false,
-            "can_delete" => $user ? ($user->can('delete', $ingredient)) : false,
+            'can_edit' => $user ? $user->can('update', $ingredient) : false,
+            'can_clone' => $user ? $user->can('clone', $ingredient) : false,
+            'can_delete' => $user ? $user->can('delete', $ingredient) : false,
         ]);
     }
 
@@ -171,9 +171,9 @@ class IngredientController extends Controller
             ]),
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
-            "can_delete" => $user ? ($user->can('delete', $ingredient)) : false,
-            "can_clone" => $user ? ($user->can('clone', $ingredient)) : false,
-            "can_create" => $user ? ($user->can('create', Ingredient::class)) : false,
+            'can_delete' => $user ? $user->can('delete', $ingredient) : false,
+            'can_clone' => $user ? $user->can('clone', $ingredient) : false,
+            'can_create' => $user ? $user->can('create', Ingredient::class) : false,
         ]);
     }
 
