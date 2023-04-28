@@ -129,7 +129,9 @@ class IngredientController extends Controller
     {
         $this->authorize('view', $ingredient);
         $user = Auth::user();
+
         $ingredient->load('ingredient_category:id,name');
+
         return Inertia::render('Ingredients/Show', [
             'ingredient' => $ingredient->only([
                 'id',
