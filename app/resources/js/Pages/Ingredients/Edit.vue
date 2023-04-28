@@ -6,7 +6,9 @@ const props = defineProps({
   ingredient: Object,
   ingredient_categories: Array,
   nutrient_categories: Array,
-  can_delete: Boolean
+  can_delete: Boolean,
+  can_create: Boolean,
+  can_clone: Boolean
 })
 
 </script>

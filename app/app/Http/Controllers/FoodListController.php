@@ -190,6 +190,7 @@ class FoodListController extends Controller
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
             'can_create' => $user ? ($user->can('create', FoodList::class)) : false,
+            'can_clone' => $user ? ($user->can('clone', $foodList)) : false,
             'can_delete' => $user ? ($user->can('delete', $foodList)) : false
         ]);
     }

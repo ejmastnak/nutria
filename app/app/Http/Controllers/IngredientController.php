@@ -172,6 +172,7 @@ class IngredientController extends Controller
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
             "can_delete" => $user ? ($user->can('delete', $ingredient)) : false,
+            "can_clone" => $user ? ($user->can('clone', $ingredient)) : false,
             "can_create" => $user ? ($user->can('create', Ingredient::class)) : false,
         ]);
     }

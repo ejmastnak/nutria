@@ -8,6 +8,7 @@ const props = defineProps({
   ingredient_categories: Array,
   units: Array,
   can_create: Boolean,
+  can_clone: Boolean,
   can_delete: Boolean
 })
 
