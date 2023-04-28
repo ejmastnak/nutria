@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\RdiProfile;
 use App\Models\RdiProfileNutrient;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class RdiProfileController extends Controller
 {
@@ -13,8 +16,18 @@ class RdiProfileController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
         return Inertia::render('RdiProfiles/Index', [
-          'rdiProfile' => RdiProfile::all()
+            'rdi_profiles' => RdiProfile::where('user_id', null)
+            ->orWhere('user_id', $user ? $user->id : 0)
+            ->get(['id', 'name'])
+            ->map(fn($profile) => [
+                'id' => $profile->id,
+                'name' => $profile->name,
+                'can_edit' => $user ? $user->can('update', $profile) : false,
+                'can_delete' => $user ? $user->can('delete', $profile) : false
+            ]),
+            'can_create' => $user ? $user->can('create', RdiProfile::class) : false,
         ]);
     }
 
@@ -42,7 +55,7 @@ class RdiProfileController extends Controller
 
         // Create RdiProfile
         $rdiProfile = RdiProfile::create([
-          'name' => $request->name
+            'name' => $request->name
         ]);
 
         // Create RdiProfileNutrients
@@ -71,7 +84,7 @@ class RdiProfileController extends Controller
         );
 
         return Inertia::render('RdiProfiles/Show', [
-          'rdiProfile' => $rdiProfile
+            'rdiProfile' => $rdiProfile
         ]);
     }
 
@@ -89,7 +102,7 @@ class RdiProfileController extends Controller
         );
 
         return Inertia::render('RdiProfiles/Edit', [
-          'rdiProfile' => $rdiProfile
+            'rdiProfile' => $rdiProfile
         ]);
     }
 
@@ -110,7 +123,7 @@ class RdiProfileController extends Controller
 
         // Update RdiProfile
         $rdiProfile->update([
-          'name' => $request->name
+            'name' => $request->name
         ]);
 
         // Update RdiProfileNutrients
