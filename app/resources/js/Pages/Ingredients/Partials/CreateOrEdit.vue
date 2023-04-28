@@ -9,7 +9,6 @@ import SecondaryButton from '@/Components/SecondaryButton.vue'
 import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import InputError from '@/Components/InputError.vue'
-import IngredientNutrientTable from './IngredientNutrientTable.vue'
 
 const props = defineProps({
   ingredient: Object,
