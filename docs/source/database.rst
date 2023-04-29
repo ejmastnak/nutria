@@ -56,6 +56,7 @@ Ingredient
 - ``name``
 - ``ingredient_category_id``
 - ``density_g_per_ml``
+- ``user_id``
 
 Ingredient Nutrient
 ^^^^^^^^^^^^^^^^^^^
@@ -71,6 +72,7 @@ Meal
 
 - ``name``
 - ``mass_in_grams``
+- ``user_id``
 
 Meal Ingredient
 ^^^^^^^^^^^^^^^
@@ -88,6 +90,7 @@ Food List
 
 - ``name``
 - ``mass_in_grams``
+- ``user_id``
 
 Food List Ingredient
 ^^^^^^^^^^^^^^^^^^^^
@@ -115,6 +118,7 @@ RDI Profile
 ^^^^^^^^^^^
 
 - ``name``
+- ``user_id``
 
 RDI Profile Nutrient
 ^^^^^^^^^^^^^^^^^^^^
