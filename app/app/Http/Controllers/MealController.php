@@ -108,7 +108,7 @@ class MealController extends Controller
           'mass_in_grams' => $meal_mass_in_grams
         ]);
 
-        return Redirect::route('meals.index')->with('message', 'Success! Meal created successfully.');
+        return Redirect::route('meals.show', $meal->id)->with('message', 'Success! Meal created successfully.');
     }
 
     /**
