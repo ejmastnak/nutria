@@ -1,56 +1,10 @@
 Validation
 ==========
 
-.. _validation-create-ingredient:
+.. _validation-crud-ingredient:
 
-Create Ingredient
------------------
-
-**Incoming request**
-
-.. code-block:: json
-
-  {
-    "name": "Foo",
-    "ingredient_category_id": 0,
-    "density_g_per_ml": null,
-    "ingredient_nutrients": [
-      {
-        "nutrient_id": 0,
-        "amount_per_100g": "0.0"
-      }
-    ]
-  }
-
-**Validatation**
-
-- ``name`` is a required string with sane min and max length.
-- ``ingredient_category_id``, is a required integer present in ``ingredient_categories,id``
-- ``density_g_per_ml`` is either null or a positive float 
-- ``ingredient_nutrients`` is a potentially empty array with max length equal to ``Nutrients::count()``.
-  (My first instinct was for ``ingredient_nutrients`` to contain exactly one item for each record in ``nutrients`` table, but then you cannot clone FDA ingredients with missing nutrients)
-- ``ingredient_nutrients.*.nutrient_id`` is a required integer present in ``nutrients,id``
-- ``ingredient_nutrients.*.amount_per_100g`` is a required nonnegative float
-
-**Create**
-
-- a new ``ingredient`` record with:
-
-  - given ``name``
-  - null ``fdc_id``
-  - given ``ingredient_category_id``
-  - give ``density_g_per_ml`` (possibly null)
-
-- a new ``ingredient_nutrient`` record for each element in supplied ``nutrients`` with:
-
-  - ``ingredient_id`` of ``ingredient`` record
-  - given ``nutrient_id`` 
-  - ``amount_per_100g``
-
-.. _validation-update-ingredient:
-
-Update Ingredient
------------------
+Create or Update Ingredient
+---------------------------
 
 **Incoming request**
 
@@ -74,16 +28,32 @@ Update Ingredient
 - ``name`` is a required string with sane min and max length.
 - ``ingredient_category_id``, is a required integer present in ``ingredient_categories,id``
 - ``density_g_per_ml`` is either null or a positive float 
-- ``ingredient_nutrients`` is a potentially empty array with max length equal to ``Nutrients::count()``.
-- ``ingredient_nutrients.*.id`` is a required integer present in ``ingredient_nutrients,id``
-- ``ingredient_nutrients.*.nutrient_id`` is a required integer present in ``nutrients,id``
+- ``ingredient_nutrients`` is a required array with exactly one entry for every Nutrient (distinct keys and length equal to ``Nutrients::count()``)  
+- ``ingredient_nutrients.*.id`` is a required integer
+- ``ingredient_nutrients.*.nutrient_id`` is a required integer present in ``nutrients,id`` with distinct values for every entry in ``ingredient_nutrients``
 - ``ingredient_nutrients.*.amount_per_100g`` is a required nonnegative float
+
+**Create**
+
+- a new ``ingredient`` record with:
+
+  - given ``name``
+  - null ``fdc_id``
+  - given ``ingredient_category_id``
+  - given ``density_g_per_ml`` (possibly null)
+  - ``user_id`` of user who made create request
+
+- a new ``ingredient_nutrient`` record for each element in supplied ``nutrients`` with:
+
+  - ``ingredient_id`` of ``ingredient`` record
+  - given ``nutrient_id`` 
+  - ``amount_per_100g``
 
 **Update**
 
 - Update existing ``ingredient`` record with given ``name``, ``fdc_id``, ``ingredient_category_id``, and ``density_g_per_ml``
 
-- For each ``ingredient_nutrient`` element look up corresponding ``IngredientNutrient`` record from supplied ``ingredient_nutrient['id']`` and update
+- For each ``ingredient_nutrient`` element look up corresponding ``IngredientNutrient`` record from supplied ``ingredient_nutrient.*.id]`` and update
 
   - given ``nutrient_id`` 
   - given ``amount_per_100g``
@@ -101,8 +71,8 @@ Create or Update Meal
     "name": "Foo",
     "meal_ingredients": [
       {
-        "id": 0.0,
-        "ingredient_id": 0.0,
+        "id": 0,
+        "ingredient_id": 0,
         "amount": 0.0,
         "unit_id": 0
       }
@@ -113,14 +83,19 @@ Create or Update Meal
 
 - ``name`` is a string with sane min and max length.
 - ``meal_ingredients`` is a required array with at least one item (and fewer than e.g. 1000 items)
-- ``meal_ingredients.*.id`` is either ignored (for create) or a positive integer in ``meal_ingredients,id``
+- ``meal_ingredients.*.id`` is a required integer (you can't require that ``id`` exist in ``meal_ingredients,id`` because of new meal ingredients arriving from form)
 - ``meal_ingredients.*.ingredient_id`` is a required integer present in ``ingredients,id``
 - ``meal_ingredients.*.amount`` is a required positive float
 - ``meal_ingredients.*.unit_id`` is a required integer present in ``units,id``
 
 **Create**
 
-- a new ``meal`` record with given ``name`` and ``mass_in_grams`` initialized to zero
+- a new ``meal`` record with:
+  
+  - given ``name``
+  - ``mass_in_grams`` initialized to zero
+  - ``user_id`` of user who made create request
+
 - a new ``meal_ingredient`` record for each element in supplied ``ingredients`` with:
 
   - ``meal_id`` of ``meal`` record
@@ -184,19 +159,24 @@ Create or Update Food List
 
 - ``name`` is a string with sane min and max length.
 - ``food_list_ingredients`` is an array with at least one item *if* ``food_list_meals`` is empty (and e.g. fewer than 1000 items)
-- ``food_list_ingredients.*.id`` is ignored for create and an integer present in ``food_list_ingredients,id`` for update
+- ``food_list_ingredients.*.id`` is a required integer 
 - ``food_list_ingredients.*.ingredient_id`` is a required integer present in ``ingredients,id``
 - ``food_list_ingredients.*.amount`` is a positive float
 - ``food_list_ingredients.*.unit_id`` i a required integer present in ``units,id``
 - ``food_list_meals`` is an array with at least one item *if* ``food_list_ingredients`` is empty (and e.g. fewer than 1000 items)
-- ``food_list_meals.*.id`` is ignored for create and an integer present in ``food_list_meals,id`` for update
+- ``food_list_meals.*.id`` is a required integer
 - ``food_list_meals.*.meal_id`` is a required integer present in ``meals,id``
 - ``food_list_meals.*.amount`` is a positive float
 - ``food_list_meals.*.unit_id`` i a required integer present in ``units,id``
 
 **Create**
 
-- a ``food_list`` record with given ``name`` and ``mass_in_grams`` initialized to zero
+- a ``food_list`` record with
+
+  - given ``name``
+  - ``mass_in_grams`` initialized to zero
+  - ``user_id`` of user who made create request
+
 - a ``food_list_ingredient`` or ``food_list_meal`` record for each respective element in supplied ``food_list_ingredients`` and ``food_list_meals``.
 
 - **Ingredients:** For each ``food_list_ingredients`` element create a ``food_list_ingredient`` record with
@@ -226,45 +206,10 @@ Create or Update Food List
 
 - **Meals:** delete/create/update protocol using existing ``foodList->food_list_meals`` in database and supplied ``food_list_meals`` array.
 
-.. _validation-create-rdi-profile:
+.. _validation-crud-rdi-profile:
 
-Create RDI profile
-------------------
-
-Incoming request looks like
-
-.. code-block:: json
-  
-  {
-    "name": "Foo",
-    "rdi_profile_nutrients": [
-      {
-        "nutrient_id": 0,
-        "rdi": 0.0
-      }
-    ]
-  }
-
-**Validate**
-
-- ``name`` is a string with sane min and max length.
-- ``rdi_profile_nutrients`` is an array and contains exactly one item for each record in ``nutrients`` table
-- ``rdi_profile_nutrients.*.nutrient_id`` is a required integer present in ``nutrients,id``
-- ``rdi_profile_nutrients.*.rdi`` is a positive float
-
-**Create**
-
-- ``rdi_profile`` record with supplied ``name``
-- For each entry in ``rdi_profile_nutrients``, create ``rdi_profile_nutrient`` record with
-
-  - ``rdi_profile_id`` of ``rdi_profile`` record
-  - supplied ``nutrient_id`` value
-  - supplied ``rdi`` value
-
-.. _validation-update-rdi-profile:
-
-Update RDI profile
-------------------
+Create or Update RDI profile
+----------------------------
 
 Incoming request looks like
 
@@ -284,17 +229,24 @@ Incoming request looks like
 **Validate**
 
 - ``name`` is a string with sane min and max length.
-- ``rdi_profile_nutrients`` is a potentially empty array with max length equal to ``Nutrients::count()``.
-- ``rdi_profile_nutrients.*.nutrient_id`` is a required integer present in ``nutrients,id``
-- ``rdi_profile_nutrients.*.rdi`` is a positive float
+- ``rdi_profile_nutrients`` is a required array with exactly one entry for every Nutrient (distinct keys and length equal to ``Nutrients::count()``)  
+- ``rdi_profile_nutrients.*.id`` is a required integer
+- ``rdi_profile_nutrients.*.nutrient_id`` is a required integer present in ``nutrients,id`` with distinct values for every entry in ``rdi_profile_nutrients``
+- ``rdi_profile_nutrients.*.rdi`` is a required positive float
+
+**Create**
+
+- ``rdi_profile`` record with supplied ``name`` and ``user_id`` of user who made create request
+- For each entry in ``rdi_profile_nutrients``, create ``rdi_profile_nutrient`` record with
+
+  - ``rdi_profile_id`` of ``rdi_profile`` record
+  - supplied ``nutrient_id`` value
+  - supplied ``rdi`` value
 
 **Update**
 
 - ``rdi_profile`` record with supplied ``name``
-- For each entry in ``rdi_profile_nutrients``, look up corresponding ``rdi_profile_nutrient`` record based on ``rdi_profile_nutrients.*.rdi``, then update:
-
-  - ``nutrient_id`` with supplied ``nutrient_id``
-  - ``rdi`` with supplied ``rdi``
+- For each entry in ``rdi_profile_nutrients``, look up corresponding ``rdi_profile_nutrient`` record based on ``rdi_profile_nutrients.*.id``, then update ``rdi`` with supplied ``rdi``.
 
 Computing mass
 --------------
