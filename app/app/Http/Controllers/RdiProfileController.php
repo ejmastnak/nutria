@@ -233,6 +233,11 @@ class RdiProfileController extends Controller
     {
         $this->authorize('delete', $rdiProfile);
 
+        if ($rdiProfile) {
+            $rdiProfile->delete();
+            return Redirect::route('rdi-profiles.index')->with('message', 'Success! RDI profile deleted successfully.');
+        }
+        return Redirect::route('rdi-profiles.index')->with('message', 'Failed to delete RDI profile.');
     }
 
     private function validateStoreOrUpdateRequest(Request $request) {
