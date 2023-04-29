@@ -195,7 +195,7 @@ Purpose: create a new Ingredient.
 - ``can_create`` to conditionally display Clone button
 - ``clone`` to conditionally display "Cloned from Foo" message
 
-**Form:** See :ref:`Validation: Create an Ingredient <validation-create-ingredient>`
+**Form:** See :ref:`Validation: Create or Update an Ingredient <validation-crud-ingredient>`
 
 **UI:** IngredientNutrient in table with columns:
 
@@ -264,7 +264,7 @@ Edit
 - ``can_create``, ``can_clone``, and ``can_delete`` to conditionally display Create, Clone and Delete buttons.
 
 
-**Form:** See :ref:`Validation: Update an Ingredient <validation-update-ingredient>`
+**Form:** See :ref:`Validation: Create or Update an Ingredient <validation-crud-ingredient>`
 
 **UI:** IngredientNutrients in table with columns:
 
@@ -929,6 +929,8 @@ Purpose: display the RDI value for every nutrient in an RDI profile.
             "id": 0,
             "display_name": "Bar",
             "unit_id": 0,
+            "nutrient_category_id": 0,
+            "display_order_id": 0,
             "unit": {
               "id": 0,
               "name": "Baz"
@@ -937,12 +939,27 @@ Purpose: display the RDI value for every nutrient in an RDI profile.
         }
       ]
     },
+    "rdi_profiles": [
+      {
+        "id": 0,
+        "name": "Boop"
+      }
+    ],
+    "nutrient_categories": [
+      {
+        "id": 0,
+        "name": "Blap"
+      }
+    ],
     "can_edit": false,
     "can_clone": false,
     "can_delete": false
   }
 
-- ``rdi_profile`` to display RDI profile info
+- ``rdi_profile`` to display RDI profile info.
+  ``nutrient_category_id`` to split up RDI profile nutrients by category.
+- ``rdi_profiles`` for "Search for another RDI profile"
+- ``nutrient_categories`` to split up display of RDI profile into vitamins, minerals, macronutrients
 - ``can_edit``, ``can_clone``, and ``can_delete`` to conditionally display edit, clone, and delete buttons.
 
 **UI:** RdiProfileNutrients in table with columns:
@@ -981,6 +998,8 @@ Purpose: create a new RDI Profile.
             "id": 0,
             "display_name": "Bar",
             "unit_id": 0,
+            "nutrient_category_id": 0,
+            "display_order_id": 0,
             "unit": {
               "id": 0,
               "name": "Baz"
@@ -989,16 +1008,23 @@ Purpose: create a new RDI Profile.
         }
       ]
     },
+    "nutrient_categories": [
+      {
+        "id": 0,
+        "name": "Blap"
+      }
+    ],
     "can_create": false,
     "clone": false
   }
 
 - ``rdi_profile`` is used by Edit and Clone, which share a CreateOrEdit component with Create.
   Although Create strictly needs only ``nutrient_id``, ``nutrient.display_name``, and ``unit.name``, I'm preserving the ``rdi_profile`` prop structure to be able to use the same CreateOrEdit component for Create.
+- ``nutrient_categories`` to split up RDI nutrients into vitamins, minerals, macronutrients
 - ``can_create`` to conditionally display Clone button
 - ``clone`` to conditionally display "Cloned from Foo" message
 
-**Form:** See :ref:`Validation: Create an RDI Profile <validation-create-rdi-profile>`
+**Form:** See :ref:`Validation: Create or Update an RDI Profile <validation-crud-rdi-profile>`
 
 **UI:** RdiProfileNutrients in table with columns:
 
@@ -1035,6 +1061,8 @@ Purpose: update an existing RDI Profile.
             "id": 0,
             "display_name": "Bar",
             "unit_id": 0,
+            "nutrient_category_id": 0,
+            "display_order_id": 0,
             "unit": {
               "id": 0,
               "name": "Baz"
@@ -1043,15 +1071,22 @@ Purpose: update an existing RDI Profile.
         }
       ]
     },
+    "nutrient_categories": [
+      {
+        "id": 0,
+        "name": "Blap"
+      }
+    ],
     "can_create": false,
     "can_clone": false,
     "can_delete": false
   }
 
 - ``rdi_profile`` to display current RDI profile information
+- ``nutrient_categories`` to split up RDI nutrients into vitamins, minerals, macronutrients
 - ``can_create``, ``can_clone`` and ``can_delete`` to conditionally display Create, Clone and Delete buttons.
 
-**Form:** See :ref:`Validation: Update an RDI Profile <validation-update-rdi-profile>`
+**Form:** See :ref:`Validation: Create or Update an RDI Profile <validation-crud-rdi-profile>`
 
 **UI:** RdiProfileNutrients in table with columns:
 
