@@ -22,7 +22,7 @@ class RdiProfilePolicy
      */
     public function viewAny(User $user): bool
     {
-        if ($user->is_admin || $user->is_full_tier || $user->is_free_tier) return true;
+        if ($user->is_full_tier || $user->is_free_tier) return true;
         return false;
     }
 
@@ -40,7 +40,7 @@ class RdiProfilePolicy
      */
     public function create(User $user): bool
     {
-        return $user->is_admin || $user->is_full_tier;
+        return $user->is_full_tier;
     }
 
     /**
@@ -48,7 +48,7 @@ class RdiProfilePolicy
      */
     public function clone(User $user, RdiProfile $rdiProfile): bool
     {
-        if ($user->is_admin || $user->is_full_tier) {
+        if ($user->is_full_tier) {
             return is_null($rdiProfile->user_id) || $rdiProfile->user_id === $user->id;
         }
         return false;

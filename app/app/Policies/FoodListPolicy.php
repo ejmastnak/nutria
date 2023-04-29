@@ -24,7 +24,7 @@ class FoodListPolicy
      */
     public function viewAny(User $user): bool
     {
-        if ($user->is_admin || $user->is_full_tier || $user->is_free_tier) return true;
+        if ($user->is_full_tier || $user->is_free_tier) return true;
         return false;
     }
 
@@ -41,7 +41,7 @@ class FoodListPolicy
      */
     public function create(User $user): bool
     {
-        if ($user->is_admin || $user->is_full_tier) return true;
+        if ($user->is_full_tier) return true;
         else if ($user->is_free_tier) {
             $count = FoodList::where('user_id', $user->id)->count();
             if ($count < self::MAX_FREE_TIER_FOOD_LISTS) return true;
@@ -54,7 +54,7 @@ class FoodListPolicy
      */
     public function clone(User $user, FoodList $foodList): bool
     {
-        if ($user->is_admin || $user->is_full_tier) {
+        if ($user->is_full_tier) {
             return $foodList->user_id === $user->id;
         } else if($user->is_free_tier) {
             $count = FoodList::where('user_id', $user->id)->count();
