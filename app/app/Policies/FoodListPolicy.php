@@ -24,7 +24,8 @@ class FoodListPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        if ($user->is_admin || $user->is_full_tier || $user->is_free_tier) return true;
+        return false;
     }
 
     /**

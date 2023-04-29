@@ -20,7 +20,9 @@ class MealController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Meal::class);
         $user = Auth::user();
+
         return Inertia::render('Meals/Index', [
             'meals' => Auth::user() ? Meal::where('user_id', Auth::user()->id)->get(['id', 'name']) : [],
             'can_create' => $user ? $user->can('create', Meal::class) : false,

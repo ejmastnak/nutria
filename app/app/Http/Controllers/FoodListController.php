@@ -22,7 +22,9 @@ class FoodListController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', FoodList::class);
         $user = Auth::user();
+
         return Inertia::render('FoodLists/Index', [
             'food_lists' => Auth::user() ? FoodList::where('user_id', Auth::user()->id)->get(['id', 'name', 'mass_in_grams']) : [],
             'can_create' => $user ? $user->can('create', FoodList::class) : false,

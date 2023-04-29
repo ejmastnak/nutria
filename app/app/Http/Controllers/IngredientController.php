@@ -19,7 +19,9 @@ class IngredientController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Ingredient::class);
         $user = Auth::user();
+
         return Inertia::render('Ingredients/Index', [
             'user_ingredients' => Auth::user() ? Ingredient::where('user_id', Auth::user()->id)
                 ->with('ingredient_category:id,name')

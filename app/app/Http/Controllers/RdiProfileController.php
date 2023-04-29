@@ -18,7 +18,9 @@ class RdiProfileController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', RdiProfile::class);
         $user = Auth::user();
+
         return Inertia::render('RdiProfiles/Index', [
             'rdi_profiles' => RdiProfile::where('user_id', null)
             ->orWhere('user_id', $user ? $user->id : 0)
