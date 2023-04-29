@@ -9,6 +9,7 @@ class RdiProfileNutrient extends Model
 {
     use HasFactory;
     public $timestamps = false;
+    protected $fillable = ['rdi_profile_id', 'nutrient_id', 'rdi'];
 
     public function rdi_profile() {
         return $this->belongsTo(RdiProfile::class, 'rdi_profile_id', 'id');

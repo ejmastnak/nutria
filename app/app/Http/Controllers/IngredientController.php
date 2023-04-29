@@ -260,6 +260,8 @@ class IngredientController extends Controller
         return Redirect::route('ingredients.index')->with('message', 'Failed to delete ingredient.');
     }
 
+    // TODO: switch to this
+    // 'ingredient_nutrients' => ['required', 'array', 'min:' . $num_nutrients, 'max:' . $num_nutrients],
     private function validateStoreOrUpdateRequest($request) {
         $num_nutrients = Nutrient::count();
         $request->validate([
@@ -267,7 +269,7 @@ class IngredientController extends Controller
             'ingredient_category_id' => ['required', 'integer', 'exists:ingredient_categories,id'],
             'density_g_per_ml' => ['nullable', 'numeric', 'gt:0'],
             'ingredient_nutrients' => ['required', 'array', 'max:' . $num_nutrients],
-            'ingredient_nutrients.*.id' => ['required', 'distinct'],
+            'ingredient_nutrients.*.id' => ['required', 'integer'],
             'ingredient_nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'exists:nutrients,id'],
             'ingredient_nutrients.*.amount_per_100g' => ['required', 'numeric', 'gte:0'],
         ]);

@@ -87,7 +87,7 @@ export default {
 
         <!-- New RDI profile button -->
         <PrimaryLinkButton
-          :href="route('meals.create')"
+          :href="route('rdi-profiles.create')"
           class="flex ml-auto items-center py-2.0 sm:py-2.5 mt-1 normal-case"
           :class="{'!bg-blue-200': !can_create}"
         >
