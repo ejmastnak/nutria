@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\RdiProfile;
 use App\Models\RdiProfileNutrient;
 use App\Models\NutrientCategory;
+use App\Models\Nutrient;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,14 +38,76 @@ class RdiProfileController extends Controller
      */
     public function create()
     {
-        return Inertia::render('RdiProfiles/Create');
+        $this->authorize('create', RdiProfile::class);
+        $user = Auth::user();
+
+        $nutrients = Nutrient::orderBy('display_order_id', 'asc')->get([
+            'id',
+            'display_name',
+            'unit_id',
+            'nutrient_category_id',
+            'display_order_id'
+        ]);
+        $nutrients->load('unit:id,name');
+
+        return Inertia::render('RdiProfiles/Create', [
+            'rdi_profile' => [
+                'id' => null,
+                'name' => "",
+                'rdi_profile_nutrients' => $nutrients->map(fn($nutrient) => [
+                    'id' => 0,
+                    'rdi_profile_id' => 0,
+                    'nutrient_id' => $nutrient->id,
+                    'rdi' => 0.0,
+                    'nutrient' => $nutrient,
+                ])
+            ],
+            'nutrient_categories' => NutrientCategory::all(['id', 'name']),
+            'can_create' => $user ? $user->can('create', RdiProfile::class) : false,
+            'clone' => false
+        ]);
     }
 
+    /**
+     * Show the form for cloning an existing resource.
+     */
+    public function clone(RdiProfile $rdiProfile)
+    {
+        $this->authorize('clone', $rdiProfile);
+        $user = Auth::user();
+
+        // The long query is to ensure rdi_profile_nutrients are ordered by
+        // nutrients.display_order_id
+        $rdiProfile->load([
+            'rdi_profile_nutrients' => function($query) {
+                $query->select([
+                    'rdi_profile_nutrients.id',
+                    'rdi_profile_nutrients.rdi_profile_id',
+                    'rdi_profile_nutrients.nutrient_id',
+                    'rdi_profile_nutrients.rdi'
+                ])
+                ->join('nutrients', 'rdi_profile_nutrients.nutrient_id', '=', 'nutrients.id')
+                ->orderBy('nutrients.display_order_id', 'asc');
+            },
+            'rdi_profile_nutrients.nutrient:id,display_name,unit_id,nutrient_category_id,display_order_id',
+            'rdi_profile_nutrients.nutrient.unit:id,name'
+        ]);
+
+        return Inertia::render('RdiProfiles/Create', [
+            'rdi_profile' => $rdiProfile->only(['id', 'name', 'rdi_profile_nutrients']),
+            'nutrient_categories' => NutrientCategory::all(['id', 'name']),
+            'can_create' => $user ? $user->can('create', RdiProfile::class) : false,
+            'clone' => true
+        ]);
+    }
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Meal::class);
+        $this->validateStoreOrUpdateRequest($request);
+
         // Validate request
         $num_nutrients = Nutrient::count();
         $request->validate([
@@ -96,7 +159,6 @@ class RdiProfileController extends Controller
             'rdi_profile_nutrients.nutrient.unit:id,name'
         ]);
 
-
         return Inertia::render('RdiProfiles/Show', [
             'rdi_profile' => $rdiProfile->only(['id', 'name', 'rdi_profile_nutrients']),
             'rdi_profiles' => RdiProfile::where('user_id', null)
@@ -114,16 +176,32 @@ class RdiProfileController extends Controller
      */
     public function edit(RdiProfile $rdiProfile)
     {
-        // Load name, RDI value, and unit (in nutrient’s preferred units)
-        // of each RdiProfileNutrient
-        $rdiProfile->load(
-            'rdi_profile_nutrients:id,rdi_profile_id,nutrient_id,rdi',
-            'rdi_profile_nutrients.nutrient:id,display_name,unit_id',
+        $this->authorize('update', $rdiProfile);
+        $user = Auth::user();
+
+        // The long query is to ensure rdi_profile_nutrients are ordered by
+        // nutrients.display_order_id
+        $rdiProfile->load([
+            'rdi_profile_nutrients' => function($query) {
+                $query->select([
+                    'rdi_profile_nutrients.id',
+                    'rdi_profile_nutrients.rdi_profile_id',
+                    'rdi_profile_nutrients.nutrient_id',
+                    'rdi_profile_nutrients.rdi'
+                ])
+                ->join('nutrients', 'rdi_profile_nutrients.nutrient_id', '=', 'nutrients.id')
+                ->orderBy('nutrients.display_order_id', 'asc');
+            },
+            'rdi_profile_nutrients.nutrient:id,display_name,unit_id,nutrient_category_id,display_order_id',
             'rdi_profile_nutrients.nutrient.unit:id,name'
-        );
+        ]);
 
         return Inertia::render('RdiProfiles/Edit', [
-            'rdiProfile' => $rdiProfile
+            'rdi_profile' => $rdiProfile->only(['id', 'name', 'rdi_profile_nutrients']),
+            'nutrient_categories' => NutrientCategory::all(['id', 'name']),
+            'can_create' => $user ? $user->can('create', RdiProfile::class) : false,
+            'can_clone' => $user ? $user->can('clone', $rdiProfile) : false,
+            'can_delete' => $user ? $user->can('delete', $rdiProfile) : false,
         ]);
     }
 
