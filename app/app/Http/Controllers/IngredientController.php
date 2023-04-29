@@ -245,6 +245,8 @@ class IngredientController extends Controller
      */
     public function destroy(Ingredient $ingredient)
     {
+        $this->authorize('delete', $ingredient);
+
         if ($ingredient) {
             $ingredient_category_id = $ingredient->ingredient_category_id;
             $ingredient->delete();

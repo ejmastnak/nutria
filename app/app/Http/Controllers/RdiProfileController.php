@@ -212,6 +212,9 @@ class RdiProfileController extends Controller
      */
     public function update(Request $request, RdiProfile $rdiProfile)
     {
+        $this->authorize('update', $rdiProfile);
+        $user = Auth::user();
+
         // Validate request
         $num_nutrients = Nutrient::count();
         $request->validate([
@@ -245,6 +248,7 @@ class RdiProfileController extends Controller
      */
     public function destroy(RdiProfile $rdiProfile)
     {
-        //
+        $this->authorize('delete', $rdiProfile);
+
     }
 }

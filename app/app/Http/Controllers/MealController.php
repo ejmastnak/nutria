@@ -244,6 +244,8 @@ class MealController extends Controller
      */
     public function destroy(Meal $meal)
     {
+        $this->authorize('delete', $meal);
+
         if ($meal) {
             $meal->delete();
             return Redirect::route('meals.index')->with('message', 'Success! Meal deleted successfully.');
