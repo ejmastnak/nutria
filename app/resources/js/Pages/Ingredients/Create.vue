@@ -7,10 +7,7 @@ const props = defineProps({
   ingredient_categories: Array,
   nutrient_categories: Array,
   can_create: Boolean,
-  clone: {
-    type: Boolean,
-    default: false
-  }
+  clone: Boolean
 })
 
 </script>

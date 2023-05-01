@@ -151,6 +151,7 @@ export default {
                       />
                       <span class="ml-2">{{ingredient_nutrient.unit}}</span>
                     </div>
+                    <InputError class="mt-2 text-left" :message="form.errors['ingredient_nutrients.' + ingredient_nutrient.idx + '.id']" />
                     <InputError class="mt-2 text-left" :message="form.errors['ingredient_nutrients.' + ingredient_nutrient.idx + '.nutrient_id']" />
                     <InputError class="mt-2 text-left" :message="form.errors['ingredient_nutrients.' + ingredient_nutrient.idx + '.amount_per_100g']" />
                   </td>
@@ -182,6 +183,5 @@ export default {
     </section>
 
   </form>
-
 
 </template>
