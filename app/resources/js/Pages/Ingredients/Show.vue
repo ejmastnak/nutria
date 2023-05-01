@@ -6,6 +6,12 @@ import { TrashIcon, DocumentDuplicateIcon, PencilSquareIcon } from '@heroicons/v
 import NutrientProfile from '@/Shared/NutrientProfile.vue'
 import FuzzyCombobox from '@/Shared/FuzzyCombobox.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
+import CloneExistingDialog from '@/Shared/CloneExistingDialog.vue'
+import CrudNavBar from '@/Shared/CrudNavBar.vue'
+import CrudNavBarEdit from '@/Shared/CrudNavBarEdit.vue'
+import CrudNavBarClone from '@/Shared/CrudNavBarClone.vue'
+import CrudNavBarDelete from '@/Shared/CrudNavBarDelete.vue'
+import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -25,6 +31,7 @@ const props = defineProps({
 const howManyGrams = ref("100");
 const defaultMassInGrams = 100
 
+const cloneExistingDialog = ref(null)
 const deleteDialog = ref(null)
 
 const searchIngredient = ref({})
@@ -45,56 +52,15 @@ export default {
   <div>
     <Head :title="ingredient.name" />
 
-    <div class="flex items-center space-x-4 -mt-2 border border-gray-300 p-1 px-4 rounded-xl">
+    <CrudNavBar>
+      <CrudNavBarEdit v-if="can_edit" :href="route('ingredients.edit', ingredient.id)" />
+      <CrudNavBarClone v-if="can_clone" :href="route('ingredients.clone', ingredient.id)" />
+      <CrudNavBarDelete v-if="can_delete" @wasClicked="deleteDialog.open(ingredient.id)" />
 
-      <Link
-        v-if="can_edit"
-        class="hover:underline hover:bg-blue-100 p-2 rounded-lg"
-        :href="route('ingredients.edit', ingredient.id)"
-      >
-      <div class="flex">
-        <PencilSquareIcon class="h-5 w-5 text-baseline text-gray-700" />
-        <p class="ml-1">Edit</p>
-      </div>
-      </Link>
-
-      <Link
-        v-if="can_clone"
-        class="hover:underline hover:bg-blue-100 p-2 rounded-lg"
-        :href="route('ingredients.clone', ingredient.id)"
-      >
-      <div class="flex">
-        <DocumentDuplicateIcon class="h-5 w-5 text-baseline text-gray-700" />
-        <p class="ml-1">Clone</p>
-      </div>
-      </Link>
-
-      <button
-        v-if="can_delete"
-        type="button"
-        @click="deleteDialog.open(ingredient.id)"
-        class="hover:underline hover:bg-blue-100 p-2 rounded-lg"
-      >
-      <div class="flex">
-        <TrashIcon class="h-5 w-5 text-baseline text-gray-700" />
-        <p class="ml-1">Delete</p>
-      </div>
-      </button>
+      <CrudNavBarSearch class="!ml-auto" @wasClicked="cloneExistingDialog.open()" />
 
 
-
-      <form
-        @submit.prevent="search"
-        class="!ml-auto"
-      >
-        <FuzzyCombobox
-          labelText="Search for another ingredient"
-          :options="ingredients"
-          v-model="searchIngredient"
-        />
-      </form>
-
-    </div>
+    </CrudNavBar>
 
     <div class="mt-10">
 
@@ -126,7 +92,7 @@ export default {
 
         <!-- How many grams text input -->
         <div class="ml-auto flex items-baseline text-gray-500 text-md">
-          <div class="">
+          <div>
             <InputLabel for="howManyGrams" value="Meal mass" class="sr-only" />
             <TextInput
               id="howManyGrams"
@@ -136,7 +102,7 @@ export default {
               v-model="howManyGrams"
             />
           </div>
-          <p class="">grams</p>
+          <p>grams</p>
         </div>
       </div>
 
@@ -149,6 +115,14 @@ export default {
       />
 
     </section>
+
+    <CloneExistingDialog
+      ref="cloneExistingDialog"
+      :things="ingredients"
+      thing="ingredient"
+      label="Search for another ingredient"
+      cloneRoute="ingredients.show"
+    />
 
     <DeleteDialog ref="deleteDialog" deleteRoute="ingredients.destroy" thing="ingredient" />
 

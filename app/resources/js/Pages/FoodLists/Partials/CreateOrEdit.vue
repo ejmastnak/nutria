@@ -333,10 +333,6 @@ export default {
 
     </section>
 
-    <pre>
-      {{form}}
-    </pre>
-
   </form>
 
 </template>
