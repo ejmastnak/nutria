@@ -18,7 +18,7 @@ const props = defineProps({
     }"
     :href="enabled ? href : '#'"
   >
-  <div class="flex items-center">
+  <div class="flex items-center whitespace-nowrap">
     <slot name="icon"></slot>
     <p class="ml-1">{{text}}</p>
   </div>

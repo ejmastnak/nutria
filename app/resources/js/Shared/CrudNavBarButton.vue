@@ -22,7 +22,7 @@ const emit = defineEmits(['wasClicked'])
       'hover:bg-gray-100': !enabled
     }"
   >
-    <div class="flex items-center">
+    <div class="flex items-center whitespace-nowrap">
       <slot name="icon"></slot>
       <p class="ml-1">{{text}}</p>
     </div>
