@@ -14,17 +14,16 @@ import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 const props = defineProps({
   things: Array,
-  thing: String,
+  goRoute: String,
   label: String,
-  cloneRoute: String
+  title: String,
+  action: String
 })
 
 defineExpose({open})
 
-const emit = defineEmits(['clone'])
-
 const isOpen = ref(false)
-const thingToClone = ref({})
+const targetThing = ref({})
 
 function open() {
   isOpen.value = true
@@ -34,10 +33,10 @@ function cancel() {
   isOpen.value = false
 }
 
-function clone() {
+function go() {
   isOpen.value = false
-  if (thingToClone.value.id) {
-    router.get(route(props.cloneRoute, thingToClone.value.id))
+  if (targetThing.value.id) {
+    router.get(route(props.goRoute, targetThing.value.id))
   }
 }
 
@@ -48,24 +47,24 @@ function clone() {
     <div class="fixed inset-0 flex items-center justify-center p-4 bg-blue-50/80">
       <DialogPanel class="flex flex-col px-6 pt-6 w-full max-w-md rounded-lg bg-white shadow">
 
-        <DialogTitle class="text-lg font-bold text-gray-600">Clone {{thing}}</DialogTitle>
+        <DialogTitle class="text-lg font-bold text-gray-600">{{title}}</DialogTitle>
 
         <form
-          @submit.prevent="clone"
+          @submit.prevent="go"
           class="mb-4"
         >
           <FuzzyCombobox
             :labelText="label"
             class="w-96"
             :options="things"
-            v-model="thingToClone"
+            v-model="targetThing"
           />
         </form>
 
         <div class="flex mt-auto -mx-6 px-4 py-3 bg-gray-50 rounded-lg">
 
-          <PrimaryButton @click="clone" class="ml-auto" >
-            Clone
+          <PrimaryButton @click="go" class="ml-auto" >
+            {{action}}
           </PrimaryButton>
 
           <SecondaryButton @click="cancel" class="ml-2" >

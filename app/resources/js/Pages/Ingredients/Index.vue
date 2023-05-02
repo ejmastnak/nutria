@@ -11,7 +11,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import MultiselectListbox from '@/Shared/MultiselectListbox.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
-import CloneExistingDialog from '@/Shared/CloneExistingDialog.vue'
+import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 const props = defineProps({
@@ -389,12 +389,13 @@ export default {
       </TabPanels>
     </TabGroup>
 
-    <CloneExistingDialog
+    <SearchForThingAndGo
       ref="cloneExistingDialog"
-      :things="ingredients"
-      thing="ingredient"
+      :things="ingredients.concat(user_ingredients)"
+      goRoute="ingredients.clone"
       label="Search for an ingredient to clone"
-      cloneRoute="ingredients.clone"
+      title="Clone ingredient"
+      action="Clone"
     />
 
     <DeleteDialog ref="deleteDialog" deleteRoute="ingredients.destroy" thing="ingredient" />

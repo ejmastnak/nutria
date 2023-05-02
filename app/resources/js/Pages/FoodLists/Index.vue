@@ -10,7 +10,7 @@ import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
-import CloneExistingDialog from '@/Shared/CloneExistingDialog.vue'
+import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 const props = defineProps({
@@ -205,12 +205,13 @@ export default {
 
     </section>
 
-    <CloneExistingDialog
+    <SearchForThingAndGo
       ref="cloneExistingDialog"
       :things="food_lists"
-      thing="food list"
+      goRoute="food-lists.clone"
       label="Search for a food list to clone"
-      cloneRoute="food-lists.clone"
+      title="Clone food list"
+      action="Clone"
     />
 
     <DeleteDialog ref="deleteDialog" deleteRoute="food-lists.destroy" thing="food list" @delete="updateFuzzySearchOnDeletion" />

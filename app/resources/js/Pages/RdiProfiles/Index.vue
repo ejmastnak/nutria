@@ -10,7 +10,7 @@ import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
-import CloneExistingDialog from '@/Shared/CloneExistingDialog.vue'
+import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 const props = defineProps({
@@ -77,7 +77,7 @@ export default {
     <div class="flex">
 
       <div class="mr-2 p-1">
-        <h1 class="font-medium text-2xl text-gray-900">RDI profiles</h1>
+        <h1 class="font-medium text-2xl text-gray-900">RDI Profiles</h1>
         <p class="mt-2 w-11/12 4 sm:w-2/3 text-gray-500">
           Use this page as an overview of RDI profiles you have created.
         </p>
@@ -190,12 +190,13 @@ export default {
 
     </section>
 
-    <CloneExistingDialog
+    <SearchForThingAndGo
       ref="cloneExistingDialog"
       :things="rdi_profiles"
-      thing="RDI profile"
-      label="Search for a RDI profile to clone"
-      cloneRoute="rdi-profiles.clone"
+      goRoute="rdi-profiles.clone"
+      label="Search for an RDI profile to clone"
+      title="Clone RDI profile"
+      action="Clone"
     />
 
     <DeleteDialog ref="deleteDialog" deleteRoute="rdi-profiles.destroy" thing="RDI profile" @delete="updateFuzzySearchOnDeletion" />
