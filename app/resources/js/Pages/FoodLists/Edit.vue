@@ -1,17 +1,32 @@
 <script setup>
+import { ref } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
 import CreateOrEdit from './Partials/CreateOrEdit.vue'
+import CrudNavBar from '@/Shared/CrudNavBar.vue'
+import CrudNavBarView from '@/Shared/CrudNavBarView.vue'
+import CrudNavBarCloneLink from '@/Shared/CrudNavBarCloneLink.vue'
+import CrudNavBarDelete from '@/Shared/CrudNavBarDelete.vue'
+import CrudNavBarCreate from '@/Shared/CrudNavBarCreate.vue'
+import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
+import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
+import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
+import DeleteDialog from '@/Shared/DeleteDialog.vue'
 
 const props = defineProps({
   food_list: Object,
+  food_lists: Array,
   ingredients: Array,
   meals: Array,
   ingredient_categories: Array,
   units: Array,
-  can_create: Boolean,
+  can_view: Boolean,
   can_clone: Boolean,
-  can_delete: Boolean
+  can_delete: Boolean,
+  can_create: Boolean
 })
+
+const searchDialog = ref(null)
+const deleteDialog = ref(null)
 
 </script>
 
@@ -26,7 +41,18 @@ export default {
   <div class="">
     <Head :title="'Edit ' + food_list.name" />
 
-    <h1 class="text-xl font-semibold">Edit {{food_list.name}}</h1>
+    <CrudNavBar>
+      <CrudNavBarIndex :href="route('food-lists.index')" />
+      <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="food list" />
+      <CrudNavBarCreate :enabled="can_create" text="New" :href="route('food-lists.create')" />
+      <div class="flex ml-auto">
+        <CrudNavBarView :enabled="can_view" text="View original" :href="route('food-lists.show', food_list.id)" />
+        <CrudNavBarCloneLink :enabled="can_clone" text="Clone" :href="route('food-lists.clone', food_list.id)" />
+        <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(food_list.id)" />
+      </div>
+    </CrudNavBar>
+
+    <h1 class="mt-8 text-xl font-semibold">Edit {{food_list.name}}</h1>
 
     <CreateOrEdit
       :food_list="food_list"
@@ -36,6 +62,18 @@ export default {
       :units="units"
       :create="false"
     />
+
+    <!-- Search for a food list -->
+    <SearchForThingAndGo
+      ref="searchDialog"
+      :things="food_lists"
+      goRoute="food-lists.show"
+      label="Search for another food list"
+      title=""
+      action="Go"
+    />
+
+    <DeleteDialog ref="deleteDialog" deleteRoute="food-lists.destroy" thing="food list" />
 
   </div>
 </template>

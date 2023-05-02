@@ -41,6 +41,7 @@ class FoodListController extends Controller
 
         return Inertia::render('FoodLists/Create', [
             'food_list' => null,
+            'food_lists' => FoodList::where('user_id', $user ? $user->id : 0)->get(['id', 'name']),
             'ingredients' => Ingredient::where('user_id', null)
                 ->orWhere('user_id', $user ? $user->id : 0)
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
@@ -73,6 +74,7 @@ class FoodListController extends Controller
 
         return Inertia::render('FoodLists/Create', [
             'food_list' => $foodList->only(['id', 'name', 'food_list_ingredients', 'food_list_meals']),
+            'food_lists' => FoodList::where('user_id', $user ? $user->id : 0)->get(['id', 'name']),
             'ingredients' => Ingredient::where('user_id', null)
                 ->orWhere('user_id', $user ? $user->id : 0)
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
@@ -159,7 +161,7 @@ class FoodListController extends Controller
                 'food_list_meals'
             ]),
             'nutrient_profile' => NutrientProfileController::profileFoodList($foodList->id),
-            'food_lists' => FoodList::all(),
+            'food_lists' => FoodList::where('user_id', $user ? $user->id : 0)->get(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
             'can_edit' => $user ? $user->can('update', $foodList) : false,
             'can_clone' => $user ? $user->can('clone', $foodList) : false,
@@ -187,6 +189,7 @@ class FoodListController extends Controller
 
         return Inertia::render('FoodLists/Edit', [
             'food_list' => $foodList->only(['id', 'name', 'food_list_ingredients', 'food_list_meals']),
+            'food_lists' => FoodList::where('user_id', $user ? $user->id : 0)->get(['id', 'name']),
             'ingredients' => Ingredient::where('user_id', null)
                 ->orWhere('user_id', $user ? $user->id : 0)
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),

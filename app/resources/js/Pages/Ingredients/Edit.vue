@@ -12,9 +12,6 @@ import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
 import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
 
-const searchDialog = ref(null)
-const deleteDialog = ref(null)
-
 const props = defineProps({
   ingredient: Object,
   ingredients: Array,
@@ -25,6 +22,9 @@ const props = defineProps({
   can_delete: Boolean,
   can_create: Boolean
 })
+
+const searchDialog = ref(null)
+const deleteDialog = ref(null)
 
 </script>
 

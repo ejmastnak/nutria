@@ -67,21 +67,21 @@ export default {
       </div>
     </CrudNavBar>
 
-
-    <div class="mt-10">
-
+    <div class="mt-8">
       <h1 class="text-xl w-2/3">{{meal.name}}</h1>
 
       <!-- Meal name and mass pillbox labels -->
       <div class="flex mt-2">
+
         <div class="bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
           Meal
         </div>
+
         <div class="ml-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
           {{meal.mass_in_grams}} g
         </div>
-      </div>
 
+      </div>
     </div>
 
     <!-- Table of meal ingredients -->
