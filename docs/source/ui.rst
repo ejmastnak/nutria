@@ -445,6 +445,12 @@ Purpose: create a new Meal
 
   {
     "meal": null,
+    "meals": [
+      {
+        "id": 0,
+        "name": "Boo"
+      }
+    ],
     "ingredients": [
       {
         "id": 0,
@@ -473,13 +479,13 @@ Purpose: create a new Meal
   }
 
 - ``meal`` is not directly needed for Create, but is used for cloning meals.
+- ``meals`` for "Search for another" and "Clone existing"
 - ``ingredients`` (FDA *and* user ingredients) to use as MealIngredients.
   ``density_g_per_ml`` to determine if ingredient amount can be specified in volume units.
 - ``ingredient_categories`` for filtering Ingredients when searching
 - ``units`` to specify amount of each MealIngredient.
 - ``clone`` to conditionally display "Cloned from Foo" message
 - Auth props to conditionally display View (for clone pages) and Clone/Create buttons
-
 
 **Form:** See :ref:`Validation: Create or Update a Meal <validation-crud-meal>`
 
@@ -532,6 +538,12 @@ Edit
         }
       ]
     },
+    "meals": [
+      {
+        "id": 0,
+        "name": "Boo"
+      }
+    ],
     "ingredients": [
       {
         "id": 0,
@@ -561,6 +573,7 @@ Edit
   }
 
 - ``meal`` to display current meal information
+- ``meals`` for "Search for another" and "Clone existing"
 - ``ingredients`` (FDA *and* user ingredients) to use as MealIngredients.
   ``density_g_per_ml`` to determine if ingredient amount can be specified in volume units.
 - ``ingredient_categories`` for filtering Ingredients when searching
@@ -745,6 +758,12 @@ Purpose: create a new Food List
 
   {
     "food_list": null,
+    "food_lists": [
+      {
+        "id": 0,
+        "name": "Boo"
+      }
+    ],
     "ingredients": [
       {
         "id": 0,
@@ -780,6 +799,7 @@ Purpose: create a new Food List
   }
 
 - ``food_list`` is not directly needed for Create, but is used for cloning food lists.
+- ``food_lists`` for "Search for another" and "Clone existing"
 - ``ingredients`` (FDA *and* user ingredients) to use as FoodListIngredients.
   ``density_g_per_ml`` to determine if ingredient amount can be specified in volume units.
 - ``meals`` to use as FoodListMeals (pass ``mass_in_grams`` to use as default meal mass)
@@ -866,6 +886,12 @@ Purpose: update an existing new Food List
         }
       ]
     },
+    "food_lists": [
+      {
+        "id": 0,
+        "name": "Boo"
+      }
+    ],
     "ingredients": [
       {
         "id": 0,
@@ -902,6 +928,7 @@ Purpose: update an existing new Food List
   }
 
 - ``food_list`` to display current food list information
+- ``food_lists`` for "Search for another" and "Clone existing"
 - ``ingredients`` (FDA *and* user ingredients) to use as FoodListIngredients
   ``density_g_per_ml`` to determine if ingredient amount can be specified in volume units.
 - ``meals`` to use as FoodListMeals
@@ -1088,6 +1115,12 @@ Purpose: create a new RDI Profile.
         }
       ]
     },
+    "rdi_profiles": [
+      {
+        "id": 0,
+        "name": "Boop"
+      }
+    ],
     "nutrient_categories": [
       {
         "id": 0,
@@ -1101,6 +1134,7 @@ Purpose: create a new RDI Profile.
 
 - ``rdi_profile`` is used by Edit and Clone, which share a CreateOrEdit component with Create.
   Although Create strictly needs only ``nutrient_id``, ``nutrient.display_name``, and ``unit.name``, I'm preserving the ``rdi_profile`` prop structure to be able to use the same CreateOrEdit component for Create.
+- ``rdi_profiles`` for "Search for another" and "Clone existing"
 - ``nutrient_categories`` to split up RDI nutrients into vitamins, minerals, macronutrients
 - ``clone`` to conditionally display "Cloned from Foo" message
 - Auth props to conditionally display View (for clone pages) and Clone/Create buttons
@@ -1159,6 +1193,12 @@ Purpose: update an existing RDI Profile.
         }
       ]
     },
+    "rdi_profiles": [
+      {
+        "id": 0,
+        "name": "Boop"
+      }
+    ],
     "nutrient_categories": [
       {
         "id": 0,
@@ -1172,6 +1212,7 @@ Purpose: update an existing RDI Profile.
   }
 
 - ``rdi_profile`` to display current RDI profile information
+- ``rdi_profiles`` for "Search for another" and "Clone existing"
 - ``nutrient_categories`` to split up RDI nutrients into vitamins, minerals, macronutrients
 - Auth props to conditionally display View, Clone, Delete, Create buttons.
 
