@@ -43,8 +43,9 @@ class MealController extends Controller
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
             'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
-            'can_create' => $user ? $user->can('create', Meal::class) : false,
-            'clone' => false
+            'clone' => false,
+            'can_view' => false,  // only relevant for clone
+            'can_create' => $user ? $user->can('create', Meal::class) : false
         ]);
     }
 
@@ -73,8 +74,9 @@ class MealController extends Controller
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
             'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
+            'clone' => true,
+            'can_view' => $user ? $user->can('view', $meal) : false,
             'can_create' => $user ? $user->can('create', Meal::class) : false,
-            'clone' => true
         ]);
     }
 
@@ -136,9 +138,10 @@ class MealController extends Controller
             'nutrient_profile' => NutrientProfileController::profileMeal($meal->id),
             'meals' => Meal::where('user_id', $user ? $user->id : 0)->get(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
-            'can_clone' => $user ? $user->can('clone', $meal) : false,
             'can_edit' => $user ? $user->can('update', $meal) : false,
+            'can_clone' => $user ? $user->can('clone', $meal) : false,
             'can_delete' => $user ? $user->can('delete', $meal) : false,
+            'can_create' => $user ? $user->can('create', Meal::class) : false
         ]);
     }
 
@@ -167,9 +170,10 @@ class MealController extends Controller
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
             'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
-            'can_create' => $user ? $user->can('create', Meal::class) : false,
+            'can_view' => $user ? $user->can('view', $meal) : false,
             'can_clone' => $user ? $user->can('clone', $meal) : false,
-            'can_delete' => $user ? $user->can('delete', $meal) : false
+            'can_delete' => $user ? $user->can('delete', $meal) : false,
+            'can_create' => $user ? $user->can('create', Meal::class) : false,
         ]);
     }
 

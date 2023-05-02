@@ -48,8 +48,9 @@ class FoodListController extends Controller
                 ->get(['id', 'name', 'mass_in_grams']),
             'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
-            'can_create' => $user ? $user->can('create', FoodList::class) : false,
             'clone' => false,
+            'can_view' => false,  // only relevant for clone
+            'can_create' => $user ? $user->can('create', FoodList::class) : false,
         ]);
     }
 
@@ -79,8 +80,9 @@ class FoodListController extends Controller
                 ->get(['id', 'name', 'mass_in_grams']),
             'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
-            'can_create' => $user ? $user->can('create', FoodList::class) : false,
             'clone' => true,
+            'can_view' => $user ? $user->can('view', $foodList) : false,
+            'can_create' => $user ? $user->can('create', FoodList::class) : false,
         ]);
     }
 
@@ -159,9 +161,10 @@ class FoodListController extends Controller
             'nutrient_profile' => NutrientProfileController::profileFoodList($foodList->id),
             'food_lists' => FoodList::all(),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
-            'can_clone' => $user ? $user->can('clone', $foodList) : false,
             'can_edit' => $user ? $user->can('update', $foodList) : false,
-            'can_delete' => $user ? $user->can('delete', $foodList) : false
+            'can_clone' => $user ? $user->can('clone', $foodList) : false,
+            'can_delete' => $user ? $user->can('delete', $foodList) : false,
+            'can_create' => $user ? $user->can('create', FoodList::class) : false
         ]);
     }
 
@@ -191,9 +194,10 @@ class FoodListController extends Controller
                 ->get(['id', 'name', 'mass_in_grams']),
             'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
-            'can_create' => $user ? $user->can('create', FoodList::class) : false,
+            'can_view' => $user ? $user->can('view', $foodList) : false,
             'can_clone' => $user ? $user->can('clone', $foodList) : false,
-            'can_delete' => $user ? $user->can('delete', $foodList) : false
+            'can_delete' => $user ? $user->can('delete', $foodList) : false,
+            'can_create' => $user ? $user->can('create', FoodList::class) : false
         ]);
     }
 

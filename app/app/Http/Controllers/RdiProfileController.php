@@ -65,8 +65,9 @@ class RdiProfileController extends Controller
                 ])
             ],
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
+            'clone' => false,
+            'can_view' => false,  // only relevant for clone
             'can_create' => $user ? $user->can('create', RdiProfile::class) : false,
-            'clone' => false
         ]);
     }
 
@@ -98,8 +99,9 @@ class RdiProfileController extends Controller
         return Inertia::render('RdiProfiles/Create', [
             'rdi_profile' => $rdiProfile->only(['id', 'name', 'rdi_profile_nutrients']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
+            'clone' => true,
+            'can_view' => $user ? $user->can('view', $rdiProfile) : false,
             'can_create' => $user ? $user->can('create', RdiProfile::class) : false,
-            'clone' => true
         ]);
     }
     /**
@@ -162,6 +164,7 @@ class RdiProfileController extends Controller
             'can_edit' => $user ? $user->can('update', $rdiProfile) : false,
             'can_clone' => $user ? $user->can('clone', $rdiProfile) : false,
             'can_delete' => $user ? $user->can('delete', $rdiProfile) : false,
+            'can_create' => $user ? $user->can('create', RdiProfile::class) : false,
         ]);
     }
 
@@ -193,9 +196,10 @@ class RdiProfileController extends Controller
         return Inertia::render('RdiProfiles/Edit', [
             'rdi_profile' => $rdiProfile->only(['id', 'name', 'rdi_profile_nutrients']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
-            'can_create' => $user ? $user->can('create', RdiProfile::class) : false,
+            'can_view' => $user ? $user->can('view', $rdiProfile) : false,
             'can_clone' => $user ? $user->can('clone', $rdiProfile) : false,
             'can_delete' => $user ? $user->can('delete', $rdiProfile) : false,
+            'can_create' => $user ? $user->can('create', RdiProfile::class) : false,
         ]);
     }
 
