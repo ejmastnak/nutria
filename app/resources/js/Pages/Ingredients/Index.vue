@@ -84,6 +84,12 @@ function resetUserSearch() {
   userSearchInput.value.focus()
 }
 
+// Updates filteredUserIngredients after deleting an ingredient to ensure then
+// ingredient disappears from display
+function updateFuzzySearchOnDeletion(id) {
+  filteredUserIngredients.value = fuzzysort.go(userSearchQuery.value.trim(), props.user_ingredients, fuzzysortUserOptions)
+}
+
 </script>
 
 <script>
@@ -317,10 +323,10 @@ export default {
                   <th scope="col" class="px-6 py-3 bg-blue-100">
                     Name
                   </th>
-                  <th scope="col" class="px-6 py-3  w-3/12 bg-blue-200">
+                  <th scope="col" class="px-6 py-3 w-3/12 bg-blue-200">
                     Type
                   </th>
-                  <th scope="col" class="px-6 py-3  w-1/12 bg-blue-100" />
+                  <th scope="col" class="px-6 py-3 w-1/12 bg-blue-100" />
                 </tr>
               </thead>
               <tbody>
@@ -399,7 +405,7 @@ export default {
       action="Clone"
     />
 
-    <DeleteDialog ref="deleteDialog" deleteRoute="ingredients.destroy" thing="ingredient" />
+    <DeleteDialog ref="deleteDialog" deleteRoute="ingredients.destroy" thing="ingredient" @delete="updateFuzzySearchOnDeletion" />
 
   </div>
 </template>
