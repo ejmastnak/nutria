@@ -6,6 +6,14 @@ import { TrashIcon, DocumentDuplicateIcon, PencilSquareIcon } from '@heroicons/v
 import RdiProfile from './Partials/RdiProfile.vue'
 import FuzzyCombobox from '@/Shared/FuzzyCombobox.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
+import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
+import CrudNavBar from '@/Shared/CrudNavBar.vue'
+import CrudNavBarEdit from '@/Shared/CrudNavBarEdit.vue'
+import CrudNavBarCloneLink from '@/Shared/CrudNavBarCloneLink.vue'
+import CrudNavBarDelete from '@/Shared/CrudNavBarDelete.vue'
+import CrudNavBarCreate from '@/Shared/CrudNavBarCreate.vue'
+import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
+import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -16,12 +24,14 @@ const props = defineProps({
   nutrient_categories: Array,
   can_edit: Boolean,
   can_clone: Boolean,
-  can_delete: Boolean
+  can_delete: Boolean,
+  can_create: Boolean
 })
 
 const howManyGrams = ref("100");
 const defaultMassInGrams = 100
 
+const searchDialog = ref(null)
 const deleteDialog = ref(null)
 
 const searchRdiProfile = ref({})
@@ -41,56 +51,18 @@ export default {
   <div>
     <Head :title="rdi_profile.name" />
 
-    <div class="flex items-center space-x-4 -mt-2 border border-gray-300 p-1 px-4 rounded-xl">
-
-      <Link
-        v-if="can_edit"
-        class="hover:underline hover:bg-blue-100 p-2 rounded-lg"
-        :href="route('rdi-profiles.edit', rdi_profile.id)"
-      >
-      <div class="flex">
-        <PencilSquareIcon class="h-5 w-5 text-baseline text-gray-700" />
-        <p class="ml-1">Edit</p>
+    <CrudNavBar>
+      <CrudNavBarIndex :href="route('rdi-profiles.index')" />
+      <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="RDI profile" />
+      <CrudNavBarCreate :enabled="can_create" :href="route('rdi-profiles.create')" />
+      <div class="flex ml-auto">
+        <CrudNavBarEdit v-if="can_edit" :enabled="can_edit" :href="route('rdi-profiles.edit', rdi_profile.id)" />
+        <CrudNavBarCloneLink :enabled="can_clone" :href="route('rdi-profiles.clone', rdi_profile.id)" />
+        <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(rdi_profile.id)" />
       </div>
-      </Link>
+    </CrudNavBar>
 
-      <Link
-        v-if="can_clone"
-        class="hover:underline hover:bg-blue-100 p-2 rounded-lg"
-        :href="route('rdi-profiles.clone', rdi_profile.id)"
-      >
-      <div class="flex">
-        <DocumentDuplicateIcon class="h-5 w-5 text-baseline text-gray-700" />
-        <p class="ml-1">Clone</p>
-      </div>
-      </Link>
-
-      <button
-        v-if="can_delete"
-        type="button"
-        @click="deleteDialog.open(rdi_profile.id)"
-        class="hover:underline hover:bg-blue-100 p-2 rounded-lg"
-      >
-      <div class="flex">
-        <TrashIcon class="h-5 w-5 text-baseline text-gray-700" />
-        <p class="ml-1">Delete</p>
-      </div>
-      </button>
-
-      <form
-        @submit.prevent="search"
-        class="!ml-auto"
-      >
-        <FuzzyCombobox
-          labelText="Search for another RDI profile"
-          :options="rdi_profiles"
-          v-model="searchRdiProfile"
-        />
-      </form>
-
-    </div>
-
-    <div class="mt-10">
+    <div class="mt-8">
       <h1 class="text-xl w-2/3">{{rdi_profile.name}}</h1>
       <!-- RDI profile pillbox label category -->
       <div class="mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
@@ -106,6 +78,15 @@ export default {
         :nutrient_categories="nutrient_categories"
       />
     </section>
+
+    <SearchForThingAndGo
+      ref="searchDialog"
+      :things="rdi_profiles"
+      goRoute="rdi-profiles.show"
+      label="Search for another RDI profile"
+      title=""
+      action="Go"
+    />
 
     <DeleteDialog ref="deleteDialog" deleteRoute="rdi-profiles.destroy" thing="RDI profile" />
 

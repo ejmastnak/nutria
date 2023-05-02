@@ -64,6 +64,9 @@ class RdiProfileController extends Controller
                     'nutrient' => $nutrient,
                 ])
             ],
+            'rdi_profiles' => RdiProfile::where('user_id', null)
+            ->orWhere('user_id', $user ? $user->id : 0)
+            ->get(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
             'clone' => false,
             'can_view' => false,  // only relevant for clone
@@ -98,6 +101,9 @@ class RdiProfileController extends Controller
 
         return Inertia::render('RdiProfiles/Create', [
             'rdi_profile' => $rdiProfile->only(['id', 'name', 'rdi_profile_nutrients']),
+            'rdi_profiles' => RdiProfile::where('user_id', null)
+            ->orWhere('user_id', $user ? $user->id : 0)
+            ->get(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
             'clone' => true,
             'can_view' => $user ? $user->can('view', $rdiProfile) : false,
@@ -195,6 +201,9 @@ class RdiProfileController extends Controller
 
         return Inertia::render('RdiProfiles/Edit', [
             'rdi_profile' => $rdiProfile->only(['id', 'name', 'rdi_profile_nutrients']),
+            'rdi_profiles' => RdiProfile::where('user_id', null)
+            ->orWhere('user_id', $user ? $user->id : 0)
+            ->get(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
             'can_view' => $user ? $user->can('view', $rdiProfile) : false,
             'can_clone' => $user ? $user->can('clone', $rdiProfile) : false,

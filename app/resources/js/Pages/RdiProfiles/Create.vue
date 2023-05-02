@@ -1,13 +1,26 @@
 <script setup>
+import { ref } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
 import CreateOrEdit from './Partials/CreateOrEdit.vue'
+import CrudNavBar from '@/Shared/CrudNavBar.vue'
+import CrudNavBarView from '@/Shared/CrudNavBarView.vue'
+import CrudNavBarCreate from '@/Shared/CrudNavBarCreate.vue'
+import CrudNavBarCloneButton from '@/Shared/CrudNavBarCloneButton.vue'
+import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
+import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
+import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
 
 const props = defineProps({
   rdi_profile: Object,
+  rdi_profiles: Array,
   nutrient_categories: Array,
+  can_view: Boolean,
   can_create: Boolean,
   clone: Boolean
 })
+
+const searchDialog = ref(null)
+const cloneExistingDialog = ref(null)
 
 </script>
 
@@ -22,13 +35,43 @@ export default {
   <div class="">
     <Head title="New RDI Profile" />
 
-    <h1 class="text-xl font-semibold">New RDI Profile</h1>
+    <CrudNavBar>
+      <CrudNavBarIndex :href="route('rdi-profiles.index')" />
+      <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="RDI profile" />
+      <div class="flex ml-auto">
+        <CrudNavBarView v-if="clone" :enabled="can_view" text="View original" :href="route('rdi-profiles.show', rdi_profile.id)" />
+        <CrudNavBarCreate v-if="clone" :enabled="can_create" text="New" :href="route('rdi-profiles.create')" />
+        <CrudNavBarCloneButton v-if="!clone" :enabled="can_create" @wasClicked="cloneExistingDialog.open()" text="Clone" />
+      </div>
+    </CrudNavBar>
+
+    <h1 class="mt-8 text-xl font-semibold">New RDI Profile</h1>
     <p v-if="clone && rdi_profile" class="text-gray-700">(Cloned from {{rdi_profile.name}})</p>
 
     <CreateOrEdit
       :rdi_profile="rdi_profile"
       :nutrient_categories="nutrient_categories"
       :create="true"
+    />
+
+    <!-- Search for an RDI profile -->
+    <SearchForThingAndGo
+      ref="searchDialog"
+      :things="rdi_profiles"
+      goRoute="rdi-profiles.show"
+      label="Search for another RDI profile"
+      title=""
+      action="Go"
+    />
+
+    <!-- Clone an existing RDI profile -->
+    <SearchForThingAndGo
+      ref="cloneExistingDialog"
+      :things="rdi_profiles"
+      goRoute="rdi-profiles.clone"
+      label="Search for an RDI profile to clone"
+      title="Clone RDI Profile"
+      action="Clone"
     />
 
   </div>
