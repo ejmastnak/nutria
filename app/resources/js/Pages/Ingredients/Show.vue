@@ -6,11 +6,13 @@ import { TrashIcon, DocumentDuplicateIcon, PencilSquareIcon } from '@heroicons/v
 import NutrientProfile from '@/Shared/NutrientProfile.vue'
 import FuzzyCombobox from '@/Shared/FuzzyCombobox.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
-import CloneExistingDialog from '@/Shared/CloneExistingDialog.vue'
+import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
 import CrudNavBar from '@/Shared/CrudNavBar.vue'
 import CrudNavBarEdit from '@/Shared/CrudNavBarEdit.vue'
-import CrudNavBarClone from '@/Shared/CrudNavBarClone.vue'
+import CrudNavBarCloneLink from '@/Shared/CrudNavBarCloneLink.vue'
 import CrudNavBarDelete from '@/Shared/CrudNavBarDelete.vue'
+import CrudNavBarCreate from '@/Shared/CrudNavBarCreate.vue'
+import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
 import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
@@ -25,13 +27,14 @@ const props = defineProps({
   ingredients: Array,
   can_edit: Boolean,
   can_clone: Boolean,
-  can_delete: Boolean
+  can_delete: Boolean,
+  can_create: Boolean
 })
 
 const howManyGrams = ref("100");
 const defaultMassInGrams = 100
 
-const cloneExistingDialog = ref(null)
+const searchDialog = ref(null)
 const deleteDialog = ref(null)
 
 const searchIngredient = ref({})
@@ -53,16 +56,17 @@ export default {
     <Head :title="ingredient.name" />
 
     <CrudNavBar>
-      <CrudNavBarEdit v-if="can_edit" :href="route('ingredients.edit', ingredient.id)" />
-      <CrudNavBarClone v-if="can_clone" :href="route('ingredients.clone', ingredient.id)" />
-      <CrudNavBarDelete v-if="can_delete" @wasClicked="deleteDialog.open(ingredient.id)" />
-
-      <CrudNavBarSearch class="!ml-auto" @wasClicked="cloneExistingDialog.open()" />
-
-
+      <CrudNavBarIndex :href="route('ingredients.index')" />
+      <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="ingredient" />
+      <CrudNavBarCreate :enabled="can_create" :href="route('ingredients.create')" />
+      <div class="flex ml-auto">
+        <CrudNavBarEdit :enabled="can_edit" :href="route('ingredients.edit', ingredient.id)" />
+        <CrudNavBarCloneLink :enabled="can_clone" :href="route('ingredients.clone', ingredient.id)" />
+        <CrudNavBarDelete :enabled="can_delete" @wasClicked="deleteDialog.open(ingredient.id)" />
+      </div>
     </CrudNavBar>
 
-    <div class="mt-10">
+    <div class="mt-8">
 
       <h1 class="text-xl w-2/3">{{ingredient.name}}</h1>
 
@@ -116,12 +120,13 @@ export default {
 
     </section>
 
-    <CloneExistingDialog
-      ref="cloneExistingDialog"
+    <SearchForThingAndGo
+      ref="searchDialog"
       :things="ingredients"
-      thing="ingredient"
+      goRoute="ingredients.show"
       label="Search for another ingredient"
-      cloneRoute="ingredients.show"
+      title=""
+      action="Go"
     />
 
     <DeleteDialog ref="deleteDialog" deleteRoute="ingredients.destroy" thing="ingredient" />

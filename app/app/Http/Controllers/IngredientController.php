@@ -57,7 +57,6 @@ class IngredientController extends Controller
                 'id' => null,
                 'name' => "",
                 'ingredient_category_id' => null,
-                'ingredient_category' => null,
                 'density_g_per_ml' => null,
                 'ingredient_nutrients' => $nutrients->map(fn($nutrient) => [
                     'id' => 0,
@@ -66,10 +65,14 @@ class IngredientController extends Controller
                     'nutrient' => $nutrient
                 ])
             ],
+            'ingredients' => Ingredient::where('user_id', null)
+            ->orWhere('user_id', $user ? $user->id : 0)
+            ->get(['id', 'name', 'ingredient_category_id']),
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
-            'can_create' => $user ? $user->can('create', Ingredient::class) : false,
-            'clone' => false
+            'clone' => false,
+            'can_view' => false,  // only relevant for clone
+            'can_create' => $user ? $user->can('create', Ingredient::class) : false
         ]);
     }
 
@@ -134,14 +137,17 @@ class IngredientController extends Controller
                 'id' => $ingredient['id'],
                 'name' => $ingredient['name'],
                 'ingredient_category_id' => $ingredient['ingredient_category_id'],
-                'ingredient_category' => $ingredient['ingredient_category'],
                 'density_g_per_ml' => $ingredient['density_g_per_ml'],
                 'ingredient_nutrients' => $ingredient_nutrients
             ],
+            'ingredients' => Ingredient::where('user_id', null)
+            ->orWhere('user_id', $user ? $user->id : 0)
+            ->get(['id', 'name', 'ingredient_category_id']),
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
-            'can_create' => $user ? $user->can('create', Ingredient::class) : false,
-            'clone' => true
+            'clone' => true,
+            'can_view' => $user ? $user->can('view', $ingredient) : false,
+            'can_create' => $user ? $user->can('create', Ingredient::class) : false
         ]);
     }
 
@@ -200,6 +206,7 @@ class IngredientController extends Controller
             'can_edit' => $user ? $user->can('update', $ingredient) : false,
             'can_clone' => $user ? $user->can('clone', $ingredient) : false,
             'can_delete' => $user ? $user->can('delete', $ingredient) : false,
+            'can_create' => $user ? $user->can('create', Ingredient::class) : false
         ]);
     }
 
@@ -236,10 +243,14 @@ class IngredientController extends Controller
                 'density_g_per_ml',
                 'ingredient_nutrients'
             ]),
+            'ingredients' => Ingredient::where('user_id', null)
+            ->orWhere('user_id', $user ? $user->id : 0)
+            ->get(['id', 'name', 'ingredient_category_id']),
             'ingredient_categories' => IngredientCategory::all(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
-            'can_delete' => $user ? $user->can('delete', $ingredient) : false,
+            'can_view' => $user ? $user->can('view', $ingredient) : false,
             'can_clone' => $user ? $user->can('clone', $ingredient) : false,
+            'can_delete' => $user ? $user->can('delete', $ingredient) : false,
             'can_create' => $user ? $user->can('create', Ingredient::class) : false,
         ]);
     }
