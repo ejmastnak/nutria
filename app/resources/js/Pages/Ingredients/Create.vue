@@ -42,7 +42,7 @@ export default {
       <div class="flex ml-auto">
         <CrudNavBarView v-if="clone" :enabled="can_view" text="View original" :href="route('ingredients.show', ingredient.id)" />
         <CrudNavBarCreate v-if="clone" :enabled="can_create" text="New" :href="route('ingredients.create')" />
-        <CrudNavBarCloneButton v-if="!clone" :enabled="can_create" @wasClicked="cloneExistingDialog.open()" text="Clone instead" />
+        <CrudNavBarCloneButton v-if="!clone" :enabled="can_create" @wasClicked="cloneExistingDialog.open()" text="Clone" />
       </div>
     </CrudNavBar>
 
