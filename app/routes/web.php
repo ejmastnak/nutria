@@ -65,6 +65,7 @@ Route::middleware('auth')->group(function () {
 
     // RDI Profiles
     Route::get('rdi-profiles/create', [RdiProfileController::class, 'create'])->name('rdi-profiles.create');
+    Route::get('rdi-profiles/{rdi_profile}/clone', [RdiProfileController::class, 'clone'])->name('rdi-profiles.clone');
     Route::post('rdi-profiles', [RdiProfileController::class, 'store'])->name('rdi-profiles.store');
     Route::get('rdi-profiles/{rdi_profile}/edit', [RdiProfileController::class, 'edit'])->name('rdi-profiles.edit');
     Route::put('rdi-profiles/{rdi_profile}', [RdiProfileController::class, 'update'])->name('rdi-profiles.update');
