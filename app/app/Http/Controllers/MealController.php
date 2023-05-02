@@ -38,6 +38,7 @@ class MealController extends Controller
         $user = Auth::user();
         return Inertia::render('Meals/Create', [
             'meal' => null,
+            'meals' => Meal::where('user_id', $user ? $user->id : 0)->get(['id', 'name']),
             'ingredients' => Ingredient::where('user_id', null)
                 ->orWhere('user_id', $user ? $user->id : 0)
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
@@ -69,6 +70,7 @@ class MealController extends Controller
                 'name',
                 'meal_ingredients'
             ]),
+            'meals' => Meal::where('user_id', $user ? $user->id : 0)->get(['id', 'name']),
             'ingredients' => Ingredient::where('user_id', null)
                 ->orWhere('user_id', $user ? $user->id : 0)
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
@@ -165,6 +167,7 @@ class MealController extends Controller
                 'name',
                 'meal_ingredients'
             ]),
+            'meals' => Meal::where('user_id', $user ? $user->id : 0)->get(['id', 'name']),
             'ingredients' => Ingredient::where('user_id', null)
                 ->orWhere('user_id', $user ? $user->id : 0)
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),

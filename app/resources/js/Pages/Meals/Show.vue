@@ -6,6 +6,14 @@ import { TrashIcon, DocumentDuplicateIcon, PencilSquareIcon } from '@heroicons/v
 import NutrientProfile from '@/Shared/NutrientProfile.vue'
 import FuzzyCombobox from '@/Shared/FuzzyCombobox.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
+import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
+import CrudNavBar from '@/Shared/CrudNavBar.vue'
+import CrudNavBarEdit from '@/Shared/CrudNavBarEdit.vue'
+import CrudNavBarCloneLink from '@/Shared/CrudNavBarCloneLink.vue'
+import CrudNavBarDelete from '@/Shared/CrudNavBarDelete.vue'
+import CrudNavBarCreate from '@/Shared/CrudNavBarCreate.vue'
+import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
+import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -19,13 +27,15 @@ const props = defineProps({
   nutrient_categories: Array,
   can_edit: Boolean,
   can_clone: Boolean,
-  can_delete: Boolean
+  can_delete: Boolean,
+  can_create: Boolean,
 })
 
 const defaultMassInGrams = props.meal.mass_in_grams
 const howManyGrams = ref(props.meal.mass_in_grams);
 
 const deleteDialog = ref(null)
+const searchDialog = ref(null)
 
 const searchMeal = ref({})
 function search() {
@@ -46,55 +56,17 @@ export default {
 
     <Head :title="meal.name" />
 
-    <!-- Header bar with edit/clone/delete icons -->
-    <div class="flex items-center space-x-4 -mt-2 border border-gray-300 p-1 px-4 rounded-xl">
-
-      <Link
-        v-if="can_edit"
-        class="hover:underline hover:bg-blue-100 p-2 rounded-lg"
-        :href="route('meals.edit', meal.id)"
-      >
-      <div class="flex">
-        <PencilSquareIcon class="h-5 w-5 text-baseline text-gray-700" />
-        <p class="ml-1">Edit</p>
+    <CrudNavBar>
+      <CrudNavBarIndex :href="route('meals.index')" />
+      <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="meal" />
+      <CrudNavBarCreate :enabled="can_create" :href="route('meals.create')" />
+      <div class="flex ml-auto">
+        <CrudNavBarEdit v-if="can_edit" :enabled="can_edit" :href="route('meals.edit', meal.id)" />
+        <CrudNavBarCloneLink :enabled="can_clone" :href="route('meals.clone', meal.id)" />
+        <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(meal.id)" />
       </div>
-      </Link>
+    </CrudNavBar>
 
-      <Link
-        v-if="can_clone"
-        class="hover:underline hover:bg-blue-100 p-2 rounded-lg"
-        :href="route('meals.clone', meal.id)"
-      >
-      <div class="flex">
-        <DocumentDuplicateIcon class="h-5 w-5 text-baseline text-gray-700" />
-        <p class="ml-1">Clone</p>
-      </div>
-      </Link>
-
-      <button
-        v-if="can_delete"
-        type="button"
-        @click="deleteDialog.open(meal.id)"
-        class="hover:underline hover:bg-blue-100 p-2 rounded-lg"
-      >
-      <div class="flex">
-        <TrashIcon class="h-5 w-5 text-baseline text-gray-700" />
-        <p class="ml-1">Delete</p>
-      </div>
-      </button>
-
-      <form
-        @submit.prevent="search"
-        class="!ml-auto"
-      >
-        <FuzzyCombobox
-          labelText="Search for another meal"
-          :options="meals"
-          v-model="searchMeal"
-        />
-      </form>
-
-    </div>
 
     <div class="mt-10">
 
@@ -181,6 +153,15 @@ export default {
       />
 
     </section>
+
+    <SearchForThingAndGo
+      ref="searchDialog"
+      :things="meals"
+      goRoute="meals.show"
+      label="Search for another meal"
+      title=""
+      action="Go"
+    />
 
     <DeleteDialog ref="deleteDialog" deleteRoute="meals.destroy" thing="meal" />
 
