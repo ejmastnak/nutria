@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->decimal('mass_in_grams', 10, 3);
+            $table->timestamps();
         });
     }
 

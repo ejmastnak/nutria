@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('ingredient_category_id')->nullable();
             $table->foreign('ingredient_category_id')->references('id')->on('ingredient_categories');
             $table->decimal('density_g_per_ml', 10, 6)->nullable();
+            $table->timestamps();
         });
     }
 

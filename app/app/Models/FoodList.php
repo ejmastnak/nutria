@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class FoodList extends Model
 {
     use HasFactory;
-    public $timestamps = false;
     protected $fillable = ['name', 'mass_in_grams', 'user_id'];
 
     public function food_list_ingredients() {

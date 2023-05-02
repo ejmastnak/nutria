@@ -14,11 +14,15 @@ from sr.food_category;
 insert into ingredients (
   fdc_id,
   name,
-  ingredient_category_id
+  ingredient_category_id,
+  created_at,
+  updated_at
 )
 select
   fdc_id::int,
   description,
-  ingredient_category_id::int
+  ingredient_category_id::int,
+  (now() at time zone 'utc'),
+  (now() at time zone 'utc')
 from sr.food;
 /*}}}*/

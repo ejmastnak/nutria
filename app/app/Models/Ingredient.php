@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Ingredient extends Model
 {
     use HasFactory;
-    public $timestamps = false;
     protected $fillable = ['name', 'fdc_id', 'ingredient_category_id', 'density_g_per_ml', 'user_id'];
 
     public function ingredient_category() {
