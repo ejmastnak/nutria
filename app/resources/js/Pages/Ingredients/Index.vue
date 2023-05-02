@@ -6,6 +6,7 @@ import debounce from "lodash/debounce";
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
 import { TrashIcon, PlusCircleIcon, DocumentDuplicateIcon, MagnifyingGlassIcon, XMarkIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
+import H1 from '@/Components/H1ForIndex.vue'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import InputLabel from '@/Components/InputLabel.vue'
@@ -100,7 +101,7 @@ export default {
     <div class="flex">
 
       <div class="mr-2 p-1">
-        <h1 class="font-medium text-2xl text-gray-900">Ingredients</h1>
+        <H1 text="Ingredients" />
         <p class="mt-2 w-11/12 4 sm:w-2/3 text-gray-500">
           Use this page as an overview of ingredients from the FDA database—or ingredients you have created yourself.
         </p>

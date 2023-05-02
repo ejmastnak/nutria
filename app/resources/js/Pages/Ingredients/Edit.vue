@@ -11,6 +11,7 @@ import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
 import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
 import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
+import H1 from '@/Components/H1ForCrud.vue'
 
 const props = defineProps({
   ingredient: Object,
@@ -51,7 +52,7 @@ export default {
       </div>
     </CrudNavBar>
 
-    <h1 class="mt-8 text-xl font-semibold">Edit Ingredient</h1>
+    <H1 class="mt-8" text="Edit Ingredient" />
 
     <CreateOrEdit
       :ingredient="ingredient"

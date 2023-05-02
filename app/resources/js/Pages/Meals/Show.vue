@@ -14,6 +14,7 @@ import CrudNavBarDelete from '@/Shared/CrudNavBarDelete.vue'
 import CrudNavBarCreate from '@/Shared/CrudNavBarCreate.vue'
 import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
 import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
+import H1 from '@/Components/H1ForCrud.vue'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -68,7 +69,7 @@ export default {
     </CrudNavBar>
 
     <div class="mt-8">
-      <h1 class="text-xl w-2/3">{{meal.name}}</h1>
+      <H1 :text="meal.name" />
 
       <!-- Meal name and mass pillbox labels -->
       <div class="flex mt-2">

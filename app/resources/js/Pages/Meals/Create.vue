@@ -9,6 +9,7 @@ import CrudNavBarCloneButton from '@/Shared/CrudNavBarCloneButton.vue'
 import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
 import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
 import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
+import H1 from '@/Components/H1ForCrud.vue'
 
 const props = defineProps({
   meal: Object,
@@ -47,7 +48,7 @@ export default {
       </div>
     </CrudNavBar>
 
-    <h1 class="mt-8 text-xl font-semibold">New meal</h1>
+    <H1 class="mt-8" text="New Meal" />
     <p v-if="clone && meal" class="text-gray-700">(Cloned from {{meal.name}})</p>
 
     <CreateOrEdit

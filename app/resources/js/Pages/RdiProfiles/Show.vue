@@ -14,6 +14,7 @@ import CrudNavBarDelete from '@/Shared/CrudNavBarDelete.vue'
 import CrudNavBarCreate from '@/Shared/CrudNavBarCreate.vue'
 import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
 import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
+import H1 from '@/Components/H1ForCrud.vue'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -63,7 +64,7 @@ export default {
     </CrudNavBar>
 
     <div class="mt-8">
-      <h1 class="text-xl w-2/3">{{rdi_profile.name}}</h1>
+      <H1 :text="rdi_profile.name" />
       <!-- RDI profile pillbox label category -->
       <div class="mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
         RDI profile
