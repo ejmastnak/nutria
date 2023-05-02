@@ -62,7 +62,7 @@ export default {
       <div class="flex ml-auto">
         <CrudNavBarEdit :enabled="can_edit" :href="route('ingredients.edit', ingredient.id)" />
         <CrudNavBarCloneLink :enabled="can_clone" :href="route('ingredients.clone', ingredient.id)" />
-        <CrudNavBarDelete :enabled="can_delete" @wasClicked="deleteDialog.open(ingredient.id)" />
+        <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(ingredient.id)" />
       </div>
     </CrudNavBar>
 
