@@ -21,7 +21,7 @@ create table sr.food(
   fdc_id text,
   data_type text,
   description text,
-  ingredient_category_id text,
+  food_category_id text,
   publication_date text
 );
 

@@ -5,9 +5,14 @@ insert into ingredient_categories (
   name
 )
 select
-  id::int,
-  name
-from sr.food_category;
+  sr.food_category.id::int,
+  sr.food_category.name
+from sr.food_category
+inner join tmp_ingredient_category_whitelist
+  on tmp_ingredient_category_whitelist.name
+  like sr.food_category.name
+  and tmp_ingredient_category_whitelist.id
+  = sr.food_category.id::int;
 /*}}}*/
 
 -- Ingredients{{{
@@ -19,10 +24,13 @@ insert into ingredients (
   updated_at
 )
 select
-  fdc_id::int,
-  description,
-  ingredient_category_id::int,
+  sr.food.fdc_id::int,
+  sr.food.description,
+  sr.food.food_category_id::int,
   (now() at time zone 'utc'),
   (now() at time zone 'utc')
-from sr.food;
+from sr.food
+inner join ingredient_categories
+  on sr.food.food_category_id::int
+  = ingredient_categories.id;
 /*}}}*/

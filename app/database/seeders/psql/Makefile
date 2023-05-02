@@ -23,7 +23,9 @@ NUTRIENTS_TMP_SCHEMA=$(CURDIR)/nutrients/tmp-schema.sql
 NUTRIENTS_INSERT=$(CURDIR)/nutrients/insert.sql
 
 # Ingredients
+INGREDIENT_CATEGORY_WHITELIST_CSV=$(CURDIR)/ingredients/ingredient-categories.csv
 INGREDIENTS_SCHEMA=$(CURDIR)/ingredients/schema.sql
+INGREDIENTS_TMP_SCHEMA=$(CURDIR)/ingredients/tmp-schema.sql
 INGREDIENTS_INSERT=$(CURDIR)/ingredients/insert.sql
 
 # Ingredient nutrients
@@ -87,6 +89,11 @@ seed_public: import_sr
 	@echo $(SEP) >> $(SEED)
 	@echo "truncate table ingredients restart identity cascade;" >> $(SEED)
 	@echo "truncate table ingredient_categories restart identity cascade;" >> $(SEED)
+	@echo "" >> $(SEED)
+	@cat $(INGREDIENTS_TMP_SCHEMA) >> $(SEED)
+	@echo "" >> $(SEED)
+	@echo "\COPY tmp_ingredient_category_whitelist FROM $(INGREDIENT_CATEGORY_WHITELIST_CSV) WITH DELIMITER ',' HEADER CSV;" >> $(SEED)
+	@echo "" >> $(SEED)
 	@cat $(INGREDIENTS_INSERT) >> $(SEED)
 	# -------------------------------------------------------------------------- #
 	# Ingredients nutrients
