@@ -46,7 +46,7 @@ class FoodListController extends Controller
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
             'meals' => Meal::where('user_id', $user ? $user->id : 0)
                 ->get(['id', 'name', 'mass_in_grams']),
-            'ingredient_categories' => IngredientCategory::all(['id', 'name']),
+            'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
             'can_create' => $user ? $user->can('create', FoodList::class) : false,
             'clone' => false,
@@ -77,7 +77,7 @@ class FoodListController extends Controller
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
             'meals' => Meal::where('user_id', $user ? $user->id : 0)
                 ->get(['id', 'name', 'mass_in_grams']),
-            'ingredient_categories' => IngredientCategory::all(['id', 'name']),
+            'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
             'can_create' => $user ? $user->can('create', FoodList::class) : false,
             'clone' => true,
@@ -189,7 +189,7 @@ class FoodListController extends Controller
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
             'meals' => Meal::where('user_id', $user ? $user->id : 0)
                 ->get(['id', 'name', 'mass_in_grams']),
-            'ingredient_categories' => IngredientCategory::all(['id', 'name']),
+            'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
             'can_create' => $user ? $user->can('create', FoodList::class) : false,
             'can_clone' => $user ? $user->can('clone', $foodList) : false,

@@ -30,7 +30,7 @@ class IngredientController extends Controller
             'ingredients' => Ingredient::where('user_id', null)
                 ->with('ingredient_category:id,name')
                 ->get(['id', 'name', 'ingredient_category_id']),
-            'ingredient_categories' => IngredientCategory::all(['id', 'name']),
+            'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
             'can_create' => $user ? $user->can('create', Ingredient::class) : false,
         ]);
     }
@@ -68,7 +68,7 @@ class IngredientController extends Controller
             'ingredients' => Ingredient::where('user_id', null)
             ->orWhere('user_id', $user ? $user->id : 0)
             ->get(['id', 'name', 'ingredient_category_id']),
-            'ingredient_categories' => IngredientCategory::all(['id', 'name']),
+            'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
             'clone' => false,
             'can_view' => false,  // only relevant for clone
@@ -143,7 +143,7 @@ class IngredientController extends Controller
             'ingredients' => Ingredient::where('user_id', null)
             ->orWhere('user_id', $user ? $user->id : 0)
             ->get(['id', 'name', 'ingredient_category_id']),
-            'ingredient_categories' => IngredientCategory::all(['id', 'name']),
+            'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
             'clone' => true,
             'can_view' => $user ? $user->can('view', $ingredient) : false,
@@ -246,7 +246,7 @@ class IngredientController extends Controller
             'ingredients' => Ingredient::where('user_id', null)
             ->orWhere('user_id', $user ? $user->id : 0)
             ->get(['id', 'name', 'ingredient_category_id']),
-            'ingredient_categories' => IngredientCategory::all(['id', 'name']),
+            'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
             'can_view' => $user ? $user->can('view', $ingredient) : false,
             'can_clone' => $user ? $user->can('clone', $ingredient) : false,

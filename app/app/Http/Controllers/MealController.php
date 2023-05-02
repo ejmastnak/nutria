@@ -41,7 +41,7 @@ class MealController extends Controller
             'ingredients' => Ingredient::where('user_id', null)
                 ->orWhere('user_id', $user ? $user->id : 0)
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
-            'ingredient_categories' => IngredientCategory::all(['id', 'name']),
+            'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
             'can_create' => $user ? $user->can('create', Meal::class) : false,
             'clone' => false
@@ -71,10 +71,9 @@ class MealController extends Controller
             'ingredients' => Ingredient::where('user_id', null)
                 ->orWhere('user_id', $user ? $user->id : 0)
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
-            'ingredient_categories' => IngredientCategory::all(['id', 'name']),
+            'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
             'can_create' => $user ? $user->can('create', Meal::class) : false,
-            'can_delete' => $user ? $user->can('delete', $meal) : false,
             'clone' => true
         ]);
     }
@@ -166,7 +165,7 @@ class MealController extends Controller
             'ingredients' => Ingredient::where('user_id', null)
                 ->orWhere('user_id', $user ? $user->id : 0)
                 ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
-            'ingredient_categories' => IngredientCategory::all(['id', 'name']),
+            'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
             'can_create' => $user ? $user->can('create', Meal::class) : false,
             'can_clone' => $user ? $user->can('clone', $meal) : false,
