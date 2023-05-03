@@ -9,6 +9,7 @@ use App\Models\Unit;
 use App\Models\FoodList;
 use App\Models\FoodListIngredient;
 use App\Models\FoodListMeal;
+use App\Models\Ingredient;
 
 class FoodListSeeder extends Seeder
 {
@@ -33,9 +34,11 @@ class FoodListSeeder extends Seeder
             ]);
 
             foreach($food_list_data['food_list_ingredients'] as $fli) {
+
+                $ingredient_id = Ingredient::where('name', $fli['name'])->first()->id;
                 FoodListIngredient::create([
                     'food_list_id' => $food_list->id,
-                    'ingredient_id' => $fli['ingredient_id'],
+                    'ingredient_id' => $ingredient_id,
                     'amount' => $fli['mass_in_grams'],
                     'unit_id' => $gram_id,
                     'mass_in_grams' => $fli['mass_in_grams'],
