@@ -9,9 +9,34 @@ use App\Models\FoodList;
 use App\Models\Unit;
 use App\Models\RdiProfile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class NutrientProfileController extends Controller
 {
+
+    /**
+     *  Returns an array of NutrientProfiles of the inputted Ingredient; one
+     *  nutrient profile for each of the user's RDI profiles.
+     */
+    public static function getNutrientProfileOfIngredient($ingredientID) {
+        $user = Auth::user();
+
+        $rdi_profiles = RdiProfile::where('user_id', null)
+        ->orWhere('user_id', $user ? $user->id : 0)
+        ->orderBy('id', 'asc')
+        ->get(['id']);
+
+        $nutrientProfiles = array();
+        foreach ($rdi_profiles as $rdi_profile) {
+            $nutrientProfiles[] = [
+              'rdi_profile_id' => $rdi_profile->id,
+              'nutrient_profile' => self::profileIngredient($ingredientID, $rdi_profile->id)
+            ];
+        }
+
+        return $nutrientProfiles;
+    }
+
     /**
      *  Computes a NutrientProfile for 100g of the specified Ingredient using
      *  the specified RdiProfile.

@@ -7,6 +7,7 @@ use App\Models\IngredientNutrient;
 use App\Models\IngredientCategory;
 use App\Models\NutrientCategory;
 use App\Models\Nutrient;
+use App\Models\RdiProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
@@ -198,7 +199,11 @@ class IngredientController extends Controller
                 'ingredient_category',
                 'density_g_per_ml'
             ]),
-            'nutrient_profile' => NutrientProfileController::profileIngredient($ingredient->id),
+            'nutrient_profiles' => NutrientProfileController::getNutrientProfileOfIngredient($ingredient->id),
+            'rdi_profiles' => RdiProfile::where('user_id', null)
+            ->orWhere('user_id', $user ? $user->id : 0)
+            ->orderBy('id', 'asc')
+            ->get(['id', 'name']),
             'ingredients' => Ingredient::where('user_id', null)
             ->orWhere('user_id', $user ? $user->id : 0)
             ->get(['id', 'name', 'ingredient_category_id']),
