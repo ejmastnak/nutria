@@ -96,26 +96,37 @@ Purpose: display an ingredient's name, properties, and nutrient profile.
       },
       "density_g_per_ml": 0
     },
-    "nutrient_profile": [
+    "nutrient_profiles": [
       {
-        "nutrient": "Baz",
-        "nutrient_category_id": 0,
-        "amount": 42,
-        "unit": "g",
-        "pdv": 100
+        "rdi_profile_id": 0,
+        "nutrient_profile": [
+          {
+            "nutrient": "Baz",
+            "nutrient_category_id": 0,
+            "amount": 42,
+            "unit": "g",
+            "pdv": 100
+          }
+        ]
+      }
+    ],
+    "rdi_profiles": [
+      {
+        "id": 0,
+        "name": "Boop"
       }
     ],
     "ingredients": [
       {
         "id": 0,
-        "name": "Bop",
+        "name": "Blap",
         "ingredient_category_id": 0
       }
     ],
     "nutrient_categories": [
       {
         "id": 0,
-        "name": "Bop"
+        "name": "Blop"
       }
     ],
     "can_edit": false,
@@ -125,7 +136,8 @@ Purpose: display an ingredient's name, properties, and nutrient profile.
   }
 
 - ``ingredient`` to display ingredient info
-- ``nutrient_profile`` to display ingredient's nutrient profile
+- ``nutrient_profiles`` to display ingredient's nutrient profile(s)
+- ``rdi_profiles`` to show nutrient profiles for different RDI profiles
 - ``ingredients`` for "Search for another ingredient" without having to go back to Ingredients/Index
 - ``nutrient_categories`` only to pass to NutrientProfile component to split up nutrient profile into vitamins, minerals, macronutrients.
 - Auth props to conditionally display Edit, Clone, Delete, and Create buttons.
@@ -383,13 +395,24 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
         }
       ]
     },
-    "nutrient_profile": [
+    "nutrient_profiles": [
       {
-        "nutrient": "Bop",
-        "nutrient_category_id": 0,
-        "amount": 0.0,
-        "unit": "Blop",
-        "pdv": 0.0
+        "rdi_profile_id": 0,
+        "nutrient_profile": [
+          {
+            "nutrient": "Blah",
+            "nutrient_category_id": 0,
+            "amount": 42,
+            "unit": "g",
+            "pdv": 100
+          }
+        ]
+      }
+    ],
+    "rdi_profiles": [
+      {
+        "id": 0,
+        "name": "Bap"
       }
     ],
     "meals": [
@@ -411,7 +434,8 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
   }
 
 - ``meal`` to display meal info
-- ``nutrient_profile`` to display meal's nutrient profile
+- ``nutrient_profiles`` to display meal's nutrient profile(s)
+- ``rdi_profiles`` to show nutrient profiles for different RDI profiles
 - ``meals`` for "Search for another meal"
 - ``nutrient_categories`` to split up nutrient profile into vitamins, minerals, macronutrients
 - Auth props to conditionally display Edit, Clone, Delete, and Create buttons.
@@ -690,13 +714,24 @@ Show
         }
       ]
     },
-    "nutrient_profile": [
+    "nutrient_profiles": [
       {
-        "nutrient": "Bop",
-        "nutrient_category_id": 0,
-        "amount": 0.0,
-        "unit": "g",
-        "pdv": 0.0
+        "rdi_profile_id": 0,
+        "nutrient_profile": [
+          {
+            "nutrient": "Blah",
+            "nutrient_category_id": 0,
+            "amount": 42,
+            "unit": "g",
+            "pdv": 100
+          }
+        ]
+      }
+    ],
+    "rdi_profiles": [
+      {
+        "id": 0,
+        "name": "Bap"
       }
     ],
     "food_lists": [
@@ -718,7 +753,8 @@ Show
   }
 
 - ``food_list`` to display food list info (``mass_in_grams`` to pass to NutrientProfile)
-- ``nutrient_profile`` to display food list's nutrient profile
+- ``nutrient_profiles`` to display food list's nutrient profile(s)
+- ``rdi_profiles`` to show nutrient profiles for different RDI profiles
 - ``food_lists`` to "Search for another food list"
 - ``nutrient_categories`` to split up nutrient profile into vitamins, minerals, macronutrients
 - Auth props to conditionally display Edit, Clone, Delete, and Create buttons.
