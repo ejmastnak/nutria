@@ -9,7 +9,6 @@ import InputLabel from '@/Components/InputLabel.vue'
 const props = defineProps({
   rdi_profiles: Array,
   howManyGrams: String,
-  defaultMassInGrams: Number,
   selectedRdiProfile: Object,
 })
 
@@ -29,7 +28,7 @@ function updatedSelectedRdiProfile(newValue) {
 <template>
   <Popover class="relative">
 
-    <PopoverButton class="-ml-2 px-2 py-1 rounded-lg">
+    <PopoverButton class="-ml-2 px-2 py-1 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-700">
       <div class="flex items-center">
         <EllipsisHorizontalCircleIcon class="w-5 h-5 text-gray-600 mr-0.5" />
         <p class="text-gray-700">Options</p>

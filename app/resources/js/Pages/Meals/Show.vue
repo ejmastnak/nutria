@@ -1,9 +1,10 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { Head, Link } from '@inertiajs/vue3'
 import { TrashIcon, DocumentDuplicateIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import NutrientProfile from '@/Shared/NutrientProfile.vue'
+import NutrientProfileOptions from '@/Shared/NutrientProfileOptions.vue'
 import FuzzyCombobox from '@/Shared/FuzzyCombobox.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
 import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
@@ -24,7 +25,8 @@ import InputLabel from '@/Components/InputLabel.vue'
 const props = defineProps({
   meal: Object,
   meals: Array,
-  nutrient_profile: Array,
+  nutrient_profiles: Array,
+  rdi_profiles: Array,
   nutrient_categories: Array,
   can_edit: Boolean,
   can_clone: Boolean,
@@ -32,8 +34,8 @@ const props = defineProps({
   can_create: Boolean,
 })
 
-const defaultMassInGrams = props.meal.mass_in_grams
 const howManyGrams = ref(props.meal.mass_in_grams);
+const defaultMassInGrams = props.meal.mass_in_grams
 
 const deleteDialog = ref(null)
 const searchDialog = ref(null)
@@ -42,6 +44,13 @@ const searchMeal = ref({})
 function search() {
   router.get(route('meals.show', searchMeal.value.id))
 }
+
+// Find index of nutrient profile with `rdi_profile_id` matching selectedRdiProfile
+const selectedRdiProfile = ref(props.rdi_profiles[0])
+const selectedNutrientProfile = computed(() => {
+  const idx = props.nutrient_profiles.map(profile => profile.rdi_profile_id).indexOf(selectedRdiProfile.value.id)
+  return props.nutrient_profiles[idx ?? 0].nutrient_profile
+})
 
 </script>
 
@@ -126,28 +135,17 @@ export default {
 
     <section v-if="meal.meal_ingredients.length" class="mt-10">
 
-      <div class="flex">
-        <h2 class="text-lg">Nutrient profile</h2>
+      <h2 class="text-lg">Nutrient profile</h2>
 
-        <!-- How many grams text input -->
-        <div class="ml-auto flex items-baseline text-gray-500 text-md">
-          <div class="">
-            <InputLabel for="howManyGrams" value="Meal mass" class="sr-only" />
-            <TextInput
-              id="howManyGrams"
-              type="number"
-              min="0"
-              class="mt-1 mx-1.5 pl-1 pr-0 text-right text-lg w-24 font-bold block py-px"
-              v-model="howManyGrams"
-            />
-          </div>
-          <p class="">grams</p>
-        </div>
-      </div>
+      <NutrientProfileOptions
+        :rdi_profiles="rdi_profiles"
+        v-model:how-many-grams="howManyGrams"
+        v-model:selected-rdi-profile="selectedRdiProfile"
+      />
 
       <NutrientProfile
         class="w-full mt-4"
-        :nutrient_profile="nutrient_profile"
+        :nutrient_profile="selectedNutrientProfile"
         :nutrient_categories="nutrient_categories"
         :howManyGrams="Number(howManyGrams)"
         :defaultMassInGrams="Number(defaultMassInGrams)"
