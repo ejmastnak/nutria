@@ -10,6 +10,10 @@ const props = defineProps({
   rdi_profiles: Array,
   howManyGrams: String,
   selectedRdiProfile: Object,
+  showMassInput: {
+    type: Boolean,
+    default: true
+  }
 })
 
 const emit = defineEmits(['update:howManyGrams', 'update:selectedRdiProfile'])
@@ -35,12 +39,12 @@ function updatedSelectedRdiProfile(newValue) {
       </div>
     </PopoverButton>
 
-    <PopoverPanel class="absolute z-10 p-4 border border-gray-200 shadow-sm rounded-xl bg-white">
+    <PopoverPanel class="absolute z-10 p-4 border border-gray-200 shadow-sm rounded-xl bg-white focus:outline-none focus:ring-1 focus:ring-blue-700">
 
       <div class="flex flex-col w-full whitespace-nowrap text-gray-900">
 
         <!-- Mass -->
-        <div class="flex items-baseline">
+        <div v-if="showMassInput" class="flex items-baseline mb-4">
           <p class="mr-1">For</p>
           <div>
             <InputLabel for="howManyGramsInput" value="Mass" class="sr-only" />
@@ -57,7 +61,7 @@ function updatedSelectedRdiProfile(newValue) {
         </div>
 
         <!-- RDI Profile -->
-        <div class="mt-4 w-fit">
+        <div class="w-fit">
           <SimpleCombobox
             comboboxInputClasses="py-px"
             :options="rdi_profiles"

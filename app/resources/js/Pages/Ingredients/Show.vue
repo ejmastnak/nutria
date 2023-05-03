@@ -104,7 +104,6 @@ export default {
       <h2 class="text-lg">Nutrient profile</h2>
 
       <NutrientProfileOptions
-        :defaultMassInGrams="100"
         :rdi_profiles="rdi_profiles"
         v-model:how-many-grams="howManyGrams"
         v-model:selected-rdi-profile="selectedRdiProfile"

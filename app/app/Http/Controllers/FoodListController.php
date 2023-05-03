@@ -10,6 +10,7 @@ use App\Models\Meal;
 use App\Models\NutrientCategory;
 use App\Models\IngredientCategory;
 use App\Models\Unit;
+use App\Models\RdiProfile;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -160,7 +161,11 @@ class FoodListController extends Controller
                 'food_list_ingredients',
                 'food_list_meals'
             ]),
-            'nutrient_profile' => NutrientProfileController::profileFoodList($foodList->id),
+            'nutrient_profiles' => NutrientProfileController::getNutrientProfilesOfFoodList($foodList->id),
+            'rdi_profiles' => RdiProfile::where('user_id', null)
+            ->orWhere('user_id', $user ? $user->id : 0)
+            ->orderBy('id', 'asc')
+            ->get(['id', 'name']),
             'food_lists' => FoodList::where('user_id', $user ? $user->id : 0)->get(['id', 'name']),
             'nutrient_categories' => NutrientCategory::all(['id', 'name']),
             'can_edit' => $user ? $user->can('update', $foodList) : false,
