@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Schema;
 use App\Models\Unit;
 use App\Models\Meal;
 use App\Models\MealIngredient;
+use App\Models\Ingredient;
 
 class MealSeeder extends Seeder
 {
@@ -31,9 +32,10 @@ class MealSeeder extends Seeder
                 'user_id' => $meal_data['user_id']
             ]);
             foreach($meal_data['meal_ingredients'] as $mi) {
+                $ingredient_id = Ingredient::where('name', $mi['name'])->first()->id;
                 MealIngredient::create([
                     'meal_id' => $meal->id,
-                    'ingredient_id' => $mi['ingredient_id'],
+                    'ingredient_id' => $ingredient_id,
                     'amount' => $mi['mass_in_grams'],
                     'unit_id' => $gram_id,
                     'mass_in_grams' => $mi['mass_in_grams'],
