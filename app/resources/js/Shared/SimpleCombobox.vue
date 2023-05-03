@@ -24,6 +24,10 @@ const props = defineProps({
   options: Array,
   labelText: String,
   modelValue: Object,
+  comboboxInputClasses: {
+    type: String,
+    default: ""
+  }
 })
 
 const emit = defineEmits([
@@ -61,6 +65,7 @@ const filteredOptions = computed(() =>
       <div class="mt-1 relative">
         <ComboboxInput
           class="w-full border border-gray-300 rounded-md shadow-sm focus:border focus:border-blue-500"
+          :class="comboboxInputClasses"
           @change="query = $event.target.value"
           :displayValue="(option) => option.name"
         />
