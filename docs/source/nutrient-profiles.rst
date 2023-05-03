@@ -83,7 +83,8 @@ Just scale nutrient mass density per gram (``ingredient_nutrients.amount_per_100
 
   <?php
   $i = App\Models\Ingredient::find(6435);
-  $result = App\Http\Controllers\NutrientProfileController::profileIngredient($i->id, 1);
+  $profile = App\Http\Controllers\NutrientProfileController::profileIngredient($i->id, 1);
+  $profiles = App\Http\Controllers\NutrientProfileController::getNutrientProfilesOfIngredient($i->id);
 
 .. _profile-meal:
 
@@ -144,7 +145,8 @@ And you'd have to throw in a ``inner join meals on meals.id = :'meal_id'`` to ge
 
   <?php
   $m = App\Models\Meal::find(1);
-  $result = App\Http\Controllers\NutrientProfileController::profileMeal($m->id, 1);
+  $profile = App\Http\Controllers\NutrientProfileController::profileMeal($m->id, 1);
+  $profiles = App\Http\Controllers\NutrientProfileController::getNutrientProfilesOfMeal($m->id);
 
 
 Profile Food List
@@ -266,4 +268,5 @@ Comments:
 
   <?php
   $fl = App\Models\FoodList::find(3);
-  $result = App\Http\Controllers\NutrientProfileController::profileFoodList($fl->id, 1);
+  $profile = App\Http\Controllers\NutrientProfileController::profileFoodList($fl->id, 1);
+  $profiles = App\Http\Controllers\NutrientProfileController::getNutrientProfilesOfFoodList($fl->id);
