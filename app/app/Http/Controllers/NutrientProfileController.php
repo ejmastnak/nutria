@@ -18,7 +18,7 @@ class NutrientProfileController extends Controller
      *  Returns an array of NutrientProfiles of the inputted Ingredient; one
      *  nutrient profile for each of the user's RDI profiles.
      */
-    public static function getNutrientProfileOfIngredient($ingredientID) {
+    public static function getNutrientProfilesOfIngredient($ingredientID) {
         $user = Auth::user();
 
         $rdi_profiles = RdiProfile::where('user_id', null)
@@ -76,6 +76,29 @@ class NutrientProfileController extends Controller
         return $result;
     }
 
+    /**
+     *  Returns an array of NutrientProfiles of the inputted Meal; one
+     *  nutrient profile for each of the user's RDI profiles.
+     */
+    public static function getNutrientProfilesOfMeal($mealID) {
+        $user = Auth::user();
+
+        $rdi_profiles = RdiProfile::where('user_id', null)
+        ->orWhere('user_id', $user ? $user->id : 0)
+        ->orderBy('id', 'asc')
+        ->get(['id']);
+
+        $nutrientProfiles = array();
+        foreach ($rdi_profiles as $rdi_profile) {
+            $nutrientProfiles[] = [
+              'rdi_profile_id' => $rdi_profile->id,
+              'nutrient_profile' => self::profileMeal($mealID, $rdi_profile->id)
+            ];
+        }
+
+        return $nutrientProfiles;
+    }
+
     public static function profileMeal($mealID, $rdiProfileID=1) {
         if (Meal::where('id', $mealID)->doesntExist()) return [];
         if (RdiProfile::where('id', $rdiProfileID)->doesntExist()) return [];
@@ -114,6 +137,29 @@ class NutrientProfileController extends Controller
         ]);
 
         return $result;
+    }
+
+    /**
+     *  Returns an array of NutrientProfiles of the inputted Food List; one
+     *  nutrient profile for each of the user's RDI profiles.
+     */
+    public static function getNutrientProfilesOfFoodList($mealID) {
+        $user = Auth::user();
+
+        $rdi_profiles = RdiProfile::where('user_id', null)
+        ->orWhere('user_id', $user ? $user->id : 0)
+        ->orderBy('id', 'asc')
+        ->get(['id']);
+
+        $nutrientProfiles = array();
+        foreach ($rdi_profiles as $rdi_profile) {
+            $nutrientProfiles[] = [
+              'rdi_profile_id' => $rdi_profile->id,
+              'nutrient_profile' => self::profileFoodList($mealID, $rdi_profile->id)
+            ];
+        }
+
+        return $nutrientProfiles;
     }
 
     public static function profileFoodList($foodListID, $rdiProfileID=1) {

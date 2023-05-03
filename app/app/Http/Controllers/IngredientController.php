@@ -199,7 +199,7 @@ class IngredientController extends Controller
                 'ingredient_category',
                 'density_g_per_ml'
             ]),
-            'nutrient_profiles' => NutrientProfileController::getNutrientProfileOfIngredient($ingredient->id),
+            'nutrient_profiles' => NutrientProfileController::getNutrientProfilesOfIngredient($ingredient->id),
             'rdi_profiles' => RdiProfile::where('user_id', null)
             ->orWhere('user_id', $user ? $user->id : 0)
             ->orderBy('id', 'asc')
