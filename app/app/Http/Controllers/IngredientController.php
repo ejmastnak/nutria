@@ -49,6 +49,7 @@ class IngredientController extends Controller
             'display_name',
             'unit_id',
             'nutrient_category_id',
+            'precision',
             'display_order_id'
         ]);
         $nutrients->load('unit:id,name');
@@ -236,7 +237,7 @@ class IngredientController extends Controller
                 ->join('nutrients', 'ingredient_nutrients.nutrient_id', '=', 'nutrients.id')
                 ->orderBy('nutrients.display_order_id', 'asc');
             },
-            'ingredient_nutrients.nutrient:id,display_name,nutrient_category_id,unit_id',
+            'ingredient_nutrients.nutrient:id,display_name,unit_id,nutrient_category_id,precision,display_order_id',
             'ingredient_nutrients.nutrient.unit:id,name'
         ]);
 

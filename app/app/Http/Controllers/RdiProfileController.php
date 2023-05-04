@@ -48,6 +48,7 @@ class RdiProfileController extends Controller
             'display_name',
             'unit_id',
             'nutrient_category_id',
+            "precision",
             'display_order_id'
         ]);
         $nutrients->load('unit:id,name');
@@ -95,7 +96,7 @@ class RdiProfileController extends Controller
                 ->join('nutrients', 'rdi_profile_nutrients.nutrient_id', '=', 'nutrients.id')
                 ->orderBy('nutrients.display_order_id', 'asc');
             },
-            'rdi_profile_nutrients.nutrient:id,display_name,unit_id,nutrient_category_id,display_order_id',
+            'rdi_profile_nutrients.nutrient:id,display_name,unit_id,nutrient_category_id,precision,display_order_id',
             'rdi_profile_nutrients.nutrient.unit:id,name'
         ]);
 
@@ -157,7 +158,7 @@ class RdiProfileController extends Controller
                 ->join('nutrients', 'rdi_profile_nutrients.nutrient_id', '=', 'nutrients.id')
                 ->orderBy('nutrients.display_order_id', 'asc');
             },
-            'rdi_profile_nutrients.nutrient:id,display_name,unit_id,nutrient_category_id,display_order_id',
+            'rdi_profile_nutrients.nutrient:id,display_name,unit_id,nutrient_category_id,precision,display_order_id',
             'rdi_profile_nutrients.nutrient.unit:id,name'
         ]);
 
@@ -195,7 +196,7 @@ class RdiProfileController extends Controller
                 ->join('nutrients', 'rdi_profile_nutrients.nutrient_id', '=', 'nutrients.id')
                 ->orderBy('nutrients.display_order_id', 'asc');
             },
-            'rdi_profile_nutrients.nutrient:id,display_name,unit_id,nutrient_category_id,display_order_id',
+            'rdi_profile_nutrients.nutrient:id,display_name,unit_id,nutrient_category_id,precision,display_order_id',
             'rdi_profile_nutrients.nutrient.unit:id,name'
         ]);
 
