@@ -10,6 +10,7 @@ Output: the selected object via modelValue.
 
 <script setup>
 import { ref, computed } from 'vue'
+import InputLabel from '@/Components/InputLabel.vue'
 import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/outline'
 import {
   Combobox,
@@ -59,8 +60,10 @@ const filteredOptions = computed(() =>
   <Combobox v-model="selectedValue">
 
     <div>
-      <ComboboxLabel class="block font-medium text-sm text-gray-600">
-        {{labelText}}
+      <ComboboxLabel>
+        <InputLabel>
+          {{labelText}}
+        </InputLabel>
       </ComboboxLabel>
       <div class="mt-1 relative">
         <ComboboxInput

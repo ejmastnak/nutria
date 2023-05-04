@@ -10,7 +10,7 @@ const props = defineProps({
   rdi_profiles: Array,
   howManyGrams: String,
   selectedRdiProfile: Object,
-  showMassInput: {
+  displayMassInput: {
     type: Boolean,
     default: true
   }
@@ -44,7 +44,7 @@ function updatedSelectedRdiProfile(newValue) {
       <div class="flex flex-col w-full whitespace-nowrap text-gray-900">
 
         <!-- Mass -->
-        <div v-if="showMassInput" class="flex items-baseline mb-4">
+        <div v-if="displayMassInput" class="flex items-baseline mb-4">
           <p class="mr-1">For</p>
           <div>
             <InputLabel for="howManyGramsInput" value="Mass" class="sr-only" />
@@ -64,6 +64,7 @@ function updatedSelectedRdiProfile(newValue) {
         <div class="w-fit">
           <SimpleCombobox
             comboboxInputClasses="py-px"
+            labelText="Intake guideline for % DV"
             :options="rdi_profiles"
             :modelValue="localSelectedRdiProfile"
             @update:modelValue="newValue => updatedSelectedRdiProfile(newValue)"
