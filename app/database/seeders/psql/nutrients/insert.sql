@@ -6,6 +6,7 @@ insert into nutrients(
   display_name,
   unit_id,
   nutrient_category_id,
+  precision,
   display_order_id
 )
 select
@@ -14,6 +15,7 @@ select
   tmp_nutrients.display_name,
   units.id,
   nutrient_categories.id,
+  tmp_nutrients.precision,
   tmp_nutrients.display_order_id
 from sr.nutrient
 inner join tmp_nutrients
