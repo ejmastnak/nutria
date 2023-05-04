@@ -4,9 +4,10 @@ import throttle from "lodash/throttle";
 import debounce from "lodash/debounce";
 
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
-import { Head, Link } from '@inertiajs/vue3'
+import { Head } from '@inertiajs/vue3'
 import { TrashIcon, PlusCircleIcon, DocumentDuplicateIcon, MagnifyingGlassIcon, XMarkIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import H1 from '@/Components/H1ForIndex.vue'
+import MyLink from '@/Components/MyLink.vue'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import InputLabel from '@/Components/InputLabel.vue'
@@ -151,30 +152,30 @@ export default {
           >
             <!-- Link to RDI profile show page -->
             <td scope="row" class="px-5 py-4 font-medium text-gray-900">
-              <Link
-                class="text-gray-800 hover:text-blue-600 hover:underline"
+              <MyLink
+                class="text-gray-800"
                 :href="route('rdi-profiles.show', profile.id)"
               >
                 {{profile.name}}
-              </Link>
+              </MyLink>
             </td>
             <!-- Edit and delete icons -->
             <td>
               <div class="flex items-center px-1.5">
 
-                <Link
+                <MyLink
                   class="mx-auto"
                   v-if="profile.can_edit"
                   :href="route('rdi-profiles.edit', profile.id)"
                 >
-                <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
-                </Link>
+                  <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
+                </MyLink>
 
                 <button
                   type="button"
                   v-if="profile.can_delete"
                   @click="deleteDialog.open(profile.id)"
-                  class="mx-auto"
+                  class="mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
                 >
                   <TrashIcon class="w-5 h-5 hover:text-red-700" />
                 </button>

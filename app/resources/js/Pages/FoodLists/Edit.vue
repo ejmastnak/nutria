@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { Head, Link } from '@inertiajs/vue3'
+import { Head } from '@inertiajs/vue3'
 import CreateOrEdit from './Partials/CreateOrEdit.vue'
 import CrudNavBar from '@/Shared/CrudNavBar.vue'
 import CrudNavBarView from '@/Shared/CrudNavBarView.vue'

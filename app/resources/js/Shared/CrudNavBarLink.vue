@@ -10,7 +10,7 @@ const props = defineProps({
 
 <template>
   <Link
-    class="hover:underline px-4 py-4 rounded-lg"
+    class="hover:underline px-4 py-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-700"
     :class="{
       'text-gray-300': !enabled,
       'hover:bg-blue-100': enabled,

@@ -1,6 +1,5 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { Head, Link } from '@inertiajs/vue3'
 import { useForm } from '@inertiajs/vue3'
 import SimpleCombobox from '@/Shared/SimpleCombobox.vue'
 import FuzzyCombobox from '@/Shared/FuzzyCombobox.vue'

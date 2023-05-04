@@ -90,7 +90,7 @@ watch(query, throttle(function (value) {
 
       </div>
 
-      <ComboboxOptions class="absolute z-50 overflow-hidden mt-0.5 bg-white border border-gray-300 text-gray-900 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+      <ComboboxOptions class="absolute z-50 overflow-hidden mt-0.5 bg-white border border-gray-300 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
         <!-- Options passed as props -->
         <ComboboxOption
           v-for="option in filteredOptions"

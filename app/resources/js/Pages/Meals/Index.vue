@@ -4,8 +4,9 @@ import throttle from "lodash/throttle";
 import debounce from "lodash/debounce";
 
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
-import { Head, Link } from '@inertiajs/vue3'
+import { Head } from '@inertiajs/vue3'
 import { TrashIcon, PlusCircleIcon, DocumentDuplicateIcon, MagnifyingGlassIcon, XMarkIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
+import MyLink from '@/Components/MyLink.vue'
 import H1 from '@/Components/H1ForIndex.vue'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -151,28 +152,28 @@ export default {
           >
             <!-- Link to meal show page -->
             <td scope="row" class="px-5 py-4 font-medium text-gray-900">
-              <Link
-                class="text-gray-800 hover:text-blue-600 hover:underline"
+              <MyLink
+                class="text-gray-800"
                 :href="route('meals.show', meal.id)"
               >
                 {{meal.name}}
-              </Link>
+              </MyLink>
             </td>
             <!-- Edit and delete icons -->
             <td>
               <div class="flex items-center px-1.5">
 
-                <Link
+                <MyLink
                   class="mx-auto"
                   :href="route('meals.edit', meal.id)"
                 >
-                <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
-                </Link>
+                <PencilSquareIcon class="w-5 h-5" />
+                </MyLink>
 
                 <button
                   type="button"
                   @click="deleteDialog.open(meal.id)"
-                  class="mx-auto"
+                  class="mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
                 >
                   <TrashIcon class="w-5 h-5 hover:text-red-700" />
                 </button>
@@ -191,17 +192,17 @@ export default {
         You haven't created any meals yet!
         <span v-if="can_create">
           Consider first
-          <Link :href="route('meals.create')" class="text-blue-500 hover:text-blue-600 hover:underline">creating a new meal</Link>
+          <MyLink :href="route('meals.create')" class="text-blue-500">creating a new meal</MyLink>
           or
           <button
             type="button"
-            class="text-blue-500 hover:text-blue-600 hover:underline"
+            class="text-blue-500 hover:text-blue-600 hover:underline p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
             @click="cloneExistingDialog.open()"
           >
             cloning an existing meal.
           </button>
         </span>
-        <span v-else>You need to <Link :href="route('login')" class="text-blue-500 hover:text-blue-600 hover:underline">log in</Link> to create meals.</span>
+        <span v-else>You need to <MyLink :href="route('login')" class="text-blue-500">log in</MyLink> to create meals.</span>
       </div>
 
     </section>

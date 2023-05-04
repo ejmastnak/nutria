@@ -1,5 +1,6 @@
 <script setup>
-import { Head, Link } from '@inertiajs/vue3'
+import { Head } from '@inertiajs/vue3'
+import MyLink from '@/Components/MyLink.vue'
 </script>
 
 <script>
@@ -16,10 +17,10 @@ export default {
     <h1 class="text-xl">Nutrient Profiler</h1>
 
     <ul class="mt-4">
-      <li><Link class="text-blue-500 hover:text-blue-600 hover:underline" :href="route('ingredients.index')">Ingredients</Link></li>
-      <li><Link class="text-blue-500 hover:text-blue-600 hover:underline" :href="route('meals.index')">Meals</Link></li>
-      <li><Link class="text-blue-500 hover:text-blue-600 hover:underline" :href="route('food-lists.index')">Food Lists</Link></li>
-      <li><Link class="text-blue-500 hover:text-blue-600 hover:underline" :href="route('rdi-profiles.index')">RDI Profiles</Link></li>
+      <li><MyLink class="text-blue-500" :href="route('ingredients.index')">Ingredients</MyLink></li>
+      <li><MyLink class="text-blue-500" :href="route('meals.index')">Meals</MyLink></li>
+      <li><MyLink class="text-blue-500" :href="route('food-lists.index')">Food Lists</MyLink></li>
+      <li><MyLink class="text-blue-500" :href="route('rdi-profiles.index')">RDI Profiles</MyLink></li>
     </ul>
   </div>
 </template>

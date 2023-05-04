@@ -32,14 +32,14 @@ function updatedSelectedRdiProfile(newValue) {
 <template>
   <Popover class="relative">
 
-    <PopoverButton class="-ml-2 px-2 py-1 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-700">
+    <PopoverButton class="-ml-2 px-2 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-700">
       <div class="flex items-center">
         <EllipsisHorizontalCircleIcon class="w-5 h-5 text-gray-600 mr-0.5" />
         <p class="text-gray-700">Options</p>
       </div>
     </PopoverButton>
 
-    <PopoverPanel class="absolute z-10 p-4 border border-gray-200 shadow-sm rounded-xl bg-white focus:outline-none focus:ring-1 focus:ring-blue-700">
+    <PopoverPanel class="absolute z-10 p-4 border border-gray-200 shadow-sm rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-700">
 
       <div class="flex flex-col w-full whitespace-nowrap text-gray-900">
 

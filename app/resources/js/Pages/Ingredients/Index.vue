@@ -4,12 +4,12 @@ import throttle from "lodash/throttle";
 import debounce from "lodash/debounce";
 
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
-import { Head, Link } from '@inertiajs/vue3'
+import { Head } from '@inertiajs/vue3'
 import { TrashIcon, PlusCircleIcon, DocumentDuplicateIcon, MagnifyingGlassIcon, XMarkIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
+import MyLink from '@/Components/MyLink.vue'
 import H1 from '@/Components/H1ForIndex.vue'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
-import InputLabel from '@/Components/InputLabel.vue'
 import MultiselectListbox from '@/Shared/MultiselectListbox.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
 import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
@@ -145,7 +145,7 @@ export default {
 
         <Tab as="template" v-slot="{ selected }">
           <button
-            class="px-4 py-2 text-sm text-gray-600 focus:outline-none focus:border-b-2 focus:border-blue-500 transition ease-in-out duration-150"
+            class="px-4 py-2 text-sm text-gray-600 focus:outline-none transition ease-in-out duration-150"
             :class="{
               'text-gray-800 font-semibold border-b-2 border-blue-500': selected,
               'hover:border-b-2 hover:border-gray-300': !selected
@@ -156,7 +156,7 @@ export default {
 
         <Tab as="template" v-slot="{ selected }">
           <button
-            class="px-4 py-2 text-sm text-gray-600 focus:outline-none focus:border-b-2 focus:border-blue-500 transition ease-in-out duration-150"
+            class="px-4 py-2 text-sm text-gray-600 focus:outline-none transition ease-in-out duration-150"
             :class="{
               'text-gray-800 font-semibold border-b-2 border-blue-500': selected,
               'hover:border-b-2 hover:border-gray-300': !selected
@@ -246,13 +246,13 @@ export default {
                   class="border-b"
                 >
                   <td scope="row" class="px-5 py-4 font-medium text-gray-900">
-                    <Link
+                    <MyLink
                       :href="route('ingredients.show', ingredient.id)"
-                      class="text-gray-800 hover:text-blue-600 hover:underline"
+                      class="text-gray-800"
                       preserve-state
                     >
                       {{ingredient.name}}
-                    </Link>
+                    </MyLink>
                   </td>
                   <td class="px-6 py-4">
                     {{ingredient.ingredient_category.name}}
@@ -336,12 +336,12 @@ export default {
                   class="border-b"
                 >
                   <td scope="row" class="px-5 py-4 font-medium text-gray-900">
-                    <Link
-                      class="text-gray-800 hover:text-blue-600 hover:underline"
+                    <MyLink
+                      class="text-gray-800"
                       :href="route('ingredients.show', ingredient.id)"
                     >
                       {{ingredient.name}}
-                    </Link>
+                    </MyLink>
                   </td>
                   <td class="px-6 py-4">
                     {{ingredient.ingredient_category.name}}
@@ -349,17 +349,17 @@ export default {
                   <td>
                     <div class="flex items-center px-1.5">
 
-                      <Link
+                      <MyLink
                         class="mx-auto"
                         :href="route('ingredients.edit', ingredient.id)"
                       >
                       <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
-                      </Link>
+                      </MyLink>
 
                       <button
                         type="button"
                         @click="deleteDialog.open(ingredient.id)"
-                        class="mx-auto"
+                        class="mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
                       >
                         <TrashIcon class="w-5 h-5 hover:text-red-700" />
                       </button>
@@ -379,17 +379,22 @@ export default {
             You haven't created any ingredients yet!
             <span v-if="can_create">
               Consider first
-              <Link :href="route('ingredients.create')" class="text-blue-500 hover:text-blue-600 hover:underline">creating a new ingredient</Link>
+              <MyLink
+                :href="route('ingredients.create')"
+                class="text-blue-500"
+              >
+                creating a new ingredient
+              </MyLink>
               or
               <button
                 type="button"
-                class="text-blue-500 hover:text-blue-600 hover:underline"
+                class="text-blue-500 hover:text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-700 p-px rounded-md"
                 @click="cloneExistingDialog.open()"
               >
                 cloning an existing ingredient.
               </button>
             </span>
-            <span v-else>You need to <Link :href="route('login')" class="text-blue-500 hover:text-blue-600 hover:underline">log in</Link> to create ingredients.</span>
+            <span v-else>You need to <MyLink :href="route('login')" class="text-blue-500">log in</MyLink> to create ingredients.</span>
           </section>
         </TabPanel>
 

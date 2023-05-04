@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
-import { Head, Link } from '@inertiajs/vue3'
+import { Head } from '@inertiajs/vue3'
 import NutrientProfile from '@/Shared/NutrientProfile.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
 import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
@@ -12,6 +12,7 @@ import CrudNavBarDelete from '@/Shared/CrudNavBarDelete.vue'
 import CrudNavBarCreate from '@/Shared/CrudNavBarCreate.vue'
 import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
 import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
+import MyLink from '@/Components/MyLink.vue'
 import H1 from '@/Components/H1ForCrud.vue'
 
 const props = defineProps({
@@ -97,12 +98,12 @@ export default {
             class="border-t text-gray-600 font-medium"
           >
             <td scope="row" class="px-4 py-2">
-              <Link
+              <MyLink
                 :href="route('ingredients.show', meal_ingredient.ingredient_id)"
-                class="text-gray-800 hover:text-blue-600 hover:underline"
+                class="text-gray-800"
               >
                 {{meal_ingredient.ingredient.name}}
-              </Link>
+              </MyLink>
             </td>
             <td class="px-3 py-2 text-right whitespace-nowrap">
               {{meal_ingredient.amount}}
