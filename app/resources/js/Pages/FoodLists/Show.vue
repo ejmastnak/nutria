@@ -2,10 +2,7 @@
 import { ref, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { Head, Link } from '@inertiajs/vue3'
-import { TrashIcon, DocumentDuplicateIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
-import NutrientProfile from '@/Shared/NutrientProfile.vue'
-import NutrientProfileOptions from '@/Shared/NutrientProfileOptions.vue'
-import FuzzyCombobox from '@/Shared/FuzzyCombobox.vue'
+import NutrientProfileMain from '@/Shared/NutrientProfileMain.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
 import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
 import CrudNavBar from '@/Shared/CrudNavBar.vue'
@@ -16,11 +13,6 @@ import CrudNavBarCreate from '@/Shared/CrudNavBarCreate.vue'
 import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
 import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
 import H1 from '@/Components/H1ForCrud.vue'
-import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
-import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
-import SecondaryButton from '@/Components/SecondaryButton.vue'
-import TextInput from '@/Components/TextInput.vue'
-import InputLabel from '@/Components/InputLabel.vue'
 
 const props = defineProps({
   food_list: Object,
@@ -34,9 +26,6 @@ const props = defineProps({
   can_create: Boolean
 })
 
-const howManyGrams = ref(props.food_list.mass_in_grams);
-const defaultMassInGrams = props.food_list.mass_in_grams
-
 const searchDialog = ref(null)
 const deleteDialog = ref(null)
 
@@ -45,12 +34,6 @@ function search() {
   router.get(route('food-lists.show', searchFoodList.value.id))
 }
 
-// Find index of nutrient profile with `rdi_profile_id` matching selectedRdiProfile
-const selectedRdiProfile = ref(props.rdi_profiles[0])
-const selectedNutrientProfile = computed(() => {
-  const idx = props.nutrient_profiles.map(profile => profile.rdi_profile_id).indexOf(selectedRdiProfile.value.id)
-  return props.nutrient_profiles[idx ?? 0].nutrient_profile
-})
 </script>
 
 <script>
@@ -166,26 +149,15 @@ export default {
 
     </div>
 
-    <section v-if="food_list.food_list_ingredients.length || food_list.food_list_meals.length" class="mt-10">
-
-      <h2 class="text-lg">Nutrient profile</h2>
-
-      <NutrientProfileOptions
-        :rdi_profiles="rdi_profiles"
-        v-model:how-many-grams="howManyGrams"
-        v-model:selected-rdi-profile="selectedRdiProfile"
-        :showMassInput="false"
-      />
-
-      <NutrientProfile
-        class="w-full mt-4"
-        :nutrient_profile="selectedNutrientProfile"
-        :nutrient_categories="nutrient_categories"
-        :howManyGrams="Number(howManyGrams)"
-        :defaultMassInGrams="Number(defaultMassInGrams)"
-      />
-
-    </section>
+    <NutrientProfileMain
+      v-if="food_list.food_list_ingredients.length || food_list.food_list_meals.length"
+      class="mt-8"
+      :rdi_profiles="rdi_profiles"
+      :nutrient_profiles="nutrient_profiles"
+      :nutrient_categories="nutrient_categories"
+      :defaultMassInGrams="Number(props.food_list.mass_in_grams)"
+      :displayMassInput="false"
+    />
 
     <SearchForThingAndGo
       ref="searchDialog"

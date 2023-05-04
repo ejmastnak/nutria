@@ -1,12 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
-import { Head, Link } from '@inertiajs/vue3'
-import { TrashIcon, DocumentDuplicateIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
-import NutrientProfile from '@/Shared/NutrientProfile.vue'
-import NutrientProfileOptions from '@/Shared/NutrientProfileOptions.vue'
-import FuzzyCombobox from '@/Shared/FuzzyCombobox.vue'
-import SimpleCombobox from '@/Shared/SimpleCombobox.vue'
+import { Head } from '@inertiajs/vue3'
+import NutrientProfileMain from '@/Shared/NutrientProfileMain.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
 import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
 import CrudNavBar from '@/Shared/CrudNavBar.vue'
@@ -17,11 +13,6 @@ import CrudNavBarCreate from '@/Shared/CrudNavBarCreate.vue'
 import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
 import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
 import H1 from '@/Components/H1ForCrud.vue'
-import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
-import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
-import SecondaryButton from '@/Components/SecondaryButton.vue'
-import TextInput from '@/Components/TextInput.vue'
-import InputLabel from '@/Components/InputLabel.vue'
 
 const props = defineProps({
   ingredient: Object,
@@ -35,9 +26,6 @@ const props = defineProps({
   can_create: Boolean
 })
 
-const howManyGrams = ref("100");
-const defaultMassInGrams = 100
-
 const searchDialog = ref(null)
 const deleteDialog = ref(null)
 
@@ -45,13 +33,6 @@ const searchIngredient = ref({})
 function search() {
   router.get(route('ingredients.show', searchIngredient.value.id))
 }
-
-// Find index of nutrient profile with `rdi_profile_id` matching selectedRdiProfile
-const selectedRdiProfile = ref(props.rdi_profiles[0])
-const selectedNutrientProfile = computed(() => {
-  const idx = props.nutrient_profiles.map(profile => profile.rdi_profile_id).indexOf(selectedRdiProfile.value.id)
-  return props.nutrient_profiles[idx ?? 0].nutrient_profile
-})
 
 </script>
 
@@ -94,30 +75,18 @@ export default {
         <div v-if="ingredient.density_g_per_ml" class="ml-2 mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
           {{ingredient.density_g_per_ml}} g/ml
         </div>
-
       </div>
 
     </div>
 
-    <section class="mt-10">
-
-      <h2 class="text-lg">Nutrient profile</h2>
-
-      <NutrientProfileOptions
-        :rdi_profiles="rdi_profiles"
-        v-model:how-many-grams="howManyGrams"
-        v-model:selected-rdi-profile="selectedRdiProfile"
-      />
-
-      <NutrientProfile
-        class="w-full mt-4"
-        :nutrient_profile="selectedNutrientProfile"
-        :nutrient_categories="nutrient_categories"
-        :howManyGrams="Number(howManyGrams)"
-        :defaultMassInGrams="Number(defaultMassInGrams)"
-      />
-
-    </section>
+    <NutrientProfileMain
+      class="mt-8"
+      :rdi_profiles="rdi_profiles"
+      :nutrient_profiles="nutrient_profiles"
+      :nutrient_categories="nutrient_categories"
+      :defaultMassInGrams="100"
+      :displayMassInput="true"
+    />
 
     <SearchForThingAndGo
       ref="searchDialog"
