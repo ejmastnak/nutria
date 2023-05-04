@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { Head } from '@inertiajs/vue3'
+import { round } from '@/utils/GlobalFunctions.js'
 import NutrientProfile from '@/Shared/NutrientProfile.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
 import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
@@ -73,7 +74,7 @@ export default {
         </div>
 
         <div v-if="ingredient.density_g_per_ml" class="ml-2 mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
-          {{ingredient.density_g_per_ml}} g/ml
+          {{round(Number(ingredient.density_g_per_ml), 2)}} g/ml
         </div>
       </div>
 

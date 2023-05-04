@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useForm } from '@inertiajs/vue3'
+import { round } from '@/utils/GlobalFunctions.js'
 import SimpleCombobox from '@/Shared/SimpleCombobox.vue'
 import FuzzyCombobox from '@/Shared/FuzzyCombobox.vue'
 import { PlusCircleIcon, TrashIcon } from '@heroicons/vue/24/outline'
@@ -28,7 +29,7 @@ const form = useForm({
     id: meal_ingredient.id,
     meal_id: meal_ingredient.meal_id,
     ingredient_id: meal_ingredient.ingredient_id,
-    amount: meal_ingredient.amount,
+    amount: round(Number(meal_ingredient.amount), 1).toString(),
     unit_id: meal_ingredient.unit_id,
     ingredient: meal_ingredient.ingredient,
     unit: meal_ingredient.unit

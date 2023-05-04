@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { Head } from '@inertiajs/vue3'
+import { round } from '@/utils/GlobalFunctions.js'
 import NutrientProfile from '@/Shared/NutrientProfile.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
 import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
@@ -71,7 +72,7 @@ export default {
         </div>
 
         <div class="ml-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
-          {{meal.mass_in_grams}} g
+          {{round(Number(meal.mass_in_grams))}} g
         </div>
 
       </div>
@@ -106,7 +107,7 @@ export default {
               </MyLink>
             </td>
             <td class="px-3 py-2 text-right whitespace-nowrap">
-              {{meal_ingredient.amount}}
+              {{round(Number(meal_ingredient.amount), 1)}}
               {{meal_ingredient.unit.name}}
             </td>
           </tr>

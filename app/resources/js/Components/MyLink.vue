@@ -9,7 +9,7 @@ const props = defineProps({
 <template>
   <Link
     :href="href"
-    class="hover:text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-700 rounded-md p-px"
+    class="p-px rounded-md hover:text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-700"
   >
     <slot />
   </Link>

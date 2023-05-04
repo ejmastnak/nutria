@@ -1,4 +1,5 @@
 <script setup>
+import { round } from '@/utils/GlobalFunctions.js'
 const props = defineProps({rdi_profile_nutrients: Array})
 </script>
 
@@ -24,8 +25,8 @@ const props = defineProps({rdi_profile_nutrients: Array})
           <td scope="row" class="px-4 py-2">
             {{rdi_profile_nutrient.nutrient.display_name}}
           </td>
-          <td class="pl-3 pr-2 py-2 text-right">
-            {{rdi_profile_nutrient.rdi}}
+          <td class="pl-3 py-2 text-right">
+            {{round(Number(rdi_profile_nutrient.rdi), rdi_profile_nutrient.nutrient.precision)}}
           </td>
           <td class="px-1 py-2 text-left whitespace-nowrap">
             {{rdi_profile_nutrient.nutrient.unit.name}}

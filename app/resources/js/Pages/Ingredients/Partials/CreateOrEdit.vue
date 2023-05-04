@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
 import { useForm } from '@inertiajs/vue3'
+import { round } from '@/utils/GlobalFunctions.js'
 import SimpleCombobox from '@/Shared/SimpleCombobox.vue'
 import TextInput from '@/Components/TextInput.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
@@ -20,7 +21,7 @@ const props = defineProps({
 const form = useForm({
   name: props.ingredient.name ?? "",
   ingredient_category_id: props.ingredient.ingredient_category_id ?? 0,
-  density_g_per_ml: props.ingredient.density_g_per_ml ? props.ingredient.density_g_per_ml.toString() : "",
+  density_g_per_ml: props.ingredient.density_g_per_ml ? round(Number(props.ingredient.density_g_per_ml), 2).toString() : "",
   ingredient_nutrients: props.ingredient.ingredient_nutrients.map((ingredient_nutrient, index) => ({
     id: props.create ? 0 : ingredient_nutrient.id,
     idx: index,
@@ -28,7 +29,7 @@ const form = useForm({
     nutrient_category_id: ingredient_nutrient.nutrient.nutrient_category_id,
     name: ingredient_nutrient.nutrient.display_name,
     unit: ingredient_nutrient.nutrient.unit.name,
-    amount_per_100g: ingredient_nutrient.amount_per_100g.toString()
+    amount_per_100g: round(Number(ingredient_nutrient.amount_per_100g), ingredient_nutrient.nutrient.precision).toString()
   }))
 })
 

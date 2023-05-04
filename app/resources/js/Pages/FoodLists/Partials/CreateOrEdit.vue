@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
 import { useForm } from '@inertiajs/vue3'
+import { round } from '@/utils/GlobalFunctions.js'
 import SimpleCombobox from '@/Shared/SimpleCombobox.vue'
 import FuzzyCombobox from '@/Shared/FuzzyCombobox.vue'
 import { PlusCircleIcon, TrashIcon } from '@heroicons/vue/24/outline'
@@ -30,7 +31,7 @@ const form = useForm({
     id: fli.id,
     food_list_id: fli.food_list_id,
     ingredient_id: fli.ingredient_id,
-    amount: fli.amount,
+    amount: round(Number(fli.amount), 1).toString(),
     unit_id: fli.unit_id,
     ingredient: fli.ingredient,
     unit: fli.unit
@@ -40,7 +41,7 @@ const form = useForm({
     id: flm.id,
     food_list_id: flm.food_list_id,
     meal_id: flm.meal_id,
-    amount: flm.amount,
+    amount: round(Number(flm.amount), 1).toString(),
     unit_id: flm.unit_id,
     meal: flm.meal,
     unit: flm.unit
@@ -102,7 +103,7 @@ function updateFoodListIngredient(foodListIngredient, newIngredient) {
 function updateFoodListMeal(foodListMeal, newMeal) {
   foodListMeal.meal_id = newMeal.id
   foodListMeal.meal = newMeal
-  foodListMeal.amount = newMeal.mass_in_grams.toString()
+  foodListMeal.amount = round(round(Number(newMeal.mass_in_grams), 1)).toString()
 }
 
 function deleteFoodListIngredient(id) {

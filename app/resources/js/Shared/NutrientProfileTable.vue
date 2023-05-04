@@ -1,4 +1,6 @@
 <script setup>
+import { round } from '@/utils/GlobalFunctions.js'
+
 const props = defineProps({
   nutrient_profile: Array,
   howManyGrams: Number,
@@ -35,10 +37,6 @@ function scale(num) {
   return num*props.howManyGrams/props.defaultMassInGrams
 }
 
-function round(num, scaleBy=100) {
-  return Math.round((num + Number.EPSILON) * scaleBy) / scaleBy
-}
-
 </script>
 
 <template>
@@ -66,11 +64,11 @@ function round(num, scaleBy=100) {
             {{nutrient.nutrient}}
           </td>
           <td class="px-3 py-2 text-right whitespace-nowrap">
-            {{round(scale(nutrient.amount))}}
+            {{round(scale(nutrient.amount), precision=nutrient.precision)}}
             {{nutrient.unit}}
           </td>
           <td class="px-3 py-2 text-right font-semibold text-gray-600" :class="bg(scale(nutrient.pdv))">
-            {{round(scale(nutrient.pdv), scaleBy=1)}}<span class="ml-px">%</span>
+            {{round(scale(nutrient.pdv), precision=0)}}<span class="ml-px">%</span>
           </td>
         </tr>
       </tbody>

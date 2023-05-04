@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
 import { useForm } from '@inertiajs/vue3'
+import { round } from '@/utils/GlobalFunctions.js'
 import SimpleCombobox from '@/Shared/SimpleCombobox.vue'
 import TextInput from '@/Components/TextInput.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
@@ -22,7 +23,7 @@ const form = useForm({
     idx: index,
     id: props.create ? 0 : rdi_profile_nutrient.id,
     nutrient_id: rdi_profile_nutrient.nutrient_id,
-    rdi: rdi_profile_nutrient.rdi.toString(),
+    rdi: round(Number(rdi_profile_nutrient.rdi), rdi_profile_nutrient.nutrient.precision).toString(),
     nutrient: {
       id: rdi_profile_nutrient.nutrient.id,
       name: rdi_profile_nutrient.nutrient.display_name,
