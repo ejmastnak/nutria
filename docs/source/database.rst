@@ -42,6 +42,7 @@ Nutrient
 - ``display_name``
 - ``unit_id``
 - ``nutrient_category_id``
+- ``precision``
 - ``display_order_id``
 
 Ingredient category

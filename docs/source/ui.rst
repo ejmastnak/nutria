@@ -94,7 +94,7 @@ Purpose: display an ingredient's name, properties, and nutrient profile.
         "id": 0,
         "name": "Bar"
       },
-      "density_g_per_ml": 0
+      "density_g_per_ml": 0.0
     },
     "nutrient_profiles": [
       {
@@ -104,6 +104,7 @@ Purpose: display an ingredient's name, properties, and nutrient profile.
             "nutrient": "Baz",
             "nutrient_category_id": 0,
             "amount": 42,
+            "precision": 0,
             "unit": "g",
             "pdv": 100
           }
@@ -177,7 +178,9 @@ Purpose: create a new Ingredient.
             "id": 0,
             "display_name": "Foo",
             "unit_id": 0,
-            "nutrient_category_id": 0.0,
+            "nutrient_category_id": 0,
+            "precision": 0,
+            "display_order_id": 0,
             "unit": {
               "id": 0,
               "name": "Bar"
@@ -263,6 +266,8 @@ Edit
             "display_name": "Baz",
             "unit_id": 0,
             "nutrient_category_id": 0,
+            "precision": 0,
+            "display_order_id": 0,
             "unit": {
               "id": 0,
               "name": "Bop"
@@ -377,6 +382,7 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
     "meal": {
       "id": 0,
       "name": "Foo",
+      "mass_in_grams": 0.0,
       "meal_ingredients": [
         {
           "id": 0,
@@ -403,6 +409,7 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
             "nutrient": "Blah",
             "nutrient_category_id": 0,
             "amount": 42,
+            "precision": 0,
             "unit": "g",
             "pdv": 100
           }
@@ -722,6 +729,7 @@ Show
             "nutrient": "Blah",
             "nutrient_category_id": 0,
             "amount": 42,
+            "precision": 0,
             "unit": "g",
             "pdv": 100
           }
@@ -838,7 +846,7 @@ Purpose: create a new Food List
 - ``food_lists`` for "Search for another" and "Clone existing"
 - ``ingredients`` (FDA *and* user ingredients) to use as FoodListIngredients.
   ``density_g_per_ml`` to determine if ingredient amount can be specified in volume units.
-- ``meals`` to use as FoodListMeals (pass ``mass_in_grams`` to use as default meal mass)
+- ``meals`` to use as FoodListMeals (``mass_in_grams`` to use as default meal mass)
 - ``ingredient_categories`` for filtering Ingredients when searching
 - ``units`` to specify amount of each FoodListIngredient and FoodListMeal
 - ``clone`` to conditionally display "Cloned from Foo" message
@@ -967,7 +975,7 @@ Purpose: update an existing new Food List
 - ``food_lists`` for "Search for another" and "Clone existing"
 - ``ingredients`` (FDA *and* user ingredients) to use as FoodListIngredients
   ``density_g_per_ml`` to determine if ingredient amount can be specified in volume units.
-- ``meals`` to use as FoodListMeals
+- ``meals`` to use as FoodListMeals (``mass_in_grams`` to use as default meal mass)
 - ``ingredient_categories`` for filtering Ingredients when searching
 - ``units`` to specify amount of each FoodListIngredient and FoodListMeal
 - Auth props to conditionally display View, Clone, Delete, Create buttons.
@@ -1069,6 +1077,7 @@ Purpose: display the RDI value for every nutrient in an RDI profile.
             "display_name": "Bar",
             "unit_id": 0,
             "nutrient_category_id": 0,
+            "precision": 0,
             "display_order_id": 0,
             "unit": {
               "id": 0,
@@ -1142,6 +1151,7 @@ Purpose: create a new RDI Profile.
             "display_name": "Bar",
             "unit_id": 0,
             "nutrient_category_id": 0,
+            "precision": 0,
             "display_order_id": 0,
             "unit": {
               "id": 0,
@@ -1220,6 +1230,7 @@ Purpose: update an existing RDI Profile.
             "display_name": "Bar",
             "unit_id": 0,
             "nutrient_category_id": 0,
+            "precision": 0,
             "display_order_id": 0,
             "unit": {
               "id": 0,
