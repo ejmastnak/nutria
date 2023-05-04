@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { Head } from '@inertiajs/vue3'
-import NutrientProfileMain from '@/Shared/NutrientProfileMain.vue'
+import NutrientProfile from '@/Shared/NutrientProfile.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
 import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
 import CrudNavBar from '@/Shared/CrudNavBar.vue'
@@ -79,7 +79,7 @@ export default {
 
     </div>
 
-    <NutrientProfileMain
+    <NutrientProfile
       class="mt-8"
       :rdi_profiles="rdi_profiles"
       :nutrient_profiles="nutrient_profiles"

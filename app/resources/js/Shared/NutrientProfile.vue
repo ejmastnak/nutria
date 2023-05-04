@@ -1,31 +1,47 @@
 <script setup>
-import NutrientProfileTable from '@/Shared/NutrientProfileTable.vue'
+import { ref, computed } from 'vue'
+import NutrientProfileTables from '@/Shared/NutrientProfileTables.vue'
+import NutrientProfileOptions from '@/Shared/NutrientProfileOptions.vue'
+
 const props = defineProps({
-  nutrient_profile: Array,
+  rdi_profiles: Array,
+  nutrient_profiles: Array,
   nutrient_categories: Array,
-  howManyGrams: Number,
-  defaultMassInGrams: Number
+  defaultMassInGrams: Number,
+  displayMassInput: Boolean
 })
 
+// Converted to String for use in text input field
+const howManyGrams = ref(props.defaultMassInGrams.toString());
+
+// Find index of nutrient profile with `rdi_profile_id` matching
+// selectedRdiProfile
+const selectedRdiProfile = ref(props.rdi_profiles[0])
+const selectedNutrientProfile = computed(() => {
+  const idx = props.nutrient_profiles.map(profile => profile.rdi_profile_id).indexOf(selectedRdiProfile.value.id)
+  return props.nutrient_profiles[idx ?? 0].nutrient_profile
+})
 </script>
 
 <template>
+  <section>
 
-  <div class="grid grid-cols-1 lg:flex md:space-x-4">
+    <h2 class="text-lg">Nutrient profile</h2>
 
-    <div
-      v-for="nc in nutrient_categories"
-      :key="nc.id"
-      class="col-span-1 sm:w-3/4 md:2/3"
-    >
-      <h2 class="text-md text-gray-900">{{nc.name}}s</h2>
-      <NutrientProfileTable
-        :nutrient_profile="nutrient_profile.filter(nutrient => nutrient.nutrient_category_id === nc.id)"
-        :howManyGrams="howManyGrams"
-        :defaultMassInGrams="defaultMassInGrams"
-      />
-    </div>
+    <NutrientProfileOptions
+      :rdi_profiles="rdi_profiles"
+      :displayMassInput="displayMassInput"
+      v-model:how-many-grams="howManyGrams"
+      v-model:selected-rdi-profile="selectedRdiProfile"
+    />
 
-  </div>
+    <NutrientProfileTables
+      class="w-full mt-4"
+      :nutrient_profile="selectedNutrientProfile"
+      :nutrient_categories="nutrient_categories"
+      :howManyGrams="Number(howManyGrams)"
+      :defaultMassInGrams="defaultMassInGrams"
+    />
 
-  </template>
+  </section>
+</template>
