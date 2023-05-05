@@ -5,9 +5,9 @@ Some notes on computing nutrient profiles.
 
 Basic API is a ``NutrientProfileController`` controller supporting the functions
 
-- ``profileIngredient($ingredientID, $rdiProfileID)``
-- ``profileMeal($mealID, $rdiProfileID)``
-- ``profileFoodList($foodListID, $rdiProfileID)``
+- ``profileIngredient($ingredientID, $intakeGuidelineID)``
+- ``profileMeal($mealID, $intakeGuidelineID)``
+- ``profileFoodList($foodListID, $intakeGuidelineID)``
 
 Each function returns an array of arrays with the structure
 
@@ -49,7 +49,7 @@ For 100 grams of ingredient:
     nutrients.precision as precision,
     round(ingredient_nutrients.amount_per_100g, 3) as amount,
     units.name as unit,
-    round((ingredient_nutrients.amount_per_100g / nullif(rdi_profile_nutrients.rdi, 0)) * 100, 2) as pdv
+    round((ingredient_nutrients.amount_per_100g / nullif(intake_guideline_nutrients.rdi, 0)) * 100, 2) as pdv
   from ingredient_nutrients
   inner join nutrients
     on nutrients.id
@@ -57,17 +57,17 @@ For 100 grams of ingredient:
   inner join units
     on units.id
     = nutrients.unit_id
-  inner join rdi_profile_nutrients
-    on rdi_profile_nutrients.rdi_profile_id
-    = :'rdi_profile_id'
-    and rdi_profile_nutrients.nutrient_id
+  inner join intake_guideline_nutrients
+    on intake_guideline_nutrients.intake_guideline_id
+    = :'intake_guideline_id'
+    and intake_guideline_nutrients.nutrient_id
     = ingredient_nutrients.nutrient_id
   where ingredient_nutrients.ingredient_id=:'ingredient_id'
   order by nutrients.display_order_id;
 
 Comments: 
 
-- **PDV:** The ``nullif`` basically allows you to have RDI Profiles where non-beneficial nutrients have no RDI and corresponding null PDV values in nutrient profiles.
+- **PDV:** The ``nullif`` basically allows you to have Intake Guidelines where non-beneficial nutrients have no RDI and corresponding null PDV values in nutrient profiles.
   Use case: set a ``0`` or null ``rdi`` value for e.g. sugar, and than have a null PDV reported for sugar in nutrient profiles.
 - **PDV:** Multiply by 100 to convert PDV to percentage
 
@@ -102,7 +102,7 @@ Profile Meal
     nutrients.precision as precision,
     round(sum((ingredient_nutrients.amount_per_100g / 100) * meal_ingredients.mass_in_grams), 3) as amount,
     units.name as unit,
-    round(sum(ingredient_nutrients.amount_per_100g * meal_ingredients.mass_in_grams / nullif(rdi_profile_nutrients.rdi, 0)), 2) as pdv
+    round(sum(ingredient_nutrients.amount_per_100g * meal_ingredients.mass_in_grams / nullif(intake_guideline_nutrients.rdi, 0)), 2) as pdv
   from ingredient_nutrients
   inner join meal_ingredients
     on ingredient_nutrients.ingredient_id
@@ -115,10 +115,10 @@ Profile Meal
   inner join units
     on units.id
     = nutrients.unit_id
-  inner join rdi_profile_nutrients
-    on rdi_profile_nutrients.rdi_profile_id
-    = :'rdi_profile_id'
-    and rdi_profile_nutrients.nutrient_id
+  inner join intake_guideline_nutrients
+    on intake_guideline_nutrients.intake_guideline_id
+    = :'intake_guideline_id'
+    and intake_guideline_nutrients.nutrient_id
     = ingredient_nutrients.nutrient_id
   group by nutrients.id, units.name
   order by nutrients.display_order_id;
@@ -171,7 +171,7 @@ Profile Food List Ingredients
   select
     nutrients.id as nutrient_id,
     round(sum((ingredient_nutrients.amount_per_100g / 100) * food_list_ingredients.mass_in_grams), 3) as amount,
-    round(sum(ingredient_nutrients.amount_per_100g * food_list_ingredients.mass_in_grams / nullif(rdi_profile_nutrients.rdi, 0)), 2) as pdv
+    round(sum(ingredient_nutrients.amount_per_100g * food_list_ingredients.mass_in_grams / nullif(intake_guideline_nutrients.rdi, 0)), 2) as pdv
   from ingredient_nutrients
   inner join food_list_ingredients
     on ingredient_nutrients.ingredient_id
@@ -181,10 +181,10 @@ Profile Food List Ingredients
   inner join nutrients
     on nutrients.id
     = ingredient_nutrients.nutrient_id  
-  inner join rdi_profile_nutrients
-    on rdi_profile_nutrients.rdi_profile_id
-    = :'rdi_profile_id'
-    and rdi_profile_nutrients.nutrient_id
+  inner join intake_guideline_nutrients
+    on intake_guideline_nutrients.intake_guideline_id
+    = :'intake_guideline_id'
+    and intake_guideline_nutrients.nutrient_id
     = ingredient_nutrients.nutrient_id
   group by nutrients.id
 
@@ -201,7 +201,7 @@ Profile Food List Meals
   select
     nutrients.id as nutrient_id,
     round(sum((ingredient_nutrients.amount_per_100g / 100) * meal_ingredients.mass_in_grams * (food_list_meals.mass_in_grams / meals.mass_in_grams)), 3) as amount,
-    round(sum(ingredient_nutrients.amount_per_100g * (meal_ingredients.mass_in_grams / nullif(rdi_profile_nutrients.rdi, 0)) * (food_list_meals.mass_in_grams / meals.mass_in_grams)), 2) as pdv
+    round(sum(ingredient_nutrients.amount_per_100g * (meal_ingredients.mass_in_grams / nullif(intake_guideline_nutrients.rdi, 0)) * (food_list_meals.mass_in_grams / meals.mass_in_grams)), 2) as pdv
   from ingredient_nutrients
   inner join food_list_meals
     on food_list_meals.food_list_id
@@ -217,10 +217,10 @@ Profile Food List Meals
   inner join nutrients
     on nutrients.id
     = ingredient_nutrients.nutrient_id  
-  inner join rdi_profile_nutrients
-    on rdi_profile_nutrients.rdi_profile_id
-    = :'rdi_profile_id'
-    and rdi_profile_nutrients.nutrient_id
+  inner join intake_guideline_nutrients
+    on intake_guideline_nutrients.intake_guideline_id
+    = :'intake_guideline_id'
+    and intake_guideline_nutrients.nutrient_id
     = ingredient_nutrients.nutrient_id
   group by nutrients.id
 

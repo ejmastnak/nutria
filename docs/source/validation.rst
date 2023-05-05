@@ -206,10 +206,10 @@ Create or Update Food List
 
 - **Meals:** delete/create/update protocol using existing ``foodList->food_list_meals`` in database and supplied ``food_list_meals`` array.
 
-.. _validation-crud-rdi-profile:
+.. _validation-crud-intake-guideline:
 
-Create or Update RDI profile
-----------------------------
+Create or Update Intake Guideline
+---------------------------------
 
 Incoming request looks like
 
@@ -217,7 +217,7 @@ Incoming request looks like
   
   {
     "name": "Foo",
-    "rdi_profile_nutrients": [
+    "intake_guideline_nutrients": [
       {
         "id": 0,
         "nutrient_id": 0,
@@ -229,24 +229,24 @@ Incoming request looks like
 **Validate**
 
 - ``name`` is a string with sane min and max length.
-- ``rdi_profile_nutrients`` is a required array with exactly one entry for every Nutrient (distinct keys and length equal to ``Nutrients::count()``)  
-- ``rdi_profile_nutrients.*.id`` is a required integer
-- ``rdi_profile_nutrients.*.nutrient_id`` is a required integer present in ``nutrients,id`` with distinct values for every entry in ``rdi_profile_nutrients``
-- ``rdi_profile_nutrients.*.rdi`` is a required positive float
+- ``intake_guideline_nutrients`` is a required array with exactly one entry for every Nutrient (distinct keys and length equal to ``Nutrients::count()``)  
+- ``intake_guideline_nutrients.*.id`` is a required integer
+- ``intake_guideline_nutrients.*.nutrient_id`` is a required integer present in ``nutrients,id`` with distinct values for every entry in ``intake_guideline_nutrients``
+- ``intake_guideline_nutrients.*.rdi`` is a required positive float
 
 **Create**
 
-- ``rdi_profile`` record with supplied ``name`` and ``user_id`` of user who made create request
-- For each entry in ``rdi_profile_nutrients``, create ``rdi_profile_nutrient`` record with
+- ``intake_guideline`` record with supplied ``name`` and ``user_id`` of user who made create request
+- For each entry in ``intake_guideline_nutrients``, create ``intake_guideline_nutrient`` record with
 
-  - ``rdi_profile_id`` of ``rdi_profile`` record
+  - ``intake_guideline_id`` of ``intake_guideline`` record
   - supplied ``nutrient_id`` value
   - supplied ``rdi`` value
 
 **Update**
 
-- ``rdi_profile`` record with supplied ``name``
-- For each entry in ``rdi_profile_nutrients``, look up corresponding ``rdi_profile_nutrient`` record based on ``rdi_profile_nutrients.*.id``, then update ``rdi`` with supplied ``rdi``.
+- ``intake_guideline`` record with supplied ``name``
+- For each entry in ``intake_guideline_nutrients``, look up corresponding ``intake_guideline_nutrient`` record based on ``intake_guideline_nutrients.*.id``, then update ``rdi`` with supplied ``rdi``.
 
 Computing mass
 --------------

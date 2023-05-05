@@ -9,7 +9,7 @@ Home
 - Ingredients Index
 - Meals Index
 - Food List Index
-- RDI Profile Index
+- Intake Guideline Index
 
 **Actions**
 
@@ -98,7 +98,7 @@ Purpose: display an ingredient's name, properties, and nutrient profile.
     },
     "nutrient_profiles": [
       {
-        "rdi_profile_id": 0,
+        "intake_guideline_id": 0,
         "nutrient_profile": [
           {
             "nutrient": "Baz",
@@ -111,7 +111,7 @@ Purpose: display an ingredient's name, properties, and nutrient profile.
         ]
       }
     ],
-    "rdi_profiles": [
+    "intake_guidelines": [
       {
         "id": 0,
         "name": "Boop"
@@ -138,12 +138,12 @@ Purpose: display an ingredient's name, properties, and nutrient profile.
 
 - ``ingredient`` to display ingredient info
 - ``nutrient_profiles`` to display ingredient's nutrient profile(s)
-- ``rdi_profiles`` to show nutrient profiles for different RDI profiles
+- ``intake_guidelines`` to show nutrient profiles for different intake guidelines
 - ``ingredients`` for "Search for another ingredient" without having to go back to Ingredients/Index
 - ``nutrient_categories`` only to pass to NutrientProfile component to split up nutrient profile into vitamins, minerals, macronutrients.
 - Auth props to conditionally display Edit, Clone, Delete, and Create buttons.
 
-**UI:** Standard RDI profile table.
+**UI:** Standard intake guideline table.
 
 **Links to:**
 
@@ -403,7 +403,7 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
     },
     "nutrient_profiles": [
       {
-        "rdi_profile_id": 0,
+        "intake_guideline_id": 0,
         "nutrient_profile": [
           {
             "nutrient": "Blah",
@@ -416,7 +416,7 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
         ]
       }
     ],
-    "rdi_profiles": [
+    "intake_guidelines": [
       {
         "id": 0,
         "name": "Bap"
@@ -442,7 +442,7 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
 
 - ``meal`` to display meal info
 - ``nutrient_profiles`` to display meal's nutrient profile(s)
-- ``rdi_profiles`` to show nutrient profiles for different RDI profiles
+- ``intake_guidelines`` to show nutrient profiles for different intake guidelines
 - ``meals`` for "Search for another meal"
 - ``nutrient_categories`` to split up nutrient profile into vitamins, minerals, macronutrients
 - Auth props to conditionally display Edit, Clone, Delete, and Create buttons.
@@ -723,7 +723,7 @@ Show
     },
     "nutrient_profiles": [
       {
-        "rdi_profile_id": 0,
+        "intake_guideline_id": 0,
         "nutrient_profile": [
           {
             "nutrient": "Blah",
@@ -736,7 +736,7 @@ Show
         ]
       }
     ],
-    "rdi_profiles": [
+    "intake_guidelines": [
       {
         "id": 0,
         "name": "Bap"
@@ -762,7 +762,7 @@ Show
 
 - ``food_list`` to display food list info (``mass_in_grams`` to pass to NutrientProfile)
 - ``nutrient_profiles`` to display food list's nutrient profile(s)
-- ``rdi_profiles`` to show nutrient profiles for different RDI profiles
+- ``intake_guidelines`` to show nutrient profiles for different intake guidelines
 - ``food_lists`` to "Search for another food list"
 - ``nutrient_categories`` to split up nutrient profile into vitamins, minerals, macronutrients
 - Auth props to conditionally display Edit, Clone, Delete, and Create buttons.
@@ -1010,20 +1010,20 @@ FoodListMeals in table with columns:
 - Store
 - Cancel
 
-RDI Profile CRUD
-----------------
+Intake Guideline CRUD
+---------------------
 
 Index
 ^^^^^
 
-Purpose: display an overview of all RDI profiles as an intermediate step to navigating to a specific profile.
+Purpose: display an overview of all intake guidelines as an intermediate step to navigating to a specific profile.
 
 **Props**
 
 .. code-block:: json
 
   {
-    "rdi_profiles": [
+    "intake_guidelines": [
       {
         "id": 0,
         "name": "Foo",
@@ -1034,19 +1034,19 @@ Purpose: display an overview of all RDI profiles as an intermediate step to navi
     "can_create": false
   }
 
-- ``rdi_profiles`` to display all RDI profiles.
-  I'm merging built-in FDA RDI profile with user RDI profiles; ``can_edit`` and ``can_delete`` are to conditionally display edit/delete links for user profiles.
+- ``intake_guidelines`` to display all intake guidelines.
+  I'm merging built-in FDA intake guideline with user intake guidelines; ``can_edit`` and ``can_delete`` are to conditionally display edit/delete links for user profiles.
 - ``can_create`` to conditionally display Create and Clone buttons.
 
 **UI**
 
 Table with columns for:
 
-- RDI Profile name (links to Show)
+- Intake Guideline name (links to Show)
 - Pencil icon (links to Edit)
 - Trash icon (links to Destroy)
 
-Filter by RDI profile name (fuzzy search filter)
+Filter by intake guideline name (fuzzy search filter)
 
 **Links to:**
 
@@ -1056,20 +1056,20 @@ Filter by RDI profile name (fuzzy search filter)
 Show
 ^^^^
 
-Purpose: display the RDI value for every nutrient in an RDI profile.
+Purpose: display the recommended daily intake for every nutrient in an intake guideline.
 
 **Props**
 
 .. code-block:: json
 
   {
-    "rdi_profile": {
+    "intake_guideline": {
       "id": 0,
       "name": "Foo",
-      "rdi_profile_nutrients": [
+      "intake_guideline_nutrients": [
         {
           "id": 0,
-          "rdi_profile_id": 0,
+          "intake_guideline_id": 0,
           "nutrient_id": 0,
           "rdi": 0.0,
           "nutrient": {
@@ -1087,7 +1087,7 @@ Purpose: display the RDI value for every nutrient in an RDI profile.
         }
       ]
     },
-    "rdi_profiles": [
+    "intake_guidelines": [
       {
         "id": 0,
         "name": "Boop"
@@ -1105,20 +1105,20 @@ Purpose: display the RDI value for every nutrient in an RDI profile.
     "can_create": false
   }
 
-- ``rdi_profile`` to display RDI profile info.
-  ``nutrient_category_id`` to split up RDI profile nutrients by category.
-- ``rdi_profiles`` for "Search for another RDI profile"
-- ``nutrient_categories`` to split up display of RDI profile into vitamins, minerals, macronutrients
+- ``intake_guideline`` to display intake guideline info.
+  ``nutrient_category_id`` to split up intake guideline nutrients by category.
+- ``intake_guidelines`` for "Search for another intake guideline"
+- ``nutrient_categories`` to split up display of intake guideline into vitamins, minerals, macronutrients
 - Auth props to conditionally display Edit, Clone, Delete, and Create buttons.
 
 
-**UI:** RdiProfileNutrients in table with columns:
+**UI:** IntakeGuidelineNutrients in table with columns:
 
 - Nutrient name
 - RDI value
 - Unit (in nutrient's preferred units)
 
-It might also be interesting to display RDI value relative to FDA-recommended RDI value. In this case you'd need to send (some information about) the FDA RDI profile as a prop.
+It might also be interesting to display RDI value relative to FDA-recommended RDI value. In this case you'd need to send (some information about) the FDA intake guideline as a prop.
 
 **Links to:**
 
@@ -1132,18 +1132,18 @@ It might also be interesting to display RDI value relative to FDA-recommended RD
 Create
 ^^^^^^
 
-Purpose: create a new RDI Profile.
+Purpose: create a new Intake Guideline.
 
 .. code-block:: json
 
   {
-    "rdi_profile": {
+    "intake_guideline": {
       "id": 0,
       "name": "",
-      "rdi_profile_nutrients": [
+      "intake_guideline_nutrients": [
         {
           "id": 0,
-          "rdi_profile_id": 0,
+          "intake_guideline_id": 0,
           "nutrient_id": 0,
           "rdi": 0.0,
           "nutrient": {
@@ -1161,7 +1161,7 @@ Purpose: create a new RDI Profile.
         }
       ]
     },
-    "rdi_profiles": [
+    "intake_guidelines": [
       {
         "id": 0,
         "name": "Boop"
@@ -1178,19 +1178,19 @@ Purpose: create a new RDI Profile.
     "can_create": false
   }
 
-- ``rdi_profile`` is used by Edit and Clone, which share a CreateOrEdit component with Create.
-  Although Create strictly needs only ``nutrient_id``, ``nutrient.display_name``, and ``unit.name``, I'm preserving the ``rdi_profile`` prop structure to be able to use the same CreateOrEdit component for Create.
-- ``rdi_profiles`` for "Search for another" and "Clone existing"
-- ``nutrient_categories`` to split up RDI nutrients into vitamins, minerals, macronutrients
+- ``intake_guideline`` is used by Edit and Clone, which share a CreateOrEdit component with Create.
+  Although Create strictly needs only ``nutrient_id``, ``nutrient.display_name``, and ``unit.name``, I'm preserving the ``intake_guideline`` prop structure to be able to use the same CreateOrEdit component for Create.
+- ``intake_guidelines`` for "Search for another" and "Clone existing"
+- ``nutrient_categories`` to split up IntakeGuidelineNutrients into vitamins, minerals, macronutrients
 - ``clone`` to conditionally display "Cloned from Foo" message
 - Auth props to conditionally display View (for clone pages) and Clone/Create buttons
 
-**Form:** See :ref:`Validation: Create or Update an RDI Profile <validation-crud-rdi-profile>`
+**Form:** See :ref:`Validation: Create or Update an Intake Guideline <validation-crud-intake-guideline>`
 
-**UI:** RdiProfileNutrients in table with columns:
+**UI:** IntakeGuidelineNutrients in table with columns:
 
 - Nutrient name (static label)
-- Nutrient amount (text input), prefilled either to zero or value from cloned RDI Profile.
+- Nutrient amount (text input), prefilled either to zero or value from cloned Intake Guideline.
 - Nutrient unit (static text)
 
 **Links to:**
@@ -1209,20 +1209,20 @@ Purpose: create a new RDI Profile.
 Edit
 ^^^^
 
-Purpose: update an existing RDI Profile.
+Purpose: update an existing Intake Guideline.
 
 **Props:** 
 
 .. code-block:: json
 
   {
-    "rdi_profile": {
+    "intake_guideline": {
       "id": 0,
       "name": "Foo",
-      "rdi_profile_nutrients": [
+      "intake_guideline_nutrients": [
         {
           "id": 0,
-          "rdi_profile_id": 0,
+          "intake_guideline_id": 0,
           "nutrient_id": 0,
           "rdi": 0.0,
           "nutrient": {
@@ -1240,7 +1240,7 @@ Purpose: update an existing RDI Profile.
         }
       ]
     },
-    "rdi_profiles": [
+    "intake_guidelines": [
       {
         "id": 0,
         "name": "Boop"
@@ -1258,14 +1258,14 @@ Purpose: update an existing RDI Profile.
     "can_create": false
   }
 
-- ``rdi_profile`` to display current RDI profile information
-- ``rdi_profiles`` for "Search for another" and "Clone existing"
-- ``nutrient_categories`` to split up RDI nutrients into vitamins, minerals, macronutrients
+- ``intake_guideline`` to display current intake guideline information
+- ``intake_guidelines`` for "Search for another" and "Clone existing"
+- ``nutrient_categories`` to split up IntakeGuidelineNutrients into vitamins, minerals, macronutrients
 - Auth props to conditionally display View, Clone, Delete, Create buttons.
 
-**Form:** See :ref:`Validation: Create or Update an RDI Profile <validation-crud-rdi-profile>`
+**Form:** See :ref:`Validation: Create or Update an Intake Guideline <validation-crud-intake-guideline>`
 
-**UI:** RdiProfileNutrients in table with columns:
+**UI:** IntakeGuidelineNutrients in table with columns:
 
 - Nutrient name (static label)
 - Nutrient amount (text input), prefilled either to current value

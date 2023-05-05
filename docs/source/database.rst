@@ -16,8 +16,8 @@ Tables
 - ``food_lists``
 - ``food_list_ingredients``
 - ``food_list_meals``
-- ``rdi_profiles``
-- ``rdi_profile_nutrients``
+- ``intake_guidelines``
+- ``intake_guideline_nutrients``
 
 The ``units``, ``ingredient_categories``, and ``nutrients`` tables are meant to be constant.
 The user can edit the other tables.
@@ -115,18 +115,18 @@ Records how much of a given meal occurs in a food list.
 - ``unit_id``
 - ``mass_in_grams``
 
-RDI Profile
-^^^^^^^^^^^
+Intake Guideline
+^^^^^^^^^^^^^^^^
 
 - ``name``
 - ``user_id``
 
-RDI Profile Nutrient
-^^^^^^^^^^^^^^^^^^^^
+Intake Guideline Nutrient
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Represents the Reference Daily Intake for a given nutrient in a given RDI profile.
+Represents the Reference Daily Intake for a given nutrient in a given intake guideline.
 
-- ``rdi_profile_id``
+- ``intake_guideline_id``
 - ``nutrient_id``
 - ``rdi``
 
