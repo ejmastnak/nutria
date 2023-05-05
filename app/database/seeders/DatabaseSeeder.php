@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
             StandardReferenceSeeder::class,
             MealSeeder::class,
             FoodListSeeder::class,
-            RdiProfileSeeder::class
+            IntakeGuidelineSeeder::class
         ]);
     }
 }

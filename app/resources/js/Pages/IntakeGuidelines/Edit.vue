@@ -14,8 +14,8 @@ import DeleteDialog from '@/Shared/DeleteDialog.vue'
 import H1 from '@/Components/H1ForCrud.vue'
 
 const props = defineProps({
-  rdi_profile: Object,
-  rdi_profiles: Array,
+  intake_guideline: Object,
+  intake_guidelines: Array,
   nutrient_categories: Array,
   can_view: Boolean,
   can_clone: Boolean,
@@ -37,38 +37,38 @@ export default {
 
 <template>
   <div class="">
-    <Head :title="'Edit ' + rdi_profile.name" />
+    <Head :title="'Edit ' + intake_guideline.name" />
 
     <CrudNavBar>
-      <CrudNavBarIndex :href="route('rdi-profiles.index')" />
-      <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="RDI profile" />
-      <CrudNavBarCreate :enabled="can_create" text="New" :href="route('rdi-profiles.create')" />
+      <CrudNavBarIndex :href="route('intake-guidelines.index')" />
+      <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="intake guideline" />
+      <CrudNavBarCreate :enabled="can_create" text="New" :href="route('intake-guidelines.create')" />
       <div class="flex ml-auto">
-        <CrudNavBarView :enabled="can_view" text="View original" :href="route('rdi-profiles.show', rdi_profile.id)" />
-        <CrudNavBarCloneLink :enabled="can_clone" text="Clone" :href="route('rdi-profiles.clone', rdi_profile.id)" />
-        <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(rdi_profile.id)" />
+        <CrudNavBarView :enabled="can_view" text="View original" :href="route('intake-guidelines.show', intake_guideline.id)" />
+        <CrudNavBarCloneLink :enabled="can_clone" text="Clone" :href="route('intake-guidelines.clone', intake_guideline.id)" />
+        <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(intake_guideline.id)" />
       </div>
     </CrudNavBar>
 
-    <H1 class="mt-8" text="Edit RDI profile" />
+    <H1 class="mt-8" text="Edit intake guideline" />
 
     <CreateOrEdit
-      :rdi_profile="rdi_profile"
+      :intake_guideline="intake_guideline"
       :nutrient_categories="nutrient_categories"
       :create="false"
     />
 
-    <!-- Search for an RDI profile -->
+    <!-- Search for an intake guideline -->
     <SearchForThingAndGo
       ref="searchDialog"
-      :things="rdi_profiles"
-      goRoute="rdi-profiles.show"
-      label="Search for another RDI profile"
+      :things="intake_guidelines"
+      goRoute="intake-guidelines.show"
+      label="Search for another intake guideline"
       title=""
       action="Go"
     />
 
-    <DeleteDialog ref="deleteDialog" deleteRoute="rdi-profiles.destroy" thing="RDI profile" />
+    <DeleteDialog ref="deleteDialog" deleteRoute="intake-guidelines.destroy" thing="intake guideline" />
 
   </div>
 </template>

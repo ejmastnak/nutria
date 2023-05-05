@@ -16,7 +16,7 @@ import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 const props = defineProps({
-  rdi_profiles: Array,
+  intake_guidelines: Array,
   can_create: Boolean
 })
 
@@ -24,8 +24,8 @@ const cloneExistingDialog = ref(null)
 const deleteDialog = ref(null)
 const searchInput = ref(null)
 
-// For fuzzy search over RDI profile names
-const filteredRdiProfiles = ref([])
+// For fuzzy search over intake guideline names
+const filteredIntakeGuidelines = ref([])
 const fuzzysortOptions = {
   key: 'name',
   all: true,
@@ -33,22 +33,22 @@ const fuzzysortOptions = {
   threshold: -10000
 }
 
-const search = ref(sessionStorage.getItem('rdiProfileIndexSearchQuery') ?? "")
+const search = ref(sessionStorage.getItem('intakeGuidelineIndexSearchQuery') ?? "")
 
-// Preserve RDI profile search from previous visit to this page
+// Preserve intake guideline search from previous visit to this page
 onMounted(() => {
   if (search) {
-    filteredRdiProfiles.value = fuzzysort.go(search.value.trim(), props.rdi_profiles, fuzzysortOptions)
+    filteredIntakeGuidelines.value = fuzzysort.go(search.value.trim(), props.intake_guidelines, fuzzysortOptions)
   }
 })
 
 watch(search, throttle(function (value) {
-  filteredRdiProfiles.value = fuzzysort.go(value.trim(), props.rdi_profiles, fuzzysortOptions)
+  filteredIntakeGuidelines.value = fuzzysort.go(value.trim(), props.intake_guidelines, fuzzysortOptions)
 }, 300))
 
 // Preserve search query between page visits
 onBeforeUnmount(() => {
-  sessionStorage.setItem('rdiProfileIndexSearchQuery', search.value);
+  sessionStorage.setItem('intakeGuidelineIndexSearchQuery', search.value);
 })
 
 function resetSearch() {
@@ -56,10 +56,10 @@ function resetSearch() {
   searchInput.value.focus()
 }
 
-// Updates filteredRdiProfiles after deleting a RDI profile to ensure the
-// RDI profile disappears from display
+// Updates filteredIntakeGuidelines after deleting a intake guideline to ensure the
+// intake guideline disappears from display
 function updateFuzzySearchOnDeletion(id) {
-  filteredRdiProfiles.value = fuzzysort.go(search.value.trim(), props.rdi_profiles, fuzzysortOptions)
+  filteredIntakeGuidelines.value = fuzzysort.go(search.value.trim(), props.intake_guidelines, fuzzysortOptions)
 }
 
 </script>
@@ -73,31 +73,31 @@ export default {
 
 <template>
   <div class="">
-    <Head title="RDI profiles" />
+    <Head title="Intake guidelines" />
 
-    <!-- Title and new RDI profile top row -->
+    <!-- Title and new intake guideline top row -->
     <div class="flex">
 
       <div class="mr-2 p-1">
-        <H1 text="RDI Profiles" />
+        <H1 text="Intake guidelines" />
         <p class="mt-2 w-11/12 4 sm:w-2/3 text-gray-500">
-          Use this page as an overview of RDI profiles you have created.
+          Use this page as an overview of intake guidelines you have created.
         </p>
       </div>
 
       <div class="flex flex-col ml-auto w-fit">
 
-        <!-- New RDI profile button -->
+        <!-- New intake guideline button -->
         <PrimaryLinkButton
-          :href="route('rdi-profiles.create')"
+          :href="route('intake-guidelines.create')"
           class="flex ml-auto items-center py-2.0 sm:py-2.5 mt-1 normal-case"
           :class="{'!bg-blue-200': !can_create}"
         >
           <PlusCircleIcon class="w-6 h-6" />
-          <p class="ml-2 font-semibold text-base whitespace-nowrap">New RDI profile</p>
+          <p class="ml-2 font-semibold text-base whitespace-nowrap">New intake guideline</p>
         </PrimaryLinkButton>
 
-        <!-- Clone RDI profile button -->
+        <!-- Clone intake guideline button -->
         <SecondaryButton
           class="flex ml-auto items-center mt-1 normal-case"
           :class="{'!text-gray-300': !can_create}"
@@ -110,14 +110,14 @@ export default {
       </div>
     </div>
 
-    <!-- RDI profile table -->
+    <!-- intake guideline table -->
     <section class="mt-8 border border-gray-200 px-4 py-2 rounded-xl shadow-sm bg-white">
 
       <!-- Input for search -->
       <div class="px-2 py-4">
 
-        <label for="rdi-profile-search" class="ml-1 text-sm text-gray-500">
-          Search by RDI profile name
+        <label for="intake-guideline-search" class="ml-1 text-sm text-gray-500">
+          Search by intake guideline name
         </label>
         <div class="relative">
           <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -126,7 +126,7 @@ export default {
 
           <input
             type="text"
-            id="rdi-profile-search"
+            id="intake-guideline-search"
             ref="searchInput"
             class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 sm:w-64 md:w-80 lg:w-96 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
             v-model="search"
@@ -135,7 +135,7 @@ export default {
       </div>
 
       <table
-        v-show="filteredRdiProfiles.length"
+        v-show="filteredIntakeGuidelines.length"
         class="mt-2 sm:table-fixed w-full text-sm sm:text-base text-left text-gray-500">
         <thead class="text-xs text-gray-700 uppercase bg-blue-100">
           <tr>
@@ -147,14 +147,14 @@ export default {
         </thead>
         <tbody>
           <tr
-            v-for="profile in filteredRdiProfiles.map(rdip => rdip.obj)" :key="profile.id"
+            v-for="profile in filteredIntakeGuidelines.map(ig => ig.obj)" :key="profile.id"
             class="border-b"
           >
-            <!-- Link to RDI profile show page -->
+            <!-- Link to intake guideline show page -->
             <td scope="row" class="px-5 py-4 font-medium text-gray-900">
               <MyLink
                 class="text-gray-800"
-                :href="route('rdi-profiles.show', profile.id)"
+                :href="route('intake-guidelines.show', profile.id)"
               >
                 {{profile.name}}
               </MyLink>
@@ -166,7 +166,7 @@ export default {
                 <MyLink
                   class="mx-auto"
                   v-if="profile.can_edit"
-                  :href="route('rdi-profiles.edit', profile.id)"
+                  :href="route('intake-guidelines.edit', profile.id)"
                 >
                   <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
                 </MyLink>
@@ -186,7 +186,7 @@ export default {
         </tbody>
       </table>
 
-      <p v-show="rdi_profiles.length && filteredRdiProfiles.length === 0" class="px-6 py-4" >
+      <p v-show="intake_guidelines.length && filteredIntakeGuidelines.length === 0" class="px-6 py-4" >
         No results found. Try a less restrictive filter or search?
       </p>
 
@@ -194,14 +194,14 @@ export default {
 
     <SearchForThingAndGo
       ref="cloneExistingDialog"
-      :things="rdi_profiles"
-      goRoute="rdi-profiles.clone"
-      label="Search for an RDI profile to clone"
-      title="Clone RDI profile"
+      :things="intake_guidelines"
+      goRoute="intake-guidelines.clone"
+      label="Search for an intake guideline to clone"
+      title="Clone intake guideline"
       action="Clone"
     />
 
-    <DeleteDialog ref="deleteDialog" deleteRoute="rdi-profiles.destroy" thing="RDI profile" @delete="updateFuzzySearchOnDeletion" />
+    <DeleteDialog ref="deleteDialog" deleteRoute="intake-guidelines.destroy" thing="intake guideline" @delete="updateFuzzySearchOnDeletion" />
 
   </div>
 </template>

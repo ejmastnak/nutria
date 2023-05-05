@@ -1,6 +1,6 @@
 <script setup>
 import { round } from '@/utils/GlobalFunctions.js'
-const props = defineProps({rdi_profile_nutrients: Array})
+const props = defineProps({intake_guideline_nutrients: Array})
 </script>
 
 <template>
@@ -19,17 +19,17 @@ const props = defineProps({rdi_profile_nutrients: Array})
       </thead>
       <tbody>
         <tr
-          v-for="rdi_profile_nutrient in rdi_profile_nutrients"
+          v-for="intake_guideline_nutrient in intake_guideline_nutrients"
           class="border-t text-gray-600 font-medium text-sm"
         >
           <td scope="row" class="px-4 py-2">
-            {{rdi_profile_nutrient.nutrient.display_name}}
+            {{intake_guideline_nutrient.nutrient.display_name}}
           </td>
           <td class="pl-3 py-2 text-right">
-            {{round(Number(rdi_profile_nutrient.rdi), rdi_profile_nutrient.nutrient.precision)}}
+            {{round(Number(intake_guideline_nutrient.rdi), intake_guideline_nutrient.nutrient.precision)}}
           </td>
           <td class="px-1 py-2 text-left whitespace-nowrap">
-            {{rdi_profile_nutrient.nutrient.unit.name}}
+            {{intake_guideline_nutrient.nutrient.unit.name}}
           </td>
         </tr>
       </tbody>

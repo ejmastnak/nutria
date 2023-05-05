@@ -38,8 +38,8 @@ const showingNavigationDropdown = ref(false);
                 <NavLink class="hidden sm:inline-flex" :href="route('food-lists.index')" :active="route().current('food-lists.index')">
                   Food Lists
                 </NavLink>
-                <NavLink class="hidden sm:inline-flex" :href="route('rdi-profiles.index')" :active="route().current('rdi-profiles.index')">
-                  RDI Profiles
+                <NavLink class="hidden sm:inline-flex" :href="route('intake-guidelines.index')" :active="route().current('intake-guidelines.index')">
+                  Intake Guidelines
                 </NavLink>
               </div>
             </div>
@@ -146,8 +146,8 @@ const showingNavigationDropdown = ref(false);
             <ResponsiveNavLink :href="route('food-lists.index')" :active="route().current('food-lists.index')">
               Food Lists
             </ResponsiveNavLink>
-            <ResponsiveNavLink :href="route('rdi-profiles.index')" :active="route().current('rdi-profiles.index')">
-              RDI Profiles
+            <ResponsiveNavLink :href="route('intake-guidelines.index')" :active="route().current('intake-guidelines.index')">
+              Intake Guidelines
             </ResponsiveNavLink>
 
             <ResponsiveNavLink

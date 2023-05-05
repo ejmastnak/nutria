@@ -20,7 +20,7 @@ export default {
       <li><MyLink class="text-blue-500" :href="route('ingredients.index')">Ingredients</MyLink></li>
       <li><MyLink class="text-blue-500" :href="route('meals.index')">Meals</MyLink></li>
       <li><MyLink class="text-blue-500" :href="route('food-lists.index')">Food Lists</MyLink></li>
-      <li><MyLink class="text-blue-500" :href="route('rdi-profiles.index')">RDI Profiles</MyLink></li>
+      <li><MyLink class="text-blue-500" :href="route('intake-guidelines.index')">Intake Guidelines</MyLink></li>
     </ul>
   </div>
 </template>

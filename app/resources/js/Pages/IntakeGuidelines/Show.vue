@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { Head } from '@inertiajs/vue3'
-import RdiProfile from './Partials/RdiProfile.vue'
+import IntakeGuideline from './Partials/IntakeGuideline.vue'
 import FuzzyCombobox from '@/Shared/FuzzyCombobox.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
 import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
@@ -16,8 +16,8 @@ import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
 import H1 from '@/Components/H1ForCrud.vue'
 
 const props = defineProps({
-  rdi_profile: Object,
-  rdi_profiles: Array,
+  intake_guideline: Object,
+  intake_guidelines: Array,
   nutrient_categories: Array,
   can_edit: Boolean,
   can_clone: Boolean,
@@ -28,9 +28,9 @@ const props = defineProps({
 const searchDialog = ref(null)
 const deleteDialog = ref(null)
 
-const searchRdiProfile = ref({})
+const searchIntakeGuideline = ref({})
 function search() {
-  router.get(route('rdi-profiles.show', searchRdiProfile.value.id))
+  router.get(route('intake-guidelines.show', searchIntakeGuideline.value.id))
 }
 
 </script>
@@ -44,46 +44,46 @@ export default {
 
 <template>
   <div>
-    <Head :title="rdi_profile.name" />
+    <Head :title="intake_guideline.name" />
 
     <CrudNavBar>
-      <CrudNavBarIndex :href="route('rdi-profiles.index')" />
-      <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="RDI profile" />
-      <CrudNavBarCreate :enabled="can_create" :href="route('rdi-profiles.create')" />
+      <CrudNavBarIndex :href="route('intake-guidelines.index')" />
+      <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="intake guideline" />
+      <CrudNavBarCreate :enabled="can_create" :href="route('intake-guidelines.create')" />
       <div class="flex ml-auto">
-        <CrudNavBarEdit v-if="can_edit" :enabled="can_edit" :href="route('rdi-profiles.edit', rdi_profile.id)" />
-        <CrudNavBarCloneLink :enabled="can_clone" :href="route('rdi-profiles.clone', rdi_profile.id)" />
-        <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(rdi_profile.id)" />
+        <CrudNavBarEdit v-if="can_edit" :enabled="can_edit" :href="route('intake-guidelines.edit', intake_guideline.id)" />
+        <CrudNavBarCloneLink :enabled="can_clone" :href="route('intake-guidelines.clone', intake_guideline.id)" />
+        <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(intake_guideline.id)" />
       </div>
     </CrudNavBar>
 
     <div class="mt-8">
-      <H1 :text="rdi_profile.name" />
-      <!-- RDI profile pillbox label category -->
+      <H1 :text="intake_guideline.name" />
+      <!-- intake guideline pillbox label category -->
       <div class="mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
-        RDI profile
+        Intake guideline
       </div>
     </div>
 
     <section class="mt-8">
       <h2 class="text-lg">Recommended daily intakes</h2>
-      <RdiProfile
+      <IntakeGuideline
         class="w-full mt-4"
-        :rdi_profile_nutrients="rdi_profile.rdi_profile_nutrients"
+        :intake_guideline_nutrients="intake_guideline.intake_guideline_nutrients"
         :nutrient_categories="nutrient_categories"
       />
     </section>
 
     <SearchForThingAndGo
       ref="searchDialog"
-      :things="rdi_profiles"
-      goRoute="rdi-profiles.show"
-      label="Search for another RDI profile"
+      :things="intake_guidelines"
+      goRoute="intake-guidelines.show"
+      label="Search for another intake guideline"
       title=""
       action="Go"
     />
 
-    <DeleteDialog ref="deleteDialog" deleteRoute="rdi-profiles.destroy" thing="RDI profile" />
+    <DeleteDialog ref="deleteDialog" deleteRoute="intake-guidelines.destroy" thing="intake guideline" />
 
   </div>
 </template>

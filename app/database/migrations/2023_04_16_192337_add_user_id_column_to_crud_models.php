@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
         });
-        Schema::table('rdi_profiles', function (Blueprint $table) {
+        Schema::table('intake_guidelines', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
         });
@@ -42,7 +42,7 @@ return new class extends Migration {
         Schema::table('food_lists', function (Blueprint $table) {
             $table->dropColumn('user_id');
         });
-        Schema::table('rdi_profiles', function (Blueprint $table) {
+        Schema::table('intake_guidelines', function (Blueprint $table) {
             $table->dropColumn('user_id');
         });
     }

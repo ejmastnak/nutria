@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RdiProfileNutrient extends Model
+class IntakeGuidelineNutrient extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $fillable = ['rdi_profile_id', 'nutrient_id', 'rdi'];
+    protected $fillable = ['intake_guideline_id', 'nutrient_id', 'rdi'];
 
-    public function rdi_profile() {
-        return $this->belongsTo(RdiProfile::class, 'rdi_profile_id', 'id');
+    public function intake_guideline() {
+        return $this->belongsTo(IntakeGuideline::class, 'intake_guideline_id', 'id');
     }
 
     public function nutrient() {

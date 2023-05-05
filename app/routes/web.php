@@ -4,7 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\MealController;
 use App\Http\Controllers\FoodListController;
-use App\Http\Controllers\RdiProfileController;
+use App\Http\Controllers\IntakeGuidelineController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -27,7 +27,7 @@ Route::get('/', function () {
 
 // These routes are available to unauthenticated users
 Route::get('ingredients', [IngredientController::class, 'index'])->name('ingredients.index');
-Route::get('rdi-profiles', [RdiProfileController::class, 'index'])->name('rdi-profiles.index');
+Route::get('intake-guidelines', [IntakeGuidelineController::class, 'index'])->name('intake-guidelines.index');
 
 Route::middleware('auth')->group(function () {
     // User profiles
@@ -63,13 +63,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('food-lists/{food_list}', [FoodListController::class, 'destroy'])->name('food-lists.destroy');
     Route::get('food-lists/{food_list}', [FoodListController::class, 'show'])->name('food-lists.show');
 
-    // RDI Profiles
-    Route::get('rdi-profiles/create', [RdiProfileController::class, 'create'])->name('rdi-profiles.create');
-    Route::get('rdi-profiles/{rdi_profile}/clone', [RdiProfileController::class, 'clone'])->name('rdi-profiles.clone');
-    Route::post('rdi-profiles', [RdiProfileController::class, 'store'])->name('rdi-profiles.store');
-    Route::get('rdi-profiles/{rdi_profile}/edit', [RdiProfileController::class, 'edit'])->name('rdi-profiles.edit');
-    Route::put('rdi-profiles/{rdi_profile}', [RdiProfileController::class, 'update'])->name('rdi-profiles.update');
-    Route::delete('rdi-profiles/{rdi_profile}', [RdiProfileController::class, 'destroy'])->name('rdi-profiles.destroy');
+    // Intake Guidelines
+    Route::get('intake-guidelines/create', [IntakeGuidelineController::class, 'create'])->name('intake-guidelines.create');
+    Route::get('intake-guidelines/{intake_guideline}/clone', [IntakeGuidelineController::class, 'clone'])->name('intake-guidelines.clone');
+    Route::post('intake-guidelines', [IntakeGuidelineController::class, 'store'])->name('intake-guidelines.store');
+    Route::get('intake-guidelines/{intake_guideline}/edit', [IntakeGuidelineController::class, 'edit'])->name('intake-guidelines.edit');
+    Route::put('intake-guidelines/{intake_guideline}', [IntakeGuidelineController::class, 'update'])->name('intake-guidelines.update');
+    Route::delete('intake-guidelines/{intake_guideline}', [IntakeGuidelineController::class, 'destroy'])->name('intake-guidelines.destroy');
 
 });
 
@@ -78,7 +78,7 @@ Route::middleware('auth')->group(function () {
 // e.g. the catch-all parameter `ingredients/{ingredients}` would otherwise
 // "capture" e.g. ingredients/create and ingredients/export
 Route::get('ingredients/{ingredient}', [IngredientController::class, 'show'])->name('ingredients.show');
-Route::get('rdi-profiles/{rdi_profile}', [RdiProfileController::class, 'show'])->name('rdi-profiles.show');
+Route::get('intake-guidelines/{intake_guideline}', [IntakeGuidelineController::class, 'show'])->name('intake-guidelines.show');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

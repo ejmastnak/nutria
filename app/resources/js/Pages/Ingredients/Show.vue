@@ -18,7 +18,7 @@ import H1 from '@/Components/H1ForCrud.vue'
 const props = defineProps({
   ingredient: Object,
   nutrient_profiles: Array,
-  rdi_profiles: Array,
+  intake_guidelines: Array,
   nutrient_categories: Array,
   ingredients: Array,
   can_edit: Boolean,
@@ -82,7 +82,7 @@ export default {
 
     <NutrientProfile
       class="mt-8"
-      :rdi_profiles="rdi_profiles"
+      :intake_guidelines="intake_guidelines"
       :nutrient_profiles="nutrient_profiles"
       :nutrient_categories="nutrient_categories"
       :defaultMassInGrams="100"

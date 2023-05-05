@@ -7,24 +7,24 @@ import TextInput from '@/Components/TextInput.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 
 const props = defineProps({
-  rdi_profiles: Array,
+  intake_guidelines: Array,
   howManyGrams: String,
-  selectedRdiProfile: Object,
+  selectedIntakeGuideline: Object,
   displayMassInput: {
     type: Boolean,
     default: true
   }
 })
 
-const emit = defineEmits(['update:howManyGrams', 'update:selectedRdiProfile'])
+const emit = defineEmits(['update:howManyGrams', 'update:selectedIntakeGuideline'])
 
-// Using a local selected RDI profile as a small hack to get around
+// Using a local selected intake guideline as a small hack to get around
 // SimpleCombobox only supporting modelValue and not decoupled :value and
 // @update like a simple <input/> component
-const localSelectedRdiProfile = ref(props.selectedRdiProfile)
-function updatedSelectedRdiProfile(newValue) {
-  localSelectedRdiProfile.value = newValue
-  emit('update:selectedRdiProfile', newValue)
+const localSelectedIntakeGuideline = ref(props.selectedIntakeGuideline)
+function updatedSelectedIntakeGuideline(newValue) {
+  localSelectedIntakeGuideline.value = newValue
+  emit('update:selectedIntakeGuideline', newValue)
 }
 
 </script>
@@ -60,14 +60,14 @@ function updatedSelectedRdiProfile(newValue) {
           <p class="ml-1">grams</p>
         </div>
 
-        <!-- RDI Profile -->
+        <!-- Intake Guideline -->
         <div class="w-fit">
           <SimpleCombobox
             comboboxInputClasses="py-px"
             labelText="Intake guideline for % DV"
-            :options="rdi_profiles"
-            :modelValue="localSelectedRdiProfile"
-            @update:modelValue="newValue => updatedSelectedRdiProfile(newValue)"
+            :options="intake_guidelines"
+            :modelValue="localSelectedIntakeGuideline"
+            @update:modelValue="newValue => updatedSelectedIntakeGuideline(newValue)"
           />
         </div>
 

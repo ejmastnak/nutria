@@ -20,7 +20,7 @@ const props = defineProps({
   meal: Object,
   meals: Array,
   nutrient_profiles: Array,
-  rdi_profiles: Array,
+  intake_guidelines: Array,
   nutrient_categories: Array,
   can_edit: Boolean,
   can_clone: Boolean,
@@ -119,7 +119,7 @@ export default {
     <NutrientProfile
       v-if="meal.meal_ingredients.length"
       class="mt-8"
-      :rdi_profiles="rdi_profiles"
+      :intake_guidelines="intake_guidelines"
       :nutrient_profiles="nutrient_profiles"
       :nutrient_categories="nutrient_categories"
       :defaultMassInGrams="Number(meal.mass_in_grams)"

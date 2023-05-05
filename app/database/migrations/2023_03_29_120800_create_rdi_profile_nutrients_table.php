@@ -10,10 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('rdi_profile_nutrients', function (Blueprint $table) {
+        Schema::create('intake_guideline_nutrients', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('rdi_profile_id');
-            $table->foreign('rdi_profile_id')->references('id')->on('rdi_profiles')->cascadeOnDelete();
+            $table->unsignedBigInteger('intake_guideline_id');
+            $table->foreign('intake_guideline_id')->references('id')->on('intake_guidelines')->cascadeOnDelete();
             $table->unsignedBigInteger('nutrient_id');
             $table->foreign('nutrient_id')->references('id')->on('nutrients');
             $table->decimal('rdi', 10, 3);
@@ -25,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('rdi_profile_nutrients');
+        Schema::dropIfExists('intake_guideline_nutrients');
     }
 };

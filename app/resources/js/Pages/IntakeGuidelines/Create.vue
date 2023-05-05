@@ -12,8 +12,8 @@ import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
 import H1 from '@/Components/H1ForCrud.vue'
 
 const props = defineProps({
-  rdi_profile: Object,
-  rdi_profiles: Array,
+  intake_guideline: Object,
+  intake_guidelines: Array,
   nutrient_categories: Array,
   can_view: Boolean,
   can_create: Boolean,
@@ -34,44 +34,44 @@ export default {
 
 <template>
   <div class="">
-    <Head title="New RDI Profile" />
+    <Head title="New Intake guideline" />
 
     <CrudNavBar>
-      <CrudNavBarIndex :href="route('rdi-profiles.index')" />
-      <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="RDI profile" />
+      <CrudNavBarIndex :href="route('intake-guidelines.index')" />
+      <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="intake guideline" />
       <div class="flex ml-auto">
-        <CrudNavBarView v-if="clone" :enabled="can_view" text="View original" :href="route('rdi-profiles.show', rdi_profile.id)" />
-        <CrudNavBarCreate v-if="clone" :enabled="can_create" text="New" :href="route('rdi-profiles.create')" />
+        <CrudNavBarView v-if="clone" :enabled="can_view" text="View original" :href="route('intake-guidelines.show', intake_guideline.id)" />
+        <CrudNavBarCreate v-if="clone" :enabled="can_create" text="New" :href="route('intake-guidelines.create')" />
         <CrudNavBarCloneButton v-if="!clone" :enabled="can_create" @wasClicked="cloneExistingDialog.open()" text="Clone" />
       </div>
     </CrudNavBar>
 
-    <H1 class="mt-8" text="New RDI profile" />
-    <p v-if="clone && rdi_profile" class="text-gray-700">(Cloned from {{rdi_profile.name}})</p>
+    <H1 class="mt-8" text="New intake guideline" />
+    <p v-if="clone && intake_guideline" class="text-gray-700">(Cloned from {{intake_guideline.name}})</p>
 
     <CreateOrEdit
-      :rdi_profile="rdi_profile"
+      :intake_guideline="intake_guideline"
       :nutrient_categories="nutrient_categories"
       :create="true"
     />
 
-    <!-- Search for an RDI profile -->
+    <!-- Search for an intake guideline -->
     <SearchForThingAndGo
       ref="searchDialog"
-      :things="rdi_profiles"
-      goRoute="rdi-profiles.show"
-      label="Search for another RDI profile"
+      :things="intake_guidelines"
+      goRoute="intake-guidelines.show"
+      label="Search for another intake guideline"
       title=""
       action="Go"
     />
 
-    <!-- Clone an existing RDI profile -->
+    <!-- Clone an existing intake guideline -->
     <SearchForThingAndGo
       ref="cloneExistingDialog"
-      :things="rdi_profiles"
-      goRoute="rdi-profiles.clone"
-      label="Search for an RDI profile to clone"
-      title="Clone RDI Profile"
+      :things="intake_guidelines"
+      goRoute="intake-guidelines.clone"
+      label="Search for an intake guideline to clone"
+      title="Clone intake guideline"
       action="Clone"
     />
 

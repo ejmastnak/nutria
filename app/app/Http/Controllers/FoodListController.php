@@ -10,7 +10,7 @@ use App\Models\Meal;
 use App\Models\NutrientCategory;
 use App\Models\IngredientCategory;
 use App\Models\Unit;
-use App\Models\RdiProfile;
+use App\Models\IntakeGuideline;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -162,7 +162,7 @@ class FoodListController extends Controller
                 'food_list_meals'
             ]),
             'nutrient_profiles' => NutrientProfileController::getNutrientProfilesOfFoodList($foodList->id),
-            'rdi_profiles' => RdiProfile::where('user_id', null)
+            'intake_guidelines' => IntakeGuideline::where('user_id', null)
             ->orWhere('user_id', $user ? $user->id : 0)
             ->orderBy('id', 'asc')
             ->get(['id', 'name']),

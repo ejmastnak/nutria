@@ -4,7 +4,7 @@ import NutrientProfileTables from '@/Shared/NutrientProfileTables.vue'
 import NutrientProfileOptions from '@/Shared/NutrientProfileOptions.vue'
 
 const props = defineProps({
-  rdi_profiles: Array,
+  intake_guidelines: Array,
   nutrient_profiles: Array,
   nutrient_categories: Array,
   defaultMassInGrams: Number,
@@ -14,11 +14,11 @@ const props = defineProps({
 // Converted to String for use in text input field
 const howManyGrams = ref(props.defaultMassInGrams.toString());
 
-// Find index of nutrient profile with `rdi_profile_id` matching
-// selectedRdiProfile
-const selectedRdiProfile = ref(props.rdi_profiles[0])
+// Find index of nutrient profile with `intake_guideline_id` matching
+// selectedIntakeGuideline
+const selectedIntakeGuideline = ref(props.intake_guidelines[0])
 const selectedNutrientProfile = computed(() => {
-  const idx = props.nutrient_profiles.map(profile => profile.rdi_profile_id).indexOf(selectedRdiProfile.value.id)
+  const idx = props.nutrient_profiles.map(profile => profile.intake_guideline_id).indexOf(selectedIntakeGuideline.value.id)
   return props.nutrient_profiles[idx ?? 0].nutrient_profile
 })
 </script>
@@ -29,10 +29,10 @@ const selectedNutrientProfile = computed(() => {
     <h2 class="text-lg">Nutrient profile</h2>
 
     <NutrientProfileOptions
-      :rdi_profiles="rdi_profiles"
+      :intake_guidelines="intake_guidelines"
       :displayMassInput="displayMassInput"
       v-model:how-many-grams="howManyGrams"
-      v-model:selected-rdi-profile="selectedRdiProfile"
+      v-model:selected-intake-guideline="selectedIntakeGuideline"
     />
 
     <NutrientProfileTables

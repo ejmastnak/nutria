@@ -1,7 +1,7 @@
 <script setup>
-import RdiProfileTable from './RdiProfileTable.vue'
+import IntakeGuidelineTable from './IntakeGuidelineTable.vue'
 const props = defineProps({
-  rdi_profile_nutrients: Array,
+  intake_guideline_nutrients: Array,
   nutrient_categories: Array
 })
 
@@ -17,7 +17,7 @@ const props = defineProps({
       class="col-span-1 sm:w-3/4 md:2/3"
     >
       <h2 class="text-md text-gray-900">{{nc.name}}s</h2>
-      <RdiProfileTable :rdi_profile_nutrients="rdi_profile_nutrients.filter(rdi_profile_nutrient => rdi_profile_nutrient.nutrient.nutrient_category_id === nc.id)" />
+      <IntakeGuidelineTable :intake_guideline_nutrients="intake_guideline_nutrients.filter(intake_guideline_nutrient => intake_guideline_nutrient.nutrient.nutrient_category_id === nc.id)" />
     </div>
 
   </div>

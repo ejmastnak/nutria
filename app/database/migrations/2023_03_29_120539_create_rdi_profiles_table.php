@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('rdi_profiles', function (Blueprint $table) {
+        Schema::create('intake_guidelines', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->timestamps();
@@ -22,6 +22,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('rdi_profiles');
+        Schema::dropIfExists('intake_guidelines');
     }
 };
