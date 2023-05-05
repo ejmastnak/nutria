@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Nutrient Tracker'
+project = 'Nutria Nutrition'
 copyright = '2023, Elijan Mastnak'
 author = 'Elijan Mastnak'
 release = '0.1'

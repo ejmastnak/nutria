@@ -1,9 +1,9 @@
-.. Nutrient Tracker documentation master file, created by
+.. Nutria Nutrition documentation master file, created by
    sphinx-quickstart on Tue Mar 21 09:22:42 2023.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Nutrient Tracker's documentation!
+Welcome to Nutria Nutrition's documentation!
 ============================================
 
 How it works in 30 seconds
