@@ -47,6 +47,7 @@ class NutrientProfileController extends Controller
 
         $query = "
         select
+          nutrients.id as nutrient_id,
           nutrients.display_name as nutrient,
           nutrients.nutrient_category_id as nutrient_category_id,
           nutrients.precision as precision,
@@ -106,6 +107,7 @@ class NutrientProfileController extends Controller
 
         $query = "
         select
+          nutrients.id as nutrient_id,
           nutrients.display_name as nutrient,
           nutrients.nutrient_category_id as nutrient_category_id,
           nutrients.precision as precision,
@@ -170,6 +172,7 @@ class NutrientProfileController extends Controller
 
         $query = "
         select
+          nutrients.id as nutrient_id,
           nutrients.display_name as nutrient,
           nutrients.nutrient_category_id as nutrient_category_id,
           nutrients.precision as precision,
