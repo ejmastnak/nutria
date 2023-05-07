@@ -101,6 +101,7 @@ Purpose: display an ingredient's name, properties, and nutrient profile.
         "intake_guideline_id": 0,
         "nutrient_profile": [
           {
+            "nutrient_id": 1,
             "nutrient": "Baz",
             "nutrient_category_id": 0,
             "amount": 42,
@@ -406,6 +407,7 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
         "intake_guideline_id": 0,
         "nutrient_profile": [
           {
+            "nutrient_id": 1,
             "nutrient": "Blah",
             "nutrient_category_id": 0,
             "amount": 42,
@@ -726,6 +728,7 @@ Show
         "intake_guideline_id": 0,
         "nutrient_profile": [
           {
+            "nutrient_id": 1,
             "nutrient": "Blah",
             "nutrient_category_id": 0,
             "amount": 42,

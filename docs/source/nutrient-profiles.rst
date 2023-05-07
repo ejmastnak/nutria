@@ -16,6 +16,7 @@ Each function returns an array of arrays with the structure
     <?php
     array(
         array(
+            "nutrient_id" => 1,
             "nutrient" => "Protein",
             "amount" => 25.0,
             "precision" => 0,
@@ -24,6 +25,7 @@ Each function returns an array of arrays with the structure
             "nutrient_category_id" => 0
         ),
         array(
+            "nutrient_id" => 2,
             "nutrient" => "Energy",
             "amount" => 2000,
             "precision" => 0,
@@ -44,6 +46,7 @@ For 100 grams of ingredient:
 .. code-block:: sql
 
   select
+    nutrients.id as nutrient_id,
     nutrients.name as nutrient,
     nutrients.nutrient_category_id as nutrient_category_id,
     nutrients.precision as precision,
@@ -97,6 +100,7 @@ Profile Meal
 .. code-block:: sql
 
   select
+    nutrients.id as nutrient_id,
     nutrients.name as nutrient,
     nutrients.nutrient_category_id as nutrient_category_id,
     nutrients.precision as precision,
@@ -241,6 +245,7 @@ Combining the subqueries
 .. code-block:: sql
 
   select
+    nutrients.id as nutrient_id,
     nutrients.name,
     nutrients.nutrient_category_id as nutrient_category_id,
     nutrients.precision as precision,
