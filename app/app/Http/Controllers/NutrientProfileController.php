@@ -101,7 +101,7 @@ class NutrientProfileController extends Controller
         return $nutrientProfiles;
     }
 
-    public static function profileMeal($mealID, $intakeGuidelineID=1) {
+    public static function profileMeal($mealID, $intakeGuidelineID=1, $return_as_symbol_table=false) {
         if (Meal::where('id', $mealID)->doesntExist()) return [];
         if (IntakeGuideline::where('id', $intakeGuidelineID)->doesntExist()) return [];
 
@@ -140,7 +140,16 @@ class NutrientProfileController extends Controller
             'intake_guideline_id' => $intakeGuidelineID
         ]);
 
-        return $result;
+        if ($return_as_symbol_table) {
+            // Create a symbol table mapping nutrient ids to results
+            $symbol_table = [];
+            foreach ($result as $nutrient) {
+                $symbol_table[$nutrient->nutrient_id] = $nutrient;
+            }
+            return $symbol_table;
+        } else {
+            return $result;  // just return an array of results
+        }
     }
 
     /**
