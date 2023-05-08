@@ -291,7 +291,7 @@ class MealController extends Controller
 
         // Update or create Ingredient's IngredientNutrients
         $nutrientProfileST = NutrientProfileController::profileMeal($meal->id, $return_as_symbol_table=true);
-        foreach (Nutrient::all()) as $nutrient) {
+        foreach (Nutrient::all() as $nutrient) {
             // Check for existing IngredientNutrient associated with this
             // $nutrient and $ingredient
             $ingredientNutrient = IngredientNutrient::where('ingredient_id', $ingredient->id)
