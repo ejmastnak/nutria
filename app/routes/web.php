@@ -52,6 +52,7 @@ Route::middleware('auth')->group(function () {
     Route::put('meals/{meal}', [MealController::class, 'update'])->name('meals.update');
     Route::delete('meals/{meal}', [MealController::class, 'destroy'])->name('meals.destroy');
     Route::get('meals/{meal}', [MealController::class, 'show'])->name('meals.show');
+    Route::put('meals/{meal}/save-as-ingredient', [MealController::class, 'saveAsIngredient'])->name('meals.save-as-ingredient');
 
     // Food lists
     Route::get('food-lists', [FoodListController::class, 'index'])->name('food-lists.index');

@@ -6,6 +6,7 @@ use App\Models\Meal;
 use App\Models\Ingredient;
 use App\Models\MealIngredient;
 use App\Models\IngredientCategory;
+use App\Models\IngredientNutrient;
 use App\Models\NutrientCategory;
 use App\Models\IntakeGuideline;
 use App\Models\Unit;
@@ -262,6 +263,58 @@ class MealController extends Controller
             return Redirect::route('meals.index')->with('message', 'Success! Meal deleted successfully.');
         }
         return Redirect::route('meals.index')->with('message', 'Failed to delete meal.');
+    }
+
+    /**
+     *  Saves a Meal as a single Ingredient.
+     */
+    public function saveAsIngredient(Meal $meal) {
+        $this->authorize('create', Ingredient::class);
+        $user = Auth::user();
+
+        // Check for an Ingredient associated with the inputted $meal
+        $ingredient = Ingredient::where('meal_id', $meal->id)->first();
+
+        // If no such Ingredient exists, create a new one.
+        // TODO: set `ingredient_category_id` to ID of custom category.
+        $customIngredientCategory = IngredientCategory::first();
+        if (is_null($ingredient)) {
+            $ingredient = Ingredient::create([
+                'name' => $meal->name,
+                'ingredient_category_id' => $customIngredientCategory->id,
+                'meal_id' => $meal->id,
+                'user_id' => $user->id
+            ]);
+        } else {
+            $ingredient->update([ 'name' => $meal->name ]);
+        }
+
+        // Update or create Ingredient's IngredientNutrients
+        $nutrientProfileST = NutrientProfileController::profileMeal($meal->id, $return_as_symbol_table=true);
+        foreach (Nutrient::all()) as $nutrient) {
+            // Check for existing IngredientNutrient associated with this
+            // $nutrient and $ingredient
+            $ingredientNutrient = IngredientNutrient::where('ingredient_id', $ingredient->id)
+            ->where('nutrient_id', $nutrient->id)
+            ->first();
+
+            // If no such IngredientNutrient exists, create a new one
+            if (is_null($ingredientNutrient)) {
+                $ingredientNutrient = IngredientNutrient::create([
+                    'ingredient_id' => $ingredient->id,
+                    'nutrient_id' => $nutrient->id,
+                    `amount_per_100g` => 0.0  // updated later
+                ]);
+            }
+
+            // Use nutrient amount from meal's nutrient profile (scaled to
+            // amount per 100 grams), if present; otherwise set amount to 0.
+            $ingredientNutrient->update([
+                'amount_per_100g' => $nutrientProfileST[$nutrient->id] ? $nutrientProfileST[$nutrient->id]->amount * (100/$meal->mass_in_grams) : 0.0
+            ]);
+        }
+
+        return Redirect::route('ingredients.show', $ingredient->id)->with('message', 'Success! Ingredient successfully created.');
     }
 
     public function validateStoreOrUpdateRequest(Request $request) {
