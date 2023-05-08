@@ -276,12 +276,12 @@ class MealController extends Controller
         $ingredient = Ingredient::where('meal_id', $meal->id)->first();
 
         // If no such Ingredient exists, create a new one.
-        // TODO: set `ingredient_category_id` to ID of custom category.
-        $customIngredientCategory = IngredientCategory::first();
+        // TODO remove hardcoded "Custom"
+        $customIngredientCategory = IngredientCategory::where('name', 'Custom')->first();
         if (is_null($ingredient)) {
             $ingredient = Ingredient::create([
                 'name' => $meal->name,
-                'ingredient_category_id' => $customIngredientCategory->id,
+                'ingredient_category_id' => $customIngredientCategory ? $customIngredientCategory->id : 1,
                 'meal_id' => $meal->id,
                 'user_id' => $user->id
             ]);

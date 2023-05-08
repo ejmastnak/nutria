@@ -301,15 +301,18 @@ class IngredientController extends Controller
             // Also delete the ingredient's IngredientCategory if there
             // are no remaining ingredients with this category
             if(Ingredient::where('ingredient_category_id', $ingredient_category_id)->doesntExist()) {
-                IngredientCategory::find($country_id)->delete();
+                $ingredientCategory = IngredientCategory::find($country_id);
+                // Preserve "Custom" IngredientCategory even if all ingredients are deleted
+                // TODO remove hardcoded "Custom"
+                if ($ingredientCategory && ($ingredientCategory->name !== "Custom")) {
+                    $ingredientCategory->delete();
+                }
             }
             return Redirect::route('ingredients.index')->with('message', 'Success! Ingredient deleted successfully.');
         }
         return Redirect::route('ingredients.index')->with('message', 'Failed to delete ingredient.');
     }
 
-    // TODO: switch to this
-    // 'ingredient_nutrients' => ['required', 'array', 'min:' . $num_nutrients, 'max:' . $num_nutrients],
     private function validateStoreOrUpdateRequest($request, $store=false) {
         $num_nutrients = Nutrient::count();
 
