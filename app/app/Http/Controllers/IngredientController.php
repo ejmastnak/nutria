@@ -302,9 +302,8 @@ class IngredientController extends Controller
             // are no remaining ingredients with this category
             if(Ingredient::where('ingredient_category_id', $ingredient_category_id)->doesntExist()) {
                 $ingredientCategory = IngredientCategory::find($country_id);
-                // Preserve "Custom" IngredientCategory even if all ingredients are deleted
-                // TODO remove hardcoded "Custom"
-                if ($ingredientCategory && ($ingredientCategory->name !== "Custom")) {
+                // Preserve "Other" IngredientCategory even if all ingredients are deleted
+                if ($ingredientCategory && ($ingredientCategory->name !== IngredientCategory::$OTHER_CATEGORY_NAME)) {
                     $ingredientCategory->delete();
                 }
             }

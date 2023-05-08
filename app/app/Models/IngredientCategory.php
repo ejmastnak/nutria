@@ -9,5 +9,7 @@ class IngredientCategory extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $table = 'ingredient_categories';
+    protected $fillable = ['id', 'name'];
+
+    public static $OTHER_CATEGORY_NAME = "Other";
 }
