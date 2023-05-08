@@ -18,8 +18,9 @@ class MealSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('meal_ingredients')->truncate();
-        DB::table('meals')->truncate();
+        DB::table('meal_ingredients')->delete();
+        DB::table('meals')->delete();
+
         $gram_id = Unit::where('name', 'g')->first()->id;
 
         foreach(glob(__DIR__ . '/meals/*.json') as $file) {
