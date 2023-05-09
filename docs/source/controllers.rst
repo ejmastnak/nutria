@@ -1,5 +1,5 @@
-Validation
-==========
+Controllers
+===========
 
 .. _validation-crud-ingredient:
 
@@ -247,6 +247,66 @@ Incoming request looks like
 
 - ``intake_guideline`` record with supplied ``name``
 - For each entry in ``intake_guideline_nutrients``, look up corresponding ``intake_guideline_nutrient`` record based on ``intake_guideline_nutrients.*.id``, then update ``rdi`` with supplied ``rdi``.
+
+Save Meal as Ingredient
+-----------------------
+
+Method signature:
+
+.. code-block:: php
+
+  <?php
+  public function saveAsIngredient(Meal $meal) {}
+
+Route:
+
+.. code-block:: php
+
+  <?php
+  Route::put('meals/{meal}/save-as-ingredient', [MealController::class, 'saveAsIngredient'])->name('meals.save-as-ingredient');
+
+Call from frontend with
+
+.. code-block:: javascript
+
+  router.put(route('meals.save-as-ingredient', props.meal.id))
+
+Protocol:
+
+- Authorize user for ingredient creation
+- Check for an Ingredient associated with the inputted (does ``$meal->id`` match any ``$ingredient->meal_id``?)
+- If no such Ingredient exists, create a new one with:
+
+  - Name of meal, e.g. ``'name' => $meal->name . ' (ingredient)'``
+  - "Other" ingredient category
+  - ``'meal_id' => $meal->id``
+  - ``'user_id' => $user->id``
+
+  ...and grab a reference ``$ingredient``.
+
+- Grab the meal's nutrient profile ``$nutrientProfileST`` (as an associative array/symbol table indexed by nutrient id for constant-time lookup of nutrients) from NutrientProfileController
+
+- For every Nutrient in ``Nutrient::all()``:
+
+  - Check for existing IngredientNutrient associated with this ``$nutrient`` and ``$ingredient``
+
+  - If no such IngredientNutrient exists, create a new one with
+
+    - ``'ingredient_id' => $ingredient->id``
+    - ``'nutrient_id' => $nutrient->id``
+    - ``'amount_per_100g' => 0.0``, which is updated later
+
+    ...and grab a reference ``$ingredientNutrient``.
+
+  - Update ``$ingredientNutrient->amount_per_100g``:
+
+    .. code-block:: php
+
+      <?php
+      // If present, use nutrient amount from meal's nutrient profile (scaled
+      // to amount per 100 grams of meal); otherwise set amount to 0.
+      // This ensures ingredient has entries (possibly zero) for all nutrients
+      'amount_per_100g' => $nutrientProfileST[$nutrient->id] ? $nutrientProfileST[$nutrient->id]->amount * (100/$meal->mass_in_grams) : 0.0
 
 Computing mass
 --------------
