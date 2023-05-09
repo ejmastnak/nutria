@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Meal;
+use App\Models\Nutrient;
 use App\Models\Ingredient;
 use App\Models\MealIngredient;
 use App\Models\IngredientCategory;
@@ -26,7 +27,7 @@ class MealController extends Controller
         $user = Auth::user();
 
         return Inertia::render('Meals/Index', [
-            'meals' => Auth::user() ? Meal::where('user_id', Auth::user()->id)->get(['id', 'name']) : [],
+            'meals' => Auth::user() ? Meal::where('user_id', Auth::user()->id)->with('ingredient:id,meal_id,name')->get(['id', 'name']) : [],
             'can_create' => $user ? $user->can('create', Meal::class) : false,
         ]);
     }
@@ -130,6 +131,7 @@ class MealController extends Controller
             'meal_ingredients:id,meal_id,ingredient_id,amount,unit_id',
             'meal_ingredients.ingredient:id,name',
             'meal_ingredients.unit:id,name',
+            'ingredient:id,meal_id,name'
         ]);
 
         return Inertia::render('Meals/Show', [
@@ -137,7 +139,8 @@ class MealController extends Controller
                 'id',
                 'name',
                 'mass_in_grams',
-                'meal_ingredients'
+                'ingredient',
+                'meal_ingredients',
             ]),
             'nutrient_profiles' => NutrientProfileController::getNutrientProfilesOfMeal($meal->id),
             'intake_guidelines' => IntakeGuideline::where('user_id', null)
@@ -149,7 +152,8 @@ class MealController extends Controller
             'can_edit' => $user ? $user->can('update', $meal) : false,
             'can_clone' => $user ? $user->can('clone', $meal) : false,
             'can_delete' => $user ? $user->can('delete', $meal) : false,
-            'can_create' => $user ? $user->can('create', Meal::class) : false
+            'can_create' => $user ? $user->can('create', Meal::class) : false,
+            'can_create_ingredient' => $user ? $user->can('create', Ingredient::class) : false,
         ]);
     }
 
@@ -165,18 +169,20 @@ class MealController extends Controller
             'meal_ingredients:id,meal_id,ingredient_id,amount,unit_id',
             'meal_ingredients.ingredient:id,name',
             'meal_ingredients.unit:id,name',
+            'ingredient:id,meal_id,name'
         ]);
 
         return Inertia::render('Meals/Edit', [
             'meal' => $meal->only([
                 'id',
                 'name',
+                'ingredient',
                 'meal_ingredients'
             ]),
             'meals' => Meal::where('user_id', $user ? $user->id : 0)->get(['id', 'name']),
             'ingredients' => Ingredient::where('user_id', null)
-                ->orWhere('user_id', $user ? $user->id : 0)
-                ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
+            ->orWhere('user_id', $user ? $user->id : 0)
+            ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
             'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
             'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
             'can_view' => $user ? $user->can('view', $meal) : false,
@@ -248,7 +254,14 @@ class MealController extends Controller
             'mass_in_grams' => $meal_mass_in_grams,
         ]);
 
-        return Redirect::route('meals.show', $meal->id)->with('message', 'Success! Meal updated successfully.');
+        if (!is_null($meal->ingredient)) {
+            $this->saveAsIngredientWithoutRedirect($meal, Auth::user());
+            $message = 'Success! Meal (and one linked ingredient) updated successfully.';
+        } else {
+            $message = 'Success! Meal updated successfully.';
+        }
+
+        return Redirect::route('meals.show', $meal->id)->with('message', $message);
     }
 
     /**
@@ -271,7 +284,16 @@ class MealController extends Controller
     public function saveAsIngredient(Meal $meal) {
         $this->authorize('create', Ingredient::class);
         $user = Auth::user();
+        $ingredient = $this->saveAsIngredientWithoutRedirect($meal, $user);
+        return Redirect::route('ingredients.show', $ingredient->id)->with('message', 'Success! Ingredient successfully created.');
+    }
 
+    /**
+     *  Implements the logic for saveAsIngredient(); this function is kept
+     *  separate from the public function saveAsIngredient so that it can
+     *  also be called from update() without redirecting to Ingredients/Show.
+     */
+    private function saveAsIngredientWithoutRedirect(Meal $meal, $user) {
         // Check for an Ingredient associated with the inputted $meal
         $ingredient = Ingredient::where('meal_id', $meal->id)->first();
 
@@ -279,17 +301,16 @@ class MealController extends Controller
         $otherIngredientCategory = IngredientCategory::where('name', IngredientCategory::$OTHER_CATEGORY_NAME)->first();
         if (is_null($ingredient)) {
             $ingredient = Ingredient::create([
-                'name' => $meal->name,
+                'name' => $meal->name . ' (ingredient)',
                 'ingredient_category_id' => $otherIngredientCategory ? $otherIngredientCategory->id : 1,
                 'meal_id' => $meal->id,
                 'user_id' => $user->id
             ]);
-        } else {
-            $ingredient->update([ 'name' => $meal->name ]);
         }
 
         // Update or create Ingredient's IngredientNutrients
-        $nutrientProfileST = NutrientProfileController::profileMeal($meal->id, $return_as_symbol_table=true);
+        $nutrientProfileST = NutrientProfileController::profileMeal($meal->id, $intakeGuidelineID=1, $returnAsSymbolTable=true);
+
         foreach (Nutrient::all() as $nutrient) {
             // Check for existing IngredientNutrient associated with this
             // $nutrient and $ingredient
@@ -302,7 +323,7 @@ class MealController extends Controller
                 $ingredientNutrient = IngredientNutrient::create([
                     'ingredient_id' => $ingredient->id,
                     'nutrient_id' => $nutrient->id,
-                    `amount_per_100g` => 0.0  // updated later
+                    'amount_per_100g' => 0.0  // updated later
                 ]);
             }
 
@@ -313,7 +334,7 @@ class MealController extends Controller
             ]);
         }
 
-        return Redirect::route('ingredients.show', $ingredient->id)->with('message', 'Success! Ingredient successfully created.');
+        return $ingredient;
     }
 
     public function validateStoreOrUpdateRequest(Request $request) {

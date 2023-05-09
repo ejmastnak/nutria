@@ -11,6 +11,7 @@ import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
 import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
 import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
+import MyLink from '@/Components/MyLink.vue'
 import H1 from '@/Components/H1ForCrud.vue'
 
 const props = defineProps({
@@ -48,7 +49,8 @@ export default {
       <div class="flex ml-auto">
         <CrudNavBarView :enabled="can_view" text="View original" :href="route('meals.show', meal.id)" />
         <CrudNavBarCloneLink :enabled="can_clone" text="Clone" :href="route('meals.clone', meal.id)" />
-        <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(meal.id)" />
+        <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(meal.id, meal.ingredient ? {id: meal.ingredient.id, name: meal.ingredient.name} : null)" />
+
       </div>
     </CrudNavBar>
 

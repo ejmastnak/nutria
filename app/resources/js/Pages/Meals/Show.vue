@@ -10,6 +10,7 @@ import CrudNavBar from '@/Shared/CrudNavBar.vue'
 import CrudNavBarEdit from '@/Shared/CrudNavBarEdit.vue'
 import CrudNavBarCloneLink from '@/Shared/CrudNavBarCloneLink.vue'
 import CrudNavBarDelete from '@/Shared/CrudNavBarDelete.vue'
+import CrudNavBarSave from '@/Shared/CrudNavBarSave.vue'
 import CrudNavBarCreate from '@/Shared/CrudNavBarCreate.vue'
 import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
 import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
@@ -26,6 +27,7 @@ const props = defineProps({
   can_clone: Boolean,
   can_delete: Boolean,
   can_create: Boolean,
+  can_create_ingredient: Boolean,
 })
 
 const deleteDialog = ref(null)
@@ -34,6 +36,10 @@ const searchDialog = ref(null)
 const searchMeal = ref({})
 function search() {
   router.get(route('meals.show', searchMeal.value.id))
+}
+
+function saveAsIngredient() {
+  router.put(route('meals.save-as-ingredient', props.meal.id))
 }
 
 </script>
@@ -57,9 +63,12 @@ export default {
       <div class="flex ml-auto">
         <CrudNavBarEdit v-if="can_edit" :enabled="can_edit" :href="route('meals.edit', meal.id)" />
         <CrudNavBarCloneLink :enabled="can_clone" :href="route('meals.clone', meal.id)" />
-        <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(meal.id)" />
+        <CrudNavBarSave :enabled="can_create_ingredient" text="Save as ingredient" @wasClicked="saveAsIngredient" />
+        <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(meal.id, meal.ingredient ? {id: meal.ingredient.id, name: meal.ingredient.name} : null)" />
       </div>
     </CrudNavBar>
+
+
 
     <div class="mt-8">
       <H1 :text="meal.name" />

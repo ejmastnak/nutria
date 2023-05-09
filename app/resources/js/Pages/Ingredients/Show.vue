@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { router } from '@inertiajs/vue3'
-import { Head } from '@inertiajs/vue3'
+import { Head, router } from '@inertiajs/vue3'
 import { round } from '@/utils/GlobalFunctions.js'
 import NutrientProfile from '@/Shared/NutrientProfile.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
@@ -14,6 +13,7 @@ import CrudNavBarCreate from '@/Shared/CrudNavBarCreate.vue'
 import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
 import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
 import H1 from '@/Components/H1ForCrud.vue'
+import MyLink from '@/Components/MyLink.vue'
 
 const props = defineProps({
   ingredient: Object,
@@ -62,6 +62,12 @@ export default {
     <div class="mt-8">
 
       <H1 :text="ingredient.name" />
+      <div v-if="ingredient.meal" class="text-gray-700">
+        (Created from
+        <MyLink class="text-blue-500" :href="route('meals.show', ingredient.meal.id)">
+          {{ingredient.meal.name}}
+        </MyLink>)
+      </div>
 
       <!-- Ingredient category -->
       <div class="flex">

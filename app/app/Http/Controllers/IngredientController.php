@@ -190,7 +190,7 @@ class IngredientController extends Controller
         $this->authorize('view', $ingredient);
         $user = Auth::user();
 
-        $ingredient->load('ingredient_category:id,name');
+        $ingredient->load('ingredient_category:id,name', 'meal:id,name');
 
         return Inertia::render('Ingredients/Show', [
             'ingredient' => $ingredient->only([
@@ -198,7 +198,9 @@ class IngredientController extends Controller
                 'name',
                 'ingredient_category_id',
                 'ingredient_category',
-                'density_g_per_ml'
+                'density_g_per_ml',
+                'meal_id',
+                'meal'
             ]),
             'nutrient_profiles' => NutrientProfileController::getNutrientProfilesOfIngredient($ingredient->id),
             'intake_guidelines' => IntakeGuideline::where('user_id', null)

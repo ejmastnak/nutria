@@ -172,7 +172,7 @@ export default {
 
                 <button
                   type="button"
-                  @click="deleteDialog.open(meal.id)"
+                  @click="deleteDialog.open(meal.id, meal.ingredient ? {id: meal.ingredient.id, name: meal.ingredient.name} : null)"
                   class="mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
                 >
                   <TrashIcon class="w-5 h-5 hover:text-red-700" />
@@ -217,6 +217,7 @@ export default {
     />
 
     <DeleteDialog ref="deleteDialog" deleteRoute="meals.destroy" thing="meal" @delete="updateFuzzySearchOnDeletion" />
+
 
   </div>
 </template>
