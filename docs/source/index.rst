@@ -151,7 +151,7 @@ Documentation
 
    database
    ui
-   validation
+   controllers
    nutrient-profiles
    auth
 

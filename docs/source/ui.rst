@@ -439,7 +439,8 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
     "can_edit": false,
     "can_clone": false,
     "can_delete": false,
-    "can_create": false
+    "can_create": false,
+    "can_create_ingredient": false
   }
 
 - ``meal`` to display meal info
@@ -447,7 +448,7 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
 - ``intake_guidelines`` to show nutrient profiles for different intake guidelines
 - ``meals`` for "Search for another meal"
 - ``nutrient_categories`` to split up nutrient profile into vitamins, minerals, macronutrients
-- Auth props to conditionally display Edit, Clone, Delete, and Create buttons.
+- Auth props to conditionally display Edit, Clone, Delete, and Create buttons; ``can_create_ingredient`` to conditionally display "Save as Ingredient".
 
 
 **UI:** MealIngredients table with columns for:
@@ -462,6 +463,7 @@ Nutrient Profile table.
 
 - Edit
 - Clone
+- Save as Ingredient
 - Delete
 - Create
 - Search
