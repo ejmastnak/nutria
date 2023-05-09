@@ -94,7 +94,12 @@ Purpose: display an ingredient's name, properties, and nutrient profile.
         "id": 0,
         "name": "Bar"
       },
-      "density_g_per_ml": 0.0
+      "density_g_per_ml": 0.0,
+      "meal_id": 0,
+      "meal": {
+        "id": 0,
+        "name": "Boo"
+      }
     },
     "nutrient_profiles": [
       {
@@ -137,7 +142,7 @@ Purpose: display an ingredient's name, properties, and nutrient profile.
     "can_create": false
   }
 
-- ``ingredient`` to display ingredient info
+- ``ingredient`` to display ingredient info (``meal`` to notify user if ingredient was created from a meal)
 - ``nutrient_profiles`` to display ingredient's nutrient profile(s)
 - ``intake_guidelines`` to show nutrient profiles for different intake guidelines
 - ``ingredients`` for "Search for another ingredient" without having to go back to Ingredients/Index
@@ -347,12 +352,17 @@ Purpose: display an overview of all meals as an intermediate step to navigating 
       {
         "id": 0,
         "name": "Foo",
+        "ingredient": {
+          "id": 0,
+          "meal_id": 0,
+          "name": "Bar"
+        }
       }
     ],
     "can_create": false
   }
 
-- ``meals`` for search over meals
+- ``meals`` for search over meals (``ingredient`` (which will mostly be ``null``) to display warnings that deleting a meal will delete associated ingredient for ingredients created from a meal).
 - ``can_create`` to control display of "Create meal" and "Clone meal" button
 
 **UI**
@@ -400,7 +410,12 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
             "name": "Baz"
           }
         }
-      ]
+      ],
+      "ingredient": {
+        "id": 0,
+        "meal_id": 0,
+        "name": "Boo"
+      }
     },
     "nutrient_profiles": [
       {
@@ -443,7 +458,7 @@ Purpose: display a meals's name, constituent MealIngredients, and nutrient profi
     "can_create_ingredient": false
   }
 
-- ``meal`` to display meal info
+- ``meal`` to display meal info (``ingredient`` (which will usually be ``null``) to display warnings that deleting this meal will delete associated ingredient for an ingredient created from this meal)
 - ``nutrient_profiles`` to display meal's nutrient profile(s)
 - ``intake_guidelines`` to show nutrient profiles for different intake guidelines
 - ``meals`` for "Search for another meal"
@@ -571,7 +586,12 @@ Edit
             "name": "Baz"
           }
         }
-      ]
+      ],
+      "ingredient": {
+        "id": 0,
+        "meal_id": 0,
+        "name": "Blap"
+      }
     },
     "meals": [
       {
@@ -607,7 +627,7 @@ Edit
     "can_create": false
   }
 
-- ``meal`` to display current meal information
+- ``meal`` to display current meal information (``ingredient`` (which will usually be ``null``) to display warnings that deleting this meal will delete associated ingredient for an ingredient created from this meal)
 - ``meals`` for "Search for another" and "Clone existing"
 - ``ingredients`` (FDA *and* user ingredients) to use as MealIngredients.
   ``density_g_per_ml`` to determine if ingredient amount can be specified in volume units.

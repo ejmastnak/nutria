@@ -121,10 +121,10 @@ Create or Update Meal
   - increment running sum tracking meal's ``mass_in_grams``
 
 - For all ``meal_ingredient`` objects in request and not in DB table, create a new ``meal_ingredient`` record with supplied values as in Create and increment running sum tracking meal's ``mass_in_grams``.
-
 - Delete all ``meal_ingredient`` records in ``meal_ingredients`` DB table but not in request
-
 - set ``meal``'s ``mass_in_grams`` to sum of all ``meal_ingredient``'s ``mass_in_grams``
+
+- Check for an ingredient created from this meal, i.e. check ``is_null($meal->ingredient)``, and update ingredient with new meal information.
 
 .. _validation-crud-food-list:
 
@@ -271,7 +271,8 @@ Call from frontend with
 
   router.put(route('meals.save-as-ingredient', props.meal.id))
 
-Protocol:
+Saving a meal as ingredient
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - Authorize user for ingredient creation
 - Check for an Ingredient associated with the inputted (does ``$meal->id`` match any ``$ingredient->meal_id``?)
@@ -307,6 +308,15 @@ Protocol:
       // to amount per 100 grams of meal); otherwise set amount to 0.
       // This ensures ingredient has entries (possibly zero) for all nutrients
       'amount_per_100g' => $nutrientProfileST[$nutrient->id] ? $nutrientProfileST[$nutrient->id]->amount * (100/$meal->mass_in_grams) : 0.0
+
+Relationship
+^^^^^^^^^^^^
+
+- The Meal-Ingredient relationship should be one-to-one.
+- Deleting parent meal deletes corresponding ingredient.
+- Updating parent meal updates corresponding ingredient.
+- Updating/deleting an ingredient has no effect on parent meal.
+- Cloning an ingredient does not preserve ingredient's `meal_id`
 
 Computing mass
 --------------
