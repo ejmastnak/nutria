@@ -18,7 +18,7 @@ const props = defineProps({
 })
 
 const form = useForm({
-  name: props.intake_guideline.name ?? "",
+  name: props.create ? "" : props.intake_guideline.name,
   intake_guideline_nutrients: props.intake_guideline.intake_guideline_nutrients.map((intake_guideline_nutrient, index) => ({
     idx: index,
     id: props.create ? 0 : intake_guideline_nutrient.id,
@@ -32,6 +32,13 @@ const form = useForm({
       unit: intake_guideline_nutrient.nutrient.unit
     }
   }))
+})
+
+const nameInput = ref(null)
+onMounted(() => {
+  if (props.create) {
+    nameInput.value.focus()
+  }
 })
 
 function submit() {
@@ -61,6 +68,7 @@ export default {
         <InputLabel for="name" value="Name" />
         <TextInput
           id="name"
+          ref="nameInput"
           type="text"
           class="mt-1 block w-full"
           v-model="form.name"

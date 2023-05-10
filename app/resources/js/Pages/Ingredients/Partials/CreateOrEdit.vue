@@ -15,11 +15,11 @@ const props = defineProps({
   ingredient: Object,
   ingredient_categories: Array,
   nutrient_categories: Array,
-  create: Boolean
+  create: Boolean,
 })
 
 const form = useForm({
-  name: props.ingredient.name ?? "",
+  name: props.create ? "" : props.ingredient.name,
   ingredient_category_id: props.ingredient.ingredient_category_id ?? 0,
   density_g_per_ml: props.ingredient.density_g_per_ml ? round(Number(props.ingredient.density_g_per_ml), 2).toString() : "",
   ingredient_nutrients: props.ingredient.ingredient_nutrients.map((ingredient_nutrient, index) => ({
@@ -33,6 +33,7 @@ const form = useForm({
   }))
 })
 
+const nameInput = ref(null)
 const selectedCategory = ref({})
 
 function submit() {
@@ -50,6 +51,9 @@ onMounted(() => {
     // equals props.ingredient.ingredient_category_id
     const idx = props.ingredient_categories.map(ic => ic.id).indexOf(props.ingredient.ingredient_category_id)
     selectedCategory.value = props.ingredient_categories[idx]
+  }
+  if (props.create) {
+    nameInput.value.focus()
   }
 })
 
@@ -72,6 +76,7 @@ export default {
         <InputLabel for="name" value="Name" />
         <TextInput
           id="name"
+          ref="nameInput"
           type="text"
           class="mt-1 block w-full"
           v-model="form.name"

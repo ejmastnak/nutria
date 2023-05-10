@@ -25,7 +25,7 @@ const props = defineProps({
 const gramIdx = props.units.map(unit => unit.name).indexOf("g")
 const gram = props.units[gramIdx]
 const form = useForm({
-  name: props.food_list ? props.food_list.name : "",
+  name: props.create ? "" : props.food_list.name,
   food_list_ingredients: props.food_list ? props.food_list.food_list_ingredients.map((fli, index) => ({
     idx: index,
     id: fli.id,
@@ -46,6 +46,13 @@ const form = useForm({
     meal: flm.meal,
     unit: flm.unit
   })) : []
+})
+
+const nameInput = ref(null)
+onMounted(() => {
+  if (props.create) {
+    nameInput.value.focus()
+  }
 })
 
 var nextIngredientID = -1
@@ -147,6 +154,7 @@ export default {
         <InputLabel for="name" value="Name" />
         <TextInput
           id="name"
+          ref="nameInput"
           type="text"
           class="mt-1 block w-full"
           v-model="form.name"
