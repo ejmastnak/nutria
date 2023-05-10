@@ -133,7 +133,7 @@ class FoodListController extends Controller
           'mass_in_grams' => $food_list_mass_in_grams
         ]);
 
-        return Redirect::route('food-lists.show', $food_list->id)->with('message', 'Success! Food list created successfully.');
+        return Redirect::route('food-lists.show', $food_list->id)->with('message', 'Success! Food List created successfully.');
     }
 
     /**
@@ -325,7 +325,7 @@ class FoodListController extends Controller
             'mass_in_grams' => $food_list_mass_in_grams
         ]);
 
-        return Redirect::route('food-lists.show', $foodList->id)->with('message', 'Success! Food list updated successfully.');
+        return Redirect::route('food-lists.show', $foodList->id)->with('message', 'Success! Food List updated successfully.');
     }
 
     /**
@@ -337,7 +337,7 @@ class FoodListController extends Controller
 
         if ($foodList) {
             $foodList->delete();
-            return Redirect::route('food-lists.index')->with('message', 'Success! Food list deleted successfully.');
+            return Redirect::route('food-lists.index')->with('message', 'Success! Food List deleted successfully.');
         }
         return Redirect::route('food-lists.index')->with('message', 'Failed to delete food list.');
     }

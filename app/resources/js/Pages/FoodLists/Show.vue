@@ -65,10 +65,10 @@ export default {
 
       <H1 :text="food_list.name" />
 
-      <!-- Food list name and mass pillbox labels -->
+      <!-- Food List name and mass pillbox labels -->
       <div class="flex mt-2">
         <div class="bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
-          Food list
+          Food List
         </div>
         <div class="ml-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
           {{round(Number(food_list.mass_in_grams))}} g
@@ -79,73 +79,78 @@ export default {
 
     <!-- Table of food list ingredients and meals -->
     <div class="mt-8 text-gray-900">
-      <h2 class="text-lg">Food list ingredients</h2>
 
       <!-- Table of food list ingredients -->
-      <table v-if="food_list.food_list_ingredients.length" class="text-left w-full">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-          <tr>
-            <th scope="col" class="px-4 py-3 bg-blue-50">
-              Ingredient
-            </th>
-            <th scope="col" class="px-4 py-3 bg-blue-100 text-right">
-              Amount
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="fli in food_list.food_list_ingredients"
-            class="border-t text-gray-600 font-medium"
-          >
-            <td scope="row" class="px-4 py-2">
-              <MyLink
-                :href="route('ingredients.show', fli.ingredient_id)"
-                class="text-gray-800"
-              >
-                {{fli.ingredient.name}}
-              </MyLink>
-            </td>
-            <td class="px-3 py-2 text-right whitespace-nowrap">
-              {{round(Number(fli.amount, 1))}}
-              {{fli.unit.name}}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div v-if="food_list.food_list_ingredients.length" >
+        <h2 class="text-lg">Food List Ingredients</h2>
+        <table class="text-left w-full">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+              <th scope="col" class="px-4 py-3 bg-blue-50">
+                Ingredient
+              </th>
+              <th scope="col" class="px-4 py-3 bg-blue-100 text-right">
+                Amount
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="fli in food_list.food_list_ingredients"
+              class="border-t text-gray-600 font-medium"
+            >
+              <td scope="row" class="px-4 py-2">
+                <MyLink
+                  :href="route('ingredients.show', fli.ingredient_id)"
+                  class="text-gray-800"
+                >
+                  {{fli.ingredient.name}}
+                </MyLink>
+              </td>
+              <td class="px-3 py-2 text-right whitespace-nowrap">
+                {{round(Number(fli.amount, 1))}}
+                {{fli.unit.name}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <!-- Table of food list meals -->
-      <table v-if="food_list.food_list_meals.length" class="text-left w-full">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-          <tr>
-            <th scope="col" class="px-4 py-3 bg-blue-50">
-              Meal
-            </th>
-            <th scope="col" class="px-4 py-3 bg-blue-100 text-right">
-              Amount
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="flm in food_list.food_list_meals"
-            class="border-t text-gray-600 font-medium"
-          >
-            <td scope="row" class="px-4 py-2">
-              <MyLink
-                :href="route('meals.show', flm.meal_id)"
-                class="text-gray-800"
-              >
-                {{flm.meal.name}}
-              </MyLink>
-            </td>
-            <td class="px-3 py-2 text-right whitespace-nowrap">
-              {{round(Number(flm.amount, 1))}}
-              {{flm.unit.name}}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div v-if="food_list.food_list_meals.length" class="mt-2">
+        <h2 class="text-lg">Food List Meals</h2>
+        <table class="text-left w-full">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+              <th scope="col" class="px-4 py-3 bg-blue-50">
+                Meal
+              </th>
+              <th scope="col" class="px-4 py-3 bg-blue-100 text-right">
+                Amount
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="flm in food_list.food_list_meals"
+              class="border-t text-gray-600 font-medium"
+            >
+              <td scope="row" class="px-4 py-2">
+                <MyLink
+                  :href="route('meals.show', flm.meal_id)"
+                  class="text-gray-800"
+                >
+                  {{flm.meal.name}}
+                </MyLink>
+              </td>
+              <td class="px-3 py-2 text-right whitespace-nowrap">
+                {{round(Number(flm.amount, 1))}}
+                {{flm.unit.name}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <div v-if="!food_list.food_list_ingredients.length && !food_list.food_list_meals.length" class="mt-1 text-gray-700">
         This food list has no meals or ingredients!

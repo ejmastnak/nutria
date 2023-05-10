@@ -37,7 +37,7 @@ export default {
 
 <template>
   <div class="">
-    <Head title="New food list" />
+    <Head title="New Food List" />
 
     <CrudNavBar>
       <CrudNavBarIndex :href="route('food-lists.index')" />
@@ -49,7 +49,7 @@ export default {
       </div>
     </CrudNavBar>
 
-    <H1 class="mt-8" text="New food list" />
+    <H1 class="mt-8" text="New Food List" />
     <p v-if="clone && food_list" class="text-gray-700">(Cloned from {{food_list.name}})</p>
 
     <CreateOrEdit

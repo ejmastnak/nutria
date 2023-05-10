@@ -134,7 +134,7 @@ class IntakeGuidelineController extends Controller
             ]);
         }
 
-        return Redirect::route('intake-guidelines.show', $intakeGuideline->id)->with('message', 'Success! Intake guideline created successfully.');
+        return Redirect::route('intake-guidelines.show', $intakeGuideline->id)->with('message', 'Success! Intake Guideline created successfully.');
     }
 
     /**
@@ -237,7 +237,7 @@ class IntakeGuidelineController extends Controller
             ]);
         }
 
-        return Redirect::route('intake-guidelines.show', $intakeGuideline->id)->with('message', 'Success! Intake guideline updated successfully.');
+        return Redirect::route('intake-guidelines.show', $intakeGuideline->id)->with('message', 'Success! Intake Guideline updated successfully.');
     }
 
     /**
@@ -249,7 +249,7 @@ class IntakeGuidelineController extends Controller
 
         if ($intakeGuideline) {
             $intakeGuideline->delete();
-            return Redirect::route('intake-guidelines.index')->with('message', 'Success! Intake guideline deleted successfully.');
+            return Redirect::route('intake-guidelines.index')->with('message', 'Success! Intake Guideline deleted successfully.');
         }
         return Redirect::route('intake-guidelines.index')->with('message', 'Failed to delete intake guideline.');
     }

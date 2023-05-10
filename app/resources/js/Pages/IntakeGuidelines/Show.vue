@@ -61,7 +61,7 @@ export default {
       <H1 :text="intake_guideline.name" />
       <!-- intake guideline pillbox label category -->
       <div class="mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
-        Intake guideline
+        Intake Guideline
       </div>
     </div>
 

@@ -54,7 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::get('meals/{meal}', [MealController::class, 'show'])->name('meals.show');
     Route::put('meals/{meal}/save-as-ingredient', [MealController::class, 'saveAsIngredient'])->name('meals.save-as-ingredient');
 
-    // Food lists
+    // Food Lists
     Route::get('food-lists', [FoodListController::class, 'index'])->name('food-lists.index');
     Route::get('food-lists/create', [FoodListController::class, 'create'])->name('food-lists.create');
     Route::get('food-lists/{food_list}/clone', [FoodListController::class, 'clone'])->name('food-lists.clone');

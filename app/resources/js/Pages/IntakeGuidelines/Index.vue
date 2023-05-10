@@ -78,7 +78,7 @@ export default {
 
 <template>
   <div class="">
-    <Head title="Intake guidelines" />
+    <Head title="Intake Guidelines" />
 
     <!-- Title and new intake guideline top row -->
     <div class="flex">

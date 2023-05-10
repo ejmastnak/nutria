@@ -53,7 +53,7 @@ export default {
       </div>
     </CrudNavBar>
 
-    <H1 class="mt-8" text="Edit food list" />
+    <H1 class="mt-8" text="Edit Food List" />
 
     <CreateOrEdit
       :food_list="food_list"

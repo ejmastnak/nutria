@@ -167,10 +167,10 @@ export default {
       </div>
     </section>
 
-    <!-- Food list ingredients table -->
+    <!-- Food List ingredients table -->
     <section class="mt-8 p-4 border border-gray-300 shadow-sm rounded-xl">
 
-      <h2 class="text-lg">Food list ingredients</h2>
+      <h2 class="text-lg">Food List Ingredients</h2>
 
       <InputError :message="form.errors.food_list_ingredients" />
 
@@ -246,10 +246,10 @@ export default {
 
     </section>
 
-    <!-- Food list meals table -->
+    <!-- Food List meals table -->
     <section class="mt-8 p-4 border border-gray-300 shadow-sm rounded-xl">
 
-      <h2 class="text-lg">Food list meals</h2>
+      <h2 class="text-lg">Food List Meals</h2>
 
       <InputError :message="form.errors.food_list_meals" />
 

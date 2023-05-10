@@ -64,7 +64,7 @@ function updatedSelectedIntakeGuideline(newValue) {
         <div class="w-fit">
           <SimpleCombobox
             comboboxInputClasses="py-px"
-            labelText="Intake guideline for % DV"
+            labelText="Intake Guideline for % DV"
             :options="intake_guidelines"
             :modelValue="localSelectedIntakeGuideline"
             @update:modelValue="newValue => updatedSelectedIntakeGuideline(newValue)"

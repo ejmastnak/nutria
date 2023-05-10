@@ -34,7 +34,7 @@ export default {
 
 <template>
   <div class="">
-    <Head title="New Intake guideline" />
+    <Head title="New Intake Guideline" />
 
     <CrudNavBar>
       <CrudNavBarIndex :href="route('intake-guidelines.index')" />
@@ -46,7 +46,7 @@ export default {
       </div>
     </CrudNavBar>
 
-    <H1 class="mt-8" text="New intake guideline" />
+    <H1 class="mt-8" text="New Intake Guideline" />
     <p v-if="clone && intake_guideline" class="text-gray-700">(Cloned from {{intake_guideline.name}})</p>
 
     <CreateOrEdit
