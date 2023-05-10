@@ -325,7 +325,7 @@ class FoodListController extends Controller
             'mass_in_grams' => $food_list_mass_in_grams
         ]);
 
-        return Redirect::route('food-lists.index')->with('message', 'Success! Food list updated successfully.');
+        return Redirect::route('food-lists.show', $foodList->id)->with('message', 'Success! Food list updated successfully.');
     }
 
     /**
