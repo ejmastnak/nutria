@@ -51,6 +51,11 @@ onBeforeUnmount(() => {
   sessionStorage.setItem('intakeGuidelineIndexSearchQuery', search.value);
 })
 
+// Preserve search query on manual page reload
+window.onbeforeunload = function() {
+  sessionStorage.setItem('intakeGuidelineIndexSearchQuery', search.value);
+}
+
 function resetSearch() {
   search.value = ""
   searchInput.value.focus()

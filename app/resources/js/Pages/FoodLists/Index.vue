@@ -50,6 +50,11 @@ onBeforeUnmount(() => {
   sessionStorage.setItem('foodListsIndexSearchQuery', search.value);
 })
 
+// Preserve search query on manual page reload
+window.onbeforeunload = function() {
+  sessionStorage.setItem('foodListsIndexSearchQuery', search.value);
+}
+
 function resetSearch() {
   search.value = ""
   searchInput.value.focus()
