@@ -49,6 +49,11 @@ const fuzzysortUserOptions = {
 const fdaSearchQuery = ref(sessionStorage.getItem('ingredientsIndexFdaSearchQuery') ?? "")
 const userSearchQuery = ref(sessionStorage.getItem('ingredientsIndexUserSearchQuery') ?? "")
 
+const selectedTab = ref(sessionStorage.getItem('ingredientsIndexSelectedTab') ?? 0)
+function changeTab(index) {
+  selectedTab.value = index
+}
+
 // Preserve ingredient search from previous visit to this page
 onMounted(() => {
   if (fdaSearchQuery) {
@@ -70,7 +75,15 @@ watch(userSearchQuery, throttle(function (value) {
 onBeforeUnmount(() => {
   sessionStorage.setItem('ingredientsIndexFdaSearchQuery', fdaSearchQuery.value);
   sessionStorage.setItem('ingredientsIndexUserSearchQuery', userSearchQuery.value);
+  sessionStorage.setItem('ingredientsIndexSelectedTab', selectedTab.value);
 })
+
+// Preserve search query on manual page reload
+window.onbeforeunload = function() {
+  sessionStorage.setItem('ingredientsIndexFdaSearchQuery', fdaSearchQuery.value);
+  sessionStorage.setItem('ingredientsIndexUserSearchQuery', userSearchQuery.value);
+  sessionStorage.setItem('ingredientsIndexSelectedTab', selectedTab.value);
+}
 
 function resetFdaSearch() {
   fdaSearchQuery.value = ""
@@ -138,7 +151,7 @@ export default {
       </div>
     </div>
 
-    <TabGroup :defaultIndex="0">
+    <TabGroup @change="changeTab" :defaultIndex="Number(selectedTab)">
 
       <TabList class="mt-4 rounded-xl w-fit border-b space-x-2">
 
@@ -353,7 +366,7 @@ export default {
                         class="mx-auto"
                         :href="route('ingredients.edit', ingredient.id)"
                       >
-                      <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
+                        <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
                       </MyLink>
 
                       <button
