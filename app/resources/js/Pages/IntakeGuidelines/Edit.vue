@@ -44,7 +44,7 @@ export default {
       <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="intake guideline" />
       <CrudNavBarCreate :enabled="can_create" text="New" :href="route('intake-guidelines.create')" />
       <div class="flex ml-auto">
-        <CrudNavBarView :enabled="can_view" text="View original" :href="route('intake-guidelines.show', intake_guideline.id)" />
+        <CrudNavBarView :enabled="can_view" text="View" :href="route('intake-guidelines.show', intake_guideline.id)" />
         <CrudNavBarCloneLink :enabled="can_clone" text="Clone" :href="route('intake-guidelines.clone', intake_guideline.id)" />
         <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(intake_guideline.id)" />
       </div>

@@ -46,7 +46,7 @@ export default {
       <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="ingredient" />
       <CrudNavBarCreate :enabled="can_create" text="New" :href="route('ingredients.create')" />
       <div class="flex ml-auto">
-        <CrudNavBarView :enabled="can_view" text="View original" :href="route('ingredients.show', ingredient.id)" />
+        <CrudNavBarView :enabled="can_view" text="View" :href="route('ingredients.show', ingredient.id)" />
         <CrudNavBarCloneLink :enabled="can_clone" text="Clone" :href="route('ingredients.clone', ingredient.id)" />
         <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(ingredient.id)" />
       </div>
