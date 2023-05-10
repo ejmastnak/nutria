@@ -130,7 +130,7 @@ export default {
       :intake_guidelines="intake_guidelines"
       :nutrient_profiles="nutrient_profiles"
       :nutrient_categories="nutrient_categories"
-      :defaultMassInGrams="Number()"
+      :defaultMassInGrams="Number(meal.mass_in_grams)"
       :displayMassInput="true"
     />
 
