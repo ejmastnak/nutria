@@ -72,7 +72,7 @@ const filteredOptions = computed(() =>
           @change="query = $event.target.value"
           :displayValue="(option) => option.name"
         />
-        <ComboboxButton tabindex="0" class="absolute right-0 px-4 rounded-md h-full focus:outline-none focus:border-2 focus:border-blue-500 active:border-0" >
+        <ComboboxButton tabindex="0" class="absolute right-0 px-6 rounded-md h-full focus:outline-none focus:border-2 focus:border-blue-500 active:border-0" >
           <ChevronDownIcon class="w-5 h-5 text-gray-500"/>
         </ComboboxButton>
       </div>

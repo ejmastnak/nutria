@@ -67,8 +67,13 @@ function scale(num) {
             {{round(scale(nutrient.amount), precision=nutrient.precision)}}
             {{nutrient.unit}}
           </td>
-          <td class="px-3 py-2 text-right font-semibold text-gray-600" :class="bg(scale(nutrient.pdv))">
-            {{round(scale(nutrient.pdv), precision=0)}}<span class="ml-px">%</span>
+
+
+    <!-- :class="{ 'text-blue-500': colored }" -->
+
+          <td class="px-3 py-2 text-right font-semibold text-gray-600" :class="nutrient.pdv !== null ? bg(scale(nutrient.pdv)) : ''">
+            <p v-if="nutrient.pdv !== null">{{round(scale(nutrient.pdv), precision=0)}}<span class="ml-px">%</span></p>
+            <p class="text-center" v-else>–</p>
           </td>
         </tr>
       </tbody>
