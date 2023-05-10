@@ -128,6 +128,9 @@ function deleteFoodListMeal(id) {
 }
 
 function submit() {
+  form.food_list_ingredients = form.food_list_ingredients.filter(fli => fli.ingredient.id > 0)
+  form.food_list_meals = form.food_list_meals.filter(flm => flm.meal.id > 0)
+
   if (props.create) {
     form.post(route('food-lists.store'))
   } else {

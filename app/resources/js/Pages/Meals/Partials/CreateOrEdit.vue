@@ -87,6 +87,7 @@ function deleteMealIngredient(id) {
 }
 
 function submit() {
+  form.meal_ingredients = form.meal_ingredients.filter(mi => mi.ingredient.id > 0)
   if (props.create) {
     form.post(route('meals.store'))
   } else {
