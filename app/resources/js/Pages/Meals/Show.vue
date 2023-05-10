@@ -68,22 +68,18 @@ export default {
       </div>
     </CrudNavBar>
 
-
-
+    <!-- Meal name and descriptive pillboxes -->
     <div class="mt-8">
       <H1 :text="meal.name" />
 
       <!-- Meal name and mass pillbox labels -->
       <div class="flex mt-2">
-
         <div class="bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
           Meal
         </div>
-
         <div class="ml-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
           {{round(Number(meal.mass_in_grams))}} g
         </div>
-
       </div>
     </div>
 
@@ -122,7 +118,10 @@ export default {
           </tr>
         </tbody>
       </table>
-      <p v-else class="mt-1 text-gray-700">This meal has no ingredients!</p>
+      <div v-else class="mt-1 text-gray-700">
+        This meal has no ingredients!
+        Consider <MyLink class="text-blue-500" :href="route('meals.edit', meal.id)">adding some first</MyLink>.
+      </div>
     </div>
 
     <NutrientProfile
@@ -131,7 +130,7 @@ export default {
       :intake_guidelines="intake_guidelines"
       :nutrient_profiles="nutrient_profiles"
       :nutrient_categories="nutrient_categories"
-      :defaultMassInGrams="Number(meal.mass_in_grams)"
+      :defaultMassInGrams="Number()"
       :displayMassInput="true"
     />
 

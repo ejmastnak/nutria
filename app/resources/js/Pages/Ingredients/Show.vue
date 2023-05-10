@@ -59,8 +59,8 @@ export default {
       </div>
     </CrudNavBar>
 
+    <!-- Ingredient name and descriptive pillboxes -->
     <div class="mt-8">
-
       <H1 :text="ingredient.name" />
       <div v-if="ingredient.meal" class="text-gray-700">
         (Created from
@@ -74,16 +74,13 @@ export default {
         <div class="mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
           Ingredient
         </div>
-
         <div class="ml-2 mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
           {{ingredient.ingredient_category.name}}
         </div>
-
         <div v-if="ingredient.density_g_per_ml" class="ml-2 mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
           {{round(Number(ingredient.density_g_per_ml), 2)}} g/ml
         </div>
       </div>
-
     </div>
 
     <NutrientProfile
