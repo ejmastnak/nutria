@@ -79,7 +79,7 @@ function closeAndDelete() {
 
               <!-- Hardcoded addon when deleting meals with a linked ingredient -->
               <div v-if="ingredient" class="mt-2 text-gray-500">
-                One ingredient based on this meal, <MyLink class="text-blue-500" :href="route('ingredients.show', ingredient.id)">{{ingredient.name}}</MyLink>, will also be deleted if you delete this meal.
+                One ingredient based on this meal, <MyLink :colored="true" :href="route('ingredients.show', ingredient.id)">{{ingredient.name}}</MyLink>, will also be deleted if you delete this meal.
               </div>
 
             </DialogDescription>

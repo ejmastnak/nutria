@@ -120,7 +120,7 @@ export default {
       </table>
       <div v-else class="mt-1 text-gray-700">
         This meal has no ingredients!
-        Consider <MyLink class="text-blue-500" :href="route('meals.edit', meal.id)">adding some first</MyLink>.
+        Consider <MyLink :colored="true" :href="route('meals.edit', meal.id)">adding some first</MyLink>.
       </div>
     </div>
 

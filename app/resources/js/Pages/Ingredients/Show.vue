@@ -64,7 +64,7 @@ export default {
       <H1 :text="ingredient.name" />
       <div v-if="ingredient.meal" class="text-gray-700">
         (Created from
-        <MyLink class="text-blue-500" :href="route('meals.show', ingredient.meal.id)">
+        <MyLink :colored="true" :href="route('meals.show', ingredient.meal.id)">
           {{ingredient.meal.name}}
         </MyLink>)
       </div>

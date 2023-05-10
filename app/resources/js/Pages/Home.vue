@@ -17,10 +17,10 @@ export default {
     <h1 class="text-xl">Nutrient Profiler</h1>
 
     <ul class="mt-4">
-      <li><MyLink class="text-blue-500" :href="route('ingredients.index')">Ingredients</MyLink></li>
-      <li><MyLink class="text-blue-500" :href="route('meals.index')">Meals</MyLink></li>
-      <li><MyLink class="text-blue-500" :href="route('food-lists.index')">Food Lists</MyLink></li>
-      <li><MyLink class="text-blue-500" :href="route('intake-guidelines.index')">Intake Guidelines</MyLink></li>
+      <li><MyLink :colored="true" :href="route('ingredients.index')">Ingredients</MyLink></li>
+      <li><MyLink :colored="true" :href="route('meals.index')">Meals</MyLink></li>
+      <li><MyLink :colored="true" :href="route('food-lists.index')">Food Lists</MyLink></li>
+      <li><MyLink :colored="true" :href="route('intake-guidelines.index')">Intake Guidelines</MyLink></li>
     </ul>
   </div>
 </template>

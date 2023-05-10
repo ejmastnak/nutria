@@ -149,7 +149,7 @@ export default {
 
       <div v-if="!food_list.food_list_ingredients.length && !food_list.food_list_meals.length" class="mt-1 text-gray-700">
         This food list has no meals or ingredients!
-        Consider <MyLink class="text-blue-500" :href="route('food-lists.edit', food_list.id)">adding some first</MyLink>.
+        Consider <MyLink :colored="true" :href="route('food-lists.edit', food_list.id)">adding some first</MyLink>.
       </div>
 
     </div>
