@@ -14,7 +14,7 @@ export default {
   <div class="">
     <Head title="Home" />
 
-    <h1 class="text-xl">Nutrient Profiler</h1>
+    <h1 class="text-xl">Nutria Nutrition</h1>
 
     <ul class="mt-4">
       <li><MyLink :colored="true" :href="route('ingredients.index')">Ingredients</MyLink></li>
