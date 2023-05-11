@@ -51,14 +51,33 @@ export default {
     <Head :title="food_list.name" />
 
     <CrudNavBar>
-      <CrudNavBarIndex :href="route('food-lists.index')" />
-      <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="food list" />
-      <CrudNavBarCreate :enabled="can_create" :href="route('food-lists.create')" />
-      <div class="flex ml-auto">
+
+      <!-- Desktop items -->
+      <template v-slot:desktop-items>
+        <CrudNavBarIndex :href="route('food-lists.index')" />
+        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="food list" />
+        <CrudNavBarCreate :enabled="can_create" :href="route('food-lists.create')" />
+        <div class="flex ml-auto">
+          <CrudNavBarEdit v-if="can_edit" :enabled="can_edit" :href="route('food-lists.edit', food_list.id)" />
+          <CrudNavBarCloneLink :enabled="can_clone" :href="route('food-lists.clone', food_list.id)" />
+          <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(food_list.id)" />
+        </div>
+      </template>
+
+      <!-- Always-displayed mobile item -->
+      <template v-slot:mobile-displayed>
+        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="food list" />
+      </template>
+
+      <!-- Mobile menu items -->
+      <template v-slot:mobile-items>
+        <CrudNavBarIndex :href="route('food-lists.index')" />
+        <CrudNavBarCreate :enabled="can_create" :href="route('food-lists.create')" />
         <CrudNavBarEdit v-if="can_edit" :enabled="can_edit" :href="route('food-lists.edit', food_list.id)" />
         <CrudNavBarCloneLink :enabled="can_clone" :href="route('food-lists.clone', food_list.id)" />
         <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(food_list.id)" />
-      </div>
+      </template>
+
     </CrudNavBar>
 
     <div class="mt-8">

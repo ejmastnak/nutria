@@ -57,15 +57,35 @@ export default {
     <Head :title="meal.name" />
 
     <CrudNavBar>
-      <CrudNavBarIndex :href="route('meals.index')" />
-      <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="meal" />
-      <CrudNavBarCreate :enabled="can_create" :href="route('meals.create')" />
-      <div class="flex ml-auto">
+
+      <!-- Desktop items -->
+      <template v-slot:desktop-items>
+        <CrudNavBarIndex :href="route('meals.index')" />
+        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="meal" />
+        <CrudNavBarCreate :enabled="can_create" :href="route('meals.create')" />
+        <div class="flex ml-auto">
+          <CrudNavBarEdit v-if="can_edit" :enabled="can_edit" :href="route('meals.edit', meal.id)" />
+          <CrudNavBarCloneLink :enabled="can_clone" :href="route('meals.clone', meal.id)" />
+          <CrudNavBarSave :enabled="can_create_ingredient" text="Save as ingredient" @wasClicked="saveAsIngredient" />
+          <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(meal.id, meal.ingredient ? {id: meal.ingredient.id, name: meal.ingredient.name} : null)" />
+        </div>
+      </template>
+
+      <!-- Always-displayed mobile item -->
+      <template v-slot:mobile-displayed>
+        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="meal" />
+      </template>
+
+      <!-- Mobile menu items -->
+      <template v-slot:mobile-items>
+        <CrudNavBarIndex :href="route('meals.index')" />
+        <CrudNavBarCreate :enabled="can_create" :href="route('meals.create')" />
         <CrudNavBarEdit v-if="can_edit" :enabled="can_edit" :href="route('meals.edit', meal.id)" />
         <CrudNavBarCloneLink :enabled="can_clone" :href="route('meals.clone', meal.id)" />
         <CrudNavBarSave :enabled="can_create_ingredient" text="Save as ingredient" @wasClicked="saveAsIngredient" />
         <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(meal.id, meal.ingredient ? {id: meal.ingredient.id, name: meal.ingredient.name} : null)" />
-      </div>
+      </template>
+
     </CrudNavBar>
 
     <!-- Meal name and descriptive pillboxes -->

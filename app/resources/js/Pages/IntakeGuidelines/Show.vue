@@ -47,14 +47,34 @@ export default {
     <Head :title="intake_guideline.name" />
 
     <CrudNavBar>
-      <CrudNavBarIndex :href="route('intake-guidelines.index')" />
-      <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="intake guideline" />
-      <CrudNavBarCreate :enabled="can_create" :href="route('intake-guidelines.create')" />
-      <div class="flex ml-auto">
+
+      <!-- Desktop items -->
+      <template v-slot:desktop-items>
+        <CrudNavBarIndex :href="route('intake-guidelines.index')" />
+        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="intake guideline" />
+        <CrudNavBarCreate :enabled="can_create" :href="route('intake-guidelines.create')" />
+        <div class="flex ml-auto">
+          <CrudNavBarEdit v-if="can_edit" :enabled="can_edit" :href="route('intake-guidelines.edit', intake_guideline.id)" />
+          <CrudNavBarCloneLink :enabled="can_clone" :href="route('intake-guidelines.clone', intake_guideline.id)" />
+          <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(intake_guideline.id)" />
+        </div>
+      </template>
+
+      <!-- Always-displayed mobile item -->
+      <template v-slot:mobile-displayed>
+        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="intake guideline" />
+      </template>
+
+      <!-- Mobile menu items -->
+      <template v-slot:mobile-items>
+        <CrudNavBarIndex :href="route('intake-guidelines.index')" />
+        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="intake guideline" />
+        <CrudNavBarCreate :enabled="can_create" :href="route('intake-guidelines.create')" />
         <CrudNavBarEdit v-if="can_edit" :enabled="can_edit" :href="route('intake-guidelines.edit', intake_guideline.id)" />
         <CrudNavBarCloneLink :enabled="can_clone" :href="route('intake-guidelines.clone', intake_guideline.id)" />
         <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(intake_guideline.id)" />
-      </div>
+      </template>
+
     </CrudNavBar>
 
     <div class="mt-8">

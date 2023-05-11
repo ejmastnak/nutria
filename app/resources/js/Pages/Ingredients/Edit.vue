@@ -42,15 +42,37 @@ export default {
     <Head :title="'Edit ' + ingredient.name"/>
 
     <CrudNavBar>
-      <CrudNavBarIndex :href="route('ingredients.index')" />
-      <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="ingredient" />
-      <CrudNavBarCreate :enabled="can_create" text="New" :href="route('ingredients.create')" />
-      <div class="flex ml-auto">
+
+      <!-- Desktop items -->
+      <template v-slot:desktop-items>
+        <CrudNavBarIndex :href="route('ingredients.index')" />
+        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="ingredient" />
+        <CrudNavBarCreate :enabled="can_create" text="New" :href="route('ingredients.create')" />
+        <div class="flex ml-auto">
+          <CrudNavBarView :enabled="can_view" text="View" :href="route('ingredients.show', ingredient.id)" />
+          <CrudNavBarCloneLink :enabled="can_clone" text="Clone" :href="route('ingredients.clone', ingredient.id)" />
+          <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(ingredient.id)" />
+        </div>
+      </template>
+
+      <!-- Always-displayed mobile item -->
+      <template v-slot:mobile-displayed>
+        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="ingredient" />
+      </template>
+
+      <!-- Mobile menu items -->
+      <template v-slot:mobile-items>
+        <CrudNavBarIndex :href="route('ingredients.index')" />
+        <CrudNavBarCreate :enabled="can_create" text="New" :href="route('ingredients.create')" />
         <CrudNavBarView :enabled="can_view" text="View" :href="route('ingredients.show', ingredient.id)" />
         <CrudNavBarCloneLink :enabled="can_clone" text="Clone" :href="route('ingredients.clone', ingredient.id)" />
         <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(ingredient.id)" />
-      </div>
+      </template>
+
     </CrudNavBar>
+
+
+
 
     <H1 class="mt-8" text="Edit Ingredient" />
 
@@ -74,4 +96,4 @@ export default {
     <DeleteDialog ref="deleteDialog" deleteRoute="ingredients.destroy" thing="ingredient" />
 
   </div>
-  </template>
+</template>

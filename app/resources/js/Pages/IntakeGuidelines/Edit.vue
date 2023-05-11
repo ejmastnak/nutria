@@ -40,14 +40,33 @@ export default {
     <Head :title="'Edit ' + intake_guideline.name" />
 
     <CrudNavBar>
-      <CrudNavBarIndex :href="route('intake-guidelines.index')" />
-      <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="intake guideline" />
-      <CrudNavBarCreate :enabled="can_create" text="New" :href="route('intake-guidelines.create')" />
-      <div class="flex ml-auto">
+
+      <!-- Desktop items -->
+      <template v-slot:desktop-items>
+        <CrudNavBarIndex :href="route('intake-guidelines.index')" />
+        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="intake guideline" />
+        <CrudNavBarCreate :enabled="can_create" text="New" :href="route('intake-guidelines.create')" />
+        <div class="flex ml-auto">
+          <CrudNavBarView :enabled="can_view" text="View" :href="route('intake-guidelines.show', intake_guideline.id)" />
+          <CrudNavBarCloneLink :enabled="can_clone" text="Clone" :href="route('intake-guidelines.clone', intake_guideline.id)" />
+          <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(intake_guideline.id)" />
+        </div>
+      </template>
+
+      <!-- Always-displayed mobile item -->
+      <template v-slot:mobile-displayed>
+        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="intake guideline" />
+      </template>
+
+      <!-- Mobile menu items -->
+      <template v-slot:mobile-items>
+        <CrudNavBarIndex :href="route('intake-guidelines.index')" />
+        <CrudNavBarCreate :enabled="can_create" text="New" :href="route('intake-guidelines.create')" />
         <CrudNavBarView :enabled="can_view" text="View" :href="route('intake-guidelines.show', intake_guideline.id)" />
         <CrudNavBarCloneLink :enabled="can_clone" text="Clone" :href="route('intake-guidelines.clone', intake_guideline.id)" />
         <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(intake_guideline.id)" />
-      </div>
+      </template>
+
     </CrudNavBar>
 
     <H1 class="mt-8" text="Edit Intake Guideline" />

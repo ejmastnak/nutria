@@ -39,13 +39,31 @@ export default {
     <Head title="New meal" />
 
     <CrudNavBar>
-      <CrudNavBarIndex :href="route('meals.index')" />
-      <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="meal" />
-      <div class="flex ml-auto">
+
+      <!-- Desktop items -->
+      <template v-slot:desktop-items>
+        <CrudNavBarIndex :href="route('meals.index')" />
+        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="meal" />
+        <div class="flex ml-auto">
+          <CrudNavBarView v-if="clone" :enabled="can_view" text="View original" :href="route('meals.show', meal.id)" />
+          <CrudNavBarCreate v-if="clone" :enabled="can_create" text="New" :href="route('meals.create')" />
+          <CrudNavBarCloneButton v-if="!clone" :enabled="can_create" @wasClicked="cloneExistingDialog.open()" text="Clone" />
+        </div>
+      </template>
+
+      <!-- Always-displayed mobile item -->
+      <template v-slot:mobile-displayed>
+        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="meal" />
+      </template>
+
+      <!-- Mobile menu items -->
+      <template v-slot:mobile-items>
+        <CrudNavBarIndex :href="route('meals.index')" />
         <CrudNavBarView v-if="clone" :enabled="can_view" text="View original" :href="route('meals.show', meal.id)" />
         <CrudNavBarCreate v-if="clone" :enabled="can_create" text="New" :href="route('meals.create')" />
         <CrudNavBarCloneButton v-if="!clone" :enabled="can_create" @wasClicked="cloneExistingDialog.open()" text="Clone" />
-      </div>
+      </template>
+
     </CrudNavBar>
 
     <H1 class="mt-8" text="New Meal" />
