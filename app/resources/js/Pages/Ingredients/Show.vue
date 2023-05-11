@@ -17,6 +17,7 @@ import MyLink from '@/Components/MyLink.vue'
 
 const props = defineProps({
   ingredient: Object,
+  has_ingredient_nutrients: Boolean,
   nutrient_profiles: Array,
   intake_guidelines: Array,
   nutrient_categories: Array,
@@ -84,6 +85,7 @@ export default {
     </div>
 
     <NutrientProfile
+      v-if="has_ingredient_nutrients"
       class="mt-8"
       :intake_guidelines="intake_guidelines"
       :nutrient_profiles="nutrient_profiles"
@@ -91,6 +93,15 @@ export default {
       :defaultMassInGrams="100"
       :displayMassInput="true"
     />
+    <div v-else class="mt-4 max-w-xl text-gray-700">
+      This ingredient has no nutrients.
+      There is likely from an error when creating the ingredient—you should probably
+      <button class="p-px rounded-md text-blue-500 hover:text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-700" type="button" @click="deleteDialog.open(ingredient.id)">
+        delete this ingredient
+      </button>,
+      then
+      create a new one.
+    </div>
 
     <SearchForThingAndGo
       ref="searchDialog"

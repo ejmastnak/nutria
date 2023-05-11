@@ -202,6 +202,7 @@ class IngredientController extends Controller
                 'meal_id',
                 'meal'
             ]),
+            'has_ingredient_nutrients' => count($ingredient->ingredient_nutrients) > 0,
             'nutrient_profiles' => NutrientProfileController::getNutrientProfilesOfIngredient($ingredient->id),
             'intake_guidelines' => IntakeGuideline::where('user_id', null)
             ->orWhere('user_id', $user ? $user->id : 0)
