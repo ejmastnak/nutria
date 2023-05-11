@@ -72,7 +72,7 @@ export default {
 
     </CrudNavBar>
 
-    <H1 class="mt-8" text="Edit Meal" />
+    <H1 class="mt-8" :text="'Edit ' + meal.name" />
 
     <CreateOrEdit
       :meal="meal"

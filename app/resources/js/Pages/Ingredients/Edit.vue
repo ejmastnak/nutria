@@ -74,7 +74,7 @@ export default {
 
 
 
-    <H1 class="mt-8" text="Edit Ingredient" />
+    <H1 class="mt-8" :text="'Edit ' + ingredient.name " />
 
     <CreateOrEdit
       :ingredient="ingredient"
