@@ -13,7 +13,7 @@ function closePopover(close) { close() }
   </header>
 
   <!-- Mobile nav bar -->
-  <header class="flex sm:hidden items-center border border-gray-300 rounded-xl">
+  <header class="flex sm:hidden items-center border border-gray-300 rounded-xl text-gray-900">
 
     <!-- Icons on left that are always displayed in mobile layout -->
     <div class="flex mr-auto">
@@ -28,7 +28,7 @@ function closePopover(close) { close() }
         <XMarkIcon v-else class="w-6 h-6 text-gray-500" />
       </PopoverButton>
       <!-- Mobile menu items -->
-      <PopoverPanel v-slot="{ close }" class="absolute right-0 z-10 p-1 border border-gray-200 shadow-sm rounded-xl bg-white focus:outline-none focus:ring-1 focus:ring-blue-700">
+      <PopoverPanel v-slot="{ close }" class="absolute right-0 z-10 px-2 py-1 border border-gray-200 shadow-sm rounded-xl bg-white focus:outline-none focus:ring-1 focus:ring-blue-700">
         <div class="flex flex-col">
           <slot name="mobile-items"></slot>
         </div>
