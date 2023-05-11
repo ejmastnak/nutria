@@ -9,7 +9,7 @@ const props = defineProps({
 
 <template>
 
-  <div class="grid grid-cols-1 lg:flex md:space-x-4">
+  <div class="grid grid-cols-1 lg:flex space-y-4 lg:space-y-0 lg:space-x-4">
 
     <div
       v-for="nc in nutrient_categories"
