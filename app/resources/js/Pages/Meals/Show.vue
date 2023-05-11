@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { Head } from '@inertiajs/vue3'
+import { ArchiveBoxArrowDownIcon } from '@heroicons/vue/24/outline'
 import { round } from '@/utils/GlobalFunctions.js'
 import NutrientProfile from '@/Shared/NutrientProfile.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
@@ -10,12 +11,12 @@ import CrudNavBar from '@/Shared/CrudNavBar.vue'
 import CrudNavBarEdit from '@/Shared/CrudNavBarEdit.vue'
 import CrudNavBarCloneLink from '@/Shared/CrudNavBarCloneLink.vue'
 import CrudNavBarDelete from '@/Shared/CrudNavBarDelete.vue'
-import CrudNavBarSave from '@/Shared/CrudNavBarSave.vue'
 import CrudNavBarCreate from '@/Shared/CrudNavBarCreate.vue'
 import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
 import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
 import MyLink from '@/Components/MyLink.vue'
 import H1 from '@/Components/H1ForCrud.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
 
 const props = defineProps({
   meal: Object,
@@ -66,7 +67,6 @@ export default {
         <div class="flex ml-auto">
           <CrudNavBarEdit v-if="can_edit" :enabled="can_edit" :href="route('meals.edit', meal.id)" />
           <CrudNavBarCloneLink :enabled="can_clone" :href="route('meals.clone', meal.id)" />
-          <CrudNavBarSave :enabled="can_create_ingredient" text="Save as ingredient" @wasClicked="saveAsIngredient" />
           <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(meal.id, meal.ingredient ? {id: meal.ingredient.id, name: meal.ingredient.name} : null)" />
         </div>
       </template>
@@ -82,25 +82,39 @@ export default {
         <CrudNavBarCreate :enabled="can_create" :href="route('meals.create')" />
         <CrudNavBarEdit v-if="can_edit" :enabled="can_edit" :href="route('meals.edit', meal.id)" />
         <CrudNavBarCloneLink :enabled="can_clone" :href="route('meals.clone', meal.id)" />
-        <CrudNavBarSave :enabled="can_create_ingredient" text="Save as ingredient" @wasClicked="saveAsIngredient" />
         <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(meal.id, meal.ingredient ? {id: meal.ingredient.id, name: meal.ingredient.name} : null)" />
       </template>
 
     </CrudNavBar>
 
     <!-- Meal name and descriptive pillboxes -->
-    <div class="mt-8">
-      <H1 :text="meal.name" />
+    <div class="mt-8 flex">
 
-      <!-- Meal name and mass pillbox labels -->
-      <div class="flex mt-2">
-        <div class="bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
-          Meal
-        </div>
-        <div class="ml-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
-          {{round(Number(meal.mass_in_grams))}} g
+      <div class="grow-[2] mr-4">
+        <H1 :text="meal.name" />
+
+        <!-- Meal name and mass pillbox labels -->
+        <div class="flex mt-2">
+          <div class="bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
+            Meal
+          </div>
+          <div class="ml-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit whitespace-nowrap">
+            {{round(Number(meal.mass_in_grams))}} g
+          </div>
         </div>
       </div>
+
+      <SecondaryButton
+        class="flex ml-auto items-center h-fit rounded-lg mt-1 normal-case"
+        :class="{'!text-gray-300': !can_create}"
+        @click="saveAsIngredient"
+      >
+        <div class="flex items-center sm:whitespace-nowrap">
+          <ArchiveBoxArrowDownIcon class="shrink-0 w-6 h-6" />
+          <p class="ml-2 text-sm text-left">Save as ingredient</p>
+        </div>
+      </SecondaryButton>
+
     </div>
 
     <!-- Table of meal ingredients -->
