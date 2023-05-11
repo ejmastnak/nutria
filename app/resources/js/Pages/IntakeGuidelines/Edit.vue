@@ -50,7 +50,7 @@ export default {
       </div>
     </CrudNavBar>
 
-    <H1 class="mt-8" text="Edit intake guideline" />
+    <H1 class="mt-8" text="Edit Intake Guideline" />
 
     <CreateOrEdit
       :intake_guideline="intake_guideline"

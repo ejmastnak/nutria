@@ -79,7 +79,7 @@ export default {
 
     </section>
 
-    <!-- Intake guideline nutrient table -->
+    <!-- Intake Guideline nutrient table -->
     <section class="mt-8">
 
       <InputError :message="form.errors.intake_guideline_nutrients" />
