@@ -1,5 +1,5 @@
 <script setup>
-import { Bars4Icon } from '@heroicons/vue/24/outline'
+import { Bars4Icon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 
 function closePopover(close) { close() }
@@ -21,10 +21,11 @@ function closePopover(close) { close() }
     </div>
 
     <!-- Popover with hamburger button and mobile menu items -->
-    <Popover class="relative">
+      <Popover v-slot="{open}" class="relative">
       <!-- Hamburger button for displaying full mobile menu -->
       <PopoverButton class="px-4 py-2 rounded-xl overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-700">
-        <Bars4Icon class="w-6 h-6 text-gray-500" />
+        <Bars4Icon v-if="!open" class="w-6 h-6 text-gray-500" />
+        <XMarkIcon v-else class="w-6 h-6 text-gray-500" />
       </PopoverButton>
       <!-- Mobile menu items -->
       <PopoverPanel v-slot="{ close }" class="absolute right-0 z-10 p-1 border border-gray-200 shadow-sm rounded-xl bg-white focus:outline-none focus:ring-1 focus:ring-blue-700">
