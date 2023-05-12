@@ -19,7 +19,7 @@ const showingNavigationDropdown = ref(false);
         <!-- Primary Navigation Menu -->
         <div class="relative px-2 sm:px-4 sm:pr-6 lg:pr-8">
 
-          <FlashMessage :message="$page.props.flash.message" class="h-full" />
+          <FlashMessage :flash="$page.props.flash" class="h-full" />
 
           <div class="flex justify-between h-16">
 
