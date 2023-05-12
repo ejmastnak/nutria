@@ -8,6 +8,8 @@ use App\Models\IngredientCategory;
 use App\Models\NutrientCategory;
 use App\Models\Nutrient;
 use App\Models\IntakeGuideline;
+use App\Http\Requests\StoreIngredientRequest;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
@@ -156,22 +158,25 @@ class IngredientController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreIngredientRequest $request)
     {
-        $this->authorize('create', Ingredient::class);
-        $this->validateStoreOrUpdateRequest($request, true);
+        $validated = $request->safe()->only([
+            'name',
+            'ingredient_category_id',
+            'density_g_per_ml'
+        ]);
 
         // Create ingredient
         $ingredient = Ingredient::create([
-            'name' => $request->name,
-            'fdc_id' => $request->fdc_id,
-            'ingredient_category_id' => $request->ingredient_category_id,
-            'density_g_per_ml' => $request->density_g_per_ml,
+            'name' => $validated['name'],
+            'fdc_id' => null,
+            'ingredient_category_id' => $validated['ingredient_category_id'],
+            'density_g_per_ml' => $validated['density_g_per_ml'],
             'user_id' => $request->user()->id
         ]);
 
         // Create ingredient's nutrients
-        foreach ($request->ingredient_nutrients as $in) {
+        foreach ($request['ingredient_nutrients'] as $in) {
             IngredientNutrient::create([
                 'ingredient_id' => $ingredient->id,
                 'nutrient_id' => $in['nutrient_id'],
