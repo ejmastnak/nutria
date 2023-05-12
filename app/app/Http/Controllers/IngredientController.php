@@ -9,6 +9,7 @@ use App\Models\NutrientCategory;
 use App\Models\Nutrient;
 use App\Models\IntakeGuideline;
 use App\Http\Requests\StoreIngredientRequest;
+use App\Http\Requests\UpdateIngredientRequest;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -272,21 +273,23 @@ class IngredientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Ingredient $ingredient)
+    public function update(UpdateIngredientRequest $request, Ingredient $ingredient)
     {
-        $this->authorize('update', $ingredient);
-        $this->validateStoreOrUpdateRequest($request);
+        $validated = $request->safe()->only([
+            'name',
+            'ingredient_category_id',
+            'density_g_per_ml'
+        ]);
 
         // Update ingredient
         $ingredient->update([
-            'name' => $request->name,
-            'fdc_id' => $request->fdc_id,
-            'ingredient_category_id' => $request->ingredient_category_id,
-            'density_g_per_ml' => $request->density_g_per_ml,
+            'name' => $request['name'],
+            'ingredient_category_id' => $request['ingredient_category_id'],
+            'density_g_per_ml' => $request['density_g_per_ml'],
         ]);
 
         // Update ingredient's nutrients
-        foreach ($request->ingredient_nutrients as $ing) {
+        foreach ($request['ingredient_nutrients'] as $ing) {
             $dbIng = IngredientNutrient::find($ing['id']);
             if ($dbIng) {
                 $dbIng->update(['amount_per_100g' => $ing['amount_per_100g']]);
@@ -318,26 +321,6 @@ class IngredientController extends Controller
             return Redirect::route('ingredients.index')->with('message', 'Success! Ingredient deleted successfully.');
         }
         return Redirect::route('ingredients.index')->with('message', 'Failed to delete ingredient.');
-    }
-
-    private function validateStoreOrUpdateRequest($request, $store=false) {
-        $num_nutrients = Nutrient::count();
-
-        $request->validate([
-            'name' => ['required', 'min:1', 'max:500'],
-            'ingredient_category_id' => ['required', 'integer', 'exists:ingredient_categories,id'],
-            'density_g_per_ml' => ['nullable', 'numeric', 'gt:0'],
-            'ingredient_nutrients' => ['required', 'array', 'max:' . $num_nutrients],
-            'ingredient_nutrients.*.id' => ['required', 'integer'],
-            'ingredient_nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'exists:nutrients,id'],
-            'ingredient_nutrients.*.amount_per_100g' => ['required', 'numeric', 'gte:0'],
-        ]);
-
-        // Every newly created ingredient must have one entry for each nutrient
-        if ($store) {
-            $request->validate(['ingredient_nutrients' => ['min:' . $num_nutrients, 'max:' . $num_nutrients]]);
-        }
-
     }
 
 }
