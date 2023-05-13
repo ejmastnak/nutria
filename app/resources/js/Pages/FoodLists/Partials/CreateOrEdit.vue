@@ -55,6 +55,7 @@ onMounted(() => {
   }
 })
 
+const foodListIngredientTableCells = ref([])
 var nextIngredientID = -1
 function addFoodListIngredient() {
   form.food_list_ingredients.push({
@@ -71,9 +72,18 @@ function addFoodListIngredient() {
     },
     "unit": gram
   });
+
+  // Focus text input for name of just-added empty food list ingredient
+  // Use timeout to give time for new table row to be injected into DOM
+  setTimeout(() => {
+    const input = foodListIngredientTableCells.value[foodListIngredientTableCells.value.length - 1].querySelectorAll('input')[0];
+    if (input) input.focus();
+  }, 0)
+
   nextIngredientID -= 1;
 }
 
+const foodListMealTableCells = ref([])
 var nextMealID = -1
 function addFoodListMeal() {
   form.food_list_meals.push({
@@ -89,6 +99,14 @@ function addFoodListMeal() {
     },
     "unit": gram
   });
+
+  // Focus text input for name of just-added empty food list meal
+  // Use timeout to give time for new table row to be injected into DOM
+  setTimeout(() => {
+    const input = foodListMealTableCells.value[foodListMealTableCells.value.length - 1].querySelectorAll('input')[0];
+    if (input) input.focus();
+  }, 0)
+
   nextMealID -= 1;
 }
 
@@ -192,9 +210,10 @@ export default {
         <tbody>
           <tr
             v-for="fli in form.food_list_ingredients"
+            :key="fli.id"
             class="border-t text-gray-600"
           >
-            <td scope="row" class="px-5 py-2">
+            <td ref="foodListIngredientTableCells" scope="row" class="px-5 py-2">
               <FuzzyCombobox
                 :options="ingredients"
                 :modelValue="fli.ingredient"
@@ -271,9 +290,10 @@ export default {
         <tbody>
           <tr
             v-for="flm in form.food_list_meals"
+            :key="flm.id"
             class="border-t text-gray-600"
           >
-            <td scope="row" class="px-5 py-2">
+            <td ref="foodListMealTableCells" scope="row" class="px-5 py-2">
               <FuzzyCombobox
                 :options="meals"
                 :modelValue="flm.meal"

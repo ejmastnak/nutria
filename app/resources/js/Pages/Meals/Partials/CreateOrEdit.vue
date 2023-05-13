@@ -43,7 +43,7 @@ onMounted(() => {
   }
 })
 
-
+const mealIngredientTableCells = ref([])
 var nextMealIngredientID = -1
 function addMealIngredient() {
   form.meal_ingredients.push({
@@ -60,6 +60,14 @@ function addMealIngredient() {
     },
     "unit": gram
   });
+
+  // Focus text input for name of just-added empty meal ingredient
+  // Use timeout to give time for new table row to be injected into DOM
+  setTimeout(() => {
+    const input = mealIngredientTableCells.value[mealIngredientTableCells.value.length - 1].querySelectorAll('input')[0];
+    if (input) input.focus();
+  }, 0)
+
   nextMealIngredientID -= 1;
 }
 
@@ -150,9 +158,10 @@ export default {
         <tbody>
           <tr
             v-for="meal_ingredient in form.meal_ingredients"
+            :key="meal_ingredient.id"
             class="border-t text-gray-600"
           >
-            <td scope="row" class="px-5 py-2">
+            <td ref="mealIngredientTableCells" scope="row" class="px-5 py-2">
               <FuzzyCombobox
                 :options="ingredients"
                 :modelValue="meal_ingredient.ingredient"
