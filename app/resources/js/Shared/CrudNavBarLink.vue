@@ -16,7 +16,7 @@ const props = defineProps({
       'hover:bg-blue-100': enabled,
       'hover:bg-gray-100': !enabled
     }"
-    :href="enabled ? href : '#'"
+    :href="href"
   >
   <div class="flex items-center whitespace-nowrap">
     <slot name="icon"></slot>
