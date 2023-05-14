@@ -26,6 +26,18 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
+     * Display the login view.
+     */
+    public function createWithSignInMessage(): Response
+    {
+        return Inertia::render('Auth/Login', [
+            'canResetPassword' => Route::has('password.request'),
+            'showSignInMessage' => true,
+            'status' => session('status'),
+        ]);
+    }
+
+    /**
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse

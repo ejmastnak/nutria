@@ -11,6 +11,10 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 defineProps({
   canResetPassword: Boolean,
   status: String,
+  showSignInMessage: {
+    type: Boolean,
+    default: false
+  },
 });
 
 const form = useForm({
@@ -32,6 +36,10 @@ const submit = () => {
 
     <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
       {{ status }}
+    </div>
+
+    <div v-if="showSignInMessage" class="mb-4 text-lg text-gray-700">
+      You must sign in to view this page!
     </div>
 
     <form @submit.prevent="submit">
