@@ -20,10 +20,9 @@ class IntakeGuidelinePolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(?User $user): bool
     {
-        if ($user->is_full_tier || $user->is_free_tier) return true;
-        return false;
+        return true;
     }
 
     /**
