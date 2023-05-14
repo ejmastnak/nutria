@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,13 +14,14 @@ class SignIn
      * unauthenticated users who try to access protected pages.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     *
+     * @throws \Illuminate\Auth\AuthenticationException
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, ...$guards): Response
     {
         if (is_null(auth()->user())) {
-            return redirect(route('sign-in'));
+            throw new AuthenticationException('Unauthenticated.', $guards, route('sign-in'));
         }
-
         return $next($request);
     }
 }
