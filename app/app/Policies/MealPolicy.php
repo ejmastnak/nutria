@@ -8,8 +8,6 @@ use Illuminate\Auth\Access\Response;
 
 class MealPolicy
 {
-    private const MAX_FREE_TIER_MEALS = 5;
-
     /**
      * Perform pre-authorization checks.
      */
@@ -44,7 +42,7 @@ class MealPolicy
         if ($user->is_full_tier) return true;
         else if ($user->is_free_tier) {
             $count = Meal::where('user_id', $user->id)->count();
-            if ($count < self::MAX_FREE_TIER_MEALS) return true;
+            if ($count < config('auth.max_free_tier_meals')) return true;
         }
         return false;
     }
@@ -58,7 +56,7 @@ class MealPolicy
             return $meal->user_id === $user->id;
         } else if($user->is_free_tier) {
             $count = Meal::where('user_id', $user->id)->count();
-            return ($count < self::MAX_FREE_TIER_MEALS) && ($meal->user_id === $user->id);
+            return ($count < config('auth.max_free_tier_meals')) && ($meal->user_id === $user->id);
         }
         return false;
     }

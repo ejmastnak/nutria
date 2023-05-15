@@ -112,4 +112,21 @@ return [
 
     'password_timeout' => 10800,
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Number of resources allowed for free tier users.
+    |--------------------------------------------------------------------------
+    |
+    | Here you I am defining the maximum number of ingredients, meals, and food
+    | lists a free tier user can own at one time. These values are used in
+    | authorization policies to prevent free tier users from exceeding their
+    | permitted number of ingredients.
+    |
+    */
+
+    'max_free_tier_ingredients' => 5,
+    'max_free_tier_meals' => 5,
+    'max_free_tier_food_lists' => 5,
+
 ];

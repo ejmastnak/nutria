@@ -8,8 +8,6 @@ use Illuminate\Auth\Access\Response;
 
 class IngredientPolicy
 {
-    private const MAX_FREE_TIER_INGREDIENTS = 5;
-
     /**
      * Perform pre-authorization checks.
      */
@@ -44,7 +42,7 @@ class IngredientPolicy
         if ($user->is_full_tier) return true;
         else if ($user->is_free_tier) {
             $count = Ingredient::where('user_id', $user->id)->count();
-            if ($count < self::MAX_FREE_TIER_INGREDIENTS) return true;
+            if ($count < config('auth.max_free_tier_ingredients')) return true;
         }
         return false;
     }
@@ -58,7 +56,7 @@ class IngredientPolicy
             return is_null($ingredient->user_id) || $ingredient->user_id === $user->id;
         } else if($user->is_free_tier) {
             $count = Ingredient::where('user_id', $user->id)->count();
-            return ($count < self::MAX_FREE_TIER_INGREDIENTS) && (is_null($ingredient->user_id) || $ingredient->user_id === $user->id);
+            return ($count < config('auth.max_free_tier_ingredients')) && (is_null($ingredient->user_id) || $ingredient->user_id === $user->id);
         }
         return false;
     }

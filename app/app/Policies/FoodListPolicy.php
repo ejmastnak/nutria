@@ -8,8 +8,6 @@ use Illuminate\Auth\Access\Response;
 
 class FoodListPolicy
 {
-    private const MAX_FREE_TIER_FOOD_LISTS = 5;
-
     /**
      * Perform pre-authorization checks.
      */
@@ -44,7 +42,7 @@ class FoodListPolicy
         if ($user->is_full_tier) return true;
         else if ($user->is_free_tier) {
             $count = FoodList::where('user_id', $user->id)->count();
-            if ($count < self::MAX_FREE_TIER_FOOD_LISTS) return true;
+            if ($count < config('auth.max_free_tier_food_lists')) return true;
         }
         return false;
     }
@@ -58,7 +56,7 @@ class FoodListPolicy
             return $foodList->user_id === $user->id;
         } else if($user->is_free_tier) {
             $count = FoodList::where('user_id', $user->id)->count();
-            return ($count < self::MAX_FREE_TIER_FOOD_LISTS) && ($foodList->user_id === $user->id);
+            return ($count < config('auth.max_free_tier_food_lists')) && ($foodList->user_id === $user->id);
         }
         return false;
     }
