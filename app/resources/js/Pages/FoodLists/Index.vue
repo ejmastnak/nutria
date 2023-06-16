@@ -143,10 +143,10 @@ export default {
         class="mt-2 sm:table-fixed w-full text-sm sm:text-base text-left text-gray-500">
         <thead class="text-xs text-gray-700 uppercase bg-blue-100">
           <tr>
-            <th scope="col" class="px-6 py-3">
+            <th scope="col" class="px-6 py-3 w-11/12">
               Name
             </th>
-            <th scope="col" class="px-6 py-3  w-1/12 bg-blue-100" />
+            <th scope="col" class="px-6 py-3 w-1/12 bg-blue-100" />
           </tr>
         </thead>
         <tbody>
@@ -200,16 +200,8 @@ export default {
             :href="route('food-lists.create')"
             class="text-blue-500"
           >
-            creating a new food list
+            creating a new food list.
           </MyLink>
-          or
-          <button
-            type="button"
-            class="text-blue-500 hover:text-blue-600 hover:underline p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
-            @click="cloneExistingDialog.open()"
-          >
-            cloning an existing food list.
-          </button>
         </span>
         <span v-else>You need to <MyLink :href="route('login')" class="text-blue-500">log in</MyLink> to create food lists.</span>
       </div>

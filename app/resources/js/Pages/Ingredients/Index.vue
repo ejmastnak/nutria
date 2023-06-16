@@ -247,7 +247,7 @@ export default {
                   <th scope="col" class="px-6 py-3">
                     Name
                   </th>
-                  <th scope="col" class="px-6 py-3  w-4/12">
+                  <th scope="col" class="px-6 py-3 w-4/12">
                     Type
                   </th>
                 </tr>
@@ -336,7 +336,7 @@ export default {
                   <th scope="col" class="px-6 py-3 bg-blue-100">
                     Name
                   </th>
-                  <th scope="col" class="px-6 py-3 w-3/12 bg-blue-200">
+                  <th scope="col" class="px-6 py-3 w-4/12 bg-blue-200">
                     Type
                   </th>
                   <th scope="col" class="px-6 py-3 w-1/12 bg-blue-100" />

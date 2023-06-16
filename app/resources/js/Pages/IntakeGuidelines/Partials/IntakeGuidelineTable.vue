@@ -8,7 +8,7 @@ const props = defineProps({intake_guideline_nutrients: Array})
     <table class="text-left w-full">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
-          <th scope="col" class="px-4 py-3 bg-blue-50">
+          <th scope="col" class="px-4 py-3 bg-blue-50 w-6/12">
             Nutrient
           </th>
           <th scope="col" class="px-4 py-3 bg-blue-100 text-right whitespace-nowrap">

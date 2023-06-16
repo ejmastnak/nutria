@@ -195,16 +195,16 @@ export default {
       <table v-if="form.food_list_ingredients.length" class="mt-2 text-sm sm:text-base text-left">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
-            <th scope="col" class="px-4 py-3 bg-blue-50">
+            <th scope="col" class="px-4 py-3 bg-blue-50 w-7/12">
               Ingredient
             </th>
-            <th scope="col" class="px-4 py-3 bg-blue-100 text-right">
+            <th scope="col" class="px-4 py-3 bg-blue-100 text-right w-2/12">
               Amount
             </th>
-            <th scope="col" class="px-4 py-3 bg-blue-50">
+            <th scope="col" class="px-4 py-3 bg-blue-50 w-2/12">
               Unit
             </th>
-            <th scope="col" class="px-4 py-3 bg-blue-100" />
+            <th scope="col" class="px-4 py-3 bg-blue-100 w-1/12" />
           </tr>
         </thead>
         <tbody>
@@ -223,13 +223,15 @@ export default {
               <InputError class="mt-2 text-left" :message="form.errors['food_list_ingredients.' + fli.idx + '.id']" />
             </td>
             <td class="px-4 py-2 text-right">
-              <TextInput
-                type="text"
-                class="mt-1 block w-24 py-1 text-right"
-                v-model="fli.amount"
-                required
-              />
-              <InputError class="mt-2 text-left" :message="form.errors['food_list_ingredients.' + fli.idx + '.amount']" />
+              <div class="w-fit ml-auto">
+                <TextInput
+                  type="text"
+                  class="mt-1 block w-24 py-1 text-right"
+                  v-model="fli.amount"
+                  required
+                />
+                <InputError class="mt-2 text-left" :message="form.errors['food_list_ingredients.' + fli.idx + '.amount']" />
+              </div>
             </td>
             <td class="px-4 py-2 text-right">
               <SimpleCombobox
@@ -275,16 +277,16 @@ export default {
       <table v-if="form.food_list_meals.length" class="mt-2 text-sm sm:text-base text-left">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
-            <th scope="col" class="px-4 py-3 bg-blue-50">
+            <th scope="col" class="px-4 py-3 bg-blue-50 w-7/12">
               Meal
             </th>
-            <th scope="col" class="px-4 py-3 bg-blue-100 text-right">
+            <th scope="col" class="px-4 py-3 bg-blue-100 text-right w-2/12">
               Amount
             </th>
-            <th scope="col" class="px-4 py-3 bg-blue-50">
+            <th scope="col" class="px-4 py-3 bg-blue-50 w-2/12">
               Unit
             </th>
-            <th scope="col" class="px-4 py-3 bg-blue-100" />
+            <th scope="col" class="px-4 py-3 bg-blue-100 w-1/12" />
           </tr>
         </thead>
         <tbody>
@@ -303,13 +305,15 @@ export default {
               <InputError class="mt-2 text-left" :message="form.errors['food_list_meals.' + flm.idx + '.id']" />
             </td>
             <td class="px-4 py-2 text-right">
-              <TextInput
-                type="text"
-                class="mt-1 block w-24 py-1 text-right"
-                v-model="flm.amount"
-                required
-              />
-              <InputError class="mt-2 text-left" :message="form.errors['food_list_meals.' + flm.idx + '.amount']" />
+              <div class="w-fit ml-auto">
+                <TextInput
+                  type="text"
+                  class="mt-1 block w-24 py-1 text-right"
+                  v-model="flm.amount"
+                  required
+                />
+                <InputError class="mt-2 text-left" :message="form.errors['food_list_meals.' + flm.idx + '.amount']" />
+              </div>
             </td>
             <td class="px-4 py-2 text-right">
               <SimpleCombobox
