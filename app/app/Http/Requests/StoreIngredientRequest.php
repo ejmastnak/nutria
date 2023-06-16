@@ -10,10 +10,11 @@ class StoreIngredientRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     * This is delegated to controller.
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', Ingredient::class);
+        return true;
     }
 
     /**

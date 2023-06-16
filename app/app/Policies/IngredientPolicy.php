@@ -37,14 +37,15 @@ class IngredientPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user): Response
     {
-        if ($user->is_full_tier) return true;
+        if ($user->is_full_tier) return Response::allow();
         else if ($user->is_free_tier) {
             $count = Ingredient::where('user_id', $user->id)->count();
-            if ($count < config('auth.max_free_tier_ingredients')) return true;
+            if ($count < config('auth.max_free_tier_ingredients')) return Response::allow();
+            else return Response::deny(config('auth.free_tier_resources_exceeded'));
         }
-        return false;
+        return Response::deny(config('auth.generic_deny'));
     }
 
     /**

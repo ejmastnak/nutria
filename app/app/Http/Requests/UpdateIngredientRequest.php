@@ -10,10 +10,11 @@ class UpdateIngredientRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     * This is delegated to controller.
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', $this->ingredient);
+        return true;
     }
 
     /**
