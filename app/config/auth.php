@@ -118,7 +118,7 @@ return [
     | Number of resources allowed for free tier users.
     |--------------------------------------------------------------------------
     |
-    | Here you I am defining the maximum number of ingredients, meals, and food
+    | Here I am defining the maximum number of ingredients, meals, and food
     | lists a free tier user can own at one time. These values are used in
     | authorization policies to prevent free tier users from exceeding their
     | permitted number of ingredients.
@@ -128,5 +128,34 @@ return [
     'max_free_tier_ingredients' => 5,
     'max_free_tier_meals' => 5,
     'max_free_tier_food_lists' => 5,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Classes of authorization errors
+    |--------------------------------------------------------------------------
+    |
+    | Here I am defining symbolic string names to represent various types of
+    | what I am calling "authentication and authorization errors", which are
+    | basically situations in which a user is denied access to a resource
+    | because of failed authorization or authentication.
+    |
+    */
+
+    // Shown to guest users who must create an account to access a feature.
+    'requires_account' => 'RequiresAccount',
+
+    // Shown to free tier users who must upgrade to a full-access account to
+    // create more resources.
+    'free_tier_resources_exceeded' => "FreeTierResourcesExceeded",
+
+    // Show to users attempting to access resources they do not own
+    'does_not_own_resource' => "DoesNotOwnResource",
+
+    // Shown to guest or free tier users who must upgrade to a full-access
+    // account to access a feature.
+    'requires_full_access' => "RequiresFullAccess",
+
+    // Shown as a fall-back error for authorization failures not covered above
+    'generic_deny' => "GenericDeny"
 
 ];
