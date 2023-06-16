@@ -46,5 +46,14 @@ class UserSeeder extends Seeder
         'is_admin' => false,
         ]);
 
+        User::create([
+        'name' => 'Elijan',
+        'email' => 'elijan@ejmastnak.com',
+        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+        'is_free_tier' => false,
+        'is_full_tier' => true,
+        'is_admin' => false,
+        ]);
+
     }
 }
