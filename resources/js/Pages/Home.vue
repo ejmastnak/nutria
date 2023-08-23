@@ -22,5 +22,8 @@ export default {
       <li><MyLink :colored="true" :href="route('food-lists.index')">Food Lists</MyLink></li>
       <li><MyLink :colored="true" :href="route('intake-guidelines.index')">Intake Guidelines</MyLink></li>
     </ul>
+
+    Here is a test line.
+
   </div>
 </template>
