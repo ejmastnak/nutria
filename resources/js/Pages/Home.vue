@@ -24,6 +24,7 @@ export default {
     </ul>
 
     Here is a test line.
+    Here is another test line.
 
   </div>
 </template>
