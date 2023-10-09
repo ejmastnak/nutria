@@ -12,14 +12,11 @@ return new class extends Migration {
     {
         Schema::create('food_list_ingredients', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('food_list_id');
-            $table->foreign('food_list_id')->references('id')->on('food_lists')->cascadeOnDelete();
-            $table->unsignedBigInteger('ingredient_id');
-            $table->foreign('ingredient_id')->references('id')->on('ingredients');
-            $table->decimal('amount', 10, 3);
-            $table->unsignedBigInteger('unit_id');
-            $table->foreign('unit_id')->references('id')->on('units');
-            $table->decimal('mass_in_grams', 10, 3);
+            $table->foreignId('food_list_id')->references('id')->on('food_lists')->cascadeOnDelete();
+            $table->foreignId('ingredient_id')->references('id')->on('ingredients');
+            $table->double('amount', 10, 4);
+            $table->foreignId('unit_id')->references('id')->on('units');
+            $table->double('mass_in_grams', 10, 4);
         });
     }
 

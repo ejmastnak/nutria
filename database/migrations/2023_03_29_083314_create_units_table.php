@@ -13,9 +13,8 @@ return new class extends Migration {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('longname');
-            $table->boolean('is_mass');
-            $table->boolean('is_volume');
+            $table->string('full_name');
+            $table->double('to_grams', 10, 4)->nullable();
         });
     }
 

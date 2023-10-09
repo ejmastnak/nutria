@@ -14,9 +14,8 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('fdc_id')->nullable();
             $table->string('name');
-            $table->unsignedBigInteger('ingredient_category_id')->nullable();
-            $table->foreign('ingredient_category_id')->references('id')->on('ingredient_categories');
-            $table->decimal('density_g_per_ml', 10, 6)->nullable();
+            $table->foreignId('ingredient_category_id')->nullable()->references('id')->on('ingredient_categories');
+            $table->foreignId('user_id')->nullable()->references('id')->on('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }

@@ -16,12 +16,10 @@ return new class extends Migration {
             $table->primary('id');
             $table->string('name');
             $table->string('display_name');
-            $table->unsignedBigInteger('unit_id');
-            $table->foreign('unit_id')->references('id')->on('units');
-            $table->unsignedBigInteger('nutrient_category_id');
-            $table->foreign('nutrient_category_id')->references('id')->on('nutrient_categories')->cascadeOnDelete();
+            $table->foreignId('unit_id')->references('id')->on('units');
+            $table->foreignId('nutrient_category_id')->references('id')->on('nutrient_categories');
             $table->integer('precision')->default(2);
-            $table->integer('display_order_id');
+            $table->integer('display_order');
         });
     }
 

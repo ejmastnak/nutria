@@ -12,11 +12,9 @@ return new class extends Migration {
     {
         Schema::create('ingredient_nutrients', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('ingredient_id');
-            $table->foreign('ingredient_id')->references('id')->on('ingredients')->cascadeOnDelete();
-            $table->unsignedBigInteger('nutrient_id');
-            $table->foreign('nutrient_id')->references('id')->on('nutrients');
-            $table->decimal('amount_per_100g', 10, 4);
+            $table->foreignId('ingredient_id')->references('id')->on('ingredients')->cascadeOnDelete();
+            $table->foreignId('nutrient_id')->references('id')->on('nutrients')->cascadeOnDelete();
+            $table->double('amount_per_100g', 10, 4);
         });
     }
 

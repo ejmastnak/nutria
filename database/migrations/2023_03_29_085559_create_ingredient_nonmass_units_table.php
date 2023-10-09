@@ -10,10 +10,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('intake_guidelines', function (Blueprint $table) {
+        Schema::create('ingredient_nonmass_units', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->timestamps();
+            $table->foreignId('ingredient_id')->references('id')->on('ingredients')->cascadeOnDelete();
+            $table->foreignId('unit_id')->references('id')->on('units')->cascadeOnDelete();
+            $table->double('to_grams', 10, 4);
         });
     }
 
@@ -22,6 +23,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('intake_guidelines');
+        Schema::dropIfExists('ingredient_nonmass_units');
     }
 };

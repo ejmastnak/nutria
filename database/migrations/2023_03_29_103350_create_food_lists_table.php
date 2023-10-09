@@ -13,7 +13,8 @@ return new class extends Migration {
         Schema::create('food_lists', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->decimal('mass_in_grams', 10, 3);
+            $table->double('mass_in_grams', 10, 4);
+            $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }

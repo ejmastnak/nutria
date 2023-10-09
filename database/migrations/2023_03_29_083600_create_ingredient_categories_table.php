@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('ingredient_categories', function (Blueprint $table) {
             // Uses hard-coded FDC ingredient category IDs as primary key
             $table->unsignedBigInteger('id');
-            $table->primary('id');	
+            $table->primary('id');
             $table->string('name');
         });
     }
