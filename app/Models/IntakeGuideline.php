@@ -8,9 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class IntakeGuideline extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'user_id'];
+    protected $fillable = [
+        'name',
+        'user_id'
+    ];
 
     public function intake_guideline_nutrients() {
         return $this->hasMany(IntakeGuidelineNutrient::class, 'intake_guideline_id', 'id');
     }
+
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
 }

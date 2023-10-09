@@ -9,7 +9,11 @@ class IntakeGuidelineNutrient extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $fillable = ['intake_guideline_id', 'nutrient_id', 'rdi'];
+    protected $fillable = [
+        'intake_guideline_id',
+        'nutrient_id',
+        'rdi'
+    ];
 
     public function intake_guideline() {
         return $this->belongsTo(IntakeGuideline::class, 'intake_guideline_id', 'id');
@@ -18,4 +22,5 @@ class IntakeGuidelineNutrient extends Model
     public function nutrient() {
         return $this->belongsTo(Nutrient::class, 'nutrient_id', 'id');
     }
+
 }

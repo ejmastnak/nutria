@@ -9,5 +9,10 @@ class Unit extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $table = 'units';
+    protected $fillable = [
+        'name',
+        'full_name',
+        'to_grams',
+    ];
+
 }

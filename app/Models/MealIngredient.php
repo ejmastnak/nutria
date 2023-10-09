@@ -9,7 +9,13 @@ class MealIngredient extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $fillable = ['meal_id', 'ingredient_id', 'amount', 'unit_id', 'mass_in_grams'];
+    protected $fillable = [
+        'meal_id',
+        'ingredient_id',
+        'amount',
+        'unit_id',
+        'mass_in_grams',
+    ];
 
     public function meal() {
         return $this->belongsTo(Meal::class, 'meal_id', 'id');
@@ -22,4 +28,5 @@ class MealIngredient extends Model
     public function unit() {
         return $this->belongsTo(Unit::class, 'unit_id', 'id');
     }
+
 }
