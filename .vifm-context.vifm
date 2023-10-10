@@ -3,3 +3,4 @@ let $VIFM_CONTEXT = expand('%d')
 source $VIFM/navigation/laravel.vifm
 
 nmap ;tt :goto $VIFM_CONTEXT/../TODO.md<CR>
+nmap ;ad :cd $VIFM_CONTEXT/../app-docs<CR>
