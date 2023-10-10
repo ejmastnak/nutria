@@ -4,12 +4,13 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Unit;
 use App\Models\FoodList;
 use App\Models\FoodListIngredient;
 use App\Models\FoodListMeal;
 use App\Models\Ingredient;
+use App\Models\Meal;
 
 class FoodListSeeder extends Seeder
 {
@@ -18,49 +19,67 @@ class FoodListSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('food_list_ingredients')->truncate();
-        DB::table('food_list_meals')->truncate();
-        DB::table('food_lists')->truncate();
         $gram_id = Unit::where('name', 'g')->first()->id;
 
-        foreach(glob(__DIR__ . '/food_lists/*.json') as $file) {
-            $json = file_get_contents($file);
-            $food_list_data = json_decode($json, true);
+
+        $json = Storage::disk('seeders')->get('json/food-lists.json');
+        $food_lists = json_decode($json, true);
+
+        foreach ($food_lists as $food_list) {
+
             $food_list_mass_in_grams = 0;
-            $food_list = FoodList::create([
-                'name' => $food_list_data['name'],
-                'mass_in_grams' => $food_list_mass_in_grams,
-                'user_id' => 1
-            ]);
+            $FoodList = FoodList::updateOrCreate(
+                [
+                    'name' => $food_list['name'],
+                    'user_id' => $food_list['user_id'],
+                ],
+                [ 'mass_in_grams' => $food_list_mass_in_grams ]
+            );
 
-            foreach($food_list_data['food_list_ingredients'] as $fli) {
+            foreach($food_list['food_list_ingredients'] as $idx=>$fli) {
 
-                $ingredient_id = Ingredient::where('name', $fli['name'])->first()->id;
-                FoodListIngredient::create([
-                    'food_list_id' => $food_list->id,
-                    'ingredient_id' => $ingredient_id,
+                $ingredient = Ingredient::where('name', $fli['name'])->first();
+                if (is_null($ingredient)) {
+                    $this->command->info("Warning. Failed to find ingredient " . $fli['name'] . " when seeding FoodLists.");
+                    continue;
+                }
+
+                FoodListIngredient::updateOrCreate([
+                    'food_list_id' => $FoodList->id,
+                    'ingredient_id' => $ingredient->id,
                     'amount' => $fli['mass_in_grams'],
                     'unit_id' => $gram_id,
                     'mass_in_grams' => $fli['mass_in_grams'],
+                    'idx' => $idx,
                 ]);
                 $food_list_mass_in_grams += $fli['mass_in_grams'];
             }
 
-            foreach($food_list_data['food_list_meals'] as $flm) {
-                FoodListMeal::create([
-                    'food_list_id' => $food_list->id,
-                    'meal_id' => $flm['meal_id'],
+            foreach($food_list['food_list_meals'] as $idx=>$flm) {
+
+                $meal = Meal::where('name', $flm['name'])->where('user_id', $food_list['user_id'])->first();
+                if (is_null($meal)) {
+                    $this->command->info("Warning. Failed to find meal with name " . $flm['name'] . " and user id " . $food_list['user_id'] . " when seeding FoodLists.");
+                    continue;
+                }
+
+                FoodListMeal::updateOrCreate([
+                    'food_list_id' => $FoodList->id,
+                    'meal_id' => $meal->id,
                     'amount' => $flm['mass_in_grams'],
                     'unit_id' => $gram_id,
                     'mass_in_grams' => $flm['mass_in_grams'],
+                    'idx' => $idx,
                 ]);
                 $food_list_mass_in_grams += $flm['mass_in_grams'];
             }
 
-            $food_list->update([
-              'mass_in_grams' => $food_list_mass_in_grams
+            $FoodList->update([
+                'mass_in_grams' => $food_list_mass_in_grams
             ]);
 
         }
+
+
     }
 }

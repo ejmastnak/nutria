@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder
 {
@@ -16,42 +15,31 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        // DB::table('users')->delete();
-        DB::table('users')->truncate();
 
-        User::create([
+        User::updateOrCreate([
         'name' => 'admin',
         'email' => 'admin@ejmastnak.com',
         'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
-        'is_free_tier' => false,
-        'is_full_tier' => true,
+        'is_registered' => true,
+        'is_paying' => false,
         'is_admin' => true,
         ]);
 
-        User::create([
-        'name' => 'free',
-        'email' => 'free@ejmastnak.com',
+        User::updateOrCreate([
+        'name' => 'registered',
+        'email' => 'registered@ejmastnak.com',
         'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
-        'is_free_tier' => true,
-        'is_full_tier' => false,
+        'is_registered' => true,
+        'is_paying' => false,
         'is_admin' => false,
         ]);
 
-        User::create([
-        'name' => 'full',
-        'email' => 'full@ejmastnak.com',
+        User::updateOrCreate([
+        'name' => 'paying',
+        'email' => 'paying@ejmastnak.com',
         'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
-        'is_free_tier' => false,
-        'is_full_tier' => true,
-        'is_admin' => false,
-        ]);
-
-        User::create([
-        'name' => 'Elijan',
-        'email' => 'elijan@ejmastnak.com',
-        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
-        'is_free_tier' => false,
-        'is_full_tier' => true,
+        'is_registered' => true,
+        'is_paying' => true,
         'is_admin' => false,
         ]);
 

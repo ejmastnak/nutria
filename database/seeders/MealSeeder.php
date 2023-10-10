@@ -2,14 +2,13 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use App\Models\Unit;
 use App\Models\Meal;
 use App\Models\MealIngredient;
 use App\Models\Ingredient;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 class MealSeeder extends Seeder
 {
@@ -18,34 +17,45 @@ class MealSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('meal_ingredients')->delete();
-        DB::table('meals')->delete();
-
         $gram_id = Unit::where('name', 'g')->first()->id;
 
-        foreach(glob(__DIR__ . '/meals/*.json') as $file) {
-            $json = file_get_contents($file);
-            $meal_data = json_decode($json, true);
+        $json = Storage::disk('seeders')->get('json/meals.json');
+        $meals = json_decode($json, true);
+
+        foreach ($meals as $meal) {
+
             $meal_mass_in_grams = 0;
-            $meal = Meal::create([
-                'name' => $meal_data['name'],
-                'mass_in_grams' => $meal_mass_in_grams,
-                'user_id' => $meal_data['user_id']
-            ]);
-            foreach($meal_data['meal_ingredients'] as $mi) {
-                $ingredient_id = Ingredient::where('name', $mi['name'])->first()->id;
-                MealIngredient::create([
-                    'meal_id' => $meal->id,
-                    'ingredient_id' => $ingredient_id,
-                    'amount' => $mi['mass_in_grams'],
+            $Meal = Meal::updateOrCreate(
+                [
+                    'name' => $meal['name'],
+                    'user_id' => $meal['user_id'],
+                ],
+                [ 'mass_in_grams' => $meal_mass_in_grams ]
+            );
+            foreach($meal['meal_ingredients'] as $idx=>$meal_ingredient) {
+
+                $ingredient = Ingredient::where('name', $meal_ingredient['name'])->first();
+                if (is_null($ingredient)) {
+                    $this->command->info("Warning. Failed to find ingredient " . $meal_ingredient['name'] . " when seeding Meals.");
+                    continue;
+                }
+
+                MealIngredient::updateOrCreate([
+                    'meal_id' => $Meal->id,
+                    'ingredient_id' => $ingredient->id,
+                    'amount' => $meal_ingredient['mass_in_grams'],
                     'unit_id' => $gram_id,
-                    'mass_in_grams' => $mi['mass_in_grams'],
+                    'mass_in_grams' => $meal_ingredient['mass_in_grams'],
+                    'idx' => $idx,
                 ]);
-                $meal_mass_in_grams += $mi['mass_in_grams'];
+                $meal_mass_in_grams += $meal_ingredient['mass_in_grams'];
+
             }
-            $meal->update([
-              'mass_in_grams' => $meal_mass_in_grams
+            $Meal->update([
+                'mass_in_grams' => $meal_mass_in_grams,
             ]);
         }
+
+
     }
 }

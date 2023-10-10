@@ -13,11 +13,14 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
-            StandardReferenceSeeder::class,
+            UnitSeeder::class,
+            NutrientCategorySeeder::class,
+            NutrientSeeder::class,
+            IngredientCategorySeeder::class,
+            IngredientSeeder::class,
             MealSeeder::class,
             FoodListSeeder::class,
             IntakeGuidelineSeeder::class,
-            OtherIngredientCategorySeeder::class
         ]);
     }
 }

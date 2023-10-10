@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Unit;
 use App\Models\Nutrient;
 use App\Models\IntakeGuideline;
@@ -17,41 +17,46 @@ class IntakeGuidelineSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('intake_guideline_nutrients')->truncate();
-        DB::table('intake_guidelines')->truncate();
 
-        foreach(glob(__DIR__ . '/intake_guidelines/*.json') as $file) {
-            $json = file_get_contents($file);
-            $intake_guideline = json_decode($json, true);
+        $json = Storage::disk('seeders')->get('json/intake-guidelines.json');
+        $intake_guidelines = json_decode($json, true);
 
-            $intake_guideline_id = IntakeGuideline::create([
+        foreach ($intake_guidelines as $intake_guideline) {
+
+            $IntakeGuideline = IntakeGuideline::updateOrCreate([
                 'name' => $intake_guideline['name'],
                 'user_id' => $intake_guideline['user_id'],
-            ])->id;
+            ]);
 
-            foreach($intake_guideline['nutrients'] as $nutrient) {
+            foreach($intake_guideline['intake_guideline_nutrients'] as $ign) {
 
                 # Check a nutrient with specified nutrient_id exists in database
-                $db_nutrient = Nutrient::find($nutrient['nutrient_id']);
-                if (!$db_nutrient) {
-                    $this->command->info("Warning: did not find nutrient with name " . $nutrient['name'] . " and id " . $nutrient['nutrient_id'] . " in database when seeding IntakeGuidelines.");
+                $nutrient = Nutrient::find($ign['nutrient_id']);
+                if (is_null($nutrient)) {
+                    $this->command->info("Warning: did not find nutrient with name " . $ign['name'] . " and id " . $ign['nutrient_id'] . " in database when seeding IntakeGuidelines.");
                     continue;
                 }
 
                 # Double check that nutrient unit in seed file is consistent
                 # with the nutrient's preferred unit in database.
-                $seed_unit_id = Unit::where('name', $nutrient['unit'])->first()->id;
-                if($seed_unit_id !== $db_nutrient->unit_id) {
-                    $this->command->info("Error seeding IntakeGuidelines: unrecognized unit for ingredient " . $nutrient['name'] . " when seeding intake guideline " . $intake_guideline['name']);
+                $unit = Unit::where('name', $ign['unit'])->first();
+                if (is_null($unit)) {
+                    $this->command->info("Warning: unrecognized unit " . $ign['unit'] . " when seeding IntakeGuidelines.");
+                    continue;
+                }
+                if($unit->id !== $nutrient->unit_id) {
+                    $this->command->info("Warning: unit " . $ign['unit'] . " is not compatible with nutrient " . $nutrient->name . " when seeding IntakeGuidelines.");
                     continue;
                 }
 
-                IntakeGuidelineNutrient::create([
-                    'intake_guideline_id' => $intake_guideline_id,
-                    'nutrient_id' => $nutrient['nutrient_id'],
-                    'rdi' => $nutrient['rdi']
+                IntakeGuidelineNutrient::updateOrCreate([
+                    'intake_guideline_id' => $IntakeGuideline->id,
+                    'nutrient_id' => $ign['nutrient_id'],
+                    'rdi' => $ign['rdi'],
                 ]);
             }
+
         }
+
     }
 }
