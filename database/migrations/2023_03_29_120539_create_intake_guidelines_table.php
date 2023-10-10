@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('intake_guidelines', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->references('id')->on('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }
