@@ -19,7 +19,7 @@ class Meal extends Model
     }
 
     public function meal_ingredients() {
-        return $this->hasMany(MealIngredient::class, 'meal_id', 'id');
+        return $this->hasMany(MealIngredient::class, 'meal_id', 'id')->orderBy('idx');
     }
 
     public function user() {
