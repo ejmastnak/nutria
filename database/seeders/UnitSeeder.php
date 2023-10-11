@@ -20,8 +20,9 @@ class UnitSeeder extends Seeder
         foreach ($units as $unit) {
             Unit::updateOrCreate([
                 'name' => $unit['name'],
-                'full_name' => $unit['full_name'],
-                'to_grams' => $unit['to_grams'],
+                'g' => $unit['g'],
+                'ml' => $unit['ml'],
+                'seq_num' => $unit['seq_num'],
             ]);
         }
     }

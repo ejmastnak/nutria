@@ -13,8 +13,12 @@ return new class extends Migration {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('full_name');
-            $table->double('to_grams', 10, 4)->nullable();
+            $table->double('g', 10, 4)->nullable();
+            $table->double('ml', 10, 4)->nullable();
+            $table->integer('seq_num');
+            // ingredient_id is added after ingredients table is created
+            // meal_id is added after meals table is created
+            $table->double('custom_grams', 10, 4)->nullable();
         });
     }
 
