@@ -50,7 +50,7 @@ class FoodListSeeder extends Seeder
                     'amount' => $fli['mass_in_grams'],
                     'unit_id' => $gram_id,
                     'mass_in_grams' => $fli['mass_in_grams'],
-                    'idx' => $idx,
+                    'seq_num' => $idx,
                 ]);
                 $food_list_mass_in_grams += $fli['mass_in_grams'];
             }
@@ -69,7 +69,7 @@ class FoodListSeeder extends Seeder
                     'amount' => $flm['mass_in_grams'],
                     'unit_id' => $gram_id,
                     'mass_in_grams' => $flm['mass_in_grams'],
-                    'idx' => $idx,
+                    'seq_num' => $idx,
                 ]);
                 $food_list_mass_in_grams += $flm['mass_in_grams'];
             }

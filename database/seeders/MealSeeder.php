@@ -46,7 +46,7 @@ class MealSeeder extends Seeder
                     'amount' => $meal_ingredient['mass_in_grams'],
                     'unit_id' => $gram_id,
                     'mass_in_grams' => $meal_ingredient['mass_in_grams'],
-                    'idx' => $idx,
+                    'seq_num' => $idx,
                 ]);
                 $meal_mass_in_grams += $meal_ingredient['mass_in_grams'];
 

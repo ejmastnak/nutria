@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->double('amount', 10, 4);
             $table->foreignId('unit_id')->references('id')->on('units');
             $table->double('mass_in_grams', 10, 4);
-            $table->integer('idx');
+            $table->integer('seq_num');
         });
     }
 
