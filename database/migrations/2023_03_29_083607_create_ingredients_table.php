@@ -16,8 +16,10 @@ return new class extends Migration {
             $table->string('name');
             $table->foreignId('ingredient_category_id')->nullable()->references('id')->on('ingredient_categories');
             $table->foreignId('density_mass_unit_id')->nullable()->references('id')->on('units');
+            $table->index('density_mass_unit_id');
             $table->double('density_mass_amount', 10, 4)->nullable();
             $table->foreignId('density_volume_unit_id')->nullable()->references('id')->on('units');
+            $table->index('density_volume_unit_id');
             $table->double('density_volume_amount', 10, 4)->nullable();
             $table->double('density_g_ml', 10, 4)->nullable();
             $table->foreignId('user_id')->nullable()->references('id')->on('users')->cascadeOnDelete();

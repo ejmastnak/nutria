@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->double('custom_unit_amount', 10, 4)->nullable();
             $table->double('custom_mass_amount', 10, 4)->nullable();
             $table->foreignId('custom_mass_unit_id')->nullable()->references('id')->on('units');
+            $table->index('custom_mass_unit_id');
             $table->double('custom_grams', 10, 4)->nullable();
         });
     }

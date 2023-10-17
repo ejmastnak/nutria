@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId('ingredient_id')->references('id')->on('ingredients')->cascadeOnDelete();
             $table->foreignId('nutrient_id')->references('id')->on('nutrients')->cascadeOnDelete();
             $table->double('amount_per_100g', 10, 4);
+            $table->index(['ingredient_id', 'nutrient_id']);
         });
     }
 
