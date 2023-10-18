@@ -8,8 +8,8 @@ use App\Models\IngredientCategory;
 use App\Models\NutrientCategory;
 use App\Models\Nutrient;
 use App\Models\IntakeGuideline;
-use App\Http\Requests\StoreIngredientRequest;
-use App\Http\Requests\UpdateIngredientRequest;
+use App\Http\Requests\IngredientStoreRequest;
+use App\Http\Requests\IngredientUpdateRequest;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -159,7 +159,7 @@ class IngredientController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreIngredientRequest $request)
+    public function store(IngredientStoreRequest $request)
     {
         $validated = $request->safe()->only([
             'name',
@@ -273,7 +273,7 @@ class IngredientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateIngredientRequest $request, Ingredient $ingredient)
+    public function update(IngredientUpdateRequest $request, Ingredient $ingredient)
     {
         $validated = $request->safe()->only([
             'name',
