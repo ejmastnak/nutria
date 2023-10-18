@@ -39,7 +39,12 @@ class IntakeGuidelinePolicy
      */
     public function create(User $user): bool
     {
-        return $user->is_full_tier;
+        if ($user->is_paying) return true;
+        else if ($user->is_registered) {
+            $count = IntakeGuideline::where('user_id', $user->id)->count();
+            return $count < config('auth.max_free_tier_intake_guidelines');
+        }
+        return false;
     }
 
     /**
@@ -47,12 +52,14 @@ class IntakeGuidelinePolicy
      */
     public function clone(User $user, IntakeGuideline $intakeGuideline): bool
     {
-        if ($user->is_full_tier) {
+        if ($user->is_paying) {
             return is_null($intakeGuideline->user_id) || $intakeGuideline->user_id === $user->id;
+        } else if($user->is_registered) {
+            $count = IntakeGuideline::where('user_id', $user->id)->count();
+            return ($count < config('auth.max_free_tier_intake_guidelines')) && (is_null($intakeGuideline->user_id) || $intakeGuideline->user_id === $user->id);
         }
         return false;
     }
-
 
     /**
      * Determine whether the user can update the model.

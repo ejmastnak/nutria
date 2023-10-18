@@ -22,7 +22,7 @@ class MealPolicy
      */
     public function viewAny(User $user): bool
     {
-        if ($user->is_full_tier || $user->is_free_tier) return true;
+        if ($user->is_paying || $user->is_registered) return true;
         return false;
     }
 
@@ -39,8 +39,8 @@ class MealPolicy
      */
     public function create(User $user): bool
     {
-        if ($user->is_full_tier) return true;
-        else if ($user->is_free_tier) {
+        if ($user->is_paying) return true;
+        else if ($user->is_registered) {
             $count = Meal::where('user_id', $user->id)->count();
             if ($count < config('auth.max_free_tier_meals')) return true;
         }
@@ -52,9 +52,9 @@ class MealPolicy
      */
     public function clone(User $user, Meal $meal): bool
     {
-        if ($user->is_full_tier) {
+        if ($user->is_paying) {
             return $meal->user_id === $user->id;
-        } else if($user->is_free_tier) {
+        } else if($user->is_registered) {
             $count = Meal::where('user_id', $user->id)->count();
             return ($count < config('auth.max_free_tier_meals')) && ($meal->user_id === $user->id);
         }

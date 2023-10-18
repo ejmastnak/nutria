@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Ingredient;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class IngredientPolicy
 {
@@ -37,15 +36,14 @@ class IngredientPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): Response
+    public function create(User $user): bool
     {
-        if ($user->is_full_tier) return Response::allow();
-        else if ($user->is_free_tier) {
+        if ($user->is_paying) return true;
+        else if ($user->is_registered) {
             $count = Ingredient::where('user_id', $user->id)->count();
-            if ($count < config('auth.max_free_tier_ingredients')) return Response::allow();
-            else return Response::deny(config('auth.free_tier_resources_exceeded'));
+            return $count < config('auth.max_free_tier_ingredients');
         }
-        return Response::deny(config('auth.generic_deny'));
+        return false;
     }
 
     /**
@@ -53,9 +51,9 @@ class IngredientPolicy
      */
     public function clone(User $user, Ingredient $ingredient): bool
     {
-        if ($user->is_full_tier) {
+        if ($user->is_paying) {
             return is_null($ingredient->user_id) || $ingredient->user_id === $user->id;
-        } else if($user->is_free_tier) {
+        } else if($user->is_registered) {
             $count = Ingredient::where('user_id', $user->id)->count();
             return ($count < config('auth.max_free_tier_ingredients')) && (is_null($ingredient->user_id) || $ingredient->user_id === $user->id);
         }

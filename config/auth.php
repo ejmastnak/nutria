@@ -128,6 +128,7 @@ return [
     'max_free_tier_ingredients' => 5,
     'max_free_tier_meals' => 5,
     'max_free_tier_food_lists' => 5,
+    'max_free_tier_intake_guidelines' => 1,
 
     /*
     |--------------------------------------------------------------------------
