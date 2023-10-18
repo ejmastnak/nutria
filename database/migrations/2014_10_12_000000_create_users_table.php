@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->boolean('is_registered');
             $table->boolean('is_paying');
             $table->boolean('is_admin');
+            $table->boolean('has_special_full_access')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });
