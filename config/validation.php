@@ -14,4 +14,6 @@ return [
     'max_ingredient_amount' => "max:100000000",
     // Max custom units in an ingredient store/update request
     'max_custom_units' => "max:1000",
+    // Max number of ingredients in a meal
+    'max_meal_list_ingredients' => "max:500",
 ];

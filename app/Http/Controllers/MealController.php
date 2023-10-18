@@ -11,6 +11,8 @@ use App\Models\IngredientNutrient;
 use App\Models\NutrientCategory;
 use App\Models\IntakeGuideline;
 use App\Models\Unit;
+use App\Http\Requests\MealStoreRequest;
+use App\Http\Requests\MealUpdateRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
@@ -88,10 +90,9 @@ class MealController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(MealStoreRequest $request)
     {
         $this->authorize('create', Meal::class);
-        $this->validateStoreOrUpdateRequest($request);
 
         // Create meal
         $meal_mass_in_grams = 0;
@@ -195,10 +196,9 @@ class MealController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Meal $meal)
+    public function update(MealUpdateRequest $request, Meal $meal)
     {
         $this->authorize('update', $meal);
-        $this->validateStoreOrUpdateRequest($request);
 
         // Keep a running sum of constituent MealIngredient mass
         $meal_mass_in_grams = 0;
@@ -336,16 +336,4 @@ class MealController extends Controller
 
         return $ingredient;
     }
-
-    public function validateStoreOrUpdateRequest(Request $request) {
-        $request->validate([
-            'name' => ['required', 'min:1', 'max:500'],
-            'meal_ingredients' => ['required', 'array', 'min:1', 'max:500'],
-            'meal_ingredients.*.id' => ['required', 'integer'],
-            'meal_ingredients.*.ingredient_id' => ['required', 'integer', 'exists:ingredients,id'],
-            'meal_ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
-            'meal_ingredients.*.unit_id' => ['required', 'integer', 'exists:units,id']
-        ]);
-    }
-
 }
