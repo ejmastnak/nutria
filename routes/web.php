@@ -28,15 +28,14 @@ Route::get('/', function () {
 Route::get('ingredients', [IngredientController::class, 'index'])->name('ingredients.index');
 Route::get('intake-guidelines', [IntakeGuidelineController::class, 'index'])->name('intake-guidelines.index');
 
+// User profiles
 Route::middleware('auth')->group(function () {
-    // User profiles
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Try signin middleware first, but fallback to probably more robust auth
-Route::middleware(['signin', 'auth'])->group(function () {
+Route::middleware('auth')->group(function () {
         // Ingredients
         Route::get('ingredients/create', [IngredientController::class, 'create'])->name('ingredients.create');
         Route::get('ingredients/{ingredient}/clone', [IngredientController::class, 'clone'])->name('ingredients.clone');
@@ -77,14 +76,10 @@ Route::middleware(['signin', 'auth'])->group(function () {
 });
 
 // These routes are available to unauthenticated users.
-// The routes are intentionally defined last among the ingredients routes, since
+// The routes are intentionally defined last among the resource routes, since
 // e.g. the catch-all parameter `ingredients/{ingredients}` would otherwise
 // "capture" e.g. ingredients/create and ingredients/export
 Route::get('ingredients/{ingredient}', [IngredientController::class, 'show'])->name('ingredients.show');
 Route::get('intake-guidelines/{intake_guideline}', [IntakeGuidelineController::class, 'show'])->name('intake-guidelines.show');
-
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 require __DIR__.'/auth.php';
