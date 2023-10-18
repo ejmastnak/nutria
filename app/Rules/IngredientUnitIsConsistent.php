@@ -8,10 +8,10 @@ use App\Models\Ingredient;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
- *  Ensures a MealIngredient's amount is specified in a unit supported by the
- *  underlying Ingredient
+ *  Ensures a MealIngredient or FoodListIngredient's amount is specified in a
+ *  unit supported by the underlying Ingredient
  */
-class MealIngredientUnitIsConsistent implements ValidationRule
+class IngredientUnitIsConsistent implements ValidationRule
 {
     /**
      * Run the validation rule.

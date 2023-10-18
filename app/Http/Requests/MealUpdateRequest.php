@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\MealIngredientUnitIsConsistent;
+use App\Rules\IngredientUnitIsConsistent;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MealUpdateRequest extends FormRequest
@@ -28,12 +28,12 @@ class MealUpdateRequest extends FormRequest
             'name' => ['required', 'min:1', config('validation.max_name_length')],
 
             // Meal ingredients
-            'meal_ingredients' => ['required', 'array', 'min:1', config('validation.max_meal_list_ingredients')],
+            'meal_ingredients' => ['required', 'array', 'min:1', config('validation.max_meal_ingredients')],
             'meal_ingredients.*.id' => ['nullable', 'integer', 'exists:meal_ingredients,id'],
             'meal_ingredients.*.ingredient_id' => ['required', 'integer', 'exists:ingredients,id'],
             'meal_ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
             'meal_ingredients.*.unit_id' => ['required', 'integer', 'exists:units,id'],
-            'meal_ingredients.*' => [new MealIngredientUnitIsConsistent],
+            'meal_ingredients.*' => [new IngredientUnitIsConsistent],
         ];
     }
 }

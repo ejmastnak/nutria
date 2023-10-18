@@ -11,6 +11,8 @@ use App\Models\NutrientCategory;
 use App\Models\IngredientCategory;
 use App\Models\Unit;
 use App\Models\IntakeGuideline;
+use App\Http\Requests\FoodListStoreRequest;
+use App\Http\Requests\FoodListUpdateRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -92,10 +94,9 @@ class FoodListController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(FoodListStoreRequest $request)
     {
         $this->authorize('create', FoodList::class);
-        $this->validateStoreOrUpdateRequest($request);
 
         // Create food list
         $food_list_mass_in_grams = 0;
@@ -212,10 +213,9 @@ class FoodListController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, FoodList $foodList)
+    public function update(FoodListUpdateRequest $request, FoodList $foodList)
     {
         $this->authorize('update', $foodList);
-        $this->validateStoreOrUpdateRequest($request);
 
         // Keep a running sum of constituent ingredient and meal masses
         $food_list_mass_in_grams = 0;
@@ -341,41 +341,4 @@ class FoodListController extends Controller
         }
         return Redirect::route('food-lists.index')->with('message', 'Failed to delete food list.');
     }
-
-    private function validateStoreOrUpdateRequest($request) {
-        $request->validate([
-            'name' => ['required', 'min:1', 'max:500'],
-            'food_list_ingredients' => [
-                'array',
-                function ($attribute, $value, $fail) use($request) {
-                    // food_list_ingredients must contain at least one element
-                    // if food_list_meals is empty
-                    if (count($request->food_list_ingredients) == 0 && count($request->food_list_meals) == 0) {
-                        $fail('Include at least one ingredient or one meal.');
-                    }
-                },
-                'max:100'
-            ],
-            'food_list_ingredients.*.id' => ['required', 'integer'],
-            'food_list_ingredients.*.ingredient_id' => ['required', 'integer', 'exists:ingredients,id'],
-            'food_list_ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
-            'food_list_ingredients.*.unit_id' => ['required', 'integer', 'exists:units,id'],
-            'food_list_meals' => [
-                'array',
-                function ($attribute, $value, $fail) use($request) {
-                    // food_list_meals must contain at least one element if
-                    // food_list_ingredients is empty
-                    if (count($request->food_list_meals) == 0 && count($request->food_list_ingredients) == 0) {
-                        $fail('Include at least one meal or one ingredient.');
-                    }
-                },
-                'max:100'
-            ],
-            'food_list_meals.*.id' => ['required', 'integer'],
-            'food_list_meals.*.meal_id' => ['required', 'integer', 'exists:meals,id'],
-            'food_list_meals.*.amount' => ['required', 'numeric', 'gt:0'],
-            'food_list_meals.*.unit_id' => ['required', 'integer', 'exists:units,id'],
-        ]);
-    }
-
 }
