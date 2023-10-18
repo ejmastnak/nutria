@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Ingredient;
 use App\Models\Nutrient;
 use App\Rules\IsMassUnit;
 use App\Rules\IsVolumeUnit;
@@ -15,7 +16,7 @@ class IngredientStoreRequest extends FormRequest
     public function authorize(): bool
     {
         $user = $this->user();
-        return $user && $user->can('update', $ingredient);
+        return $user && $user->can('create', Ingredient::class);
     }
 
     /**
