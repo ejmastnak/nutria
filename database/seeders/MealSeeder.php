@@ -17,7 +17,7 @@ class MealSeeder extends Seeder
      */
     public function run(): void
     {
-        $gramId = Unit::where('name', 'g')->first()->id;
+        $gramId = Unit::gramId();
 
         $json = Storage::disk('seeders')->get('json/meals.json');
         $meals = json_decode($json, true);

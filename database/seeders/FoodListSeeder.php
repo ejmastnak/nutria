@@ -19,7 +19,7 @@ class FoodListSeeder extends Seeder
      */
     public function run(): void
     {
-        $gramId = Unit::where('name', 'g')->first()->id;
+        $gramId = Unit::gramId();
 
         $json = Storage::disk('seeders')->get('json/food-lists.json');
         $foodLists = json_decode($json, true);
