@@ -15,6 +15,7 @@ class MealIngredient extends Model
         'amount',
         'unit_id',
         'mass_in_grams',
+        'seq_num',
     ];
 
     public function meal() {

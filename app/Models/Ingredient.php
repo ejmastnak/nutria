@@ -12,8 +12,13 @@ class Ingredient extends Model
         'fdc_id',
         'name',
         'ingredient_category_id',
+        'density_mass_unit_id',
+        'density_mass_amount',
+        'density_volume_unit_id',
+        'density_volume_amount',
+        'density_g_ml',
         'meal_id',
-        'user_id'
+        'user_id',
     ];
 
     public function meal() {

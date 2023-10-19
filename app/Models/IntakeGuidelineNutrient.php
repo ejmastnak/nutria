@@ -12,7 +12,7 @@ class IntakeGuidelineNutrient extends Model
     protected $fillable = [
         'intake_guideline_id',
         'nutrient_id',
-        'rdi'
+        'rdi',
     ];
 
     public function intakeGuideline() {

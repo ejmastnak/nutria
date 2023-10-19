@@ -14,7 +14,8 @@ class FoodListMeal extends Model
         'meal_id',
         'amount',
         'unit_id',
-        'mass_in_grams'
+        'mass_in_grams',
+        'seq_num',
     ];
 
     public function foodList() {

@@ -11,7 +11,7 @@ class FoodList extends Model
     protected $fillable = [
         'name',
         'mass_in_grams',
-        'user_id'
+        'user_id',
     ];
 
     public function foodListIngredients() {

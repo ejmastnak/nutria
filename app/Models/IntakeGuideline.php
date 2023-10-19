@@ -10,7 +10,7 @@ class IntakeGuideline extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'user_id'
+        'user_id',
     ];
 
     public function intakeGuidelineNutrients() {

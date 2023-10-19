@@ -11,8 +11,13 @@ class Unit extends Model
     public $timestamps = false;
     protected $fillable = [
         'name',
-        'full_name',
-        'to_grams',
+        'g',
+        'ml',
+        'seq_num',
+        'custom_unit_amount',
+        'custom_mass_amount',
+        'custom_mass_unit_id',
+        'custom_grams',
     ];
 
     public static function numberMassAndVolumeUnits() {
