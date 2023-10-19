@@ -35,7 +35,7 @@ class IngredientUpdateRequest extends FormRequest
             'ingredient_nutrients' => ['required', 'array', 'min:' . $num_nutrients, 'max:' . $num_nutrients],
             'ingredient_nutrients.*.id' => ['required', 'integer', 'exists:nutrient_ingredients,id'],
             'ingredient_nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'exists:nutrients,id'],
-            'ingredient_nutrients.*.amount_per_100g' => ['required', 'numeric', 'gte:0', config('validation.max_ingredient_nutrient_amount')],
+            'ingredient_nutrients.*.amount_per_100g' => ['required', 'numeric', 'gte:0', config('validation.max_nutrient_amount')],
 
             // Density
             'density_mass_unit_id' => ['nullable', 'integer', 'exists:units,id', new IsMassUnit],
