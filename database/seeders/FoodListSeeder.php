@@ -21,7 +21,6 @@ class FoodListSeeder extends Seeder
     {
         $gramId = Unit::where('name', 'g')->first()->id;
 
-
         $json = Storage::disk('seeders')->get('json/food-lists.json');
         $foodLists = json_decode($json, true);
 
@@ -48,7 +47,7 @@ class FoodListSeeder extends Seeder
                     'food_list_id' => $FoodList->id,
                     'ingredient_id' => $ingredient->id,
                     'amount' => $fli['mass_in_grams'],
-                    'unit_id' => $gram_id,
+                    'unit_id' => $gramId,
                     'mass_in_grams' => $fli['mass_in_grams'],
                     'seq_num' => $idx,
                 ]);
@@ -67,7 +66,7 @@ class FoodListSeeder extends Seeder
                     'food_list_id' => $FoodList->id,
                     'meal_id' => $meal->id,
                     'amount' => $flm['mass_in_grams'],
-                    'unit_id' => $gram_id,
+                    'unit_id' => $gramId,
                     'mass_in_grams' => $flm['mass_in_grams'],
                     'seq_num' => $idx,
                 ]);
