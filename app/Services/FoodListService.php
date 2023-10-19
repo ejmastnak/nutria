@@ -5,16 +5,15 @@ use App\Models\FoodList;
 use App\Models\FoodListIngredient;
 use App\Models\FoodListMeal;
 use App\Models\Unit;
-use App\Services\ComputeDensityService;
 use App\Services\ConvertToGramsService;
 use Illuminate\Support\Facades\DB;
 
 class FoodListService
 {
-    public function storeFoodList(array $data, int $userId, ComputeDensityService $computeDensityService, ConvertToGramsService $convertToGramsService): ?FoodList
+    public function storeFoodList(array $data, int $userId, ConvertToGramsService $convertToGramsService): ?FoodList
     {
         $foodList = null;
-        DB::transaction(function () use ($data, $userId, &$foodList, $computeDensityService, $convertToGramsService) {
+        DB::transaction(function () use ($data, $userId, &$foodList, $convertToGramsService) {
 
             $foodListMassInGrams = 0;
             $foodList = FoodList::create([
@@ -56,9 +55,9 @@ class FoodListService
         return $foodList;
     }
 
-    public function updateFoodList(array $data, FoodList $foodList, ComputeDensityService $computeDensityService, ConvertToGramsService $convertToGramsService): ?FoodList
+    public function updateFoodList(array $data, FoodList $foodList, ConvertToGramsService $convertToGramsService): ?FoodList
     {
-        DB::transaction(function () use ($data, $foodList, $computeDensityService, $convertToGramsService) {
+        DB::transaction(function () use ($data, $foodList, $convertToGramsService) {
 
             $foodListMassInGrams = 0;
             $freshFoodListIngredientIds = [];

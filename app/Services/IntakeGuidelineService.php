@@ -3,16 +3,14 @@ namespace App\Services;
 
 use App\Models\IntakeGuideline;
 use App\Models\IntakeGuidelineNutrient;
-use App\Services\ComputeDensityService;
-use App\Services\ConvertToGramsService;
 use Illuminate\Support\Facades\DB;
 
 class IntakeGuidelineService
 {
-    public function storeIntakeGuideline(array $data, int $userId, ComputeDensityService $computeDensityService, ConvertToGramsService $convertToGramsService): ?IntakeGuideline
+    public function storeIntakeGuideline(array $data, int $userId): ?IntakeGuideline
     {
         $intakeGuideline = null;
-        DB::transaction(function () use ($data, $userId, &$intakeGuideline, $computeDensityService, $convertToGramsService) {
+        DB::transaction(function () use ($data, $userId, &$intakeGuideline) {
 
             // Create intake guideline
             $intakeGuideline = IntakeGuideline::create([
@@ -33,9 +31,9 @@ class IntakeGuidelineService
         return $intakeGuideline;
     }
 
-    public function updateIntakeGuideline(array $data, IntakeGuideline $intakeGuideline, ComputeDensityService $computeDensityService, ConvertToGramsService $convertToGramsService): ?IntakeGuideline
+    public function updateIntakeGuideline(array $data, IntakeGuideline $intakeGuideline): ?IntakeGuideline
     {
-        DB::transaction(function () use ($data, $intakeGuideline, $computeDensityService, $convertToGramsService) {
+        DB::transaction(function () use ($data, $intakeGuideline) {
 
             // Update intake guideline
             $intakeGuideline->update([ 'name' => $data['name'] ]);

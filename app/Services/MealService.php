@@ -4,16 +4,15 @@ namespace App\Services;
 use App\Models\Meal;
 use App\Models\MealIngredient;
 use App\Models\Unit;
-use App\Services\ComputeDensityService;
 use App\Services\ConvertToGramsService;
 use Illuminate\Support\Facades\DB;
 
 class MealService
 {
-    public function storeMeal(array $data, int $userId, ComputeDensityService $computeDensityService, ConvertToGramsService $convertToGramsService): ?Meal
+    public function storeMeal(array $data, int $userId, ConvertToGramsService $convertToGramsService): ?Meal
     {
         $meal = null;
-        DB::transaction(function () use ($data, $userId, &$meal, $computeDensityService, $convertToGramsService) {
+        DB::transaction(function () use ($data, $userId, &$meal, $convertToGramsService) {
 
             $mealMassInGrams = 0;
             $meal = Meal::create([
@@ -53,9 +52,9 @@ class MealService
         return $meal;
     }
 
-    public function updateMeal(array $data, Meal $meal, ComputeDensityService $computeDensityService, ConvertToGramsService $convertToGramsService): ?Meal
+    public function updateMeal(array $data, Meal $meal, ConvertToGramsService $convertToGramsService): ?Meal
     {
-        DB::transaction(function () use ($data, $meal, $computeDensityService, $convertToGramsService) {
+        DB::transaction(function () use ($data, $meal, $convertToGramsService) {
 
             $mealMassInGrams = 0;
             $freshMealIngredientIds = [];
