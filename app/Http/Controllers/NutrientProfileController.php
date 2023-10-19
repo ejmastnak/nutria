@@ -21,16 +21,16 @@ class NutrientProfileController extends Controller
     public static function getNutrientProfilesOfIngredient($ingredientID) {
         $user = Auth::user();
 
-        $intake_guidelines = IntakeGuideline::where('user_id', null)
+        $intakeGuidelines = IntakeGuideline::where('user_id', null)
         ->orWhere('user_id', $user ? $user->id : 0)
         ->orderBy('id', 'asc')
         ->get(['id']);
 
         $nutrientProfiles = array();
-        foreach ($intake_guidelines as $intake_guideline) {
+        foreach ($intakeGuidelines as $intakeGuideline) {
             $nutrientProfiles[] = [
-              'intake_guideline_id' => $intake_guideline->id,
-              'nutrient_profile' => self::profileIngredient($ingredientID, $intake_guideline->id)
+              'intake_guideline_id' => $intakeGuideline->id,
+              'nutrient_profile' => self::profileIngredient($ingredientID, $intakeGuideline->id)
             ];
         }
 
@@ -85,16 +85,16 @@ class NutrientProfileController extends Controller
     public static function getNutrientProfilesOfMeal($mealID) {
         $user = Auth::user();
 
-        $intake_guidelines = IntakeGuideline::where('user_id', null)
+        $intakeGuidelines = IntakeGuideline::where('user_id', null)
         ->orWhere('user_id', $user ? $user->id : 0)
         ->orderBy('id', 'asc')
         ->get(['id']);
 
         $nutrientProfiles = array();
-        foreach ($intake_guidelines as $intake_guideline) {
+        foreach ($intakeGuidelines as $intakeGuideline) {
             $nutrientProfiles[] = [
-              'intake_guideline_id' => $intake_guideline->id,
-              'nutrient_profile' => self::profileMeal($mealID, $intake_guideline->id)
+              'intake_guideline_id' => $intakeGuideline->id,
+              'nutrient_profile' => self::profileMeal($mealID, $intakeGuideline->id)
             ];
         }
 
@@ -142,11 +142,11 @@ class NutrientProfileController extends Controller
 
         if ($returnAsSymbolTable) {
             // Create a symbol table mapping nutrient ids to results
-            $symbol_table = [];
+            $symbolTable = [];
             foreach ($result as $nutrient) {
-                $symbol_table[$nutrient->nutrient_id] = $nutrient;
+                $symbolTable[$nutrient->nutrient_id] = $nutrient;
             }
-            return $symbol_table;
+            return $symbolTable;
         } else {
             return $result;  // just return an array of results
         }
@@ -159,16 +159,16 @@ class NutrientProfileController extends Controller
     public static function getNutrientProfilesOfFoodList($mealID) {
         $user = Auth::user();
 
-        $intake_guidelines = IntakeGuideline::where('user_id', null)
+        $intakeGuidelines = IntakeGuideline::where('user_id', null)
         ->orWhere('user_id', $user ? $user->id : 0)
         ->orderBy('id', 'asc')
         ->get(['id']);
 
         $nutrientProfiles = array();
-        foreach ($intake_guidelines as $intake_guideline) {
+        foreach ($intakeGuidelines as $intakeGuideline) {
             $nutrientProfiles[] = [
-              'intake_guideline_id' => $intake_guideline->id,
-              'nutrient_profile' => self::profileFoodList($mealID, $intake_guideline->id)
+              'intake_guideline_id' => $intakeGuideline->id,
+              'nutrient_profile' => self::profileFoodList($mealID, $intakeGuideline->id)
             ];
         }
 

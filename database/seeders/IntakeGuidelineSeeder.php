@@ -19,16 +19,16 @@ class IntakeGuidelineSeeder extends Seeder
     {
 
         $json = Storage::disk('seeders')->get('json/intake-guidelines.json');
-        $intake_guidelines = json_decode($json, true);
+        $intakeGuidelines = json_decode($json, true);
 
-        foreach ($intake_guidelines as $intake_guideline) {
+        foreach ($intakeGuidelines as $intakeGuideline) {
 
             $IntakeGuideline = IntakeGuideline::updateOrCreate([
-                'name' => $intake_guideline['name'],
-                'user_id' => $intake_guideline['user_id'],
+                'name' => $intakeGuideline['name'],
+                'user_id' => $intakeGuideline['user_id'],
             ]);
 
-            foreach($intake_guideline['intake_guideline_nutrients'] as $ign) {
+            foreach($intakeGuideline['intake_guideline_nutrients'] as $ign) {
 
                 # Check a nutrient with specified nutrient_id exists in database
                 $nutrient = Nutrient::find($ign['nutrient_id']);

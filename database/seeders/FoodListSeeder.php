@@ -19,24 +19,24 @@ class FoodListSeeder extends Seeder
      */
     public function run(): void
     {
-        $gram_id = Unit::where('name', 'g')->first()->id;
+        $gramId = Unit::where('name', 'g')->first()->id;
 
 
         $json = Storage::disk('seeders')->get('json/food-lists.json');
-        $food_lists = json_decode($json, true);
+        $foodLists = json_decode($json, true);
 
-        foreach ($food_lists as $food_list) {
+        foreach ($foodLists as $foodList) {
 
-            $food_list_mass_in_grams = 0;
+            $foodListMassInGrams = 0;
             $FoodList = FoodList::updateOrCreate(
                 [
-                    'name' => $food_list['name'],
-                    'user_id' => $food_list['user_id'],
+                    'name' => $foodList['name'],
+                    'user_id' => $foodList['user_id'],
                 ],
-                [ 'mass_in_grams' => $food_list_mass_in_grams ]
+                [ 'mass_in_grams' => $foodListMassInGrams ]
             );
 
-            foreach($food_list['food_list_ingredients'] as $idx=>$fli) {
+            foreach($foodList['food_list_ingredients'] as $idx=>$fli) {
 
                 $ingredient = Ingredient::where('name', $fli['name'])->first();
                 if (is_null($ingredient)) {
@@ -52,14 +52,14 @@ class FoodListSeeder extends Seeder
                     'mass_in_grams' => $fli['mass_in_grams'],
                     'seq_num' => $idx,
                 ]);
-                $food_list_mass_in_grams += $fli['mass_in_grams'];
+                $foodListMassInGrams += $fli['mass_in_grams'];
             }
 
-            foreach($food_list['food_list_meals'] as $idx=>$flm) {
+            foreach($foodList['food_list_meals'] as $idx=>$flm) {
 
-                $meal = Meal::where('name', $flm['name'])->where('user_id', $food_list['user_id'])->first();
+                $meal = Meal::where('name', $flm['name'])->where('user_id', $foodList['user_id'])->first();
                 if (is_null($meal)) {
-                    $this->command->info("Warning. Failed to find meal with name " . $flm['name'] . " and user id " . $food_list['user_id'] . " when seeding FoodLists.");
+                    $this->command->info("Warning. Failed to find meal with name " . $flm['name'] . " and user id " . $foodList['user_id'] . " when seeding FoodLists.");
                     continue;
                 }
 
@@ -71,11 +71,11 @@ class FoodListSeeder extends Seeder
                     'mass_in_grams' => $flm['mass_in_grams'],
                     'seq_num' => $idx,
                 ]);
-                $food_list_mass_in_grams += $flm['mass_in_grams'];
+                $foodListMassInGrams += $flm['mass_in_grams'];
             }
 
             $FoodList->update([
-                'mass_in_grams' => $food_list_mass_in_grams
+                'mass_in_grams' => $foodListMassInGrams
             ]);
 
         }

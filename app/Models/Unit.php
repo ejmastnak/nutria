@@ -15,4 +15,8 @@ class Unit extends Model
         'to_grams',
     ];
 
+    public static function numberMassAndVolumeUnits() {
+        return self::whereNotNull('g')->orWhereNotNull('ml')->count();
+    }
+
 }

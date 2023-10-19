@@ -15,12 +15,12 @@ class IngredientCategorySeeder extends Seeder
     public function run(): void
     {
         $json = Storage::disk('seeders')->get('json/ingredient-categories.json');
-        $ingredient_categories = json_decode($json, true);
+        $ingredientCategories = json_decode($json, true);
 
-        foreach ($ingredient_categories as $ingredient_category) {
+        foreach ($ingredientCategories as $ingredientCategory) {
             IngredientCategory::updateOrCreate([
-                'id' => $ingredient_category['fdc_id'],
-                'name' => $ingredient_category['name'],
+                'id' => $ingredientCategory['fdc_id'],
+                'name' => $ingredientCategory['name'],
             ]);
         }
     }

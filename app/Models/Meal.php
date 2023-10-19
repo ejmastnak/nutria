@@ -18,7 +18,7 @@ class Meal extends Model
         return $this->hasOne(Ingredient::class, 'meal_id', 'id');
     }
 
-    public function meal_ingredients() {
+    public function mealIngredients() {
         return $this->hasMany(MealIngredient::class, 'meal_id', 'id')->orderBy('seq_num');
     }
 

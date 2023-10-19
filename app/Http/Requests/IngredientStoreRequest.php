@@ -26,13 +26,13 @@ class IngredientStoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        $num_nutrients = Nutrient::count();
+        $numNutrients = Nutrient::count();
         return [
             'name' => ['required', 'min:1', config('validation.max_name_length')],
             'ingredient_category_id' => ['nullable', 'integer', 'exists:ingredient_categories,id'],
 
             // Ingredient nutrients
-            'ingredient_nutrients' => ['required', 'array', 'min:' . $num_nutrients, 'max:' . $num_nutrients],
+            'ingredient_nutrients' => ['required', 'array', 'min:' . $numNutrients, 'max:' . $numNutrients],
             'ingredient_nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'exists:nutrients,id'],
             'ingredient_nutrients.*.amount_per_100g' => ['required', 'numeric', 'gte:0', config('validation.max_nutrient_amount')],
 

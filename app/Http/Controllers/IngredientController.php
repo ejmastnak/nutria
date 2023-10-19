@@ -114,28 +114,28 @@ class IngredientController extends Controller
         order by nutrients.display_order_id;
         ";
 
-        $raw_ingredient_nutrients = DB::select($query, [
+        $rawIngredientNutrients = DB::select($query, [
             'ingredient_id' => $ingredient->id
         ]);
 
         // Map to nested JSON format expected by frontend
-        $ingredient_nutrients = array_map(function ($ingredient_nutrient) {
+        $ingredientNutrients = array_map(function ($ingredientNutrient) {
             return [
                 'id' => 0,
-                'nutrient_id' => $ingredient_nutrient->nutrient_id,
-                'amount_per_100g' => $ingredient_nutrient->amount_per_100g,
+                'nutrient_id' => $ingredientNutrient->nutrient_id,
+                'amount_per_100g' => $ingredientNutrient->amount_per_100g,
                 'nutrient' => [
-                    'id' => $ingredient_nutrient->nutrient_id,
-                    'display_name' => $ingredient_nutrient->display_name,
-                    'unit_id' => $ingredient_nutrient->unit_id,
-                    'nutrient_category_id' => $ingredient_nutrient->nutrient_category_id,
+                    'id' => $ingredientNutrient->nutrient_id,
+                    'display_name' => $ingredientNutrient->display_name,
+                    'unit_id' => $ingredientNutrient->unit_id,
+                    'nutrient_category_id' => $ingredientNutrient->nutrient_category_id,
                     'unit' => [
-                        'id' => $ingredient_nutrient->unit_id,
-                        'name' => $ingredient_nutrient->unit_name
+                        'id' => $ingredientNutrient->unit_id,
+                        'name' => $ingredientNutrient->unit_name
                     ]
                 ]
             ];
-        }, $raw_ingredient_nutrients);
+        }, $rawIngredientNutrients);
 
         return Inertia::render('Ingredients/Create', [
             'ingredient' => [
@@ -143,7 +143,7 @@ class IngredientController extends Controller
                 'name' => $ingredient['name'],
                 'ingredient_category_id' => $ingredient['ingredient_category_id'],
                 'density_g_per_ml' => $ingredient['density_g_per_ml'],
-                'ingredient_nutrients' => $ingredient_nutrients
+                'ingredient_nutrients' => $ingredientNutrients
             ],
             'ingredients' => Ingredient::where('user_id', null)
             ->orWhere('user_id', $user ? $user->id : 0)
@@ -307,12 +307,12 @@ class IngredientController extends Controller
         $this->authorize('delete', $ingredient);
 
         if ($ingredient) {
-            $ingredient_category_id = $ingredient->ingredient_category_id;
+            $ingredientCategoryId = $ingredient->ingredient_category_id;
             $ingredient->delete();
             // Also delete the ingredient's IngredientCategory if there
             // are no remaining ingredients with this category
-            if(Ingredient::where('ingredient_category_id', $ingredient_category_id)->doesntExist()) {
-                $ingredientCategory = IngredientCategory::find($country_id);
+            if(Ingredient::where('ingredient_category_id', $ingredientCategoryId)->doesntExist()) {
+                $ingredientCategory = IngredientCategory::find($ingredientCategoryId);
                 // Preserve "Other" IngredientCategory even if all ingredients are deleted
                 if ($ingredientCategory && ($ingredientCategory->name !== IngredientCategory::$OTHER_CATEGORY_NAME)) {
                     $ingredientCategory->delete();

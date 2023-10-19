@@ -14,11 +14,11 @@ class FoodList extends Model
         'user_id'
     ];
 
-    public function food_list_ingredients() {
+    public function foodListIngredients() {
         return $this->hasMany(FoodListIngredient::class, 'food_list_id', 'id')->orderBy('seq_num');
     }
 
-    public function food_list_meals() {
+    public function foodListMeals() {
         return $this->hasMany(FoodListMeal::class, 'food_list_id', 'id')->orderBy('idx');
     }
 

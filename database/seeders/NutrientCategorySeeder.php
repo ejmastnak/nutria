@@ -15,11 +15,11 @@ class NutrientCategorySeeder extends Seeder
     public function run(): void
     {
         $json = Storage::disk('seeders')->get('json/nutrient-categories.json');
-        $nutrient_categories = json_decode($json, true);
+        $nutrientCategories = json_decode($json, true);
 
-        foreach ($nutrient_categories as $nutrient_category) {
+        foreach ($nutrientCategories as $nutrientCategory) {
             NutrientCategory::updateOrCreate([
-                'name' => $nutrient_category,
+                'name' => $nutrientCategory,
             ]);
         }
     }

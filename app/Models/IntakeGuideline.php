@@ -13,7 +13,7 @@ class IntakeGuideline extends Model
         'user_id'
     ];
 
-    public function intake_guideline_nutrients() {
+    public function intakeGuidelineNutrients() {
         return $this->hasMany(IntakeGuidelineNutrient::class, 'intake_guideline_id', 'id');
     }
 

@@ -20,15 +20,15 @@ class Ingredient extends Model
         return $this->belongsTo(Meal::class, 'meal_id', 'id');
     }
 
-    public function ingredient_category() {
+    public function ingredientCategory() {
         return $this->belongsTo(IngredientCategory::class, 'ingredient_category_id', 'id');
     }
 
-    public function ingredient_nutrients() {
+    public function ingredientNutrients() {
         return $this->hasMany(IngredientNutrient::class, 'ingredient_id', 'id');
     }
 
-    public function ingredient_nonmass_units() {
+    public function ingredientNonmassUnits() {
         return $this->hasMany(IngredientNonmassUnit::class, 'ingredient_id', 'id');
     }
 

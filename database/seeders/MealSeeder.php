@@ -17,42 +17,42 @@ class MealSeeder extends Seeder
      */
     public function run(): void
     {
-        $gram_id = Unit::where('name', 'g')->first()->id;
+        $gramId = Unit::where('name', 'g')->first()->id;
 
         $json = Storage::disk('seeders')->get('json/meals.json');
         $meals = json_decode($json, true);
 
         foreach ($meals as $meal) {
 
-            $meal_mass_in_grams = 0;
+            $mealMassInGrams = 0;
             $Meal = Meal::updateOrCreate(
                 [
                     'name' => $meal['name'],
                     'user_id' => $meal['user_id'],
                 ],
-                [ 'mass_in_grams' => $meal_mass_in_grams ]
+                [ 'mass_in_grams' => $mealMassInGrams ]
             );
-            foreach($meal['meal_ingredients'] as $idx=>$meal_ingredient) {
+            foreach($meal['meal_ingredients'] as $idx=>$mealIngredient) {
 
-                $ingredient = Ingredient::where('name', $meal_ingredient['name'])->first();
+                $ingredient = Ingredient::where('name', $mealIngredient['name'])->first();
                 if (is_null($ingredient)) {
-                    $this->command->info("Warning. Failed to find ingredient " . $meal_ingredient['name'] . " when seeding Meals.");
+                    $this->command->info("Warning. Failed to find ingredient " . $mealIngredient['name'] . " when seeding Meals.");
                     continue;
                 }
 
                 MealIngredient::updateOrCreate([
                     'meal_id' => $Meal->id,
                     'ingredient_id' => $ingredient->id,
-                    'amount' => $meal_ingredient['mass_in_grams'],
-                    'unit_id' => $gram_id,
-                    'mass_in_grams' => $meal_ingredient['mass_in_grams'],
+                    'amount' => $mealIngredient['mass_in_grams'],
+                    'unit_id' => $gramId,
+                    'mass_in_grams' => $mealIngredient['mass_in_grams'],
                     'seq_num' => $idx,
                 ]);
-                $meal_mass_in_grams += $meal_ingredient['mass_in_grams'];
+                $mealMassInGrams += $mealIngredient['mass_in_grams'];
 
             }
             $Meal->update([
-                'mass_in_grams' => $meal_mass_in_grams,
+                'mass_in_grams' => $mealMassInGrams,
             ]);
         }
 

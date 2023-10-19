@@ -21,8 +21,8 @@ class NutrientSeeder extends Seeder
 
         foreach ($nutrients as $nutrient) {
 
-            $nutrient_category = NutrientCategory::where('name', $nutrient['nutrient_category_name'])->first();
-            if (is_null($nutrient_category)) {
+            $nutrientCategory = NutrientCategory::where('name', $nutrient['nutrient_category_name'])->first();
+            if (is_null($nutrientCategory)) {
                 $this->command->info('Warning: Failed to find nutrient category ' . $nutrient['nutrient_category_name'] . ' when seeding Nutrients.');
                 continue;
             }
@@ -38,7 +38,7 @@ class NutrientSeeder extends Seeder
                 'name' => $nutrient['name'],
                 'display_name' => $nutrient['display_name'],
                 'unit_id' => $unit->id,
-                'nutrient_category_id' => $nutrient_category->id,
+                'nutrient_category_id' => $nutrientCategory->id,
                 'precision' => $nutrient['precision'],
                 'display_order' => $nutrient['display_order'],
             ]);

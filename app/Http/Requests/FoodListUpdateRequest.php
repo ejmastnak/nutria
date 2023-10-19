@@ -14,9 +14,9 @@ class FoodListUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $food_list = $this->route('food_list');
+        $foodList = $this->route('food_list');
         $user = $this->user();
-        return $food_list && $user && $user->can('update', $food_list);
+        return $foodList && $user && $user->can('update', $foodList);
     }
 
     /**

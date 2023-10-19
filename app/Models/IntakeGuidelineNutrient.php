@@ -15,7 +15,7 @@ class IntakeGuidelineNutrient extends Model
         'rdi'
     ];
 
-    public function intake_guideline() {
+    public function intakeGuideline() {
         return $this->belongsTo(IntakeGuideline::class, 'intake_guideline_id', 'id');
     }
 

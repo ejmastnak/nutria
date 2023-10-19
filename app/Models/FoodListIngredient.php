@@ -17,7 +17,7 @@ class FoodListIngredient extends Model
         'mass_in_grams'
     ];
 
-    public function food_list() {
+    public function foodList() {
         return $this->belongsTo(FoodList::class, 'food_list_id', 'id');
     }
 
