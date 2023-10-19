@@ -8,7 +8,7 @@ use App\Models\Unit;
  *  arbitrary units of volume) to density in grams per milliliter (e.g. when
  *  creating Ingredients).
  */
-class ConvertToGramsService
+class ComputeDensityService
 {
 
     public function convertToGrams(int $densityMassUnitId, float $densityMassAmount, int $densityVolumeUnitId, float $densityVolumeAmount): ?float
