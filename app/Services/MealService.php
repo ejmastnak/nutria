@@ -34,6 +34,8 @@ class MealService
                 ]);
                 $mealMassInGrams += $MealIngredient->mass_in_grams;
             }
+
+            // Add meal's mass in grams
             $meal->update([ 'mass_in_grams' => $mealMassInGrams ]);
 
             // Create a meal-specific unit
