@@ -26,4 +26,8 @@ class Meal extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public function customUnits() {
+        return $this->hasMany(Unit::class, 'meal_id', 'id');
+    }
+
 }

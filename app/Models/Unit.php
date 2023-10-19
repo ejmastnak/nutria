@@ -14,6 +14,8 @@ class Unit extends Model
         'g',
         'ml',
         'seq_num',
+        'ingredient_id',
+        'meal_id',
         'custom_unit_amount',
         'custom_mass_amount',
         'custom_mass_unit_id',

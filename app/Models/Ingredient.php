@@ -33,8 +33,8 @@ class Ingredient extends Model
         return $this->hasMany(IngredientNutrient::class, 'ingredient_id', 'id');
     }
 
-    public function ingredientNonmassUnits() {
-        return $this->hasMany(IngredientNonmassUnit::class, 'ingredient_id', 'id');
+    public function customUnits() {
+        return $this->hasMany(Unit::class, 'ingredient_id', 'id');
     }
 
     public function user() {
