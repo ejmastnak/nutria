@@ -28,7 +28,7 @@ class MealService
                     'ingredient_id' => $mealIngredient['ingredient_id'],
                     'amount' => $mealIngredient['amount'],
                     'unit_id' => $mealIngredient['unit_id'],
-                    'mass_in_grams' => $convertToGramsService->convertToGrams($mealIngredient['amount'], $mealIngredient['unit_id'], $mealIngredient['ingredient_id']),
+                    'mass_in_grams' => $convertToGramsService->convertToGrams($mealIngredient['amount'], $mealIngredient['unit_id'], $mealIngredient['ingredient_id'], null),
                     'seq_num' => $idx,
                 ]);
                 $mealMassInGrams += $MealIngredient->mass_in_grams;
@@ -67,7 +67,7 @@ class MealService
                         'ingredient_id' => $mealIngredient['ingredient_id'],
                         'amount' => $mealIngredient['amount'],
                         'unit_id' => $mealIngredient['unit_id'],
-                        'mass_in_grams' => $convertToGramsService->convertToGrams($mealIngredient['amount'], $mealIngredient['unit_id'], $mealIngredient['ingredient_id']),
+                        'mass_in_grams' => $convertToGramsService->convertToGrams($mealIngredient['amount'], $mealIngredient['unit_id'], $mealIngredient['ingredient_id'], null),
                         'seq_num' => $idx,
                     ]);
                     $freshMealIngredientIds[] = $MealIngredient->id;
@@ -78,7 +78,7 @@ class MealService
                         'ingredient_id' => $mealIngredient['ingredient_id'],
                         'amount' => $mealIngredient['amount'],
                         'unit_id' => $mealIngredient['unit_id'],
-                        'mass_in_grams' => $convertToGramsService->convertToGrams($mealIngredient['amount'], $mealIngredient['unit_id'], $mealIngredient['ingredient_id']),
+                        'mass_in_grams' => $convertToGramsService->convertToGrams($mealIngredient['amount'], $mealIngredient['unit_id'], $mealIngredient['ingredient_id'], null),
                         'seq_num' => $idx,
                     ]);
                     $freshMealIngredientIds[] = $MealIngredient->id;

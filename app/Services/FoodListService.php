@@ -29,7 +29,7 @@ class FoodListService
                     'ingredient_id' => $fli['ingredient_id'],
                     'amount' => $fli['amount'],
                     'unit_id' => $fli['unit_id'],
-                    'mass_in_grams' => $convertToGramsService->convertToGrams($fli['amount'], $fli['unit_id'], $fli['ingredient_id']),
+                    'mass_in_grams' => $convertToGramsService->convertToGrams($fli['amount'], $fli['unit_id'], $fli['ingredient_id'], null),
                     'seq_num' => $idx,
                 ]);
                 $foodListMassInGrams += $fli->mass_in_grams;
@@ -42,7 +42,7 @@ class FoodListService
                     'meal_id' => $flm['meal_id'],
                     'amount' => $flm['amount'],
                     'unit_id' => $flm['unit_id'],
-                    'mass_in_grams' => $convertToGramsService->convertToGrams($flm['amount'], $flm['unit_id'], $flm['meal_id']),
+                    'mass_in_grams' => $convertToGramsService->convertToGrams($flm['amount'], $flm['unit_id'], null, $flm['meal_id']),
                     'seq_num' => $idx,
                 ]);
                 $foodListMassInGrams += $flm->mass_in_grams;
@@ -74,7 +74,7 @@ class FoodListService
                         'ingredient_id' => $fli['ingredient_id'],
                         'amount' => $fli['amount'],
                         'unit_id' => $fli['unit_id'],
-                        'mass_in_grams' => $convertToGramsService->convertToGrams($fli['amount'], $fli['unit_id'], $fli['ingredient_id']),
+                        'mass_in_grams' => $convertToGramsService->convertToGrams($fli['amount'], $fli['unit_id'], $fli['ingredient_id'], null),
                         'seq_num' => $idx,
                     ]);
                     $freshFoodListIngredientIds[] = $FoodListIngredient->id;
@@ -85,7 +85,7 @@ class FoodListService
                         'ingredient_id' => $fli['ingredient_id'],
                         'amount' => $fli['amount'],
                         'unit_id' => $fli['unit_id'],
-                        'mass_in_grams' => $convertToGramsService->convertToGrams($fli['amount'], $fli['unit_id'], $fli['ingredient_id']),
+                        'mass_in_grams' => $convertToGramsService->convertToGrams($fli['amount'], $fli['unit_id'], $fli['ingredient_id'], null),
                         'seq_num' => $idx,
                     ]);
                     $freshFoodListIngredientIds[] = $FoodListIngredient->id;
@@ -110,7 +110,7 @@ class FoodListService
                         'meal_id' => $flm['meal_id'],
                         'amount' => $flm['amount'],
                         'unit_id' => $flm['unit_id'],
-                        'mass_in_grams' => $convertToGramsService->convertToGrams($flm['amount'], $flm['unit_id'], $flm['meal_id']),
+                        'mass_in_grams' => $convertToGramsService->convertToGrams($flm['amount'], $flm['unit_id'], null, $flm['meal_id']),
                         'seq_num' => $idx,
                     ]);
                     $freshFoodListMealIds[] = $FoodListMeal->id;
@@ -121,7 +121,7 @@ class FoodListService
                         'meal_id' => $flm['meal_id'],
                         'amount' => $flm['amount'],
                         'unit_id' => $flm['unit_id'],
-                        'mass_in_grams' => $convertToGramsService->convertToGrams($flm['amount'], $flm['unit_id'], $flm['meal_id']),
+                        'mass_in_grams' => $convertToGramsService->convertToGrams($flm['amount'], $flm['unit_id'], null, $flm['meal_id']),
                         'seq_num' => $idx,
                     ]);
                     $freshFoodListMealIds[] = $FoodListMeal->id;
