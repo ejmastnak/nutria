@@ -26,4 +26,8 @@ class Unit extends Model
         return self::whereNotNull('g')->orWhereNotNull('ml')->count();
     }
 
+    public static function gramId() {
+        return self::where('name', 'g')->first()->id;
+    }
+
 }
