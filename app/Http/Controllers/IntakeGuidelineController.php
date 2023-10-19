@@ -6,6 +6,8 @@ use App\Models\IntakeGuideline;
 use App\Models\IntakeGuidelineNutrient;
 use App\Models\NutrientCategory;
 use App\Models\Nutrient;
+use App\Http\Requests\IntakeGuidelineStoreRequest;
+use App\Http\Requests\IntakeGuidelineUpdateRequest;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -114,10 +116,9 @@ class IntakeGuidelineController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(IntakeGuidelineStoreRequest $request)
     {
         $this->authorize('create', Meal::class);
-        $this->validateStoreOrUpdateRequest($request);
 
         // Create IntakeGuideline
         $intakeGuideline = IntakeGuideline::create([
@@ -216,7 +217,7 @@ class IntakeGuidelineController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, IntakeGuideline $intakeGuideline)
+    public function update(IntakeGuidelineUpdateRequest $request, IntakeGuideline $intakeGuideline)
     {
         $this->authorize('update', $intakeGuideline);
         $user = Auth::user();
@@ -252,17 +253,6 @@ class IntakeGuidelineController extends Controller
             return Redirect::route('intake-guidelines.index')->with('message', 'Success! Intake Guideline deleted successfully.');
         }
         return Redirect::route('intake-guidelines.index')->with('message', 'Failed to delete intake guideline.');
-    }
-
-    private function validateStoreOrUpdateRequest(Request $request) {
-        $num_nutrients = Nutrient::count();
-        $request->validate([
-            'name' => ['required', 'min:1', 'max:500'],
-            'intake_guideline_nutrients' => ['required', 'array', 'min:' . $num_nutrients, 'max:' . $num_nutrients],
-            'intake_guideline_nutrients.*.id' => ['required', 'integer'],
-            'intake_guideline_nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'exists:nutrients,id'],
-            'intake_guideline_nutrients.*.rdi' => ['required', 'numeric', 'gte:0'],
-        ]);
     }
 
 }

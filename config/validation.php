@@ -9,6 +9,8 @@ return [
     'max_description_length' => "max:10000",
     // Quantity of nutrient (in nutrient units) in an ingredient
     'max_ingredient_nutrient_amount' => "max:100000000",
+    // Quantity of nutrient (in nutrient units) in an ingredient or intake guideline
+    'max_nutrient_amount' => "max:100000000",
     // Amount of an ingredient in mass or volume (in whatever unit the user
     // used) to specify an ingredient density or mass amount of a custom unit.
     'max_ingredient_amount' => "max:100000000",
