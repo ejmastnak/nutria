@@ -3,15 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ingredient;
-use App\Models\IngredientNutrient;
 use App\Models\IngredientCategory;
 use App\Models\NutrientCategory;
 use App\Models\Nutrient;
 use App\Models\IntakeGuideline;
+use App\Services\IngredientService;
 use App\Http\Requests\IngredientStoreRequest;
 use App\Http\Requests\IngredientUpdateRequest;
-
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -159,32 +157,9 @@ class IngredientController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(IngredientStoreRequest $request)
+    public function store(IngredientStoreRequest $request, IngredientService $ingredientService)
     {
-        $validated = $request->safe()->only([
-            'name',
-            'ingredient_category_id',
-            'density_g_per_ml'
-        ]);
-
-        // Create ingredient
-        $ingredient = Ingredient::create([
-            'name' => $validated['name'],
-            'fdc_id' => null,
-            'ingredient_category_id' => $validated['ingredient_category_id'],
-            'density_g_per_ml' => $validated['density_g_per_ml'],
-            'user_id' => $request->user()->id
-        ]);
-
-        // Create ingredient's nutrients
-        foreach ($request['ingredient_nutrients'] as $in) {
-            IngredientNutrient::create([
-                'ingredient_id' => $ingredient->id,
-                'nutrient_id' => $in['nutrient_id'],
-                'amount_per_100g' => $in['amount_per_100g'],
-            ]);
-        }
-
+        $ingredient = $ingredientService->storeIngredient($request->validated(), $request->user()->id);
         return Redirect::route('ingredients.show', $ingredient->id)->with('message', 'Success! Ingredient created successfully.');
     }
 
@@ -273,29 +248,9 @@ class IngredientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(IngredientUpdateRequest $request, Ingredient $ingredient)
+    public function update(IngredientUpdateRequest $request, Ingredient $ingredient, IngredientService $ingredientService)
     {
-        $validated = $request->safe()->only([
-            'name',
-            'ingredient_category_id',
-            'density_g_per_ml'
-        ]);
-
-        // Update ingredient
-        $ingredient->update([
-            'name' => $request['name'],
-            'ingredient_category_id' => $request['ingredient_category_id'],
-            'density_g_per_ml' => $request['density_g_per_ml'],
-        ]);
-
-        // Update ingredient's nutrients
-        foreach ($request['ingredient_nutrients'] as $ing) {
-            $dbIng = IngredientNutrient::find($ing['id']);
-            if ($dbIng) {
-                $dbIng->update(['amount_per_100g' => $ing['amount_per_100g']]);
-            }
-        }
-
+        $ingredientService->updateIngredient($request->validated(), $ingredient);
         return Redirect::route('ingredients.show', $ingredient->id)->with('message', 'Success! Ingredient updated successfully.');
     }
 

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Meal;
 use App\Models\Nutrient;
 use App\Models\Ingredient;
-use App\Models\MealIngredient;
 use App\Models\IngredientCategory;
 use App\Models\IngredientNutrient;
 use App\Models\NutrientCategory;
@@ -13,10 +12,10 @@ use App\Models\IntakeGuideline;
 use App\Models\Unit;
 use App\Http\Requests\MealStoreRequest;
 use App\Http\Requests\MealUpdateRequest;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
+use App\Services\MealService;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class MealController extends Controller
 {
@@ -90,33 +89,9 @@ class MealController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(MealStoreRequest $request)
+    public function store(MealStoreRequest $request, MealService $mealService)
     {
-        $this->authorize('create', Meal::class);
-
-        // Create meal
-        $meal_mass_in_grams = 0;
-        $meal = Meal::create([
-            'name' => $request->name,
-            'mass_in_grams' => $meal_mass_in_grams,
-            'user_id' => $request->user()->id
-        ]);
-
-        // Create meal's MealIngredients
-        foreach ($request->meal_ingredients as $mi_data) {
-            $mi = MealIngredient::create([
-                'meal_id' => $meal->id,
-                'ingredient_id' => $mi_data['ingredient_id'],
-                'amount' => $mi_data['amount'],
-                'unit_id' => $mi_data['unit_id'],
-                'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($mi_data['amount'], $mi_data['unit_id'], $mi_data['ingredient_id'])
-            ]);
-            $meal_mass_in_grams += $mi->mass_in_grams;
-        }
-        $meal->update([
-          'mass_in_grams' => $meal_mass_in_grams
-        ]);
-
+        $meal = $mealService->storeMeal($request->validated(), $request->user()->id);
         return Redirect::route('meals.show', $meal->id)->with('message', 'Success! Meal created successfully.');
     }
 
@@ -196,72 +171,10 @@ class MealController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(MealUpdateRequest $request, Meal $meal)
+    public function update(MealUpdateRequest $request, Meal $meal, MealService $mealService)
     {
-        $this->authorize('update', $meal);
-
-        // Keep a running sum of constituent MealIngredient mass
-        $meal_mass_in_grams = 0;
-
-        // Find ID of all MealIngredients already associated with this meal in DB
-        $dbMIs = $meal->meal_ingredients;
-        $dbIDs = array_map(function ($dbMI) { return $dbMI['id']; }, $dbMIs->toArray());
-        // Find ID of all MealIngredients associated with this meal in incoming request
-        $requestMIs = $request->meal_ingredients;
-        $requestIDs = array_map(function ($requestMI) { return $requestMI['id']; }, $requestMIs);
-
-        // Delete all MealIngredients currently in DB but not in incoming request
-        foreach ($dbMIs as $dbMI) {
-            if (!in_array($dbMI['id'], $requestIDs)) {
-                $dbMI->delete();
-            }
-        }
-
-        // Create a new MealIngredient for any MealIngredient in request but not in DB
-        foreach ($requestMIs as $requestMI) {
-            if (!in_array($requestMI['id'], $dbIDs)) {
-                $mi = MealIngredient::create([
-                    'meal_id' => $meal->id,
-                    'ingredient_id' => $requestMI['ingredient_id'],
-                    'amount' => $requestMI['amount'],
-                    'unit_id' => $requestMI['unit_id'],
-                    'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($requestMI['amount'], $requestMI['unit_id'], $requestMI['ingredient_id'])
-                ]);
-                $meal_mass_in_grams += $mi->mass_in_grams;
-            }
-        }
-
-        // Update any MealIngredient that appear in both DB and incoming
-        // request to reflect the state in request.
-        foreach ($dbMIs as $dbMI) {
-            // Is this dbMI also in requestMIs?
-            $key = array_search($dbMI['id'], $requestIDs);
-            if ($key !== false) {  // if a match was found
-                $dbMI->update([
-                    'meal_id' => $meal->id,
-                    'ingredient_id' => $requestMIs[$key]['ingredient_id'],
-                    'amount' => $requestMIs[$key]['amount'],
-                    'unit_id' => $requestMIs[$key]['unit_id'],
-                    'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($requestMIs[$key]['amount'], $requestMIs[$key]['unit_id'], $requestMIs[$key]['ingredient_id'])
-                ]);
-                $meal_mass_in_grams += $dbMI->mass_in_grams;
-            }
-        }
-
-        // Update meal
-        $meal->update([
-            'name' => $request->name,
-            'mass_in_grams' => $meal_mass_in_grams,
-        ]);
-
-        if (!is_null($meal->ingredient)) {
-            $this->saveAsIngredientWithoutRedirect($meal, Auth::user());
-            $message = 'Success! Meal (and one linked ingredient) updated successfully.';
-        } else {
-            $message = 'Success! Meal updated successfully.';
-        }
-
-        return Redirect::route('meals.show', $meal->id)->with('message', $message);
+        $mealService->updateMeal($request->validated(), $meal);
+        return Redirect::route('meals.show', $meal->id)->with('message', 'Success! Meal updated successfully.');
     }
 
     /**

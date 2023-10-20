@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\FoodList;
-use App\Models\FoodListIngredient;
-use App\Models\FoodListMeal;
 use App\Models\Ingredient;
 use App\Models\Meal;
 use App\Models\NutrientCategory;
@@ -13,10 +11,10 @@ use App\Models\Unit;
 use App\Models\IntakeGuideline;
 use App\Http\Requests\FoodListStoreRequest;
 use App\Http\Requests\FoodListUpdateRequest;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
+use App\Services\FoodListService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
 
 class FoodListController extends Controller
 {
@@ -94,47 +92,10 @@ class FoodListController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(FoodListStoreRequest $request)
+    public function store(FoodListStoreRequest $request, FoodListService $foodListService)
     {
-        $this->authorize('create', FoodList::class);
-
-        // Create food list
-        $food_list_mass_in_grams = 0;
-        $food_list = FoodList::create([
-            'name' => $request->name,
-            'mass_in_grams' => $food_list_mass_in_grams,
-            'user_id' => $request->user()->id
-        ]);
-
-        // Create FoodListIngredients
-        foreach ($request->food_list_ingredients as $fli_data) {
-            $fli = FoodListIngredient::create([
-                'food_list_id' => $food_list->id,
-                'ingredient_id' => $fli_data['ingredient_id'],
-                'amount' => $fli_data['amount'],
-                'unit_id' => $fli_data['unit_id'],
-                'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($fli_data['amount'], $fli_data['unit_id'], $fli_data['ingredient_id'])
-            ]);
-            $food_list_mass_in_grams += $fli->mass_in_grams;
-        }
-
-        // Create FoodListMeals
-        foreach ($request->food_list_meals as $flm_data) {
-            $flm = FoodListMeal::create([
-                'food_list_id' => $food_list->id,
-                'meal_id' => $flm_data['meal_id'],
-                'amount' => $flm_data['amount'],
-                'unit_id' => $flm_data['unit_id'],
-                'mass_in_grams' => UnitConversionController::mass_to_grams($flm_data['amount'], $flm_data['unit_id'])
-            ]);
-            $food_list_mass_in_grams += $flm->mass_in_grams;
-        }
-
-        $food_list->update([
-          'mass_in_grams' => $food_list_mass_in_grams
-        ]);
-
-        return Redirect::route('food-lists.show', $food_list->id)->with('message', 'Success! Food List created successfully.');
+        $foodList = $foodListService->storeFoodList($request->validated(), $request->user()->id);
+        return Redirect::route('food-lists.show', $foodList->id)->with('message', 'Success! Food List created successfully.');
     }
 
     /**
@@ -213,118 +174,9 @@ class FoodListController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(FoodListUpdateRequest $request, FoodList $foodList)
+    public function update(FoodListUpdateRequest $request, FoodList $foodList, FoodListService $foodListService)
     {
-        $this->authorize('update', $foodList);
-
-        // Keep a running sum of constituent ingredient and meal masses
-        $food_list_mass_in_grams = 0;
-
-        // ------------------------------------------------------------------ //
-        // Update FoodListIngredients
-        // ------------------------------------------------------------------ //
-        // Find ID of all FoodListIngredients already associated with this food list in DB
-        $dbFLIs = $foodList->food_list_ingredients;
-        $dbFLIIDS = array_map(function ($dbFLI) { return $dbFLI['id']; }, $dbFLIs->toArray());
-        // Find ID of all FoodListIngredients associated with this food list in incoming request
-        $requestFLIs = $request->food_list_ingredients;
-        $requestFLIIDs = array_map(function ($requestFLI) { return $requestFLI['id']; }, $requestFLIs);
-
-        // Delete all FoodListIngredients currently in DB but not in incoming request
-        foreach ($dbFLIs as $dbFLI) {
-            if (!in_array($dbFLI['id'], $requestFLIIDs)) {
-                $dbFLI->delete();
-            }
-        }
-
-        // Create a new FoodListIngredient for any FoodListIngredient in
-        // request but not in DB
-        foreach ($requestFLIs as $requestFLI) {
-            if (!in_array($requestFLI['id'], $dbFLIIDS)) {
-                $fli = FoodListIngredient::create([
-                    'food_list_id' => $foodList->id,
-                    'ingredient_id' => $requestFLI['ingredient_id'],
-                    'amount' => $requestFLI['amount'],
-                    'unit_id' => $requestFLI['unit_id'],
-                    'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($requestFLI['amount'], $requestFLI['unit_id'], $requestFLI['ingredient_id'])
-                ]);
-                $food_list_mass_in_grams += $fli->mass_in_grams;
-            }
-        }
-
-        // Update any FoodListIngredient that appear in both DB and incoming
-        // request to reflect the state in request.
-        foreach ($dbFLIs as $dbFLI) {
-            // Is this dbFLI also in requestFLIs?
-            $key = array_search($dbFLI['id'], $requestFLIIDs);
-            if ($key !== false) {  // if a match was found
-                $dbFLI->update([
-                    'food_list_id' => $foodList->id,
-                    'ingredient_id' => $requestFLIs[$key]['ingredient_id'],
-                    'amount' => $requestFLIs[$key]['amount'],
-                    'unit_id' => $requestFLIs[$key]['unit_id'],
-                    'mass_in_grams' => UnitConversionController::to_grams_for_ingredient($requestFLIs[$key]['amount'], $requestFLIs[$key]['unit_id'], $requestFLIs[$key]['ingredient_id'])
-                ]);
-                $food_list_mass_in_grams += $dbFLI->mass_in_grams;
-            }
-        }
-
-        // ------------------------------------------------------------------ //
-        // Update FoodListMeals
-        // ------------------------------------------------------------------ //
-        // Find ID of all FoodListMeals already associated with this food list in DB
-        $dbFLMs = $foodList->food_list_meals;
-        $dbFLMIDS = array_map(function ($dbFLM) { return $dbFLM['id']; }, $dbFLMs->toArray());
-        // Find ID of all FoodListMeals associated with this food list in
-        // incoming request
-        $requestFLMs = $request->food_list_meals;
-        $requestFLMIDs = array_map(function ($requestFLM) { return $requestFLM['id']; }, $requestFLMs);
-
-        // Delete all FoodListMeals currently in DB but not in incoming request
-        foreach ($dbFLMs as $dbFLM) {
-            if (!in_array($dbFLM['id'], $requestFLMIDs)) {
-                $dbFLM->delete();
-            }
-        }
-
-        // Create a new FoodListMeal for any FoodListMeals in request but not
-        // in DB
-        foreach ($requestFLMs as $requestFLM) {
-            if (!in_array($requestFLM['id'], $dbFLMIDS)) {
-                $flm = FoodListMeal::create([
-                    'food_list_id' => $foodList->id,
-                    'meal_id' => $requestFLM['meal_id'],
-                    'amount' => $requestFLM['amount'],
-                    'unit_id' => $requestFLM['unit_id'],
-                    'mass_in_grams' => UnitConversionController::mass_to_grams($requestFLM['amount'], $requestFLM['unit_id'])
-                ]);
-                $food_list_mass_in_grams += $flm->mass_in_grams;
-            }
-        }
-
-        // Update any FoodListMeal that appears in both DB and incoming request
-        // to reflect the state in request.
-        foreach ($dbFLMs as $dbFLM) {
-            // Is this dbFLM also in requestFLMs?
-            $key = array_search($dbFLM['id'], $requestFLMIDs);
-            if ($key !== false) {  // if a match was found
-                $dbFLM->update([
-                    'food_list_id' => $foodList->id,
-                    'meal_id' => $requestFLMs[$key]['meal_id'],
-                    'amount' => $requestFLMs[$key]['amount'],
-                    'unit_id' => $requestFLMs[$key]['unit_id'],
-                    'mass_in_grams' => UnitConversionController::mass_to_grams($requestFLMs[$key]['amount'], $requestFLMs[$key]['unit_id'])
-                ]);
-                $food_list_mass_in_grams += $dbFLM->mass_in_grams;
-            }
-        }
-
-        // Update FoodList
-        $foodList->update([
-            'name' => $request->name,
-            'mass_in_grams' => $food_list_mass_in_grams
-        ]);
-
+        $foodListService->updateFoodList($request->validated(), $foodList);
         return Redirect::route('food-lists.show', $foodList->id)->with('message', 'Success! Food List updated successfully.');
     }
 

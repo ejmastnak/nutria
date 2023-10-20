@@ -3,15 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\IntakeGuideline;
-use App\Models\IntakeGuidelineNutrient;
 use App\Models\NutrientCategory;
 use App\Models\Nutrient;
 use App\Http\Requests\IntakeGuidelineStoreRequest;
 use App\Http\Requests\IntakeGuidelineUpdateRequest;
-use Inertia\Inertia;
-use Illuminate\Http\Request;
+use App\Services\IntakeGuidelineService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
 
 class IntakeGuidelineController extends Controller
 {
@@ -116,25 +115,9 @@ class IntakeGuidelineController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(IntakeGuidelineStoreRequest $request)
+    public function store(IntakeGuidelineStoreRequest $request, IntakeGuidelineService $intakeGuidelineService)
     {
-        $this->authorize('create', Meal::class);
-
-        // Create IntakeGuideline
-        $intakeGuideline = IntakeGuideline::create([
-            'name' => $request->name,
-            'user_id' => $request->user()->id
-        ]);
-
-        // Create IntakeGuidelineNutrients
-        foreach ($request->intake_guideline_nutrients as $ign) {
-            IntakeGuidelineNutrient::create([
-                'intake_guideline_id' => $intakeGuideline->id,
-                'nutrient_id' => $ign['nutrient_id'],
-                'rdi' => $ign['rdi']
-            ]);
-        }
-
+        $intakeGuideline = $intakeGuidelineService->storeIntakeGuideline($request->validated(), $request->user()->id);
         return Redirect::route('intake-guidelines.show', $intakeGuideline->id)->with('message', 'Success! Intake Guideline created successfully.');
     }
 
@@ -217,27 +200,9 @@ class IntakeGuidelineController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(IntakeGuidelineUpdateRequest $request, IntakeGuideline $intakeGuideline)
+    public function update(IntakeGuidelineUpdateRequest $request, IntakeGuideline $intakeGuideline, IntakeGuidelineService $intakeGuidelineService)
     {
-        $this->authorize('update', $intakeGuideline);
-        $user = Auth::user();
-
-        // Update IntakeGuideline
-        $intakeGuideline->update([
-            'name' => $request->name
-        ]);
-
-        // Update IntakeGuidelineNutrients
-        foreach ($request->intake_guideline_nutrients as $ign) {
-            $dbIGN = IntakeGuidelineNutrient::find($ign['id']);
-            if (is_null($dbIGN)) continue;
-            $dbIGN->update([
-                'intake_guideline_id' => $intakeGuideline->id,
-                'nutrient_id' => $ign['nutrient_id'],
-                'rdi' => $ign['rdi']
-            ]);
-        }
-
+        $intakeGuidelineService->updateIntakeGuideline($request->validated(), $intakeGuideline);
         return Redirect::route('intake-guidelines.show', $intakeGuideline->id)->with('message', 'Success! Intake Guideline updated successfully.');
     }
 
