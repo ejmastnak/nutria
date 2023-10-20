@@ -250,6 +250,8 @@ class IngredientController extends Controller
      */
     public function update(IngredientUpdateRequest $request, Ingredient $ingredient, IngredientService $ingredientService)
     {
+        // Restrict updating ingredient derived from a meal
+        if (!is_null($ingredient->meal_id)) return back()->with('message', 'Error. Updating this ingredient is intentionally restricted doing so would break the relationship with the parent meal. Update the parent meal instead.');
         $ingredientService->updateIngredient($request->validated(), $ingredient);
         return Redirect::route('ingredients.show', $ingredient->id)->with('message', 'Success! Ingredient updated successfully.');
     }

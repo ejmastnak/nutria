@@ -168,9 +168,8 @@ class NutrientProfileService
 
     /**
      *  Instead of returning an array of nutrient data, returns a symbol table
-     *  mapping nutrient ids to nutrient data. This is currently used when
-     *  saving meals as ingredients, but it might not be needed.
-     *  TODO: determine if this method is needed.
+     *  mapping nutrient ids to nutrient data. This is used when saving meals
+     *  as ingredients.
      */
     public function getNutrientIndexedMealProfile($mealId, $intakeGuidelineId=1) {
 

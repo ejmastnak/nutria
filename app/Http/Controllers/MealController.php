@@ -178,6 +178,17 @@ class MealController extends Controller
     }
 
     /**
+     *  Saves a Meal as a single Ingredient.
+     */
+    public function saveAsIngredient(Meal $meal, MealService $mealService) {
+        if (is_null($meal)) return back()->with('message', 'Error. Failed to create ingredient—the parent meal could not be resolved.');  // basic validation
+        $user = Auth::user();
+        $ingredient = $mealService->saveAsIngredient($meal, $user->id);
+        return Redirect::route('ingredients.show', $ingredient->id)->with('message', 'Success! Ingredient successfully created.');
+    }
+
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Meal $meal)
@@ -187,62 +198,4 @@ class MealController extends Controller
         else return Redirect::route('meals.index')->with('message', 'Failed to delete meal.');
     }
 
-    /**
-     *  Saves a Meal as a single Ingredient.
-     */
-    public function saveAsIngredient(Meal $meal) {
-        $this->authorize('create', Ingredient::class);
-        $user = Auth::user();
-        $ingredient = $this->saveAsIngredientWithoutRedirect($meal, $user);
-        return Redirect::route('ingredients.show', $ingredient->id)->with('message', 'Success! Ingredient successfully created.');
-    }
-
-    /**
-     *  Implements the logic for saveAsIngredient(); this function is kept
-     *  separate from the public function saveAsIngredient so that it can
-     *  also be called from update() without redirecting to Ingredients/Show.
-     */
-    private function saveAsIngredientWithoutRedirect(Meal $meal, $user) {
-        // Check for an Ingredient associated with the inputted $meal
-        $ingredient = Ingredient::where('meal_id', $meal->id)->first();
-
-        // If no such Ingredient exists, create a new one with "Other" category
-        $otherIngredientCategory = IngredientCategory::where('name', IngredientCategory::$OTHER_CATEGORY_NAME)->first();
-        if (is_null($ingredient)) {
-            $ingredient = Ingredient::create([
-                'name' => $meal->name . ' (ingredient)',
-                'ingredient_category_id' => $otherIngredientCategory ? $otherIngredientCategory->id : 1,
-                'meal_id' => $meal->id,
-                'user_id' => $user->id
-            ]);
-        }
-
-        // Update or create Ingredient's IngredientNutrients
-        $nutrientProfileST = NutrientProfileController::profileMeal($meal->id, $intakeGuidelineID=1, $returnAsSymbolTable=true);
-
-        foreach (Nutrient::all() as $nutrient) {
-            // Check for existing IngredientNutrient associated with this
-            // $nutrient and $ingredient
-            $ingredientNutrient = IngredientNutrient::where('ingredient_id', $ingredient->id)
-            ->where('nutrient_id', $nutrient->id)
-            ->first();
-
-            // If no such IngredientNutrient exists, create a new one
-            if (is_null($ingredientNutrient)) {
-                $ingredientNutrient = IngredientNutrient::create([
-                    'ingredient_id' => $ingredient->id,
-                    'nutrient_id' => $nutrient->id,
-                    'amount_per_100g' => 0.0  // updated later
-                ]);
-            }
-
-            // Use nutrient amount from meal's nutrient profile (scaled to
-            // amount per 100 grams), if present; otherwise set amount to 0.
-            $ingredientNutrient->update([
-                'amount_per_100g' => $nutrientProfileST[$nutrient->id] ? $nutrientProfileST[$nutrient->id]->amount * (100/$meal->mass_in_grams) : 0.0
-            ]);
-        }
-
-        return $ingredient;
-    }
 }
