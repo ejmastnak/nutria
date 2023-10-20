@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Meal;
+use App\Models\Ingredient;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
@@ -91,5 +92,15 @@ class MealPolicy
     public function forceDelete(User $user, Meal $meal): bool
     {
         //
+    }
+
+    public function saveAsIngredient(User $user, Meal $meal):bool {
+        if ($user->is_paying) {
+            return $meal->user_id === $user->id;
+        } else if($user->is_registered && $meal->user_id === $user->id) {
+            $count = Ingredient::where('user_id', $user->id)->count();
+            return $count < config('auth.max_free_tier_ingredients');
+        }
+        return false;
     }
 }
