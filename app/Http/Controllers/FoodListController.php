@@ -186,11 +186,7 @@ class FoodListController extends Controller
     public function destroy(FoodList $foodList)
     {
         $this->authorize('delete', $foodList);
-
-        if ($foodList) {
-            $foodList->delete();
-            return Redirect::route('food-lists.index')->with('message', 'Success! Food List deleted successfully.');
-        }
-        return Redirect::route('food-lists.index')->with('message', 'Failed to delete food list.');
+        if ($foodList->delete()) return Redirect::route('food-lists.index')->with('message', 'Success! Food List deleted successfully.');
+        else return Redirect::route('food-lists.index')->with('message', 'Failed to delete food list.');
     }
 }

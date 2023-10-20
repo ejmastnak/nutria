@@ -213,11 +213,8 @@ class IntakeGuidelineController extends Controller
     {
         $this->authorize('delete', $intakeGuideline);
 
-        if ($intakeGuideline) {
-            $intakeGuideline->delete();
-            return Redirect::route('intake-guidelines.index')->with('message', 'Success! Intake Guideline deleted successfully.');
-        }
-        return Redirect::route('intake-guidelines.index')->with('message', 'Failed to delete intake guideline.');
+        if ($intakeGuideline->delete()) return Redirect::route('intake-guidelines.index')->with('message', 'Success! Intake Guideline deleted successfully.');
+        else return Redirect::route('intake-guidelines.index')->with('message', 'Failed to delete intake guideline.');
     }
 
 }

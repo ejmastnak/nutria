@@ -260,22 +260,8 @@ class IngredientController extends Controller
     public function destroy(Ingredient $ingredient)
     {
         $this->authorize('delete', $ingredient);
-
-        if ($ingredient) {
-            $ingredientCategoryId = $ingredient->ingredient_category_id;
-            $ingredient->delete();
-            // Also delete the ingredient's IngredientCategory if there
-            // are no remaining ingredients with this category
-            if(Ingredient::where('ingredient_category_id', $ingredientCategoryId)->doesntExist()) {
-                $ingredientCategory = IngredientCategory::find($ingredientCategoryId);
-                // Preserve "Other" IngredientCategory even if all ingredients are deleted
-                if ($ingredientCategory && ($ingredientCategory->name !== IngredientCategory::$OTHER_CATEGORY_NAME)) {
-                    $ingredientCategory->delete();
-                }
-            }
-            return Redirect::route('ingredients.index')->with('message', 'Success! Ingredient deleted successfully.');
-        }
-        return Redirect::route('ingredients.index')->with('message', 'Failed to delete ingredient.');
+        if ($ingredient->delete()) return Redirect::route('ingredients.index')->with('message', 'Success! Ingredient deleted successfully.');
+        else return Redirect::route('ingredients.index')->with('message', 'Failed to delete ingredient.');
     }
 
 }
