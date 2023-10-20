@@ -11,5 +11,7 @@ class IngredientCategory extends Model
     public $timestamps = false;
     protected $fillable = ['id', 'name'];
 
-    public static $OTHER_CATEGORY_NAME = "Other";
+    public static function otherCategory() {
+        return self::where('name', 'Other')->first();
+    }
 }
