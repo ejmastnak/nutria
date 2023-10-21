@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
         // Ingredients
         Route::get('ingredients/create', [IngredientController::class, 'create'])->name('ingredients.create')->can('create', Ingredient::class);
-        Route::get('ingredients/{ingredient}/clone', [IngredientController::class, 'clone'])->name('ingredients.clone')->can('create', Ingredient::class);
+        Route::get('ingredients/{ingredient}/clone', [IngredientController::class, 'clone'])->name('ingredients.clone')->can('clone', 'ingredient');
         Route::post('ingredients', [IngredientController::class, 'store'])->name('ingredients.store')->can('create', Ingredient::class);
         Route::get('ingredients/{ingredient}/edit', [IngredientController::class, 'edit'])->name('ingredients.edit')->can('update', 'ingredient');
         Route::put('ingredients/{ingredient}', [IngredientController::class, 'update'])->name('ingredients.update')->can('update', 'ingredient');
@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
         // Meals
         Route::get('meals', [MealController::class, 'index'])->name('meals.index')->can('viewAny', Meal::class);
         Route::get('meals/create', [MealController::class, 'create'])->name('meals.create')->can('create', Meal::class);
-        Route::get('meals/{meal}/clone', [MealController::class, 'clone'])->name('meals.clone')->can('create', Meal::class);
+        Route::get('meals/{meal}/clone', [MealController::class, 'clone'])->name('meals.clone')->can('clone', 'meal');
         Route::post('meals', [MealController::class, 'store'])->name('meals.store')->can('create', Meal::class);
         Route::get('meals/{meal}/edit', [MealController::class, 'edit'])->name('meals.edit')->can('update', 'meal');
         Route::put('meals/{meal}', [MealController::class, 'update'])->name('meals.update')->can('update', 'meal');
@@ -62,7 +62,7 @@ Route::middleware('auth')->group(function () {
         // Food Lists
         Route::get('food-lists', [FoodListController::class, 'index'])->name('food-lists.index')->can('viewAny', FoodList::class);
         Route::get('food-lists/create', [FoodListController::class, 'create'])->name('food-lists.create')->can('create', FoodList::class);
-        Route::get('food-lists/{food_list}/clone', [FoodListController::class, 'clone'])->name('food-lists.clone')->can('create', FoodList::class);
+        Route::get('food-lists/{food_list}/clone', [FoodListController::class, 'clone'])->name('food-lists.clone')->can('clone', 'food_list');
         Route::post('food-lists', [FoodListController::class, 'store'])->name('food-lists.store')->can('create', FoodList::class);
         Route::get('food-lists/{food_list}/edit', [FoodListController::class, 'edit'])->name('food-lists.edit')->can('update', 'food_list');
         Route::put('food-lists/{food_list}', [FoodListController::class, 'update'])->name('food-lists.update')->can('update', 'food_list');
@@ -71,7 +71,7 @@ Route::middleware('auth')->group(function () {
 
         // Intake Guidelines
         Route::get('intake-guidelines/create', [IntakeGuidelineController::class, 'create'])->name('intake-guidelines.create')->can('create', IntakeGuideline::class);
-        Route::get('intake-guidelines/{intake_guideline}/clone', [IntakeGuidelineController::class, 'clone'])->name('intake-guidelines.clone')->can('create', IntakeGuideline::class);
+        Route::get('intake-guidelines/{intake_guideline}/clone', [IntakeGuidelineController::class, 'clone'])->name('intake-guidelines.clone')->can('clone', 'intake_guideline');
         Route::post('intake-guidelines', [IntakeGuidelineController::class, 'store'])->name('intake-guidelines.store')->can('create', IntakeGuideline::class);
         Route::get('intake-guidelines/{intake_guideline}/edit', [IntakeGuidelineController::class, 'edit'])->name('intake-guidelines.edit')->can('update', 'intake_guideline');
         Route::put('intake-guidelines/{intake_guideline}', [IntakeGuidelineController::class, 'update'])->name('intake-guidelines.update')->can('update', 'intake_guideline');
