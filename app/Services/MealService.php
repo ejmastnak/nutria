@@ -166,4 +166,41 @@ class MealService
         });
         return $ingredient;
     }
+
+    public function deleteMeal(Meal $meal) {
+        $restricted = false;
+        $success = false;
+        $errors = [];
+
+        // Check for meal use in food lists
+        if ($meal->foodListMeals->count() > 0) {
+            $restricted = true;
+            $message = "Failed to delete meal.";
+            $errors[] = "Deleting the meal is intentionally restricted because the meal is used in one or more food lists (which you can check on the meals's page).";
+        }
+
+        // Check if the meal has a child ingredient used in meals or food lists
+        $ingredient = $meal->ingredient;
+        if (!is_null($ingredient)) {
+            // Check for ingredient use in meals or food lists
+            if ($ingredient->mealIngredients->count() > 0 || $ingredient->foodListIngredients->count() > 0) {
+                $restricted = true;
+                $message = "Failed to delete meal.";
+                $errors[] = "Deleting the meal is intentionally restricted because the meal has a derived ingredient used in one or more meals or food lists (which you can check on the derived ingredient's page).";
+            }
+        }
+
+        if (!$restricted) $success = $meal->delete();
+
+        if ($success) $message = 'Success! Meal deleted successfully.';
+        else if (!$success && !$restricted) $message = 'Error. Failed to delete ingredient.';
+
+        return [
+            'success' => $success,
+            'restricted' => $restricted,
+            'message' => $message,
+            'errors' => $errors,
+        ];
+    }
+
 }

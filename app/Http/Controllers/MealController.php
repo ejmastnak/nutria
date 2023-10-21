@@ -191,11 +191,12 @@ class MealController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Meal $meal)
+    public function destroy(Meal $meal, MealService $mealService)
     {
-        $this->authorize('delete', $meal);
-        if ($meal->delete()) return Redirect::route('meals.index')->with('message', 'Success! Meal deleted successfully.');
-        else return Redirect::route('meals.index')->with('message', 'Failed to delete meal.');
+        $result = $mealService->deleteMeal($meal);
+        if ($result['success']) return Redirect::route('meals.index')->with('message', $result['message']);
+        else if ($result['restricted']) return back()->with('message', $result['message']);
+        else return Redirect::route('meals.index')->with('message', $result['message']);
     }
 
 }

@@ -183,10 +183,10 @@ class FoodListController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(FoodList $foodList)
+    public function destroy(FoodList $foodList, FoodListService $foodListService)
     {
-        $this->authorize('delete', $foodList);
-        if ($foodList->delete()) return Redirect::route('food-lists.index')->with('message', 'Success! Food List deleted successfully.');
-        else return Redirect::route('food-lists.index')->with('message', 'Failed to delete food list.');
+        $result = $foodListService->deleteFoodList($foodList);
+        if ($result['success']) return Redirect::route('food-lists.index')->with('message', $result['message']);
+        else return Redirect::route('food-lists.index')->with('message', $result['message']);
     }
 }

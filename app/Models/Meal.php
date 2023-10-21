@@ -30,4 +30,12 @@ class Meal extends Model
         return $this->hasMany(Unit::class, 'meal_id', 'id');
     }
 
+    public function foodListMeals() {
+        return $this->hasMany(FoodListMeal::class, 'meal_id', 'id');
+    }
+
+    public function foodLists() {
+        return $this->belongsToMany(FoodList::class, 'food_list_meals', 'meal_id', 'food_list_id');
+    }
+
 }

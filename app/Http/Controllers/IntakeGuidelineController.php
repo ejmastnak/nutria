@@ -209,12 +209,11 @@ class IntakeGuidelineController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(IntakeGuideline $intakeGuideline)
+    public function destroy(IntakeGuideline $intakeGuideline, IntakeGuidelineService $intakeGuidelineService)
     {
-        $this->authorize('delete', $intakeGuideline);
-
-        if ($intakeGuideline->delete()) return Redirect::route('intake-guidelines.index')->with('message', 'Success! Intake Guideline deleted successfully.');
-        else return Redirect::route('intake-guidelines.index')->with('message', 'Failed to delete intake guideline.');
+        $result = $intakeGuidelineService->deleteIntakeGuideline($intakeGuideline);
+        if ($result['success']) return Redirect::route('intake-guidelines.index')->with('message', $result['message']);
+        else return Redirect::route('intake-guidelines.index')->with('message', $result['message']);
     }
 
 }

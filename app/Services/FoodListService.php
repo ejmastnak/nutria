@@ -146,4 +146,14 @@ class FoodListService
         return $foodList;
     }
 
+    public function deleteFoodList(FoodList $foodList) {
+        $success = $foodList->delete();
+        if ($success) $message = 'Success! Food list deleted successfully.';
+        else $message = 'Failed to delete food list.';
+        return [
+            'success' => $success,
+            'message' => $message,
+        ];
+    }
+
 }

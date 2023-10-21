@@ -259,11 +259,12 @@ class IngredientController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Ingredient $ingredient)
+    public function destroy(Ingredient $ingredient, IngredientService $ingredientService)
     {
-        $this->authorize('delete', $ingredient);
-        if ($ingredient->delete()) return Redirect::route('ingredients.index')->with('message', 'Success! Ingredient deleted successfully.');
-        else return Redirect::route('ingredients.index')->with('message', 'Failed to delete ingredient.');
+        $result = $ingredientService->deleteIngredient($ingredient);
+        if ($result['success']) return Redirect::route('ingredients.index')->with('message', $result['message']);
+        else if ($result['restricted']) return back()->with('message', $result['message']);
+        else return Redirect::route('ingredients.index')->with('message', $result['message']);
     }
 
 }

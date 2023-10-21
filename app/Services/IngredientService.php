@@ -109,4 +109,36 @@ class IngredientService
         return $ingredient;
     }
 
+    public function deleteIngredient(Ingredient $ingredient) {
+        $restricted = false;
+        $success = false;
+        $errors = [];
+
+        // Check for ingredient use in meals
+        if ($ingredient->mealIngredients->count() > 0) {
+            $restricted = true;
+            $message = "Failed to delete ingredient.";
+            $errors[] = "Deleting the ingredient is intentionally restricted because the ingredient is used in one or more meals (which you can check on the ingredient's page).";
+        }
+
+        // Check for ingredient use in food lists
+        if ($ingredient->foodListIngredients->count() > 0) {
+            $restricted = true;
+            $message = "Failed to delete ingredient.";
+            $errors[] = "Deleting the ingredient is intentionally restricted because the ingredient is used in one or more food lists (which you can check on the ingredient's page).";
+        }
+
+        if (!$restricted) $success = $ingredient->delete();
+
+        if ($success) $message = 'Success! Ingredient deleted successfully.';
+        else if (!$success && !$restricted) $message = 'Error. Failed to delete ingredient.';
+
+        return [
+            'success' => $success,
+            'restricted' => $restricted,
+            'message' => $message,
+            'errors' => $errors,
+        ];
+    }
+
 }
