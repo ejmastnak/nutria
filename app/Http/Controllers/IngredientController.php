@@ -8,6 +8,7 @@ use App\Models\NutrientCategory;
 use App\Models\Nutrient;
 use App\Models\IntakeGuideline;
 use App\Services\IngredientService;
+use App\Services\NutrientProfileService;
 use App\Http\Requests\IngredientStoreRequest;
 use App\Http\Requests\IngredientUpdateRequest;
 use Illuminate\Support\Facades\Redirect;
@@ -22,17 +23,11 @@ class IngredientController extends Controller
      */
     public function index()
     {
-        $this->authorize('viewAny', Ingredient::class);
         $user = Auth::user();
-
+        $userId = $user ? $user->id : null;
         return Inertia::render('Ingredients/Index', [
-            'user_ingredients' => Auth::user() ? Ingredient::where('user_id', Auth::user()->id)
-                ->with('ingredient_category:id,name')
-                ->get(['id', 'name', 'ingredient_category_id']) : [],
-            'ingredients' => Ingredient::where('user_id', null)
-                ->with('ingredient_category:id,name')
-                ->get(['id', 'name', 'ingredient_category_id']),
-            'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
+            'ingredients' => Ingredient::getForUserWithIngredientCategory($userId),
+            'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'can_create' => $user ? $user->can('create', Ingredient::class) : false,
         ]);
     }
@@ -42,39 +37,14 @@ class IngredientController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', Ingredient::class);
         $user = Auth::user();
-
-        $nutrients = Nutrient::orderBy('display_order_id', 'asc')->get([
-            'id',
-            'display_name',
-            'unit_id',
-            'nutrient_category_id',
-            'precision',
-            'display_order_id'
-        ]);
-        $nutrients->load('unit:id,name');
+        $userId = $user ? $user->id : null;
 
         return Inertia::render('Ingredients/Create', [
-            'ingredient' => [
-                'id' => null,
-                'name' => "",
-                'ingredient_category_id' => null,
-                'density_g_per_ml' => null,
-                'ingredient_nutrients' => $nutrients->map(fn($nutrient) => [
-                    'id' => 0,
-                    'nutrient_id' => $nutrient->id,
-                    'amount_per_100g' => 0.0,
-                    'nutrient' => $nutrient
-                ])
-            ],
-            'ingredients' => Ingredient::where('user_id', null)
-            ->orWhere('user_id', $user ? $user->id : 0)
-            ->get(['id', 'name', 'ingredient_category_id']),
-            'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
-            'nutrient_categories' => NutrientCategory::all(['id', 'name']),
-            'clone' => false,
-            'can_view' => false,  // only relevant for clone
+            'cloned_from_ingredient' => null,
+            'ingredient_categories' => IngredientCategory::getWithNameSorted(),
+            'nutrient_categories' => NutrientCategory::getWithName(),
+            'units' => Unit::getMassAndVolumeUnits(),
             'can_create' => $user ? $user->can('create', Ingredient::class) : false
         ]);
     }
@@ -84,7 +54,6 @@ class IngredientController extends Controller
      */
     public function clone(Ingredient $ingredient)
     {
-        $this->authorize('clone', $ingredient);
         $user = Auth::user();
 
         // The raw query is to solve the following problem: When cloning
@@ -135,21 +104,28 @@ class IngredientController extends Controller
             ];
         }, $rawIngredientNutrients);
 
+        $ingredient->load([
+            'ingredientCategory:id,name',
+            'customUnits:id,name,seq_num,ingredient_id,custom_unit_amount,custom_mass_amount,custom_mass_unit_id,custom_grams',
+        ])
+
         return Inertia::render('Ingredients/Create', [
-            'ingredient' => [
+            'cloned_from_ingredient' => [
                 'id' => $ingredient['id'],
                 'name' => $ingredient['name'],
                 'ingredient_category_id' => $ingredient['ingredient_category_id'],
-                'density_g_per_ml' => $ingredient['density_g_per_ml'],
-                'ingredient_nutrients' => $ingredientNutrients
+                'ingredient_category' => $ingredient['ingredientCategory'],
+                'ingredient_nutrients' => $ingredientNutrients,
+                'density_mass_unit_id' => $ingredient['density_mass_unit_id'],
+                'density_mass_amount' => $ingredient['density_mass_amount'],
+                'density_volume_unit_id' => $ingredient['density_volume_unit_id'],
+                'density_volume_amount' => $ingredient['density_volume_amount'],
+                'density_g_ml' => $ingredient['density_g_ml'],
+                'custom_units' => $ingredient['customUnits'],
             ],
-            'ingredients' => Ingredient::where('user_id', null)
-            ->orWhere('user_id', $user ? $user->id : 0)
-            ->get(['id', 'name', 'ingredient_category_id']),
-            'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
-            'nutrient_categories' => NutrientCategory::all(['id', 'name']),
-            'clone' => true,
-            'can_view' => $user ? $user->can('view', $ingredient) : false,
+            'ingredient_categories' => IngredientCategory::getWithNameSorted(),
+            'nutrient_categories' => NutrientCategory::getWithName(),
+            'units' => Unit::getMassAndVolumeUnits(),
             'can_create' => $user ? $user->can('create', Ingredient::class) : false
         ]);
     }
@@ -166,33 +142,16 @@ class IngredientController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Ingredient $ingredient)
+    public function show(Ingredient $ingredient, NutrientProfileService $nutrientProfileService)
     {
-        $this->authorize('view', $ingredient);
         $user = Auth::user();
-
-        $ingredient->load('ingredient_category:id,name', 'meal:id,name');
+        $userId = $user ? $user->id : null;
 
         return Inertia::render('Ingredients/Show', [
-            'ingredient' => $ingredient->only([
-                'id',
-                'name',
-                'ingredient_category_id',
-                'ingredient_category',
-                'density_g_per_ml',
-                'meal_id',
-                'meal'
-            ]),
-            'has_ingredient_nutrients' => count($ingredient->ingredient_nutrients) > 0,
-            'nutrient_profiles' => NutrientProfileController::getNutrientProfilesOfIngredient($ingredient->id),
-            'intake_guidelines' => IntakeGuideline::where('user_id', null)
-            ->orWhere('user_id', $user ? $user->id : 0)
-            ->orderBy('id', 'asc')
-            ->get(['id', 'name']),
-            'ingredients' => Ingredient::where('user_id', null)
-            ->orWhere('user_id', $user ? $user->id : 0)
-            ->get(['id', 'name', 'ingredient_category_id']),
-            'nutrient_categories' => NutrientCategory::all(['id', 'name']),
+            'ingredient' => $ingredient->withCategoryUnitsAndMeal(),
+            'nutrient_profiles' => $nutrientProfileService->getNutrientProfilesOfIngredient($ingredient->id, $userId),
+            'intake_guidelines' => IntakeGuideline::getForUser($userId),
+            'nutrient_categories' => NutrientCategory::getWithName(),
             'can_edit' => $user ? $user->can('update', $ingredient) : false,
             'can_clone' => $user ? $user->can('clone', $ingredient) : false,
             'can_delete' => $user ? $user->can('delete', $ingredient) : false,
@@ -205,39 +164,14 @@ class IngredientController extends Controller
      */
     public function edit(Ingredient $ingredient)
     {
-        $this->authorize('update', $ingredient);
         $user = Auth::user();
-
-        // The long query is to ensure ingredient_nutrients are ordered by
-        // nutrients.display_order_id
-        $ingredient->load([
-            'ingredient_nutrients' => function($query) {
-                $query->select([
-                    'ingredient_nutrients.id',
-                    'ingredient_nutrients.ingredient_id',
-                    'ingredient_nutrients.nutrient_id',
-                    'ingredient_nutrients.amount_per_100g'
-                ])
-                ->join('nutrients', 'ingredient_nutrients.nutrient_id', '=', 'nutrients.id')
-                ->orderBy('nutrients.display_order_id', 'asc');
-            },
-            'ingredient_nutrients.nutrient:id,display_name,unit_id,nutrient_category_id,precision,display_order_id',
-            'ingredient_nutrients.nutrient.unit:id,name'
-        ]);
+        $userId = $user ? $user->id : null;
 
         return Inertia::render('Ingredients/Edit', [
-            'ingredient' => $ingredient->only([
-                'id',
-                'name',
-                'ingredient_category_id',
-                'density_g_per_ml',
-                'ingredient_nutrients'
-            ]),
-            'ingredients' => Ingredient::where('user_id', null)
-            ->orWhere('user_id', $user ? $user->id : 0)
-            ->get(['id', 'name', 'ingredient_category_id']),
-            'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
-            'nutrient_categories' => NutrientCategory::all(['id', 'name']),
+            'ingredient' => $ingredient->withCategoryUnitsNutrientsAndMeal(),
+            'ingredient_categories' => IngredientCategory::getWithNameSorted(),
+            'nutrient_categories' => NutrientCategory::getWithName(),
+            'units' => Unit::getForIngredient($ingredient),
             'can_view' => $user ? $user->can('view', $ingredient) : false,
             'can_clone' => $user ? $user->can('clone', $ingredient) : false,
             'can_delete' => $user ? $user->can('delete', $ingredient) : false,

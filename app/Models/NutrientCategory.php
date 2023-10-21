@@ -11,6 +11,10 @@ class NutrientCategory extends Model
     public $timestamps = false;
     protected $fillable = ['name'];
 
+    public static function getWithName() {
+        return self::all(['id', 'name']);
+    }
+
     public function unit() {
         return $this->belongsTo(Unit::class, 'unit_id', 'id');
     }

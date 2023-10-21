@@ -11,6 +11,19 @@ class Nutrient extends Model
     public $timestamps = false;
     protected $table = 'nutrients';
 
+    public static function getWithUnit() {
+        return self::with('unit:id,name')
+            ->orderBy('display_order_id')
+            ->get([
+                'id',
+                'display_name',
+                'unit_id',
+                'nutrient_category_id',
+                'precision',
+                'display_order_id'
+            ]);
+    }
+
     public function unit() {
         return $this->belongsTo(Unit::class, 'unit_id', 'id');
     }

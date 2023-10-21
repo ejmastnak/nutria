@@ -13,6 +13,12 @@ class IntakeGuideline extends Model
         'user_id',
     ];
 
+    public static function getForUser(?int $userId) {
+        return self::where('user_id', null)
+            ->orWhere('user_id', $userId)
+            ->get(['id', 'name']);
+    }
+
     public function intakeGuidelineNutrients() {
         return $this->hasMany(IntakeGuidelineNutrient::class, 'intake_guideline_id', 'id');
     }

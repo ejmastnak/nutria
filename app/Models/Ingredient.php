@@ -21,6 +21,73 @@ class Ingredient extends Model
         'user_id',
     ];
 
+    public function withCategoryUnitsAndMeal() {
+        $this->load(
+            'ingredientCategory:id,name',
+            'customUnits:id,name,seq_num,ingredient_id,custom_unit_amount,custom_mass_amount,custom_mass_unit_id,custom_grams',
+            'meal:id,name',
+        );
+        return $this->only([
+            'id',
+            'name',
+            'ingredient_category_id',
+            'ingredient_category',
+            "density_mass_unit_id",
+            "density_mass_amount",
+            "density_volume_unit_id",
+            "density_volume_amount",
+            "density_g_ml",
+            "custom_units",
+            'meal_id',
+            'meal',
+        ]);
+    }
+
+    public function withCategoryUnitsNutrientsAndMeal() {
+        // The long ingredient_nutrients query is to ensure
+        // ingredient_nutrients are ordered by nutrients.display_order
+        $this->load([
+            'ingredientCategory:id,name',
+            'ingredientNutrients' => function($query) {
+                $query->select([
+                    'ingredient_nutrients.id',
+                    'ingredient_nutrients.ingredient_id',
+                    'ingredient_nutrients.nutrient_id',
+                    'ingredient_nutrients.amount_per_100g'
+                ])
+                ->join('nutrients', 'ingredient_nutrients.nutrient_id', '=', 'nutrients.id')
+                ->orderBy('nutrients.display_order_id', 'asc');
+            },
+            'ingredientNutrients.nutrient:id,display_name,unit_id,nutrient_category_id,precision,display_order_id',
+            'ingredientNutrients.nutrient.unit:id,name',
+            'customUnits:id,name,seq_num,ingredient_id,custom_unit_amount,custom_mass_amount,custom_mass_unit_id,custom_grams',
+            'meal:id,name',
+        ]);
+
+        return $this->only([
+            'id',
+            'name',
+            'ingredient_category_id',
+            'ingredient_category',
+            'ingredient_nutrients',
+            'density_mass_unit_id',
+            'density_mass_amount',
+            'density_volume_unit_id',
+            'density_volume_amount',
+            'density_g_ml',
+            'custom_units',
+            'meal_id',
+            'meal',
+        ]);
+    }
+
+    public static function getForUserWithIngredientCategory(?int $userId) {
+        return self::where('user_id', null)
+            ->orWhere('user_id', $userId)
+            ->with('ingredientCategory:id,name')
+            ->get(['id', 'name', 'ingredient_category_id']);
+    }
+
     public function meal() {
         return $this->belongsTo(Meal::class, 'meal_id', 'id');
     }
