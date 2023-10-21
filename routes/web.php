@@ -37,41 +37,41 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
         // Ingredients
-        Route::get('ingredients/create', [IngredientController::class, 'create'])->name('ingredients.create');
-        Route::get('ingredients/{ingredient}/clone', [IngredientController::class, 'clone'])->name('ingredients.clone');
-        Route::post('ingredients', [IngredientController::class, 'store'])->name('ingredients.store');
-        Route::get('ingredients/{ingredient}/edit', [IngredientController::class, 'edit'])->name('ingredients.edit');
-        Route::put('ingredients/{ingredient}', [IngredientController::class, 'update'])->name('ingredients.update');
-        Route::delete('ingredients/{ingredient}', [IngredientController::class, 'destroy'])->name('ingredients.destroy');
+        Route::get('ingredients/create', [IngredientController::class, 'create'])->name('ingredients.create')->can('create', Ingredient::class);
+        Route::get('ingredients/{ingredient}/clone', [IngredientController::class, 'clone'])->name('ingredients.clone')->can('create', Ingredient::class);
+        Route::post('ingredients', [IngredientController::class, 'store'])->name('ingredients.store')->can('create', Ingredient::class);
+        Route::get('ingredients/{ingredient}/edit', [IngredientController::class, 'edit'])->name('ingredients.edit')->can('update', 'ingredient');
+        Route::put('ingredients/{ingredient}', [IngredientController::class, 'update'])->name('ingredients.update')->can('update', 'ingredient');
+        Route::delete('ingredients/{ingredient}', [IngredientController::class, 'destroy'])->name('ingredients.destroy')->can('delete', 'ingredient');
 
         // Meals
-        Route::get('meals', [MealController::class, 'index'])->name('meals.index');
-        Route::get('meals/create', [MealController::class, 'create'])->name('meals.create');
-        Route::get('meals/{meal}/clone', [MealController::class, 'clone'])->name('meals.clone');
-        Route::post('meals', [MealController::class, 'store'])->name('meals.store');
-        Route::get('meals/{meal}/edit', [MealController::class, 'edit'])->name('meals.edit');
-        Route::put('meals/{meal}', [MealController::class, 'update'])->name('meals.update');
-        Route::delete('meals/{meal}', [MealController::class, 'destroy'])->name('meals.destroy');
-        Route::get('meals/{meal}', [MealController::class, 'show'])->name('meals.show');
-        Route::put('meals/{meal}/save-as-ingredient', [MealController::class, 'saveAsIngredient'])->name('meals.save-as-ingredient');
+        Route::get('meals', [MealController::class, 'index'])->name('meals.index')->can('viewAny', Meal::class);
+        Route::get('meals/create', [MealController::class, 'create'])->name('meals.create')->can('create', Meal::class);
+        Route::get('meals/{meal}/clone', [MealController::class, 'clone'])->name('meals.clone')->can('create', Meal::class);
+        Route::post('meals', [MealController::class, 'store'])->name('meals.store')->can('create', Meal::class);
+        Route::get('meals/{meal}/edit', [MealController::class, 'edit'])->name('meals.edit')->can('update', 'meal');
+        Route::put('meals/{meal}', [MealController::class, 'update'])->name('meals.update')->can('update', 'meal');
+        Route::delete('meals/{meal}', [MealController::class, 'destroy'])->name('meals.destroy')->can('delete', 'meal');
+        Route::get('meals/{meal}', [MealController::class, 'show'])->name('meals.show')->can('view', 'meal');
+        Route::put('meals/{meal}/save-as-ingredient', [MealController::class, 'saveAsIngredient'])->name('meals.save-as-ingredient')->can('saveAsIngredient', 'meal');
 
         // Food Lists
-        Route::get('food-lists', [FoodListController::class, 'index'])->name('food-lists.index');
-        Route::get('food-lists/create', [FoodListController::class, 'create'])->name('food-lists.create');
-        Route::get('food-lists/{food_list}/clone', [FoodListController::class, 'clone'])->name('food-lists.clone');
-        Route::post('food-lists', [FoodListController::class, 'store'])->name('food-lists.store');
-        Route::get('food-lists/{food_list}/edit', [FoodListController::class, 'edit'])->name('food-lists.edit');
-        Route::put('food-lists/{food_list}', [FoodListController::class, 'update'])->name('food-lists.update');
-        Route::delete('food-lists/{food_list}', [FoodListController::class, 'destroy'])->name('food-lists.destroy');
-        Route::get('food-lists/{food_list}', [FoodListController::class, 'show'])->name('food-lists.show');
+        Route::get('food-lists', [FoodListController::class, 'index'])->name('food-lists.index')->can('viewAny', FoodList::class);
+        Route::get('food-lists/create', [FoodListController::class, 'create'])->name('food-lists.create')->can('create', FoodList::class);
+        Route::get('food-lists/{food_list}/clone', [FoodListController::class, 'clone'])->name('food-lists.clone')->can('create', FoodList::class);
+        Route::post('food-lists', [FoodListController::class, 'store'])->name('food-lists.store')->can('create', FoodList::class);
+        Route::get('food-lists/{food_list}/edit', [FoodListController::class, 'edit'])->name('food-lists.edit')->can('update', 'food_list');
+        Route::put('food-lists/{food_list}', [FoodListController::class, 'update'])->name('food-lists.update')->can('update', 'food_list');
+        Route::delete('food-lists/{food_list}', [FoodListController::class, 'destroy'])->name('food-lists.destroy')->can('delete', 'food_list');
+        Route::get('food-lists/{food_list}', [FoodListController::class, 'show'])->name('food-lists.show')->can('view', 'food_list');
 
         // Intake Guidelines
-        Route::get('intake-guidelines/create', [IntakeGuidelineController::class, 'create'])->name('intake-guidelines.create');
-        Route::get('intake-guidelines/{intake_guideline}/clone', [IntakeGuidelineController::class, 'clone'])->name('intake-guidelines.clone');
-        Route::post('intake-guidelines', [IntakeGuidelineController::class, 'store'])->name('intake-guidelines.store');
-        Route::get('intake-guidelines/{intake_guideline}/edit', [IntakeGuidelineController::class, 'edit'])->name('intake-guidelines.edit');
-        Route::put('intake-guidelines/{intake_guideline}', [IntakeGuidelineController::class, 'update'])->name('intake-guidelines.update');
-        Route::delete('intake-guidelines/{intake_guideline}', [IntakeGuidelineController::class, 'destroy'])->name('intake-guidelines.destroy');
+        Route::get('intake-guidelines/create', [IntakeGuidelineController::class, 'create'])->name('intake-guidelines.create')->('create', IntakeGuideline::class);
+        Route::get('intake-guidelines/{intake_guideline}/clone', [IntakeGuidelineController::class, 'clone'])->name('intake-guidelines.clone')->('create', IntakeGuideline::class);
+        Route::post('intake-guidelines', [IntakeGuidelineController::class, 'store'])->name('intake-guidelines.store')->('create', IntakeGuideline::class);
+        Route::get('intake-guidelines/{intake_guideline}/edit', [IntakeGuidelineController::class, 'edit'])->name('intake-guidelines.edit')->('update', 'intake_guideline');
+        Route::put('intake-guidelines/{intake_guideline}', [IntakeGuidelineController::class, 'update'])->name('intake-guidelines.update')->('update', 'intake_guideline');
+        Route::delete('intake-guidelines/{intake_guideline}', [IntakeGuidelineController::class, 'destroy'])->name('intake-guidelines.destroy')->('delete', 'intake_guideline');
 
 });
 
