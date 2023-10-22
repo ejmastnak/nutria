@@ -22,6 +22,18 @@ class Unit extends Model
         'custom_grams',
     ];
 
+    public static function getMassAndVolume() {
+        return self::whereNotNull('g')
+            ->orWhereNotNull('ml')
+            ->get([
+                'id',
+                'name',
+                'g',
+                'ml',
+                'seq_num',
+            ]);
+    }
+
     public static function numberMassAndVolumeUnits() {
         return self::whereNotNull('g')->orWhereNotNull('ml')->count();
     }

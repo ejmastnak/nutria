@@ -31,13 +31,13 @@ class Ingredient extends Model
             'id',
             'name',
             'ingredient_category_id',
-            'ingredient_category',
+            'ingredientCategory',
             "density_mass_unit_id",
             "density_mass_amount",
             "density_volume_unit_id",
             "density_volume_amount",
             "density_g_ml",
-            "custom_units",
+            "customUnits",
             'meal_id',
             'meal',
         ]);
@@ -68,14 +68,14 @@ class Ingredient extends Model
             'id',
             'name',
             'ingredient_category_id',
-            'ingredient_category',
+            'ingredientCategory',
             'ingredient_nutrients',
             'density_mass_unit_id',
             'density_mass_amount',
             'density_volume_unit_id',
             'density_volume_amount',
             'density_g_ml',
-            'custom_units',
+            'customUnits',
             'meal_id',
             'meal',
         ]);
@@ -85,7 +85,14 @@ class Ingredient extends Model
         return self::where('user_id', null)
             ->orWhere('user_id', $userId)
             ->with('ingredientCategory:id,name')
-            ->get(['id', 'name', 'ingredient_category_id']);
+            ->get(['id', 'name', 'ingredient_category_id', 'ingredientCategory']);
+    }
+
+    public static function getForUserWithUnits(?int $userId) {
+        return self::where('user_id', null)
+            ->orWhere('user_id', $userId)
+            ->with('customUnits:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams')
+            ->get(['id', 'name', 'ingredient_category_id', 'density_g_ml', 'customUnits', 'user_id']);
     }
 
     public function meal() {

@@ -14,6 +14,29 @@ class Meal extends Model
         'user_id',
     ];
 
+    public function withIngredientsAndChildIngredient() {
+        $this->load([
+            'mealIngredients:id,meal_id,ingredient_id,amount,unit_id',
+            'mealIngredients.ingredient:id,name',
+            'mealIngredients.ingredient.customUnits:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
+            'mealIngredients.unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
+            'ingredient:id,meal_id,name',
+        ]);
+        return $this->only([
+            'id',
+            'name',
+            'mass_in_grams',
+            'mealIngredients',
+            'ingredient',
+        ]);
+    }
+
+    public static function getForUser(?int $userId) {
+        return is_null($userId) ? [] : self::where('user_id', $userId)
+            ->with('ingredient:id,meal_id,name')
+            ->get(['id', 'name']);
+    }
+
     public function ingredient() {
         return $this->hasOne(Ingredient::class, 'meal_id', 'id');
     }
