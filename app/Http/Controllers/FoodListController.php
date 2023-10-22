@@ -23,11 +23,11 @@ class FoodListController extends Controller
      */
     public function index()
     {
-        $this->authorize('viewAny', FoodList::class);
         $user = Auth::user();
+        $userId = $user ? $user->id : null;
 
         return Inertia::render('FoodLists/Index', [
-            'food_lists' => Auth::user() ? FoodList::where('user_id', Auth::user()->id)->get(['id', 'name', 'mass_in_grams']) : [],
+            'food_lists' => FoodList::getForUser($userId),
             'can_create' => $user ? $user->can('create', FoodList::class) : false,
         ]);
     }
@@ -37,21 +37,16 @@ class FoodListController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', FoodList::class);
         $user = Auth::user();
+        $userId = $user ? $user->id : null;
 
         return Inertia::render('FoodLists/Create', [
-            'food_list' => null,
-            'food_lists' => FoodList::where('user_id', $user ? $user->id : 0)->get(['id', 'name']),
-            'ingredients' => Ingredient::where('user_id', null)
-                ->orWhere('user_id', $user ? $user->id : 0)
-                ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
-            'meals' => Meal::where('user_id', $user ? $user->id : 0)
-                ->get(['id', 'name', 'mass_in_grams']),
-            'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
-            'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
+            'cloned_from_food_list' => null,
+            'ingredients' => Ingredient::getForUserWithUnits($userId),
+            'meals' => Meal::getForUserWithUnits($userId),
+            'ingredient_categories' => IngredientCategory::getWithNameSorted(),
+            'units' => Unit::getMassAndVolume(),
             'clone' => false,
-            'can_view' => false,  // only relevant for clone
             'can_create' => $user ? $user->can('create', FoodList::class) : false,
         ]);
     }
@@ -61,30 +56,15 @@ class FoodListController extends Controller
      */
     public function clone(FoodList $foodList)
     {
-        $this->authorize('clone', $foodList);
         $user = Auth::user();
-
-        $foodList->load([
-            'food_list_ingredients:id,ingredient_id,food_list_id,amount,unit_id',
-            'food_list_ingredients.ingredient:id,name,density_g_per_ml',
-            'food_list_ingredients.unit:id,name',
-            'food_list_meals:id,meal_id,food_list_id,amount,unit_id',
-            'food_list_meals.meal:id,name',
-            'food_list_meals.unit:id,name'
-        ]);
+        $userId = $user ? $user->id : null;
 
         return Inertia::render('FoodLists/Create', [
-            'food_list' => $foodList->only(['id', 'name', 'food_list_ingredients', 'food_list_meals']),
-            'food_lists' => FoodList::where('user_id', $user ? $user->id : 0)->get(['id', 'name']),
-            'ingredients' => Ingredient::where('user_id', null)
-                ->orWhere('user_id', $user ? $user->id : 0)
-                ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
-            'meals' => Meal::where('user_id', $user ? $user->id : 0)
-                ->get(['id', 'name', 'mass_in_grams']),
-            'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
-            'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
-            'clone' => true,
-            'can_view' => $user ? $user->can('view', $foodList) : false,
+            'food_list' => $foodList->withIngredientsAndMeals(),
+            'ingredients' => Ingredient::getForUserWithUnits($userId),
+            'meals' => Meal::getForUserWithUnits($userId),
+            'ingredient_categories' => IngredientCategory::getWithNameSorted(),
+            'units' => Unit::getMassAndVolume(),
             'can_create' => $user ? $user->can('create', FoodList::class) : false,
         ]);
     }
@@ -103,33 +83,14 @@ class FoodListController extends Controller
      */
     public function show(FoodList $foodList)
     {
-        $this->authorize('view', $foodList);
         $user = Auth::user();
-
-        $foodList->load([
-            'food_list_ingredients:id,ingredient_id,food_list_id,amount,unit_id',
-            'food_list_ingredients.ingredient:id,name',
-            'food_list_ingredients.unit:id,name',
-            'food_list_meals:id,meal_id,food_list_id,amount,unit_id',
-            'food_list_meals.meal:id,name',
-            'food_list_meals.unit:id,name'
-        ]);
+        $userId = $user ? $user->id : null,
 
         return Inertia::render('FoodLists/Show', [
-            'food_list' => $foodList->only([
-                'id',
-                'name',
-                'mass_in_grams',
-                'food_list_ingredients',
-                'food_list_meals'
-            ]),
+            'food_list' => $foodList->withIngredientsAndMeals(),
             'nutrient_profiles' => NutrientProfileController::getNutrientProfilesOfFoodList($foodList->id),
-            'intake_guidelines' => IntakeGuideline::where('user_id', null)
-            ->orWhere('user_id', $user ? $user->id : 0)
-            ->orderBy('id', 'asc')
-            ->get(['id', 'name']),
-            'food_lists' => FoodList::where('user_id', $user ? $user->id : 0)->get(['id', 'name']),
-            'nutrient_categories' => NutrientCategory::all(['id', 'name']),
+            'intake_guidelines' => IntakeGuideline::forUser($userId),
+            'nutrient_categories' => NutrientCategory::getWithName(),
             'can_edit' => $user ? $user->can('update', $foodList) : false,
             'can_clone' => $user ? $user->can('clone', $foodList) : false,
             'can_delete' => $user ? $user->can('delete', $foodList) : false,
@@ -142,28 +103,15 @@ class FoodListController extends Controller
      */
     public function edit(FoodList $foodList)
     {
-        $this->authorize('update', $foodList);
         $user = Auth::user();
-
-        $foodList->load([
-            'food_list_ingredients:id,ingredient_id,food_list_id,amount,unit_id',
-            'food_list_ingredients.ingredient:id,name,density_g_per_ml',
-            'food_list_ingredients.unit:id,name',
-            'food_list_meals:id,meal_id,food_list_id,amount,unit_id',
-            'food_list_meals.meal:id,name',
-            'food_list_meals.unit:id,name'
-        ]);
+        $userId = $user ? $user->id : null,
 
         return Inertia::render('FoodLists/Edit', [
-            'food_list' => $foodList->only(['id', 'name', 'food_list_ingredients', 'food_list_meals']),
-            'food_lists' => FoodList::where('user_id', $user ? $user->id : 0)->get(['id', 'name']),
-            'ingredients' => Ingredient::where('user_id', null)
-                ->orWhere('user_id', $user ? $user->id : 0)
-                ->get(['id', 'name', 'ingredient_category_id', 'density_g_per_ml']),
-            'meals' => Meal::where('user_id', $user ? $user->id : 0)
-                ->get(['id', 'name', 'mass_in_grams']),
-            'ingredient_categories' => IngredientCategory::orderBy('name', 'asc')->get(['id', 'name']),
-            'units' => Unit::all(['id', 'name', 'is_mass', 'is_volume']),
+            'food_list' => $foodList->withIngredientsAndMeals(),
+            'ingredients' => Ingredient::getForUserWithUnits($userId),
+            'meals' => Meal::getForUserWithUnits($userId),
+            'ingredient_categories' => IngredientCategory::getWithNameSorted(),
+            'units' => Unit::getMassAndVolume(),
             'can_view' => $user ? $user->can('view', $foodList) : false,
             'can_clone' => $user ? $user->can('clone', $foodList) : false,
             'can_delete' => $user ? $user->can('delete', $foodList) : false,

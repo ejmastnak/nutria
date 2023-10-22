@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Meal;
-use App\Models\Nutrient;
 use App\Models\Ingredient;
 use App\Models\IngredientCategory;
-use App\Models\IngredientNutrient;
 use App\Models\NutrientCategory;
 use App\Models\IntakeGuideline;
 use App\Models\Unit;

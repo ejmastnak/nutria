@@ -37,6 +37,12 @@ class Meal extends Model
             ->get(['id', 'name']);
     }
 
+    public static function getForUserWithUnits(?int $userId) {
+        return is_null($userId) ? [] : self::where('user_id', $userId)
+            ->with('customUnits:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams')
+            ->get(['id', 'name', 'mass_in_grams', 'customUnits']);
+    }
+
     public function ingredient() {
         return $this->hasOne(Ingredient::class, 'meal_id', 'id');
     }

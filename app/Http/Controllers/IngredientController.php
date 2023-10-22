@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Ingredient;
 use App\Models\IngredientCategory;
 use App\Models\NutrientCategory;
-use App\Models\Nutrient;
 use App\Models\IntakeGuideline;
 use App\Services\IngredientService;
 use App\Services\NutrientProfileService;
