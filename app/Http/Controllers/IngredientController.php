@@ -8,6 +8,7 @@ use App\Models\NutrientCategory;
 use App\Models\IntakeGuideline;
 use App\Services\IngredientService;
 use App\Services\NutrientProfileService;
+use App\Models\Nutrient;
 use App\Http\Requests\IngredientStoreRequest;
 use App\Http\Requests\IngredientUpdateRequest;
 use Illuminate\Support\Facades\Redirect;
@@ -42,6 +43,7 @@ class IngredientController extends Controller
         return Inertia::render('Ingredients/Create', [
             'cloned_from_ingredient' => null,
             'ingredient_categories' => IngredientCategory::getWithNameSorted(),
+            'nutrients' => Nutrient::getWithUnit(),
             'nutrient_categories' => NutrientCategory::getWithName(),
             'units' => Unit::getMassAndVolumeUnits(),
             'can_create' => $user ? $user->can('create', Ingredient::class) : false
@@ -123,6 +125,7 @@ class IngredientController extends Controller
                 'custom_units' => $ingredient['customUnits'],
             ],
             'ingredient_categories' => IngredientCategory::getWithNameSorted(),
+            'nutrients' => null,
             'nutrient_categories' => NutrientCategory::getWithName(),
             'units' => Unit::getMassAndVolumeUnits(),
             'can_create' => $user ? $user->can('create', Ingredient::class) : false
