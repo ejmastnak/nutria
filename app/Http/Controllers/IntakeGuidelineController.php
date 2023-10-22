@@ -19,19 +19,11 @@ class IntakeGuidelineController extends Controller
      */
     public function index()
     {
-        $this->authorize('viewAny', IntakeGuideline::class);
         $user = Auth::user();
+        $userId = $user ? $user->id : null;
 
         return Inertia::render('IntakeGuidelines/Index', [
-            'intake_guidelines' => IntakeGuideline::where('user_id', null)
-            ->orWhere('user_id', $user ? $user->id : 0)
-            ->get(['id', 'name'])
-            ->map(fn($profile) => [
-                'id' => $profile->id,
-                'name' => $profile->name,
-                'can_edit' => $user ? $user->can('update', $profile) : false,
-                'can_delete' => $user ? $user->can('delete', $profile) : false
-            ]),
+            'intake_guidelines' => IntakeGuideline::getForUserWithPermissions($userId),
             'can_create' => $user ? $user->can('create', IntakeGuideline::class) : false,
         ]);
     }
@@ -41,37 +33,12 @@ class IntakeGuidelineController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', IntakeGuideline::class);
         $user = Auth::user();
 
-        $nutrients = Nutrient::orderBy('display_order_id', 'asc')->get([
-            'id',
-            'display_name',
-            'unit_id',
-            'nutrient_category_id',
-            "precision",
-            'display_order_id'
-        ]);
-        $nutrients->load('unit:id,name');
-
         return Inertia::render('IntakeGuidelines/Create', [
-            'intake_guideline' => [
-                'id' => null,
-                'name' => "",
-                'intake_guideline_nutrients' => $nutrients->map(fn($nutrient) => [
-                    'id' => 0,
-                    'intake_guideline_id' => 0,
-                    'nutrient_id' => $nutrient->id,
-                    'rdi' => 0.0,
-                    'nutrient' => $nutrient,
-                ])
-            ],
-            'intake_guidelines' => IntakeGuideline::where('user_id', null)
-            ->orWhere('user_id', $user ? $user->id : 0)
-            ->get(['id', 'name']),
-            'nutrient_categories' => NutrientCategory::all(['id', 'name']),
-            'clone' => false,
-            'can_view' => false,  // only relevant for clone
+            'cloned_from_intake_guideline' => null,
+            'nutrients' => Nutrient::getWithUnit(),
+            'nutrient_categories' => NutrientCategory::getWithName(),
             'can_create' => $user ? $user->can('create', IntakeGuideline::class) : false,
         ]);
     }
@@ -81,34 +48,12 @@ class IntakeGuidelineController extends Controller
      */
     public function clone(IntakeGuideline $intakeGuideline)
     {
-        $this->authorize('clone', $intakeGuideline);
         $user = Auth::user();
 
-        // The long query is to ensure intake_guideline_nutrients are ordered by
-        // nutrients.display_order_id
-        $intakeGuideline->load([
-            'intake_guideline_nutrients' => function($query) {
-                $query->select([
-                    'intake_guideline_nutrients.id',
-                    'intake_guideline_nutrients.intake_guideline_id',
-                    'intake_guideline_nutrients.nutrient_id',
-                    'intake_guideline_nutrients.rdi'
-                ])
-                ->join('nutrients', 'intake_guideline_nutrients.nutrient_id', '=', 'nutrients.id')
-                ->orderBy('nutrients.display_order_id', 'asc');
-            },
-            'intake_guideline_nutrients.nutrient:id,display_name,unit_id,nutrient_category_id,precision,display_order_id',
-            'intake_guideline_nutrients.nutrient.unit:id,name'
-        ]);
-
         return Inertia::render('IntakeGuidelines/Create', [
-            'intake_guideline' => $intakeGuideline->only(['id', 'name', 'intake_guideline_nutrients']),
-            'intake_guidelines' => IntakeGuideline::where('user_id', null)
-            ->orWhere('user_id', $user ? $user->id : 0)
-            ->get(['id', 'name']),
-            'nutrient_categories' => NutrientCategory::all(['id', 'name']),
-            'clone' => true,
-            'can_view' => $user ? $user->can('view', $intakeGuideline) : false,
+            'cloned_from_intake_guideline' => $intakeGuideline->withNutrients(),
+            'nutrients' => null,
+            'nutrient_categories' => NutrientCategory::getWithName(),
             'can_create' => $user ? $user->can('create', IntakeGuideline::class) : false,
         ]);
     }
@@ -126,32 +71,11 @@ class IntakeGuidelineController extends Controller
      */
     public function show(IntakeGuideline $intakeGuideline)
     {
-        $this->authorize('view', $intakeGuideline);
         $user = Auth::user();
 
-        // The long query is to ensure intake_guideline_nutrients are ordered by
-        // nutrients.display_order_id
-        $intakeGuideline->load([
-            'intake_guideline_nutrients' => function($query) {
-                $query->select([
-                    'intake_guideline_nutrients.id',
-                    'intake_guideline_nutrients.intake_guideline_id',
-                    'intake_guideline_nutrients.nutrient_id',
-                    'intake_guideline_nutrients.rdi'
-                ])
-                ->join('nutrients', 'intake_guideline_nutrients.nutrient_id', '=', 'nutrients.id')
-                ->orderBy('nutrients.display_order_id', 'asc');
-            },
-            'intake_guideline_nutrients.nutrient:id,display_name,unit_id,nutrient_category_id,precision,display_order_id',
-            'intake_guideline_nutrients.nutrient.unit:id,name'
-        ]);
-
         return Inertia::render('IntakeGuidelines/Show', [
-            'intake_guideline' => $intakeGuideline->only(['id', 'name', 'intake_guideline_nutrients']),
-            'intake_guidelines' => IntakeGuideline::where('user_id', null)
-            ->orWhere('user_id', $user ? $user->id : 0)
-            ->get(['id', 'name']),
-            'nutrient_categories' => NutrientCategory::all(['id', 'name']),
+            'intake_guideline' => $intakeGuideline->withNutrients(),
+            'nutrient_categories' => NutrientCategory::getWithName(),
             'can_edit' => $user ? $user->can('update', $intakeGuideline) : false,
             'can_clone' => $user ? $user->can('clone', $intakeGuideline) : false,
             'can_delete' => $user ? $user->can('delete', $intakeGuideline) : false,
@@ -164,32 +88,11 @@ class IntakeGuidelineController extends Controller
      */
     public function edit(IntakeGuideline $intakeGuideline)
     {
-        $this->authorize('update', $intakeGuideline);
         $user = Auth::user();
 
-        // The long query is to ensure intake_guideline_nutrients are ordered by
-        // nutrients.display_order_id
-        $intakeGuideline->load([
-            'intake_guideline_nutrients' => function($query) {
-                $query->select([
-                    'intake_guideline_nutrients.id',
-                    'intake_guideline_nutrients.intake_guideline_id',
-                    'intake_guideline_nutrients.nutrient_id',
-                    'intake_guideline_nutrients.rdi'
-                ])
-                ->join('nutrients', 'intake_guideline_nutrients.nutrient_id', '=', 'nutrients.id')
-                ->orderBy('nutrients.display_order_id', 'asc');
-            },
-            'intake_guideline_nutrients.nutrient:id,display_name,unit_id,nutrient_category_id,precision,display_order_id',
-            'intake_guideline_nutrients.nutrient.unit:id,name'
-        ]);
-
         return Inertia::render('IntakeGuidelines/Edit', [
-            'intake_guideline' => $intakeGuideline->only(['id', 'name', 'intake_guideline_nutrients']),
-            'intake_guidelines' => IntakeGuideline::where('user_id', null)
-            ->orWhere('user_id', $user ? $user->id : 0)
-            ->get(['id', 'name']),
-            'nutrient_categories' => NutrientCategory::all(['id', 'name']),
+            'intake_guideline' => $intakeGuideline->withNutrients(),
+            'nutrient_categories' => NutrientCategory::getWithName(),
             'can_view' => $user ? $user->can('view', $intakeGuideline) : false,
             'can_clone' => $user ? $user->can('clone', $intakeGuideline) : false,
             'can_delete' => $user ? $user->can('delete', $intakeGuideline) : false,

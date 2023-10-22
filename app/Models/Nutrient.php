@@ -13,14 +13,15 @@ class Nutrient extends Model
 
     public static function getWithUnit() {
         return self::with('unit:id,name')
-            ->orderBy('display_order_id')
+            ->orderBy('display_order')
             ->get([
                 'id',
                 'display_name',
                 'unit_id',
+                'unit',
                 'nutrient_category_id',
                 'precision',
-                'display_order_id'
+                'display_order',
             ]);
     }
 
