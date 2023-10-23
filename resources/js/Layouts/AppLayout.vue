@@ -15,12 +15,12 @@ const showingNavigationDropdown = ref(false);
 <template>
   <div class="bg-[#fefefe]">
     <div class="min-h-screen max-w-6xl mx-auto px-6">
-      <nav class="max-w-6xl mx-auto border-b border-gray-100">
-        <!-- Primary Navigation Menu -->
+      <nav class="mx-auto border-b border-gray-100">
         <div class="relative px-2 sm:px-4 sm:pr-6 lg:pr-8">
 
           <FlashMessage :flash="$page.props.flash" class="h-full" />
 
+          <!-- Desktop navigation menu -->
           <div class="flex justify-between h-16">
 
             <div class="flex">
@@ -42,6 +42,7 @@ const showingNavigationDropdown = ref(false);
                   Intake Guidelines
                 </NavLink>
               </div>
+
             </div>
 
             <!-- Dropdown with Profile/Log Out links -->
@@ -75,14 +76,14 @@ const showingNavigationDropdown = ref(false);
                         </svg>
                       </button>
                     </span>
-                    </template>
+                  </template>
 
                   <template #content>
                     <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
                     <DropdownLink :href="route('logout')" method="post" as="button">
                       Log Out
                     </DropdownLink>
-                    </template>
+                  </template>
                 </Dropdown>
               </div>
             </div>
@@ -129,12 +130,13 @@ const showingNavigationDropdown = ref(false);
           </div>
         </div>
 
-        <!-- Responsive Navigation Menu -->
+        <!-- Mobile navigation menu -->
         <div
           :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }"
           class="sm:hidden"
         >
 
+          <!-- Links in mobile navigation menu -->
           <div class="pt-2 pb-3 space-y-1">
 
             <ResponsiveNavLink :href="route('ingredients.index')" :active="route().current('ingredients.index')" >
@@ -149,7 +151,7 @@ const showingNavigationDropdown = ref(false);
             <ResponsiveNavLink :href="route('intake-guidelines.index')" :active="route().current('intake-guidelines.index')">
               Intake Guidelines
             </ResponsiveNavLink>
-
+            <!-- Display log in link for unauthenticated users -->
             <ResponsiveNavLink
               v-if="!$page.props.auth.user"
               :href="route('login')"
@@ -181,7 +183,7 @@ const showingNavigationDropdown = ref(false);
       </nav>
 
       <!-- Page Heading -->
-      <header class="bg-white shadow max-w-3xl mx-auto" v-if="$slots.header">
+      <header class="bg-white shadow mx-auto" v-if="$slots.header">
         <div class="mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <slot name="header" />
         </div>
@@ -193,4 +195,4 @@ const showingNavigationDropdown = ref(false);
       </main>
     </div>
   </div>
-  </template>
+</template>

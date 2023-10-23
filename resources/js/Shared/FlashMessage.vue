@@ -18,9 +18,8 @@ watch(() => props.flash, () => {
   if (props.flash.message) {
     show.value = true;
     setTimeout(() => {
-      router.reload({ only: ['flash'], onFinish: visit => {
-        show.value = false;
-      }})
+      props.flash.message = null
+      show.value = false
     }, 3000);
   }
 });
@@ -34,7 +33,7 @@ watch(() => props.flash, () => {
       @click="hide"
       class="absolute inset-x-0 mx-auto  flex items-center text-sm text-gray-800 bg-blue-50 px-4 py-3 rounded-b-md border-b-2 border-blue-400 z-50"
     >
-      <InformationCircleIcon class="w-5 h-5 text-gray-600" />
+      <InformationCircleIcon class="w-5 h-5 text-gray-600 shrink-0" />
       <span class="ml-1 translate-y-px">{{ flash.message }}</span>
     </div>
   </Transition>
@@ -52,3 +51,4 @@ watch(() => props.flash, () => {
   opacity: 0;
 }
 </style>
+/style>

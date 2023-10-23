@@ -23,7 +23,5 @@ export default {
       <li><MyLink :colored="true" :href="route('intake-guidelines.index')">Intake Guidelines</MyLink></li>
     </ul>
 
-    Hello, world!
-
   </div>
 </template>
