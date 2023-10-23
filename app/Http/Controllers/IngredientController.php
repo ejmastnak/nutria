@@ -108,7 +108,7 @@ class IngredientController extends Controller
         $ingredient->load([
             'ingredientCategory:id,name',
             'customUnits:id,name,seq_num,ingredient_id,custom_unit_amount,custom_mass_amount,custom_mass_unit_id,custom_grams',
-        ])
+        ]);
 
         return Inertia::render('Ingredients/Create', [
             'cloned_from_ingredient' => [

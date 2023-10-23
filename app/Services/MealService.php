@@ -139,7 +139,7 @@ class MealService
 
             // Create ingredient's nutrients
             $nutrientProfile = $nutrientProfileService->getNutrientIndexedMealProfile($meal->id);
-            foreach ($nutrient as Nutrient::all()) {
+            foreach (Nutrient::all() as $nutrient) {
                 IngredientNutrient::create([
                     'ingredient_id' => $ingredient->id,
                     'nutrient_id' => $nutrient->id,

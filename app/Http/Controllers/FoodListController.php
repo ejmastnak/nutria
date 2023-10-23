@@ -84,7 +84,7 @@ class FoodListController extends Controller
     public function show(FoodList $foodList)
     {
         $user = Auth::user();
-        $userId = $user ? $user->id : null,
+        $userId = $user ? $user->id : null;
 
         return Inertia::render('FoodLists/Show', [
             'food_list' => $foodList->withIngredientsAndMeals(),
@@ -104,7 +104,7 @@ class FoodListController extends Controller
     public function edit(FoodList $foodList)
     {
         $user = Auth::user();
-        $userId = $user ? $user->id : null,
+        $userId = $user ? $user->id : null;
 
         return Inertia::render('FoodLists/Edit', [
             'food_list' => $foodList->withIngredientsAndMeals(),
