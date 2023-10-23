@@ -45,7 +45,7 @@ class Ingredient extends Model
 
     public function withCategoryUnitsNutrientsAndMeal() {
         // The long ingredient_nutrients query is to ensure
-        // ingredient_nutrients are ordered by nutrients.display_order
+        // ingredient_nutrients are ordered by nutrients.seq_num
         $this->load([
             'ingredientCategory:id,name',
             'ingredientNutrients' => function($query) {
@@ -56,9 +56,9 @@ class Ingredient extends Model
                     'ingredient_nutrients.amount_per_100g'
                 ])
                 ->join('nutrients', 'ingredient_nutrients.nutrient_id', '=', 'nutrients.id')
-                ->orderBy('nutrients.display_order_id', 'asc');
+                ->orderBy('nutrients.seq_num', 'asc');
             },
-            'ingredientNutrients.nutrient:id,display_name,unit_id,nutrient_category_id,precision,display_order_id',
+            'ingredientNutrients.nutrient:id,display_name,unit_id,nutrient_category_id,precision,seq_num',
             'ingredientNutrients.nutrient.unit:id,name',
             'customUnits:id,name,seq_num,ingredient_id,custom_unit_amount,custom_mass_amount,custom_mass_unit_id,custom_grams',
             'meal:id,name',

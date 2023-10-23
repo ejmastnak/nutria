@@ -79,7 +79,7 @@ class IngredientController extends Controller
         inner join units
           on units.id
           = nutrients.unit_id
-        order by nutrients.display_order_id;
+        order by nutrients.seq_num;
         ";
 
         $rawIngredientNutrients = DB::select($query, [

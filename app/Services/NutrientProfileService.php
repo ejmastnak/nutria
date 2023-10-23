@@ -92,7 +92,7 @@ class NutrientProfileService
           and intake_guideline_nutrients.nutrient_id
           = ingredient_nutrients.nutrient_id
         where ingredient_nutrients.ingredient_id=:ingredient_id
-        order by nutrients.display_order_id;
+        order by nutrients.seq_num;
         ";
 
         $result = DB::select($query, [
@@ -155,7 +155,7 @@ class NutrientProfileService
           and intake_guideline_nutrients.nutrient_id
           = ingredient_nutrients.nutrient_id
         group by nutrients.id, units.name
-        order by nutrients.display_order_id;
+        order by nutrients.seq_num;
         ";
 
         $result = DB::select($query, [
@@ -267,7 +267,7 @@ class NutrientProfileService
           on units.id
           = nutrients.unit_id
         group by nutrients.id, units.name
-        order by nutrients.display_order_id;
+        order by nutrients.seq_num;
         ";
 
         $result = DB::select($query, [

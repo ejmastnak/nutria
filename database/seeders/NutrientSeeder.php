@@ -40,7 +40,7 @@ class NutrientSeeder extends Seeder
                 'unit_id' => $unit->id,
                 'nutrient_category_id' => $nutrientCategory->id,
                 'precision' => $nutrient['precision'],
-                'display_order' => $nutrient['display_order'],
+                'seq_num' => $nutrient['seq_num'],
             ]);
         }
     }

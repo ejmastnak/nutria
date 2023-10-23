@@ -7,7 +7,7 @@ insert into nutrients(
   unit_id,
   nutrient_category_id,
   precision,
-  display_order_id
+  seq_num
 )
 select
   sr.nutrient.id::int,
@@ -16,7 +16,7 @@ select
   units.id,
   nutrient_categories.id,
   tmp_nutrients.precision,
-  tmp_nutrients.display_order_id
+  tmp_nutrients.seq_num
 from sr.nutrient
 inner join tmp_nutrients
   on tmp_nutrients.name

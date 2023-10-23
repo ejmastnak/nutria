@@ -15,7 +15,7 @@ class IntakeGuideline extends Model
 
     public function withNutrients() {
         // The long query is to ensure intake_guideline_nutrients are ordered by
-        // nutrients.display_order
+        // nutrients.seq_num
         $this->load([
             'intakeGuidelineNutrients' => function($query) {
                 $query->select([
@@ -25,9 +25,9 @@ class IntakeGuideline extends Model
                     'intake_guideline_nutrients.rdi'
                 ])
                 ->join('nutrients', 'intake_guideline_nutrients.nutrient_id', '=', 'nutrients.id')
-                ->orderBy('nutrients.display_order');
+                ->orderBy('nutrients.seq_num');
             },
-            'intake_guideline_nutrients.nutrient:id,display_name,unit_id,nutrient_category_id,precision,display_order',
+            'intake_guideline_nutrients.nutrient:id,display_name,unit_id,nutrient_category_id,precision,seq_num',
             'intake_guideline_nutrients.nutrient.unit:id,name'
         ]);
         return $this->only(['id', 'name', 'intakeGuidelineNutrients']);

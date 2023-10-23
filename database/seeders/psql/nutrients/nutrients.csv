@@ -1,4 +1,4 @@
-# id,name,display_name,nutrient_category_name,precision,display_order_id
+# id,name,display_name,nutrient_category_name,precision,seq_num
 1008,"Energy","Energy","Macronutrient",0,1
 1051,"Water","Water","Macronutrient",0,2
 1003,"Protein","Protein","Macronutrient",1,3

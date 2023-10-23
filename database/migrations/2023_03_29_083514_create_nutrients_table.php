@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->foreignId('unit_id')->references('id')->on('units');
             $table->foreignId('nutrient_category_id')->references('id')->on('nutrient_categories');
             $table->integer('precision')->default(2);
-            $table->integer('display_order');
+            $table->integer('seq_num');
         });
     }
 

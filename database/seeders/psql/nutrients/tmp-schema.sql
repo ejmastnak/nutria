@@ -6,5 +6,5 @@ create temporary table tmp_nutrients (
   display_name text,
   nutrient_category_name text,
   precision integer,
-  display_order_id integer
+  seq_num integer
 );
