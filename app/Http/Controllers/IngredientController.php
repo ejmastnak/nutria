@@ -6,9 +6,10 @@ use App\Models\Ingredient;
 use App\Models\IngredientCategory;
 use App\Models\NutrientCategory;
 use App\Models\IntakeGuideline;
+use App\Models\Nutrient;
+use App\Models\Unit;
 use App\Services\IngredientService;
 use App\Services\NutrientProfileService;
-use App\Models\Nutrient;
 use App\Http\Requests\IngredientStoreRequest;
 use App\Http\Requests\IngredientUpdateRequest;
 use Illuminate\Support\Facades\Redirect;
@@ -45,7 +46,7 @@ class IngredientController extends Controller
             'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'nutrients' => Nutrient::getWithUnit(),
             'nutrient_categories' => NutrientCategory::getWithName(),
-            'units' => Unit::getMassAndVolumeUnits(),
+            'units' => Unit::getMassAndVolume(),
             'can_create' => $user ? $user->can('create', Ingredient::class) : false
         ]);
     }
@@ -66,6 +67,7 @@ class IngredientController extends Controller
         select
           nutrients.id as nutrient_id,
           nutrients.display_name as display_name,
+          coalesce(round(ingredient_nutrients.amount, 2),0) as amount,
           coalesce(round(ingredient_nutrients.amount_per_100g, 2),0) as amount_per_100g,
           nutrients.nutrient_category_id as nutrient_category_id,
           units.id as unit_id,
@@ -91,6 +93,7 @@ class IngredientController extends Controller
             return [
                 'id' => 0,
                 'nutrient_id' => $ingredientNutrient->nutrient_id,
+                'amount' => $ingredientNutrient->amount,
                 'amount_per_100g' => $ingredientNutrient->amount_per_100g,
                 'nutrient' => [
                     'id' => $ingredientNutrient->nutrient_id,
@@ -107,6 +110,7 @@ class IngredientController extends Controller
 
         $ingredient->load([
             'ingredientCategory:id,name',
+            'ingredientNutrientAmountUnit:id,name',
             'customUnits:id,name,seq_num,ingredient_id,custom_unit_amount,custom_mass_amount,custom_mass_unit_id,custom_grams',
         ]);
 
@@ -116,6 +120,9 @@ class IngredientController extends Controller
                 'name' => $ingredient['name'],
                 'ingredient_category_id' => $ingredient['ingredient_category_id'],
                 'ingredient_category' => $ingredient['ingredientCategory'],
+                'ingredient_nutrient_amount' => $ingredient['ingredient_nutrient_amount'],
+                'ingredient_nutrient_amount_unit_id' => $ingredient['ingredient_nutrient_amount_unit_id'],
+                'ingredient_nutrient_amount_unit' => $ingredient['ingredientNutrientAmountUnit'],
                 'ingredient_nutrients' => $ingredientNutrients,
                 'density_mass_unit_id' => $ingredient['density_mass_unit_id'],
                 'density_mass_amount' => $ingredient['density_mass_amount'],
@@ -127,7 +134,7 @@ class IngredientController extends Controller
             'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'nutrients' => null,
             'nutrient_categories' => NutrientCategory::getWithName(),
-            'units' => Unit::getMassAndVolumeUnits(),
+            'units' => Unit::getMassAndVolume(),
             'can_create' => $user ? $user->can('create', Ingredient::class) : false
         ]);
     }
@@ -154,6 +161,7 @@ class IngredientController extends Controller
             'nutrient_profiles' => $nutrientProfileService->getNutrientProfilesOfIngredient($ingredient->id, $userId),
             'intake_guidelines' => IntakeGuideline::getForUser($userId),
             'nutrient_categories' => NutrientCategory::getWithName(),
+            'units' => Unit::getMassAndVolume(),
             'can_edit' => $user ? $user->can('update', $ingredient) : false,
             'can_clone' => $user ? $user->can('clone', $ingredient) : false,
             'can_delete' => $user ? $user->can('delete', $ingredient) : false,
@@ -173,7 +181,7 @@ class IngredientController extends Controller
             'ingredient' => $ingredient->withCategoryUnitsNutrientsAndMeal(),
             'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'nutrient_categories' => NutrientCategory::getWithName(),
-            'units' => Unit::getForIngredient($ingredient),
+            'units' => Unit::getMassAndVolume(),
             'can_view' => $user ? $user->can('view', $ingredient) : false,
             'can_clone' => $user ? $user->can('clone', $ingredient) : false,
             'can_delete' => $user ? $user->can('delete', $ingredient) : false,

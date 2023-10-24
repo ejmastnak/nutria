@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use App\Models\Nutrient;
 use App\Rules\IsMassUnit;
 use App\Rules\IsVolumeUnit;
+use App\Rules\IngredientNutrientAmountUnitIdIsValid;
+use App\Rules\IngredientNutrientAmountUnitIsValid;
 use Illuminate\Foundation\Http\FormRequest;
 
 class IngredientUpdateRequest extends FormRequest
@@ -30,12 +32,15 @@ class IngredientUpdateRequest extends FormRequest
         return [
             'name' => ['required', 'min:1', config('validation.max_name_length')],
             'ingredient_category_id' => ['nullable', 'integer', 'exists:ingredient_categories,id'],
+            'ingredient_nutrient_amount' => ['required', 'float', 'gt:0', config('validation.max_ingredient_amount')],
+            'ingredient_nutrient_amount_unit_id' => ['nullable', 'integer', 'exists:units,id', new IngredientNutrientAmountUnitIdIsValid],
+            'ingredient_nutrient_amount_unit' => ['required_without:ingredient_nutrient_amount_unit_id', 'array', 'required_array_keys:name,custom_unit_amount,custom_mass_amount,custom_mass_unit_id', new IngredientNutrientAmountUnitIsValid],
 
             // Ingredient nutrients
             'ingredient_nutrients' => ['required', 'array', 'min:' . $numNutrients, 'max:' . $numNutrients],
             'ingredient_nutrients.*.id' => ['required', 'integer', 'exists:nutrient_ingredients,id'],
             'ingredient_nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'exists:nutrients,id'],
-            'ingredient_nutrients.*.amount_per_100g' => ['required', 'numeric', 'gte:0', config('validation.max_nutrient_amount')],
+            'ingredient_nutrients.*.amount' => ['required', 'numeric', 'gte:0', config('validation.max_nutrient_amount')],
 
             // Density
             'density_mass_unit_id' => ['nullable', 'integer', 'exists:units,id', new IsMassUnit],
@@ -45,7 +50,7 @@ class IngredientUpdateRequest extends FormRequest
 
             // Custom units
             'custom_units' => ['nullable', 'min:1', config('validation.max_custom_units')],
-            'custom_units*.name' => ['required', 'min:1', config('validation.max_name_length')],
+            'custom_units*.name' => ['required', 'distinct', 'min:1', config('validation.max_name_length')],
             'custom_units*.custom_unit_amount' => ['required', 'numeric', 'gt:0', config('validation.max_ingredient_amount')],
             'custom_units*.custom_mass_amount' => ['required', 'numeric', 'gt:0', config('validation.max_ingredient_amount')],
             'custom_units*.custom_mass_unit_id' => ['required', 'integer', 'exists:units,id', new IsMassUnit],

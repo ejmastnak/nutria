@@ -26,7 +26,6 @@ class IngredientUnitIsConsistent implements ValidationRule
         $ingredient = Ingredient::find($value['ingredient_id']);
         if (is_null($ingredient)) $fail("The :attribute's ingredient was not recognized.");
 
-
         // Allow any mass unit
         if (!is_null($unit->g)) return;
 

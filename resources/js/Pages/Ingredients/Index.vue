@@ -3,7 +3,7 @@ import fuzzysort from 'fuzzysort'
 import throttle from "lodash/throttle";
 import debounce from "lodash/debounce";
 
-import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, computed } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import { TrashIcon, PlusCircleIcon, DocumentDuplicateIcon, MagnifyingGlassIcon, XMarkIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import MyLink from '@/Components/MyLink.vue'
@@ -17,7 +17,6 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 const props = defineProps({
   ingredients: Array,
-  user_ingredients: Array,
   ingredient_categories: Array,
   can_create: Boolean
 })
@@ -54,13 +53,17 @@ function changeTab(index) {
   selectedTab.value = index
 }
 
+const userIngredients = computed(() => {
+    return props.ingredients.filter($ingredient => $ingredient.user_id)
+})
+
 // Preserve ingredient search from previous visit to this page
 onMounted(() => {
   if (fdaSearchQuery) {
     filteredIngredients.value = fuzzysort.go(fdaSearchQuery.value.trim(), props.ingredients, fuzzysortOptions)
   }
   if (userSearchQuery) {
-    filteredUserIngredients.value = fuzzysort.go(userSearchQuery.value.trim(), props.user_ingredients, fuzzysortUserOptions)
+    filteredUserIngredients.value = fuzzysort.go(userSearchQuery.value.trim(), userIngredients.value, fuzzysortUserOptions)
   }
 })
 
@@ -68,7 +71,7 @@ watch(fdaSearchQuery, throttle(function (value) {
   filteredIngredients.value = fuzzysort.go(value.trim(), props.ingredients, fuzzysortOptions)
 }, 300))
 watch(userSearchQuery, throttle(function (value) {
-  filteredUserIngredients.value = fuzzysort.go(value.trim(), props.user_ingredients, fuzzysortUserOptions)
+  filteredUserIngredients.value = fuzzysort.go(value.trim(), userIngredients.value, fuzzysortUserOptions)
 }, 300))
 
 // Preserve search query between page visits
@@ -100,7 +103,7 @@ function resetUserSearch() {
 // Updates filteredUserIngredients after deleting an ingredient to ensure then
 // ingredient disappears from display
 function updateFuzzySearchOnDeletion(id) {
-  filteredUserIngredients.value = fuzzysort.go(userSearchQuery.value.trim(), props.user_ingredients, fuzzysortUserOptions)
+  filteredUserIngredients.value = fuzzysort.go(userSearchQuery.value.trim(), userIngredients.value, fuzzysortUserOptions)
 }
 
 </script>
@@ -113,7 +116,14 @@ export default {
 </script>
 
 <template>
+
   <div class="">
+    <pre>
+      {{can_create}}
+    </pre>
+  </div>
+
+  <div v-if="false" class="">
     <Head title="Ingredients" />
 
     <!-- Title and new ingredient top row -->
@@ -278,7 +288,7 @@ export default {
 
         <!-- User ingredients -->
         <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-xl">
-          <section v-if="user_ingredients.length" class="border border-gray-200 shadow-sm p-4 rounded-xl bg-white" >
+          <section v-if="userIngredients.length" class="border border-gray-200 shadow-sm p-4 rounded-xl bg-white" >
             <h2 class="text-lg">Your ingredients</h2>
 
             <div class="p-4 flex">
@@ -416,7 +426,7 @@ export default {
 
     <SearchForThingAndGo
       ref="cloneExistingDialog"
-      :things="ingredients.concat(user_ingredients)"
+      :things="ingredients"
       goRoute="ingredients.clone"
       label="Search for an ingredient to clone"
       title="Clone ingredient"

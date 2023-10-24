@@ -12,6 +12,8 @@ class Ingredient extends Model
         'fdc_id',
         'name',
         'ingredient_category_id',
+        'ingredient_nutrient_amount',
+        'ingredient_nutrient_amount_unit_id',
         'density_mass_unit_id',
         'density_mass_amount',
         'density_volume_unit_id',
@@ -31,15 +33,12 @@ class Ingredient extends Model
             'id',
             'name',
             'ingredient_category_id',
-            'ingredientCategory',
             "density_mass_unit_id",
             "density_mass_amount",
             "density_volume_unit_id",
             "density_volume_amount",
             "density_g_ml",
-            "customUnits",
             'meal_id',
-            'meal',
         ]);
     }
 
@@ -48,12 +47,14 @@ class Ingredient extends Model
         // ingredient_nutrients are ordered by nutrients.seq_num
         $this->load([
             'ingredientCategory:id,name',
+            'ingredientNutrientAmountUnit:id,name',
             'ingredientNutrients' => function($query) {
                 $query->select([
                     'ingredient_nutrients.id',
                     'ingredient_nutrients.ingredient_id',
                     'ingredient_nutrients.nutrient_id',
-                    'ingredient_nutrients.amount_per_100g'
+                    'ingredient_nutrients.amount',
+                    'ingredient_nutrients.amount_per_100g',
                 ])
                 ->join('nutrients', 'ingredient_nutrients.nutrient_id', '=', 'nutrients.id')
                 ->orderBy('nutrients.seq_num', 'asc');
@@ -69,7 +70,10 @@ class Ingredient extends Model
             'name',
             'ingredient_category_id',
             'ingredientCategory',
-            'ingredient_nutrients',
+            'ingredient_nutrient_amount',
+            'ingredient_nutrient_amount_unit_id',
+            'ingredientNutrientAmountUnit',
+            'ingredientNutrients',
             'density_mass_unit_id',
             'density_mass_amount',
             'density_volume_unit_id',
@@ -85,7 +89,7 @@ class Ingredient extends Model
         return self::where('user_id', null)
             ->orWhere('user_id', $userId)
             ->with('ingredientCategory:id,name')
-            ->get(['id', 'name', 'ingredient_category_id', 'ingredientCategory']);
+            ->get(['id', 'name', 'ingredient_category_id']);
     }
 
     public static function getForUserWithUnits(?int $userId) {
@@ -105,6 +109,18 @@ class Ingredient extends Model
 
     public function ingredientNutrients() {
         return $this->hasMany(IngredientNutrient::class, 'ingredient_id', 'id');
+    }
+
+    public function ingredientNutrientAmountUnit() {
+        return $this->belongsTo(Unit::class, 'ingredient_nutrient_amount_unit_id', 'id');
+    }
+
+    public function densityMassUnit() {
+        return $this->belongsTo(Unit::class, 'density_mass_unit_id', 'id');
+    }
+
+    public function densityVolumeUnit() {
+        return $this->belongsTo(Unit::class, 'density_volume_unit_id', 'id');
     }
 
     public function customUnits() {

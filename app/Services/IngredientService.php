@@ -6,20 +6,23 @@ use App\Models\IngredientNutrient;
 use App\Models\Unit;
 use App\Services\ComputeDensityService;
 use App\Services\ConvertToGramsService;
+use App\Services\AmountPer100gService;
 use Illuminate\Support\Facades\DB;
 
 class IngredientService
 {
-    public function storeIngredient(array $data, int $userId, ComputeDensityService $computeDensityService, ConvertToGramsService $convertToGramsService): ?Ingredient
+    public function storeIngredient(array $data, int $userId, ComputeDensityService $computeDensityService, ConvertToGramsService $convertToGramsService, AmountPer100gService $amountPer100gService): ?Ingredient
     {
         $ingredient = null;
-        DB::transaction(function () use ($data, $userId, &$ingredient, $computeDensityService, $convertToGramsService) {
+        DB::transaction(function () use ($data, $userId, &$ingredient, $computeDensityService, $convertToGramsService, $amountPer100gService) {
 
             // Create ingredient
             $ingredient = Ingredient::create([
                 'name' => $data['name'],
                 'fdc_id' => null,
                 'ingredient_category_id' => $data['ingredient_category_id'],
+                'ingredient_nutrient_amount' => $data['ingredient_nutrient_amount'],
+                'ingredient_nutrient_amount_unit_id' => $data['ingredient_nutrient_amount_unit_id'],
                 'density_mass_unit_id' => $data['density_mass_unit_id'],
                 'density_mass_amount' => $data['density_mass_amount'],
                 'density_volume_unit_id' => $data['density_volume_unit_id'],
@@ -32,15 +35,6 @@ class IngredientService
                 ),
                 'user_id' => $userId,
             ]);
-
-            // Create ingredient's nutrients
-            foreach ($data['ingredient_nutrients'] as $ingredientNutrient) {
-                IngredientNutrient::create([
-                    'ingredient_id' => $ingredient->id,
-                    'nutrient_id' => $ingredientNutrient['nutrient_id'],
-                    'amount_per_100g' => $ingredientNutrient['amount_per_100g'],
-                ]);
-            }
 
             // Create ingredient-specific custom units, if applicable
             $numberMassAndVolumeUnits = Unit::numberMassAndVolumeUnits();
@@ -56,18 +50,35 @@ class IngredientService
                 ]);
             }
 
+            // Create ingredient's nutrients
+            foreach ($data['ingredient_nutrients'] as $ingredientNutrient) {
+                IngredientNutrient::create([
+                    'ingredient_id' => $ingredient->id,
+                    'nutrient_id' => $ingredientNutrient['nutrient_id'],
+                    'amount' => $ingredientNutrient['amount'],
+                    'amount_per_100g' => $amountPer100gService->computeAmountPer100gService(
+                        $ingredientNutrient['amount'],
+                        $data['ingredient_nutrient_amount'],
+                        $data['ingredient_nutrient_amount_unit'],
+                        $ingredient->density_g_ml,
+                    ),
+                ]);
+            }
+
         });
         return $ingredient;
     }
 
-    public function updateIngredient(array $data, Ingredient $ingredient, ComputeDensityService $computeDensityService, ConvertToGramsService $convertToGramsService): ?Ingredient
+    public function updateIngredient(array $data, Ingredient $ingredient, ComputeDensityService $computeDensityService, ConvertToGramsService $convertToGramsService, AmountPer100gService $amountPer100gService): ?Ingredient
     {
-        DB::transaction(function () use ($data, $ingredient, $computeDensityService, $convertToGramsService) {
+        DB::transaction(function () use ($data, $ingredient, $computeDensityService, $convertToGramsService, $amountPer100gService) {
 
             // Update ingredient
             $ingredient->update([
                 'name' => $data['name'],
                 'ingredient_category_id' => $data['ingredient_category_id'],
+                'ingredient_nutrient_amount' => $data['ingredient_nutrient_amount'],
+                'ingredient_nutrient_amount_unit_id' => $data['ingredient_nutrient_amount_unit_id'],
                 'density_mass_unit_id' => $data['density_mass_unit_id'],
                 'density_mass_amount' => $data['density_mass_amount'],
                 'density_volume_unit_id' => $data['density_volume_unit_id'],
@@ -80,30 +91,53 @@ class IngredientService
                 ),
             ]);
 
+            // Update ingredient's custom units.
+            $freshCustomUnitIds = [];
+            $numberMassAndVolumeUnits = Unit::numberMassAndVolumeUnits();
+            foreach ($ingredient->customUnits() as $idx=>$customUnit) {
+                if (is_null($customUnit['id'])) {
+                    $freshCustomUnitIds[] = Unit::create([
+                        'name' => $customUnit['name'],
+                        'seq_num' => $numberMassAndVolumeUnits + $idx,
+                        'ingredient_id' => $ingredient->id,
+                        'custom_unit_amount' => $customUnit['custom_unit_amount'],
+                        'custom_mass_amount' => $customUnit['custom_mass_amount'],
+                        'custom_mass_unit_id' => $customUnit['custom_mass_unit_id'],
+                        'custom_grams' => $convertToGramsService->convertToGrams($customUnit['custom_mass_unit_id'], $customUnit['custom_mass_amount'], null, null)/$customUnit['custom_unit_amount'],
+                    ])->id;
+                } else {
+                    $CustomUnit = Unit::find($customUnit['id']);
+                    $CustomUnit->update([
+                        'name' => $customUnit['name'],
+                        'seq_num' => $numberMassAndVolumeUnits + $idx,
+                        'custom_unit_amount' => $customUnit['custom_unit_amount'],
+                        'custom_mass_amount' => $customUnit['custom_mass_amount'],
+                        'custom_mass_unit_id' => $customUnit['custom_mass_unit_id'],
+                        'custom_grams' => $convertToGramsService->convertToGrams($customUnit['custom_mass_unit_id'], $customUnit['custom_mass_amount'], null, null)/$customUnit['custom_unit_amount'],
+                    ]);
+                    $freshCustomUnitIds[] = $CustomUnit['id'];
+                }
+            }
+
+            // Delete stale custom units
+            foreach ($ingredient->customUnits() as $customUnit) {
+                if (!in_array($customUnit->id, $freshCustomUnitIds)) $customUnit->delete();
+            }
+
             // Update ingredient's nutrients
             foreach ($data['ingredient_nutrients'] as $ingredientNutrient) {
                 $IngredientNutrient = IngredientNutrient::find($ingredientNutrient['id']);
                 $IngredientNutrient->update([
-                    'amount_per_100g' => $ingredientNutrient['amount_per_100g'],
+                    'amount' => $ingredientNutrient['amount'],
+                    'amount_per_100g' => $amountPer100gService->computeAmountPer100gService(
+                        $ingredientNutrient['amount'],
+                        $data['ingredient_nutrient_amount'],
+                        $data['ingredient_nutrient_amount_unit'],
+                        $ingredient->density_g_ml,
+                    ),
                 ]);
             }
 
-            // Refresh ingredient's custom units. I'm just deleting all and
-            // recreating; it's not worth the complexity of using the
-            // create-new-update-existing-delete-stale protocol.
-            foreach ($ingredient->customUnits() as $customUnit) $customUnit->delete();
-            $numberMassAndVolumeUnits = Unit::numberMassAndVolumeUnits();
-            foreach ($data['custom_units'] as $idx=>$customUnit) {
-                Unit::create([
-                    'name' => $customUnit['name'],
-                    'seq_num' => $numberMassAndVolumeUnits + $idx,
-                    'ingredient_id' => $ingredient->id,
-                    'custom_unit_amount' => $customUnit['custom_unit_amount'],
-                    'custom_mass_amount' => $customUnit['custom_mass_amount'],
-                    'custom_mass_unit_id' => $customUnit['custom_mass_unit_id'],
-                    'custom_grams' => $convertToGramsService->convertToGrams($customUnit['custom_mass_unit_id'], $customUnit['custom_mass_amount'], null, null)/$customUnit['custom_unit_amount'],
-                ]);
-            }
 
         });
         return $ingredient;

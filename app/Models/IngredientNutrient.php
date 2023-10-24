@@ -12,6 +12,7 @@ class IngredientNutrient extends Model
     protected $fillable = [
         'ingredient_id',
         'nutrient_id',
+        'amount',
         'amount_per_100g',
     ];
 

@@ -80,6 +80,8 @@ insert into ingredients (
   fdc_id,
   name,
   ingredient_category_id,
+  ingredient_nutrient_amount,
+  ingredient_nutrient_amount_unit_id,
   created_at,
   updated_at
 )
@@ -87,6 +89,8 @@ select
   sr.food.fdc_id::int,
   sr.food.description,
   sr.food.food_category_id::int,
+  100,
+  (select id from units where name like 'g' limit 1),
   (now() at time zone 'utc'),
   (now() at time zone 'utc')
 from sr.food
@@ -106,11 +110,13 @@ truncate table ingredient_nutrients restart identity;
 insert into ingredient_nutrients (
   ingredient_id,
   nutrient_id,
+  amount,
   amount_per_100g
 )
 select
   ingredients.id,  -- use local ingredient id and not FDC id
   sr.food_nutrient.nutrient_id::int,
+  sr.food_nutrient.amount_per_100g::decimal(10, 3),
   sr.food_nutrient.amount_per_100g::decimal(10, 3)
 from sr.food_nutrient
 inner join ingredients  -- to access local ingredient id
