@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             NutrientSeeder::class,
             IngredientCategorySeeder::class,
             IngredientSeeder::class,
+            CustomIngredientSeeder::class,
             MealSeeder::class,
             FoodListSeeder::class,
             IntakeGuidelineSeeder::class,

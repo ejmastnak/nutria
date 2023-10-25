@@ -18,9 +18,8 @@ class AmountPer100gService
      */
     public static function computeAmountPer100g(float $nutrientAmount, float $ingredientAmount, array $ingredientAmountUnit, ?float $ingredientDensityGMl): ?float
     {
-
         if (!is_null($ingredientAmountUnit['id'])) {
-            $unit = Unit::find($unitId);
+            $unit = Unit::find($ingredientAmountUnit['id']);
             if (is_null($unit)) return null;
 
             // For mass units
