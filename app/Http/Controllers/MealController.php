@@ -11,6 +11,7 @@ use App\Models\Unit;
 use App\Http\Requests\MealStoreRequest;
 use App\Http\Requests\MealUpdateRequest;
 use App\Services\MealService;
+use App\Services\NutrientProfileService;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -75,14 +76,14 @@ class MealController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Meal $meal)
+    public function show(Meal $meal, NutrientProfileService $nutrientProfileService)
     {
         $user = Auth::user();
         $userId = $user ? $user->id : null;
 
         return Inertia::render('Meals/Show', [
             'meal' => $meal->withIngredientsAndChildIngredient(),
-            'nutrient_profiles' => NutrientProfileController::getNutrientProfilesOfMeal($meal->id),
+            'nutrient_profiles' => $nutrientProfileService->getNutrientProfilesOfMeal($meal->id),
             'intake_guidelines' => IntakeGuideline::getForUser($userId),
             'nutrient_categories' => NutrientCategory::getWithName(),
             'can_edit' => $user ? $user->can('update', $meal) : false,

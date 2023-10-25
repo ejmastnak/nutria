@@ -16,7 +16,7 @@ class AmountPer100gService
      *  Returns the number of grams equal to `amount` of the Unit with
      *  `unit_id`, or `null` if the conversion is not possible.
      */
-    public function computeAmountPer100gService(float $nutrientAmount, float $ingredientAmount, array $ingredientAmountUnit, float $ingredientDensityGMl, ConvertToGramsService $convertToGramsService): ?float
+    public static function computeAmountPer100g(float $nutrientAmount, float $ingredientAmount, array $ingredientAmountUnit, ?float $ingredientDensityGMl): ?float
     {
 
         if (!is_null($ingredientAmountUnit['id'])) {
@@ -38,10 +38,10 @@ class AmountPer100gService
                 return $nutrientAmount * (100 / ($unit->custom_g * $ingredientAmount));
             }
         } else {
-            $customGrams = $convertToGramsService->convertToGrams($ingredientAmountUnit['custom_mass_unit_id'], $ingredientAmountUnit['custom_mass_amount'], null, null);
+            $customGrams = ConvertToGramsService::convertToGrams($ingredientAmountUnit['custom_mass_unit_id'], $ingredientAmountUnit['custom_mass_amount'], null, null);
             if (is_null($customGrams)) return null;
-            $customGrams /= $ingredientAmountUnit['custom_unit_amount'],
-            return $nutrientAmount * (100 / ($customGrams * $ingredientAmount))
+            $customGrams /= $ingredientAmountUnit['custom_unit_amount'];
+            return $nutrientAmount * (100 / ($customGrams * $ingredientAmount));
         }
 
         return null;

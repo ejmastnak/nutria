@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\DB;
 
 class MealService
 {
-    public function storeMeal(array $data, int $userId, ConvertToGramsService $convertToGramsService): ?Meal
+    public function storeMeal(array $data, int $userId): ?Meal
     {
         $meal = null;
-        DB::transaction(function () use ($data, $userId, &$meal, $convertToGramsService) {
+        DB::transaction(function () use ($data, $userId, &$meal) {
 
             $mealMassInGrams = 0;
             $meal = Meal::create([
@@ -32,7 +32,7 @@ class MealService
                     'ingredient_id' => $mealIngredient['ingredient_id'],
                     'amount' => $mealIngredient['amount'],
                     'unit_id' => $mealIngredient['unit_id'],
-                    'mass_in_grams' => $convertToGramsService->convertToGrams($mealIngredient['amount'], $mealIngredient['unit_id'], $mealIngredient['ingredient_id'], null),
+                    'mass_in_grams' => ConvertToGramsService::convertToGrams($mealIngredient['amount'], $mealIngredient['unit_id'], $mealIngredient['ingredient_id'], null),
                     'seq_num' => $idx,
                 ]);
                 $mealMassInGrams += $MealIngredient->mass_in_grams;
@@ -56,9 +56,9 @@ class MealService
         return $meal;
     }
 
-    public function updateMeal(array $data, Meal $meal, ConvertToGramsService $convertToGramsService): ?Meal
+    public function updateMeal(array $data, Meal $meal): ?Meal
     {
-        DB::transaction(function () use ($data, $meal, $convertToGramsService) {
+        DB::transaction(function () use ($data, $meal) {
 
             $mealMassInGrams = 0;
             $freshMealIngredientIds = [];
@@ -71,7 +71,7 @@ class MealService
                         'ingredient_id' => $mealIngredient['ingredient_id'],
                         'amount' => $mealIngredient['amount'],
                         'unit_id' => $mealIngredient['unit_id'],
-                        'mass_in_grams' => $convertToGramsService->convertToGrams($mealIngredient['amount'], $mealIngredient['unit_id'], $mealIngredient['ingredient_id'], null),
+                        'mass_in_grams' => ConvertToGramsService::convertToGrams($mealIngredient['amount'], $mealIngredient['unit_id'], $mealIngredient['ingredient_id'], null),
                         'seq_num' => $idx,
                     ]);
                     $freshMealIngredientIds[] = $MealIngredient->id;
@@ -82,7 +82,7 @@ class MealService
                         'ingredient_id' => $mealIngredient['ingredient_id'],
                         'amount' => $mealIngredient['amount'],
                         'unit_id' => $mealIngredient['unit_id'],
-                        'mass_in_grams' => $convertToGramsService->convertToGrams($mealIngredient['amount'], $mealIngredient['unit_id'], $mealIngredient['ingredient_id'], null),
+                        'mass_in_grams' => ConvertToGramsService::convertToGrams($mealIngredient['amount'], $mealIngredient['unit_id'], $mealIngredient['ingredient_id'], null),
                         'seq_num' => $idx,
                     ]);
                     $freshMealIngredientIds[] = $MealIngredient->id;

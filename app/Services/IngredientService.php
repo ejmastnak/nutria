@@ -11,10 +11,10 @@ use Illuminate\Support\Facades\DB;
 
 class IngredientService
 {
-    public function storeIngredient(array $data, int $userId, ComputeDensityService $computeDensityService, ConvertToGramsService $convertToGramsService, AmountPer100gService $amountPer100gService): ?Ingredient
+    public function storeIngredient(array $data, int $userId): ?Ingredient
     {
         $ingredient = null;
-        DB::transaction(function () use ($data, $userId, &$ingredient, $computeDensityService, $convertToGramsService, $amountPer100gService) {
+        DB::transaction(function () use ($data, $userId, &$ingredient) {
 
             // Create ingredient
             $ingredient = Ingredient::create([
@@ -27,7 +27,7 @@ class IngredientService
                 'density_mass_amount' => $data['density_mass_amount'],
                 'density_volume_unit_id' => $data['density_volume_unit_id'],
                 'density_volume_amount' => $data['density_volume_amount'],
-                'density_g_ml' => $computeDensityService->computeDensity(
+                'density_g_ml' => ComputeDensityService::computeDensity(
                     $data['density_mass_unit_id'],
                     $data['density_mass_amount'],
                     $data['density_volume_unit_id'],
@@ -46,7 +46,7 @@ class IngredientService
                     'custom_unit_amount' => $customUnit['custom_unit_amount'],
                     'custom_mass_amount' => $customUnit['custom_mass_amount'],
                     'custom_mass_unit_id' => $customUnit['custom_mass_unit_id'],
-                    'custom_grams' => $convertToGramsService->convertToGrams($customUnit['custom_mass_unit_id'], $customUnit['custom_mass_amount'], null, null)/$customUnit['custom_unit_amount'],
+                    'custom_grams' => ConvertToGramsService::convertToGrams($customUnit['custom_mass_unit_id'], $customUnit['custom_mass_amount'], null, null)/$customUnit['custom_unit_amount'],
                 ]);
             }
 
@@ -56,7 +56,7 @@ class IngredientService
                     'ingredient_id' => $ingredient->id,
                     'nutrient_id' => $ingredientNutrient['nutrient_id'],
                     'amount' => $ingredientNutrient['amount'],
-                    'amount_per_100g' => $amountPer100gService->computeAmountPer100gService(
+                    'amount_per_100g' => AmountPer100gService::computeAmountPer100g(
                         $ingredientNutrient['amount'],
                         $data['ingredient_nutrient_amount'],
                         $data['ingredient_nutrient_amount_unit'],
@@ -69,9 +69,9 @@ class IngredientService
         return $ingredient;
     }
 
-    public function updateIngredient(array $data, Ingredient $ingredient, ComputeDensityService $computeDensityService, ConvertToGramsService $convertToGramsService, AmountPer100gService $amountPer100gService): ?Ingredient
+    public function updateIngredient(array $data, Ingredient $ingredient): ?Ingredient
     {
-        DB::transaction(function () use ($data, $ingredient, $computeDensityService, $convertToGramsService, $amountPer100gService) {
+        DB::transaction(function () use ($data, $ingredient) {
 
             // Update ingredient
             $ingredient->update([
@@ -83,7 +83,7 @@ class IngredientService
                 'density_mass_amount' => $data['density_mass_amount'],
                 'density_volume_unit_id' => $data['density_volume_unit_id'],
                 'density_volume_amount' => $data['density_volume_amount'],
-                'density_g_ml' => $computeDensityService->computeDensity(
+                'density_g_ml' => ComputeDensityService::computeDensity(
                     $data['density_mass_unit_id'],
                     $data['density_mass_amount'],
                     $data['density_volume_unit_id'],
@@ -103,7 +103,7 @@ class IngredientService
                         'custom_unit_amount' => $customUnit['custom_unit_amount'],
                         'custom_mass_amount' => $customUnit['custom_mass_amount'],
                         'custom_mass_unit_id' => $customUnit['custom_mass_unit_id'],
-                        'custom_grams' => $convertToGramsService->convertToGrams($customUnit['custom_mass_unit_id'], $customUnit['custom_mass_amount'], null, null)/$customUnit['custom_unit_amount'],
+                        'custom_grams' => ConvertToGramsService::convertToGrams($customUnit['custom_mass_unit_id'], $customUnit['custom_mass_amount'], null, null)/$customUnit['custom_unit_amount'],
                     ])->id;
                 } else {
                     $CustomUnit = Unit::find($customUnit['id']);
@@ -113,7 +113,7 @@ class IngredientService
                         'custom_unit_amount' => $customUnit['custom_unit_amount'],
                         'custom_mass_amount' => $customUnit['custom_mass_amount'],
                         'custom_mass_unit_id' => $customUnit['custom_mass_unit_id'],
-                        'custom_grams' => $convertToGramsService->convertToGrams($customUnit['custom_mass_unit_id'], $customUnit['custom_mass_amount'], null, null)/$customUnit['custom_unit_amount'],
+                        'custom_grams' => ConvertToGramsService::convertToGrams($customUnit['custom_mass_unit_id'], $customUnit['custom_mass_amount'], null, null)/$customUnit['custom_unit_amount'],
                     ]);
                     $freshCustomUnitIds[] = $CustomUnit['id'];
                 }
@@ -129,7 +129,7 @@ class IngredientService
                 $IngredientNutrient = IngredientNutrient::find($ingredientNutrient['id']);
                 $IngredientNutrient->update([
                     'amount' => $ingredientNutrient['amount'],
-                    'amount_per_100g' => $amountPer100gService->computeAmountPer100gService(
+                    'amount_per_100g' => AmountPer100gService::computeAmountPer100g(
                         $ingredientNutrient['amount'],
                         $data['ingredient_nutrient_amount'],
                         $data['ingredient_nutrient_amount_unit'],

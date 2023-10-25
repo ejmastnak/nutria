@@ -12,6 +12,7 @@ use App\Models\IntakeGuideline;
 use App\Http\Requests\FoodListStoreRequest;
 use App\Http\Requests\FoodListUpdateRequest;
 use App\Services\FoodListService;
+use App\Services\NutrientProfileService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -81,14 +82,14 @@ class FoodListController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(FoodList $foodList)
+    public function show(FoodList $foodList, NutrientProfileService $nutrientProfileService)
     {
         $user = Auth::user();
         $userId = $user ? $user->id : null;
 
         return Inertia::render('FoodLists/Show', [
             'food_list' => $foodList->withIngredientsAndMeals(),
-            'nutrient_profiles' => NutrientProfileController::getNutrientProfilesOfFoodList($foodList->id),
+            'nutrient_profiles' => $nutrientProfileService->getNutrientProfilesOfFoodList($foodList->id),
             'intake_guidelines' => IntakeGuideline::forUser($userId),
             'nutrient_categories' => NutrientCategory::getWithName(),
             'can_edit' => $user ? $user->can('update', $foodList) : false,
