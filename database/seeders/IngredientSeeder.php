@@ -15,7 +15,8 @@ class IngredientSeeder extends Seeder
     public function run(): void
     {
         $result = Process::path(storage_path('app/seeders/psql'))->run('psql -d ' . env('DB_DATABASE') . " -U " . env("DB_USERNAME") . " -f ingredients.sql");
-        $this->command->info($result->output());
+        $this->command->info("stdout\n" . $result->output());
+        $this->command->info("stderr\n" . $result->errorOutput());
         if($result->failed()) {
             $this->command->info('Failed seeding Ingredients and IngredientNutrients.');
             $this->command->info('Exit code: ' . $result->exitCode());

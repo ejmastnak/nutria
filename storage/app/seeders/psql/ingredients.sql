@@ -71,7 +71,10 @@ create table tmp_volume_units(
 --------------------------------------------------------------------------------
 -- Populate ingredients table
 --------------------------------------------------------------------------------
-truncate table ingredients restart identity;
+delete from units where ingredient_id is not null;
+alter table units drop constraint units_ingredient_id_foreign;
+truncate table ingredients restart identity cascade;
+alter table units add constraint units_ingredient_id_foreign foreign key (ingredient_id) references ingredients(id);
 
 -- Populates ingredients table.
 -- Prerequisite: `ingredient_categories` is populated.
@@ -107,6 +110,7 @@ inner join ingredient_categories
 truncate table ingredient_nutrients restart identity;
 -- Populates the ingredient_nutrients table.
 -- Prerequisite: `nutrients` and `ingredients` are populated.
+
 insert into ingredient_nutrients (
   ingredient_id,
   nutrient_id,
@@ -115,7 +119,7 @@ insert into ingredient_nutrients (
 )
 select
   ingredients.id,  -- use local ingredient id and not FDC id
-  sr.food_nutrient.nutrient_id::int,
+  nutrients.id,
   sr.food_nutrient.amount_per_100g::decimal(10, 3),
   sr.food_nutrient.amount_per_100g::decimal(10, 3)
 from sr.food_nutrient
@@ -254,6 +258,6 @@ from (select
 where fpvd.ingredient_id = ingredients.id;
 
 -- Clean up
-drop table if exists tmp_mass_units;
-drop table if exists tmp_volume_units;
+drop table if exists tmp_mass_units cascade;
+drop table if exists tmp_volume_units cascade;
 -- ----------------------------------------------------------------------------
