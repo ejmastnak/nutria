@@ -89,7 +89,7 @@ class Ingredient extends Model
         return self::where('user_id', null)
             ->orWhere('user_id', $userId)
             ->with('ingredientCategory:id,name')
-            ->get(['id', 'name', 'ingredient_category_id']);
+            ->get(['id', 'name', 'ingredient_category_id', 'user_id']);
     }
 
     public static function getForUserWithUnits(?int $userId) {
