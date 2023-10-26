@@ -39,7 +39,6 @@ class IngredientController extends Controller
     public function create()
     {
         $user = Auth::user();
-        $userId = $user ? $user->id : null;
 
         return Inertia::render('Ingredients/Create', [
             'cloned_from_ingredient' => null,
@@ -58,79 +57,8 @@ class IngredientController extends Controller
     {
         $user = Auth::user();
 
-        // The raw query is to solve the following problem: When cloning
-        // ingredients for ingredients from FDA database which don't have all
-        // nutrients present, you need to add the missing nutrients and set
-        // their `amount_per_100_g` values to zero. I found this to be most
-        // straightforward with a raw query and left join than using the ORM.
-        $query = "
-        select
-          nutrients.id as nutrient_id,
-          nutrients.display_name as display_name,
-          coalesce(round(ingredient_nutrients.amount, 2),0) as amount,
-          coalesce(round(ingredient_nutrients.amount_per_100g, 2),0) as amount_per_100g,
-          nutrients.nutrient_category_id as nutrient_category_id,
-          units.id as unit_id,
-          units.name as unit_name
-        from nutrients
-        left join ingredient_nutrients
-          on ingredient_nutrients.nutrient_id
-          = nutrients.id
-          and ingredient_nutrients.ingredient_id
-          = :ingredient_id
-        inner join units
-          on units.id
-          = nutrients.unit_id
-        order by nutrients.seq_num;
-        ";
-
-        $rawIngredientNutrients = DB::select($query, [
-            'ingredient_id' => $ingredient->id
-        ]);
-
-        // Map to nested JSON format expected by frontend
-        $ingredientNutrients = array_map(function ($ingredientNutrient) {
-            return [
-                'id' => 0,
-                'nutrient_id' => $ingredientNutrient->nutrient_id,
-                'amount' => $ingredientNutrient->amount,
-                'amount_per_100g' => $ingredientNutrient->amount_per_100g,
-                'nutrient' => [
-                    'id' => $ingredientNutrient->nutrient_id,
-                    'display_name' => $ingredientNutrient->display_name,
-                    'unit_id' => $ingredientNutrient->unit_id,
-                    'nutrient_category_id' => $ingredientNutrient->nutrient_category_id,
-                    'unit' => [
-                        'id' => $ingredientNutrient->unit_id,
-                        'name' => $ingredientNutrient->unit_name
-                    ]
-                ]
-            ];
-        }, $rawIngredientNutrients);
-
-        $ingredient->load([
-            'ingredientCategory:id,name',
-            'ingredientNutrientAmountUnit:id,name',
-            'customUnits:id,name,seq_num,ingredient_id,custom_unit_amount,custom_mass_amount,custom_mass_unit_id,custom_grams',
-        ]);
-
         return Inertia::render('Ingredients/Create', [
-            'cloned_from_ingredient' => [
-                'id' => $ingredient['id'],
-                'name' => $ingredient['name'],
-                'ingredient_category_id' => $ingredient['ingredient_category_id'],
-                'ingredient_category' => $ingredient['ingredientCategory'],
-                'ingredient_nutrient_amount' => $ingredient['ingredient_nutrient_amount'],
-                'ingredient_nutrient_amount_unit_id' => $ingredient['ingredient_nutrient_amount_unit_id'],
-                'ingredient_nutrient_amount_unit' => $ingredient['ingredientNutrientAmountUnit'],
-                'ingredient_nutrients' => $ingredientNutrients,
-                'density_mass_unit_id' => $ingredient['density_mass_unit_id'],
-                'density_mass_amount' => $ingredient['density_mass_amount'],
-                'density_volume_unit_id' => $ingredient['density_volume_unit_id'],
-                'density_volume_amount' => $ingredient['density_volume_amount'],
-                'density_g_ml' => $ingredient['density_g_ml'],
-                'custom_units' => $ingredient['customUnits'],
-            ],
+            'cloned_from_ingredient' => $ingredient->withCategoryUnitsNutrientsAndMeal(),
             'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'nutrients' => null,
             'nutrient_categories' => NutrientCategory::getWithName(),
@@ -175,7 +103,6 @@ class IngredientController extends Controller
     public function edit(Ingredient $ingredient)
     {
         $user = Auth::user();
-        $userId = $user ? $user->id : null;
 
         return Inertia::render('Ingredients/Edit', [
             'ingredient' => $ingredient->withCategoryUnitsNutrientsAndMeal(),
