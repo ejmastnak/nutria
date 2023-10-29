@@ -94,7 +94,7 @@ class IngredientService
             // Update ingredient's custom units.
             $freshCustomUnitIds = [];
             $numberMassAndVolumeUnits = Unit::numberMassAndVolumeUnits();
-            foreach ($ingredient->customUnits() as $idx=>$customUnit) {
+            foreach ($ingredient->custom_units() as $idx=>$customUnit) {
                 if (is_null($customUnit['id'])) {
                     $freshCustomUnitIds[] = Unit::create([
                         'name' => $customUnit['name'],
@@ -120,7 +120,7 @@ class IngredientService
             }
 
             // Delete stale custom units
-            foreach ($ingredient->customUnits() as $customUnit) {
+            foreach ($ingredient->custom_units() as $customUnit) {
                 if (!in_array($customUnit->id, $freshCustomUnitIds)) $customUnit->delete();
             }
 
@@ -149,14 +149,14 @@ class IngredientService
         $errors = [];
 
         // Check for ingredient use in meals
-        if ($ingredient->mealIngredients->count() > 0) {
+        if ($ingredient->meal_ingredients->count() > 0) {
             $restricted = true;
             $message = "Failed to delete ingredient.";
             $errors[] = "Deleting the ingredient is intentionally restricted because the ingredient is used in one or more meals (which you can check on the ingredient's page).";
         }
 
         // Check for ingredient use in food lists
-        if ($ingredient->foodListIngredients->count() > 0) {
+        if ($ingredient->food_list_ingredients->count() > 0) {
             $restricted = true;
             $message = "Failed to delete ingredient.";
             $errors[] = "Deleting the ingredient is intentionally restricted because the ingredient is used in one or more food lists (which you can check on the ingredient's page).";

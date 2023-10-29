@@ -16,21 +16,21 @@ class FoodList extends Model
 
     public function withIngredientsAndMeals() {
         $this->load([
-            'foodListIngredients:id,food_list_id,ingredient_id,amount,unit_id',
-            'foodListIngredients.ingredient:id,name',
-            'foodListIngredients.ingredient.customUnits:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
-            'foodListIngredients.unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
-            'foodListMeals:id,food_list_id,meal_id,amount,unit_id',
-            'foodListMeals.meal:id,name,mass_in_grams',
-            'foodListMeals.meal.customUnits:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
-            'foodListMeals.unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
+            'food_list_ingredients:id,food_list_id,ingredient_id,amount,unit_id',
+            'food_list_ingredients.ingredient:id,name',
+            'food_list_ingredients.ingredient.customUnits:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
+            'food_list_ingredients.unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
+            'food_list_meals:id,food_list_id,meal_id,amount,unit_id',
+            'food_list_meals.meal:id,name,mass_in_grams',
+            'food_list_meals.meal.custom_units:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
+            'food_list_meals.unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
         ]);
         return $this->only([
             'id',
             'name',
             'mass_in_grams',
-            'foodListIngredients',
-            'foodListMeals',
+            'foodList_ingredients',
+            'food_list_meals',
         ]);
     }
 
@@ -39,11 +39,11 @@ class FoodList extends Model
             ->get(['id', 'name']);
     }
 
-    public function foodListIngredients() {
+    public function foodList_ingredients() {
         return $this->hasMany(FoodListIngredient::class, 'food_list_id', 'id')->orderBy('seq_num');
     }
 
-    public function foodListMeals() {
+    public function food_list_meals() {
         return $this->hasMany(FoodListMeal::class, 'food_list_id', 'id')->orderBy('idx');
     }
 

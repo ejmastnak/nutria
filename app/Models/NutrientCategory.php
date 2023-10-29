@@ -18,9 +18,4 @@ class NutrientCategory extends Model
     public function unit() {
         return $this->belongsTo(Unit::class, 'unit_id', 'id');
     }
-
-    public function nutrientCategory() {
-        return $this->belongsTo(NutrientCategory::class, 'nutrient_category_id', 'id');
-    }
-
 }

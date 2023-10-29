@@ -18,7 +18,7 @@ class FoodListIngredient extends Model
         'seq_num',
     ];
 
-    public function foodList() {
+    public function food_list() {
         return $this->belongsTo(FoodList::class, 'food_list_id', 'id');
     }
 

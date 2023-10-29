@@ -91,7 +91,7 @@ class MealService
             }
 
             // Delete stale meal ingredients
-            foreach ($meal->mealIngredients as $mealIngredient) {
+            foreach ($meal->meal_ingredients as $mealIngredient) {
                 if (!in_array($mealIngredient->id, $freshMealIngredientIds)) {
                     $mealIngredient->delete();
                 }
@@ -158,7 +158,7 @@ class MealService
 
             // Update ingredient's nutrients
             $nutrientProfile = $nutrientProfileService->getNutrientIndexedMealProfile($meal->id);
-            foreach ($ingredientNutrient as $ingredient->ingredientNutrients) {
+            foreach ($ingredientNutrient as $ingredient->ingredient_nutrients) {
                 $ingredientNutrient->update([
                     'amount_per_100g' => $nutrientProfile[$ingredientNutrient->nutrient_id] ? $nutrientProfile[$ingredientNutrient->nutrient_id]->amount * (100/$meal->mass_in_grams) : 0.0,
                 ]);
@@ -173,7 +173,7 @@ class MealService
         $errors = [];
 
         // Check for meal use in food lists
-        if ($meal->foodListMeals->count() > 0) {
+        if ($meal->food_list_meals->count() > 0) {
             $restricted = true;
             $message = "Failed to delete meal.";
             $errors[] = "Deleting the meal is intentionally restricted because the meal is used in one or more food lists (which you can check on the meals's page).";
@@ -183,7 +183,7 @@ class MealService
         $ingredient = $meal->ingredient;
         if (!is_null($ingredient)) {
             // Check for ingredient use in meals or food lists
-            if ($ingredient->mealIngredients->count() > 0 || $ingredient->foodListIngredients->count() > 0) {
+            if ($ingredient->meal_ingredients->count() > 0 || $ingredient->food_list_ingredients->count() > 0) {
                 $restricted = true;
                 $message = "Failed to delete meal.";
                 $errors[] = "Deleting the meal is intentionally restricted because the meal has a derived ingredient used in one or more meals or food lists (which you can check on the derived ingredient's page).";

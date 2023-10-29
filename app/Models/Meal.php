@@ -16,17 +16,17 @@ class Meal extends Model
 
     public function withIngredientsAndChildIngredient() {
         $this->load([
-            'mealIngredients:id,meal_id,ingredient_id,amount,unit_id',
-            'mealIngredients.ingredient:id,name',
-            'mealIngredients.ingredient.customUnits:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
-            'mealIngredients.unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
+            'meal_ingredients:id,meal_id,ingredient_id,amount,unit_id',
+            'meal_ingredients.ingredient:id,name',
+            'meal_ingredients.ingredient.custom_units:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
+            'meal_ingredients.unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
             'ingredient:id,meal_id,name',
         ]);
         return $this->only([
             'id',
             'name',
             'mass_in_grams',
-            'mealIngredients',
+            'meal_ingredients',
             'ingredient',
         ]);
     }
@@ -39,15 +39,15 @@ class Meal extends Model
 
     public static function getForUserWithUnits(?int $userId) {
         return is_null($userId) ? [] : self::where('user_id', $userId)
-            ->with('customUnits:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams')
-            ->get(['id', 'name', 'mass_in_grams', 'customUnits']);
+            ->with('custom_units:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams')
+            ->get(['id', 'name', 'mass_in_grams', 'custom_units']);
     }
 
     public function ingredient() {
         return $this->hasOne(Ingredient::class, 'meal_id', 'id');
     }
 
-    public function mealIngredients() {
+    public function meal_ingredients() {
         return $this->hasMany(MealIngredient::class, 'meal_id', 'id')->orderBy('seq_num');
     }
 
@@ -55,15 +55,15 @@ class Meal extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function customUnits() {
+    public function custom_units() {
         return $this->hasMany(Unit::class, 'meal_id', 'id');
     }
 
-    public function foodListMeals() {
+    public function food_list_meals() {
         return $this->hasMany(FoodListMeal::class, 'meal_id', 'id');
     }
 
-    public function foodLists() {
+    public function food_lists() {
         return $this->belongsToMany(FoodList::class, 'food_list_meals', 'meal_id', 'food_list_id');
     }
 

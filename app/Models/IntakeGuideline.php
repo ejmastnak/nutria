@@ -30,7 +30,7 @@ class IntakeGuideline extends Model
             'intake_guideline_nutrients.nutrient:id,display_name,unit_id,nutrient_category_id,precision,seq_num',
             'intake_guideline_nutrients.nutrient.unit:id,name'
         ]);
-        return $this->only(['id', 'name', 'intakeGuidelineNutrients']);
+        return $this->only(['id', 'name', 'intake_guideline_nutrients']);
     }
 
     public static function getForUser(?int $userId) {
@@ -55,7 +55,7 @@ class IntakeGuideline extends Model
             ]);
     }
 
-    public function intakeGuidelineNutrients() {
+    public function intake_guideline_nutrients() {
         return $this->hasMany(IntakeGuidelineNutrient::class, 'intake_guideline_id', 'id');
     }
 

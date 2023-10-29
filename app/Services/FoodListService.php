@@ -94,7 +94,7 @@ class FoodListService
             }
 
             // Delete stale food list ingredients
-            foreach ($foodList->foodListIngredients as $fli) {
+            foreach ($foodList->food_list_ingredients as $fli) {
                 if (!in_array($fli->id, $freshFoodListIngredientIds)) $fli->delete();
             }
             // ------------------------------------------------------------- //
@@ -130,7 +130,7 @@ class FoodListService
             }
 
             // Delete stale food list meals
-            foreach ($foodList->foodListMeals as $flm) {
+            foreach ($foodList->food_list_meals as $flm) {
                 if (!in_array($flm->id, $freshFoodListMealIds)) $flm->delete();
             }
             // ------------------------------------------------------------- //
