@@ -81,7 +81,7 @@ density-candidates.txt: clean density-candidates
 	psql --quiet -d $(DB) -U $(DB_USER) -f $(MAIN) > $(DENSITY_CANDIDATES_TXT)
 
 # Creates seed script
-main.sql: clean density custom_units;
+main.sql: clean ingredient_nutrients density custom_units;
 
 # Runs seed script
 .PHONY: seed
