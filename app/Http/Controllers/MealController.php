@@ -41,7 +41,7 @@ class MealController extends Controller
 
         return Inertia::render('Meals/Create', [
             'meal' => null,
-            'ingredients' => Ingredient::getForUserWithUnits($userId),
+            'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
             'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'units' => Unit::getMassAndVolume(),
             'can_create' => $user ? $user->can('create', Meal::class) : false
@@ -57,7 +57,7 @@ class MealController extends Controller
         $userId = $user ? $user->id : null;
         return Inertia::render('Meals/Create', [
             'meal' => $meal->withIngredientsAndChildIngredient(),
-            'ingredients' => Ingredient::getForUserWithUnits($userId),
+            'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
             'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'units' => Unit::getMassAndVolume(),
             'can_create' => $user ? $user->can('create', Meal::class) : false,
@@ -104,7 +104,7 @@ class MealController extends Controller
 
         return Inertia::render('Meals/Edit', [
             'meal' => $meal->withIngredientsAndChildIngredient(),
-            'ingredients' => Ingredient::getForUserWithUnits($userId),
+            'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
             'units' => Unit::getMassAndVolume(),
             'can_view' => $user ? $user->can('view', $meal) : false,
             'can_clone' => $user ? $user->can('clone', $meal) : false,

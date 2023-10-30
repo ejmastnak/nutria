@@ -43,7 +43,8 @@ class IntakeGuideline extends Model
      *  Permissions for Index page, which shows built-in and user guidelines on
      *  the same page. Default guideline cannot be edited, but the user's can.
      */
-    public static function getForUserWithPermissions(?int $userId) {
+    public static function getForUserWithPermissions(?User $user) {
+        $userId = $user ? $user->id : null;
         return self::where('user_id', null)
             ->orWhere('user_id', $userId)
             ->get(['id', 'name'])

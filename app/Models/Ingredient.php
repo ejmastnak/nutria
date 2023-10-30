@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class Ingredient extends Model
 {
@@ -85,18 +86,25 @@ class Ingredient extends Model
         ]);
     }
 
-    public static function getForUserWithIngredientCategory(?int $userId) {
-        return self::where('user_id', null)
-            ->orWhere('user_id', $userId)
-            ->with('ingredient_category:id,name')
-            ->get(['id', 'name', 'ingredient_category_id', 'user_id']);
+    public static function getUsdaWithCategoryAndUnits() {
+        return Cache::rememberForever('shared.usdaIngredients', function () {
+            return self::where('user_id', null)
+                ->with([
+                    'ingredient_category:id,name',
+                    'custom_units:id,name,g,ml,seq_num,ingredient_id,custom_grams',
+                ])
+                ->get(['id', 'name', 'ingredient_category_id', 'density_g_ml', 'user_id']);
+        });
     }
 
-    public static function getForUserWithUnits(?int $userId) {
-        return self::where('user_id', null)
-            ->orWhere('user_id', $userId)
-            ->with('custom_units:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams')
-            ->get(['id', 'name', 'ingredient_category_id', 'density_g_ml', 'custom_units', 'user_id']);
+    public static function getForUserWithCategoryAndUnits(?int $userId) {
+        if (is_null($userId)) return [];
+        return self::where('user_id', $userId)
+            ->with([
+                'ingredient_category:id,name',
+                'custom_units:id,name,g,ml,seq_num,ingredient_id,custom_grams',
+            ])
+            ->get(['id', 'name', 'ingredient_category_id', 'density_g_ml', 'user_id']);
     }
 
     public function meal() {

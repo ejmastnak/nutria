@@ -15,6 +15,7 @@ use App\Http\Requests\IngredientUpdateRequest;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class IngredientController extends Controller
@@ -26,8 +27,9 @@ class IngredientController extends Controller
     {
         $user = Auth::user();
         $userId = $user ? $user->id : null;
+
         return Inertia::render('Ingredients/Index', [
-            'ingredients' => Ingredient::getForUserWithIngredientCategory($userId),
+            'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
             'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'can_create' => $user ? $user->can('create', Ingredient::class) : false,
         ]);
