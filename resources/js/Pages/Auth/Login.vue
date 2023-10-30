@@ -4,7 +4,7 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue'
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
@@ -28,6 +28,11 @@ const submit = () => {
     onFinish: () => form.reset('password'),
   });
 };
+
+function cancel() {
+  history.back()
+}
+
 </script>
 
 <template>
@@ -90,9 +95,9 @@ const submit = () => {
           Create account
         </Link>
 
-        <SecondaryLinkButton :href="route('home')" class="ml-auto" >
+        <SecondaryButton @click="cancel" class="ml-auto" >
           Cancel
-        </SecondaryLinkButton>
+        </SecondaryButton>
 
         <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
           Log in
