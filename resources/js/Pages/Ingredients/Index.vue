@@ -10,33 +10,48 @@ import MyLink from '@/Components/MyLink.vue'
 import H1 from '@/Components/H1ForIndex.vue'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
-import MultiselectListbox from '@/Shared/MultiselectListbox.vue'
+import MultiSelect from '@/Components/MultiSelect.vue'
 import DeleteDialog from '@/Shared/DeleteDialog.vue'
 import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 const props = defineProps({
-  ingredients: Array,
+  user_ingredients: Array,
   ingredient_categories: Array,
   can_create: Boolean
 })
 
+const usdaIngredients = window.usdaIngredients ? window.usdaIngredients : []
+const ingredients = usdaIngredients.concat(props.user_ingredients)
+
 const cloneExistingDialog = ref(null)
 const deleteDialog = ref(null)
-const fdaSearchInput = ref(null)
+const usdaSearchInput = ref(null)
 const userSearchInput = ref(null)
 
 // For filtering ingredients by category
-const selectedFdaCategories = ref([])
+const selectedUsdaCategories = ref([])
+const selectedUsdaCategoryIds = computed(() => {
+  return selectedUsdaCategories.value.map(category => category.id)
+})
 const selectedUserCategories = ref([])
+const selectedUserCategoryIds = computed(() => {
+  return selectedUserCategories.value.map(category => category.id)
+})
+function shouldDisplayUsdaIngredient(ingredient) {
+  return (selectedUsdaCategories.value.length === 0) || selectedUsdaCategoryIds.value.includes(ingredient.ingredient_category_id)
+}
+function shouldDisplayUserIngredient(ingredient) {
+  return (selectedUserCategories.value.length === 0) || selectedUserCategoryIds.value.includes(ingredient.ingredient_category_id)
+}
 
 // For fuzzy search over ingredient names
-const filteredIngredients = ref([])
+const filteredUsdaIngredients = ref([])
 const filteredUserIngredients = ref([])
-const fuzzysortOptions = {
+const fuzzysortUsdaOptions = {
   key: 'name',
-  limit: 25,        // don't return more results than this
-  threshold: -10000    // don't return lower scores than this
+  limit: 25,
+  threshold: -10000
 }
 const fuzzysortUserOptions = {
   key: 'name',
@@ -45,53 +60,53 @@ const fuzzysortUserOptions = {
   threshold: -10000
 }
 
-const fdaSearchQuery = ref(sessionStorage.getItem('ingredientsIndexFdaSearchQuery') ?? "")
+const usdaSearchQuery = ref(sessionStorage.getItem('ingredientsIndexUsdaSearchQuery') ?? "")
 const userSearchQuery = ref(sessionStorage.getItem('ingredientsIndexUserSearchQuery') ?? "")
+
+const numDisplayedUserIngredients = computed(() => {
+  return filteredUserIngredients.value.filter(ingredient => shouldDisplayUserIngredient(ingredient.obj)).length
+})
 
 const selectedTab = ref(sessionStorage.getItem('ingredientsIndexSelectedTab') ?? 0)
 function changeTab(index) {
   selectedTab.value = index
 }
 
-const userIngredients = computed(() => {
-    return props.ingredients.filter($ingredient => $ingredient.user_id)
-})
-
 // Preserve ingredient search from previous visit to this page
 onMounted(() => {
-  if (fdaSearchQuery) {
-    filteredIngredients.value = fuzzysort.go(fdaSearchQuery.value.trim(), props.ingredients, fuzzysortOptions)
+  if (usdaSearchQuery) {
+    filteredUsdaIngredients.value = fuzzysort.go(usdaSearchQuery.value.trim(), usdaIngredients, fuzzysortUsdaOptions)
   }
   if (userSearchQuery) {
-    filteredUserIngredients.value = fuzzysort.go(userSearchQuery.value.trim(), userIngredients.value, fuzzysortUserOptions)
+    filteredUserIngredients.value = fuzzysort.go(userSearchQuery.value.trim(), props.user_ingredients, fuzzysortUserOptions)
   }
 })
 
-watch(fdaSearchQuery, throttle(function (value) {
-  filteredIngredients.value = fuzzysort.go(value.trim(), props.ingredients, fuzzysortOptions)
+watch(usdaSearchQuery, throttle(function (value) {
+  filteredUsdaIngredients.value = fuzzysort.go(value.trim(), usdaIngredients, fuzzysortUsdaOptions)
 }, 300))
 watch(userSearchQuery, throttle(function (value) {
-  filteredUserIngredients.value = fuzzysort.go(value.trim(), userIngredients.value, fuzzysortUserOptions)
+  filteredUserIngredients.value = fuzzysort.go(value.trim(), props.user_ingredients, fuzzysortUserOptions)
 }, 300))
 
 // Preserve search query between page visits
 onBeforeUnmount(() => {
-  sessionStorage.setItem('ingredientsIndexFdaSearchQuery', fdaSearchQuery.value);
+  sessionStorage.setItem('ingredientsIndexUsdaSearchQuery', usdaSearchQuery.value);
   sessionStorage.setItem('ingredientsIndexUserSearchQuery', userSearchQuery.value);
   sessionStorage.setItem('ingredientsIndexSelectedTab', selectedTab.value);
 })
 
 // Preserve search query on manual page reload
 window.onbeforeunload = function() {
-  sessionStorage.setItem('ingredientsIndexFdaSearchQuery', fdaSearchQuery.value);
+  sessionStorage.setItem('ingredientsIndexUsdaSearchQuery', usdaSearchQuery.value);
   sessionStorage.setItem('ingredientsIndexUserSearchQuery', userSearchQuery.value);
   sessionStorage.setItem('ingredientsIndexSelectedTab', selectedTab.value);
 }
 
-function resetFdaSearch() {
-  fdaSearchQuery.value = ""
-  selectedFdaCategories.value = []
-  fdaSearchInput.value.focus()
+function resetUsdaSearch() {
+  usdaSearchQuery.value = ""
+  selectedUsdaCategories.value = []
+  usdaSearchInput.value.focus()
 }
 
 function resetUserSearch() {
@@ -103,7 +118,7 @@ function resetUserSearch() {
 // Updates filteredUserIngredients after deleting an ingredient to ensure then
 // ingredient disappears from display
 function updateFuzzySearchOnDeletion(id) {
-  filteredUserIngredients.value = fuzzysort.go(userSearchQuery.value.trim(), userIngredients.value, fuzzysortUserOptions)
+  filteredUserIngredients.value = fuzzysort.go(userSearchQuery.value.trim(), props.user_ingredients, fuzzysortUserOptions)
 }
 
 </script>
@@ -118,12 +133,6 @@ export default {
 <template>
 
   <div class="">
-    <pre>
-      {{can_create}}
-    </pre>
-  </div>
-
-  <div v-if="false" class="">
     <Head title="Ingredients" />
 
     <!-- Title and new ingredient top row -->
@@ -132,7 +141,7 @@ export default {
       <div class="mr-2 p-1">
         <H1 text="Ingredients" />
         <p class="mt-2 w-11/12 4 sm:w-2/3 text-gray-500">
-          Use this page as an overview of ingredients from the FDA database—or ingredients you have created yourself.
+          Use this page as an overview of ingredients from the USDA database—or ingredients you have created yourself.
         </p>
       </div>
 
@@ -165,7 +174,6 @@ export default {
 
       <TabList class="mt-4 rounded-xl w-fit border-b space-x-2">
 
-
         <Tab as="template" v-slot="{ selected }">
           <button
             class="px-4 py-2 text-sm text-gray-600 focus:outline-none transition ease-in-out duration-150"
@@ -173,7 +181,7 @@ export default {
               'text-gray-800 font-semibold border-b-2 border-blue-500': selected,
               'hover:border-b-2 hover:border-gray-300': !selected
             }" >
-            FDA Ingredients
+            USDA Ingredients
           </button>
         </Tab>
 
@@ -192,16 +200,16 @@ export default {
 
       <TabPanels class="mt-2">
 
-        <!-- Ingredients in FDA database -->
+        <!-- Ingredients in USDA database -->
         <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-xl">
           <section class="border border-gray-200 p-4 rounded-xl shadow-sm bg-white">
-            <h2 class="text-lg">Ingredients from the FDA database</h2>
+            <h2 class="text-lg">Ingredients from the USDA database</h2>
 
             <div class="flex flex-col sm:flex-row items-start sm:items-end px-2 py-4">
 
               <!-- Input for search -->
               <div class="sm:mr-3">
-                <label for="fda-search" class="ml-1 text-sm text-gray-500">
+                <label for="usda-search" class="ml-1 text-sm text-gray-500">
                   Search by ingredient name
                 </label>
                 <div class="relative">
@@ -211,10 +219,10 @@ export default {
 
                   <input
                     type="text"
-                    id="fda-search"
-                    ref="fdaSearchInput"
+                    id="usda-search"
+                    ref="usdaSearchInput"
                     class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 sm:w-64 md:w-80 lg:w-96 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-                    v-model="fdaSearchQuery"
+                    v-model="usdaSearchQuery"
                   />
                 </div>
               </div>
@@ -222,24 +230,25 @@ export default {
               <!-- Select menu for ingredient category -->
               <div class="flex items-end">
                 <div class="mt-2 sm:mt-0 sm:ml-2">
-                  <MultiselectListbox
+
+                  <MultiSelect
                     :options="ingredient_categories"
                     labelText="Filter by type"
-                    :modelValue="selectedFdaCategories"
-                    @update:modelValue="newValue => selectedFdaCategories = newValue"
+                    v-model="selectedUsdaCategories"
                     width="full min-w-[6rem] max-w-full"
                   />
+
                 </div>
 
                 <div class="">
-                  <label for="clear-fda-filters" class="sr-only">
+                  <label for="clear-usda-filters" class="sr-only">
                     Clear filter
                   </label>
                   <SecondaryButton
                     type="button"
-                    id="clear-fda-filters"
+                    id="clear-usda-filters"
                     class="normal-case font-normal !tracking-normal !text-sm !px-2 h-fit ml-2"
-                    @click="resetFdaSearch"
+                    @click="resetUsdaSearch"
                   >
                     <XMarkIcon class="w-5 h-5" />
                     <span class="text-gray-600 font-normal ml-1.5">Clear filter</span>
@@ -250,7 +259,7 @@ export default {
             </div>
 
             <table
-              v-show="filteredIngredients.length"
+              v-show="filteredUsdaIngredients.length"
               class="mt-2 sm:table-fixed w-full text-sm sm:text-base text-left text-gray-500">
               <thead class="text-xs text-gray-700 uppercase bg-blue-100">
                 <tr>
@@ -264,8 +273,8 @@ export default {
               </thead>
               <tbody>
                 <tr
-                  v-for="ingredient in filteredIngredients.map(fi => fi.obj)" :key="ingredient.id"
-                  v-show="selectedFdaCategories.length === 0 || selectedFdaCategories.includes(ingredient.ingredient_category_id)"
+                  v-for="ingredient in filteredUsdaIngredients.map(fi => fi.obj)" :key="ingredient.id"
+                  v-show="shouldDisplayUsdaIngredient(ingredient)"
                   class="border-b"
                 >
                   <td scope="row" class="px-5 py-4 font-medium text-gray-900">
@@ -288,7 +297,7 @@ export default {
 
         <!-- User ingredients -->
         <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-xl">
-          <section v-if="userIngredients.length" class="border border-gray-200 shadow-sm p-4 rounded-xl bg-white" >
+          <section v-if="user_ingredients.length" class="border border-gray-200 shadow-sm p-4 rounded-xl bg-white" >
             <h2 class="text-lg">Your ingredients</h2>
 
             <div class="p-4 flex">
@@ -314,13 +323,14 @@ export default {
 
               <div class="flex items-end">
                 <div class="mt-2 sm:mt-0 sm:ml-2">
-                  <MultiselectListbox
+
+                  <MultiSelect
                     :options="ingredient_categories"
                     labelText="Filter by type"
-                    :modelValue="selectedUserCategories"
-                    @update:modelValue="newValue => selectedUserCategories = newValue"
+                    v-model="selectedUserCategories"
                     width="full min-w-[6rem] max-w-full"
                   />
+
                 </div>
 
                 <div class="">
@@ -355,7 +365,7 @@ export default {
               <tbody>
                 <tr
                   v-for="ingredient in filteredUserIngredients.map(fi => fi.obj)" :key="ingredient.id"
-                  v-show="selectedUserCategories.length === 0 || selectedUserCategories.includes(ingredient.ingredient_category_id)"
+                  v-show="shouldDisplayUserIngredient(ingredient)"
                   class="border-b"
                 >
                   <td scope="row" class="px-5 py-4 font-medium text-gray-900">
@@ -391,9 +401,7 @@ export default {
                   </td>
                 </tr>
               </tbody>
-              <p
-                v-show="filteredUserIngredients.filter((ing) => selectedUserCategories.length === 0 || selectedUserCategories.includes(ing.obj.ingredient_category_id)).length === 0"
-                class="px-6 py-4" >
+              <p v-show="numDisplayedUserIngredients === 0" class="px-6 py-4" >
                 No results found. Try a less restrictive filter or search?
               </p>
             </table>
