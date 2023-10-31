@@ -43,8 +43,7 @@ class IntakeGuideline extends Model
      *  Permissions for Index page, which shows built-in and user guidelines on
      *  the same page. Default guideline cannot be edited, but the user's can.
      */
-    public static function getForUserWithPermissions(?User $user) {
-        $userId = $user ? $user->id : null;
+    public static function getForUserWithPermissions(?int $userId) {
         return self::where('user_id', null)
             ->orWhere('user_id', $userId)
             ->get(['id', 'name'])
@@ -54,6 +53,16 @@ class IntakeGuideline extends Model
                 'can_edit' => $user ? $user->can('update', $intakeGuideline) : false,
                 'can_delete' => $user ? $user->can('delete', $intakeGuideline) : false,
             ]);
+    }
+
+    /**
+     *  Returns ids of all intake guidelines applicable to the inputted user.
+     */
+    public static function getIdsForUser(?int $userId) {
+        return self::where('user_id', null)
+        ->orWhere('user_id', $userId)
+        ->orderBy('id', 'asc')
+        ->pluck('id');
     }
 
     public function intake_guideline_nutrients() {

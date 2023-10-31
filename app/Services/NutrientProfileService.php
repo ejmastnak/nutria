@@ -45,12 +45,7 @@ use Illuminate\Support\Facades\Auth;
 class NutrientProfileService
 {
     public function getNutrientProfilesOfIngredient(int $ingredientId, ?int $userId) {
-
-        $intakeGuidelineIds = IntakeGuideline::where('user_id', null)
-        ->orWhere('user_id', $userId)
-        ->orderBy('id', 'asc')
-        ->pluck('id');
-
+        $intakeGuidelineIds = IntakeGuideline::getIdsForUser($userId);
         $nutrientProfiles = array();
         foreach ($intakeGuidelineIds as $intakeGuidelineId) {
             $nutrientProfiles[] = [
@@ -108,11 +103,7 @@ class NutrientProfileService
      *  one nutrient profile for each of the user's intake guidelines.
      */
     public function getNutrientProfilesOfMeal(int $mealId, ?int $userId) {
-        $intakeGuidelineIds = IntakeGuideline::where('user_id', null)
-        ->orWhere('user_id', $userId)
-        ->orderBy('id', 'asc')
-        ->pluck('id');
-
+        $intakeGuidelineIds = IntakeGuideline::getIdsForUser($userId);
         $nutrientProfiles = array();
         foreach ($intakeGuidelineIds as $intakeGuidelineId) {
             $nutrientProfiles[] = [
@@ -184,11 +175,7 @@ class NutrientProfileService
      *  nutrient profile for each of the user's intake guidelines.
      */
     public function getNutrientProfilesOfFoodList(int $foodListId, ?int $userId) {
-        $intakeGuidelineIds = IntakeGuideline::where('user_id', null)
-        ->orWhere('user_id', $userId)
-        ->orderBy('id', 'asc')
-        ->pluck('id');
-
+        $intakeGuidelineIds = IntakeGuideline::getIdsForUser($userId);
         $nutrientProfiles = array();
         foreach ($intakeGuidelineIds as $intakeGuidelineId) {
             $nutrientProfiles[] = [
