@@ -74,21 +74,19 @@ function changeTab(index) {
   selectedTab.value = index
 }
 
-// Preserve ingredient search from previous visit to this page
-onMounted(() => {
-  if (usdaSearchQuery) {
-    filteredUsdaIngredients.value = fuzzysort.go(usdaSearchQuery.value.trim(), usdaIngredients, fuzzysortUsdaOptions)
-  }
-  if (userSearchQuery) {
-    filteredUserIngredients.value = fuzzysort.go(userSearchQuery.value.trim(), props.user_ingredients, fuzzysortUserOptions)
-  }
-})
+// To avoid repeating the full search code everywhere
+function usdaSearch(query) {
+  filteredUsdaIngredients.value = fuzzysort.go(query.trim(), usdaIngredients, fuzzysortUsdaOptions)
+}
+function userSearch(query) {
+  filteredUserIngredients.value = fuzzysort.go(query.trim(), props.user_ingredients, fuzzysortUserOptions)
+}
 
 watch(usdaSearchQuery, throttle(function (value) {
-  filteredUsdaIngredients.value = fuzzysort.go(value.trim(), usdaIngredients, fuzzysortUsdaOptions)
+  usdaSearch(value)
 }, 300))
 watch(userSearchQuery, throttle(function (value) {
-  filteredUserIngredients.value = fuzzysort.go(value.trim(), props.user_ingredients, fuzzysortUserOptions)
+  userSearch(value)
 }, 300))
 
 // Preserve search query between page visits
@@ -123,14 +121,21 @@ function deleteIngredient() {
   if (idToDelete.value) {
     router.delete(route('ingredients.destroy', idToDelete.value), {
       onSuccess: () => {
-        // Updates filteredUserIngredients after deleting an ingredient to ensure then
-        // ingredient disappears from display
-        filteredUserIngredients.value = fuzzysort.go(userSearchQuery.value.trim(), props.user_ingredients, fuzzysortUserOptions)
+        // Updates filteredUserIngredients after deleting an ingredient to
+        // ensure the deleted ingredient disappears from display.
+        userSearch(userSearchQuery.value)
       }
     });
   }
   idToDelete.value = null
 }
+
+// Preserve ingredient search from previous visit to this page
+onMounted(() => {
+  if (usdaSearchQuery) { usdaSearch(usdaSearchQuery.value) }
+  if (userSearchQuery) { userSearch(userSearchQuery.value) }
+})
+
 
 </script>
 
