@@ -7,7 +7,7 @@ create temporary table tmp_mass_units(name text);
 create temporary table tmp_volume_units(
   name text,
   cname text,
-  ml double precision,
+  ml numeric,
   unit_id integer
 );
 

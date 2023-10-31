@@ -31,10 +31,10 @@ create view food_portion_deduped as
     fp.id::int,
     fp.fdc_id::int,
     fp.ingredient_id,
-    fp.amount::double precision,
+    fp.amount::numeric,
     fp.modifier,
     fp.seq_num::int,
-    fp.gram_weight::double precision
+    fp.gram_weight::numeric
   from (
     select fdc_id, min(amount) as min_amount, modifier
     from sr.food_portion group by fdc_id, modifier
