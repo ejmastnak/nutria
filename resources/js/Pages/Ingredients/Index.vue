@@ -4,14 +4,17 @@ import throttle from "lodash/throttle";
 import debounce from "lodash/debounce";
 
 import { ref, watch, onMounted, onBeforeUnmount, computed } from 'vue'
-import { Head } from '@inertiajs/vue3'
+import { Head, router } from '@inertiajs/vue3'
 import { TrashIcon, PlusCircleIcon, DocumentDuplicateIcon, MagnifyingGlassIcon, XMarkIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import MyLink from '@/Components/MyLink.vue'
 import H1 from '@/Components/H1ForIndex.vue'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import MultiSelect from '@/Components/MultiSelect.vue'
-import DeleteDialog from '@/Shared/DeleteDialog.vue'
+
+// import DeleteDialog from '@/Shared/DeleteDialog.vue'
+import DeleteDialog from "@/Components/DeleteDialog.vue";
+
 import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
@@ -25,7 +28,6 @@ const usdaIngredients = window.usdaIngredients ? window.usdaIngredients : []
 const ingredients = usdaIngredients.concat(props.user_ingredients)
 
 const cloneExistingDialog = ref(null)
-const deleteDialog = ref(null)
 const usdaSearchInput = ref(null)
 const userSearchInput = ref(null)
 
@@ -115,10 +117,19 @@ function resetUserSearch() {
   userSearchInput.value.focus()
 }
 
-// Updates filteredUserIngredients after deleting an ingredient to ensure then
-// ingredient disappears from display
-function updateFuzzySearchOnDeletion(id) {
-  filteredUserIngredients.value = fuzzysort.go(userSearchQuery.value.trim(), props.user_ingredients, fuzzysortUserOptions)
+let idToDelete = ref(null)
+const deleteDialog = ref(null)
+function deleteIngredient() {
+  if (idToDelete.value) {
+    router.delete(route('ingredients.destroy', idToDelete.value), {
+      onSuccess: () => {
+        // Updates filteredUserIngredients after deleting an ingredient to ensure then
+        // ingredient disappears from display
+        filteredUserIngredients.value = fuzzysort.go(userSearchQuery.value.trim(), props.user_ingredients, fuzzysortUserOptions)
+      }
+    });
+  }
+  idToDelete.value = null
 }
 
 </script>
@@ -391,7 +402,7 @@ export default {
 
                       <button
                         type="button"
-                        @click="deleteDialog.open(ingredient.id)"
+                        @click="idToDelete = ingredient.id; deleteDialog.open()"
                         class="mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
                       >
                         <TrashIcon class="w-5 h-5 hover:text-red-700" />
@@ -441,7 +452,12 @@ export default {
       action="Clone"
     />
 
-    <DeleteDialog ref="deleteDialog" deleteRoute="ingredients.destroy" thing="ingredient" @delete="updateFuzzySearchOnDeletion" />
+    <DeleteDialog
+      ref="deleteDialog"
+      description="ingredient"
+      @delete="deleteIngredient"
+      @cancel="idToDelete = null"
+    />
 
   </div>
 </template>
