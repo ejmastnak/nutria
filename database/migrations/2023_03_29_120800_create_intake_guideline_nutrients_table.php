@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('intake_guideline_id')->references('id')->on('intake_guidelines');
             $table->foreignId('nutrient_id')->references('id')->on('nutrients');
-            $table->double('rdi', 10, 4);
+            $table->decimal('rdi', 10, 4);
         });
     }
 

@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('meals', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->double('mass_in_grams', 10, 4);
+            $table->decimal('mass_in_grams', 10, 4);
             $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->timestamps();
         });

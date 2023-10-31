@@ -14,9 +14,9 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('food_list_id')->references('id')->on('food_lists')->cascadeOnDelete();
             $table->foreignId('ingredient_id')->references('id')->on('ingredients');
-            $table->double('amount', 10, 4);
+            $table->decimal('amount', 10, 4);
             $table->foreignId('unit_id')->references('id')->on('units');
-            $table->double('mass_in_grams', 10, 4);
+            $table->decimal('mass_in_grams', 10, 4);
             $table->integer('seq_num');
         });
     }
