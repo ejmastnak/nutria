@@ -1,3 +1,4 @@
 *
 !.gitignore
 !density-whitelist.csv
+!ingredient-whitelist.tsv
