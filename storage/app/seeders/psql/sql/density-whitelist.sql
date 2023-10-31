@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- Creates and populates temporary density whitelist table
--- Prerequisite: whitelist csv file exists
+-- Prerequisite: density whitelist csv file exists
 -------------------------------------------------------------------------------
 create temporary table tmp_density_whitelist(
   food_portion_id integer,
@@ -8,5 +8,5 @@ create temporary table tmp_density_whitelist(
   ingredient_name text
 );
 
-\COPY tmp_density_whitelist (food_portion_id, fdc_id, ingredient_name) FROM ./csv/whitelist.csv WITH DELIMITER ',' HEADER CSV;
+\COPY tmp_density_whitelist (food_portion_id, fdc_id, ingredient_name) FROM ./csv/density-whitelist.csv WITH DELIMITER ',' HEADER CSV;
 -------------------------------------------------------------------------------

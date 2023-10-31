@@ -4,6 +4,9 @@
 -- ingredients with multiple volume units, only the unit with the largest
 -- gram_weight is kept, since this unit will have the smallest relative error
 -- in density.
+-- This candidate list is then looked through by hand, and only ingredients for
+-- which it makes sense to compute a density (i.e. liquid ingredients) are
+-- retrained.
 -- Prerequisite: food_portion table is populated and preprocessed
 -------------------------------------------------------------------------------
 -- Select all food_portion records where the underlying ingredient has *only*
