@@ -5,6 +5,7 @@ use App\Models\Meal;
 use App\Models\Ingredient;
 use App\Models\IntakeGuideline;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
  *  Used to compute the nutrient profiles of ingredients, meals, and food
@@ -61,7 +62,7 @@ class NutrientProfileService
      *  Computes a NutrientProfile for 100g of the specified Ingredient using
      *  the specified IntakeGuideline.
      */
-    private function profileIngredient($ingredientId) {
+    private function profileIngredient($ingredientId, $intakeGuidelineId) {
         if (is_null(Ingredient::find($ingredientId))) return [];
         if (is_null(IntakeGuideline::find($intakeGuidelineId))) return [];
 

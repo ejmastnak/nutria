@@ -2,11 +2,11 @@
 import { round } from '@/utils/GlobalFunctions.js'
 
 const props = defineProps({
-  nutrient_profile: Array,
-  howManyGrams: Number,
-  defaultMassInGrams: Number
+  nutrientProfile: Array,
+  scaleFactor: Number,
 })
 
+// Gradient of Tailwind color classes from red to green
 const gradient = [
   'bg-red-300',
   'bg-red-200',
@@ -33,14 +33,11 @@ function bg(pdv) {
   }
 }
 
-function scale(num) {
-  return num*props.howManyGrams/props.defaultMassInGrams
-}
-
 </script>
 
 <template>
   <div class="border border-gray-300 rounded-xl overflow-hidden">
+
     <table class="text-left w-full">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
@@ -57,22 +54,19 @@ function scale(num) {
       </thead>
       <tbody>
         <tr
-          v-for="nutrient in nutrient_profile"
+          v-for="nutrient in nutrientProfile"
           class="border-t text-gray-600 font-medium text-sm"
         >
           <td scope="row" class="px-4 py-2">
             {{nutrient.nutrient}}
           </td>
           <td class="px-3 py-2 text-right whitespace-nowrap">
-            {{round(scale(nutrient.amount), precision=nutrient.precision)}}
+            {{round(nutrient.amount * scaleFactor, precision=nutrient.precision)}}
             {{nutrient.unit}}
           </td>
 
-
-    <!-- :class="{ 'text-blue-500': colored }" -->
-
-          <td class="px-3 py-2 text-right font-semibold text-gray-600" :class="nutrient.pdv !== null ? bg(scale(nutrient.pdv)) : ''">
-            <p v-if="nutrient.pdv !== null">{{round(scale(nutrient.pdv), precision=0)}}<span class="ml-px">%</span></p>
+          <td class="px-3 py-2 text-right font-semibold text-gray-600" :class="nutrient.pdv !== null ? bg(nutrient.pdv * scaleFactor) : ''">
+            <p v-if="nutrient.pdv !== null">{{round(nutrient.pdv * scaleFactor, precision=0)}}<span class="ml-px">%</span></p>
             <p class="text-center" v-else>–</p>
           </td>
         </tr>

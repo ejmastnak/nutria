@@ -24,9 +24,20 @@ class Ingredient extends Model
         'user_id',
     ];
 
+    // Convert decimal values (represented by PHP as strings) to doubles
+    protected $casts = [
+        'ingredient_nutrient_amount' => 'double',
+        'density_mass_amount' => 'double',
+        'density_volume_amount' => 'double',
+        'density_g_ml' => 'double',
+    ];
+
     public function withCategoryUnitsAndMeal() {
         $this->load(
             'ingredient_category:id,name',
+            'ingredient_nutrient_amount_unit:id,name',
+            'density_mass_unit:id,name',
+            'density_volume_unit:id,name',
             'custom_units:id,name,seq_num,ingredient_id,custom_unit_amount,custom_mass_amount,custom_mass_unit_id,custom_grams',
             'meal:id,name',
         );
@@ -34,12 +45,19 @@ class Ingredient extends Model
             'id',
             'name',
             'ingredient_category_id',
-            "density_mass_unit_id",
-            "density_mass_amount",
-            "density_volume_unit_id",
-            "density_volume_amount",
-            "density_g_ml",
+            'ingredient_category',
+            'ingredient_nutrient_amount',
+            'ingredient_nutrient_amount_unit',
+            'density_mass_amount',
+            'density_mass_unit_id',
+            'density_mass_unit',
+            'density_volume_amount',
+            'density_volume_unit_id',
+            'density_volume_unit',
+            'density_g_ml',
+            'custom_units',
             'meal_id',
+            'meal',
         ]);
     }
 
