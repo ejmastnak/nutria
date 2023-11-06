@@ -23,7 +23,7 @@ const props = defineProps({
     type: String,
     default: 'name',
   },
-  throttlems: {  // ms amount used to throttle fuzzy search
+  throttlems: {  // ms amount used to throttle search
     type: Number,
     default: 100,
   },
@@ -37,16 +37,28 @@ const selectedOption = computed({
   set(option) { emit('update:modelValue', option) }
 })
 
+// This feels like a disgusting hack; the goal is to watch when props.options
+// changes and updated filteredOptions accordingly. The obvious choice would be
+// to watch props.options, but for whatever this watcher doesn't seem to run
+// when options change. But watching computedOptions does (see watcher below).
+const computedOptions = computed(() => {
+  return props.options.map(option => option)
+})
+
 // For search over option names
 const query = ref("")
-const filteredOptions = ref(props.options)
-watch(query, throttle(function (value) {
+const filteredOptions = ref(computedOptions.value)
+function search() {
   filteredOptions.value = query.value.trim() === ''
-    ? props.options
-    : props.options.filter((option) => {
+    ? computedOptions.value
+    : computedOptions.value.filter((option) => {
       return option[props.searchKey].toLowerCase().includes(query.value.toLowerCase())
     })
-}, props.throttlems))
+}
+
+watch(query, throttle(function (value) { search() }, props.throttlems))
+watch(computedOptions, () => { search() })
+
 
 </script>
 
@@ -56,7 +68,7 @@ watch(query, throttle(function (value) {
     <div class="relative">
 
       <div>
-        <ComboboxLabel class="text-sm font-medium text-gray-700" :class="labelClasses">
+        <ComboboxLabel class="text-sm font-medium text-gray-600" :class="labelClasses">
           {{labelText}}
         </ComboboxLabel>
 
