@@ -46,7 +46,7 @@ const form = useForm({
     id: null,
     ingredient_id: null,
     nutrient_id: nutrient.id,
-    amount: 0,
+    amount: null,
     nutrient: nutrient,
   })),
 })
@@ -362,10 +362,11 @@ export default {
                   <td class="px-4 py-2 text-right">
                     <div class="flex items-baseline">
                       <TextInput
-                        type="text"
+                        type="number"
+                        placeholder="0"
+                        :min="0"
                         class="mt-1 inline-block w-24 py-1 text-right"
                         v-model="ingredient_nutrient.amount"
-                        required
                       />
                       <span class="ml-2">{{ingredient_nutrient.nutrient.unit.name}}</span>
                     </div>

@@ -16,8 +16,10 @@ class AmountPer100gService
      *  Returns the number of grams equal to `amount` of the Unit with
      *  `unit_id`, or `null` if the conversion is not possible.
      */
-    public static function computeAmountPer100g(float $nutrientAmount, float $ingredientAmount, int $ingredientAmountUnitId, ?float $ingredientDensityGMl): ?float
+    public static function computeAmountPer100g(?float $nutrientAmount, float $ingredientAmount, int $ingredientAmountUnitId, ?float $ingredientDensityGMl): ?float
     {
+        if (is_null($nutrientAmount)) return 0.0;
+
         $unit = Unit::find($ingredientAmountUnitId);
         if (is_null($unit)) return null;
 

@@ -55,7 +55,7 @@ class IngredientService
                 IngredientNutrient::create([
                     'ingredient_id' => $ingredient->id,
                     'nutrient_id' => $ingredientNutrient['nutrient_id'],
-                    'amount' => $ingredientNutrient['amount'],
+                    'amount' => is_null($ingredientNutrient['amount']) ? 0.0 : $ingredientNutrient['amount'],
                     'amount_per_100g' => AmountPer100gService::computeAmountPer100g(
                         $ingredientNutrient['amount'],
                         $data['ingredient_nutrient_amount'],
@@ -128,7 +128,7 @@ class IngredientService
             foreach ($data['ingredient_nutrients'] as $ingredientNutrient) {
                 $IngredientNutrient = IngredientNutrient::find($ingredientNutrient['id']);
                 $IngredientNutrient->update([
-                    'amount' => $ingredientNutrient['amount'],
+                    'amount' => is_null($ingredientNutrient['amount']) ? 0.0 : $ingredientNutrient['amount'],
                     'amount_per_100g' => AmountPer100gService::computeAmountPer100g(
                         $ingredientNutrient['amount'],
                         $data['ingredient_nutrient_amount'],

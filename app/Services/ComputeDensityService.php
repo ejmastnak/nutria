@@ -10,7 +10,6 @@ use App\Models\Unit;
  */
 class ComputeDensityService
 {
-
     public static function computeDensity(?int $densityMassUnitId, ?float $densityMassAmount, ?int $densityVolumeUnitId, ?float $densityVolumeAmount): ?float
     {
         $massUnit = Unit::find($densityMassUnitId);
@@ -21,5 +20,4 @@ class ComputeDensityService
 
         return ($densityMassAmount * $massUnit->g) / ($densityVolumeAmount * $volumeUnit->ml);
     }
-
 }
