@@ -11,7 +11,7 @@ use App\Models\Unit;
 class ComputeDensityService
 {
 
-    public static function computeDensity(int $densityMassUnitId, float $densityMassAmount, int $densityVolumeUnitId, float $densityVolumeAmount): ?float
+    public static function computeDensity(?int $densityMassUnitId, ?float $densityMassAmount, ?int $densityVolumeUnitId, ?float $densityVolumeAmount): ?float
     {
         $massUnit = Unit::find($densityMassUnitId);
         if (is_null($massUnit) || is_null($massUnit->g)) return null;
