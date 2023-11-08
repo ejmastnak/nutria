@@ -47,33 +47,25 @@ class IngredientNutrientAmountUnitIdIsValid implements DataAwareRule, Validation
 
         // Allow volume units if underlying Ingredient has a density
         else if (!is_null($unit->ml)) {
-            if (is_null($data['density_mass_unit_id']) || is_null($data['density_mass_amount']) || is_null($data['density_volume_unit_id']) || is_null($data['density_volume_unit_id'])) {
+            if (is_null($this->data['density_mass_unit_id']) || is_null($this->data['density_mass_amount']) || is_null($this->data['density_volume_unit_id']) || is_null($this->data['density_volume_unit_id'])) {
                 $fail("The ingredient does not have a valid density, so its amount cannot be expressed in a unit of volume.");
             }
             else return;
         }
 
-        $ingredient = Ingredient::find($data['id']);
-        if (is_null($ingredient)) $fail("The ingredient was not recognized.");
-
-        // Allow ingredient custom units only for a matching ingredient
+        // A custom unit
         else if (!is_null($unit->ingredient_id)) {
-            if (is_null($data['custom_units']) || count($data['custom_units']) === 0) $fail("The ingredient's unit is not valid.");
+            if (is_null($this->data['custom_units']) || count($this->data['custom_units']) === 0) $fail("The ingredient's unit is not valid.");
 
             // Check for a matching unit entry in ingredient's custom units
             $matchingCustomUnitExists = false;
-            foreach ($data['custom_units'] as $customUnit) {
+            foreach ($this->data['custom_units'] as $customUnit) {
                 if ($customUnit['id'] === $value) {
                     $matchingCustomUnitExists = true;
                     break;
                 }
             }
             if (!$matchingCustomUnitExists) $fail("This ingredient unit is not valid. Perhaps it was just deleted?");
-
-            // Check unit matches ingredient
-            if ($unit->ingredient_id === $ingredient->id) return;
-            else $fail("The ingredient does not support the unit " . $unit->name . " .");
-
         }
 
         // Fail all other cases
