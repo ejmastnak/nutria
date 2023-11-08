@@ -43,7 +43,7 @@ class IngredientController extends Controller
         $user = Auth::user();
 
         return Inertia::render('Ingredients/Create', [
-            'cloned_from_ingredient' => null,
+            'ingredient' => null,
             'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'nutrients' => Nutrient::getWithUnit(),
             'nutrient_categories' => NutrientCategory::getWithName(),
@@ -60,7 +60,7 @@ class IngredientController extends Controller
         $user = Auth::user();
 
         return Inertia::render('Ingredients/Create', [
-            'cloned_from_ingredient' => $ingredient->withCategoryUnitsNutrientsAndMeal(),
+            'ingredient' => $ingredient->withCategoryUnitsNutrientsAndMeal(),
             'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'nutrients' => null,
             'nutrient_categories' => NutrientCategory::getWithName(),
@@ -74,6 +74,7 @@ class IngredientController extends Controller
      */
     public function store(IngredientStoreRequest $request, IngredientService $ingredientService)
     {
+        dd("Validated");
         $ingredient = $ingredientService->storeIngredient($request->validated(), $request->user()->id);
         return Redirect::route('ingredients.show', $ingredient->id)->with('message', 'Success! Ingredient created successfully.');
     }
@@ -111,7 +112,6 @@ class IngredientController extends Controller
             'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'nutrient_categories' => NutrientCategory::getWithName(),
             'units' => Unit::getMassAndVolume(),
-            'can_view' => $user ? $user->can('view', $ingredient) : false,
             'can_clone' => $user ? $user->can('clone', $ingredient) : false,
             'can_delete' => $user ? $user->can('delete', $ingredient) : false,
             'can_create' => $user ? $user->can('create', Ingredient::class) : false,

@@ -1,5 +1,18 @@
+// Rounds inputted number to the given precision
 export const round = (number, precision=0) => {
+    if (number === null) return null;
+    if (isNaN(number)) return NaN;
     return Math.round((number + Number.EPSILON) * (10**precision)) / (10**precision)
+}
+
+// Rounds inputted number to the given number of nonzero decimals
+// See https://stackoverflow.com/questions/38837610/javascript-how-to-round-number-to-2-non-zero-decimals
+export const roundNonZero = (num, decimals=0) => {
+  num = Number(num);
+  if (isNaN(num)) return NaN;
+  const log10 = num ? Math.floor(Math.log10(num)) : 0
+  const div = log10 < 0 ? Math.pow(10, decimals - log10 - 1) : Math.pow(10, decimals);
+  return Math.round(num * div) / div;
 }
 
 // This is a hack: at the time of writing this, I did not know how to locally

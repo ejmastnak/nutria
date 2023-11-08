@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Cache;
 
 class Ingredient extends Model
@@ -31,6 +32,28 @@ class Ingredient extends Model
         'density_volume_amount' => 'double',
         'density_g_ml' => 'double',
     ];
+
+
+    protected function ingredientNutrientAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => $value + 0,
+        );
+    }
+
+    protected function densityMassAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn (?string $value) => is_null($value) ? null : $value + 0,
+        );
+    }
+
+    protected function densityVolumeAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn (?string $value) => is_null($value) ? null : $value + 0,
+        );
+    }
 
     public function withCategoryUnitsAndMeal() {
         $this->load(
@@ -66,21 +89,23 @@ class Ingredient extends Model
         // ingredient_nutrients are ordered by nutrients.seq_num
         $this->load([
             'ingredient_category:id,name',
-            'ingredient_nutrient_amount_unit:id,name',
+            'ingredient_nutrient_amount_unit:id,name,g,ml,seq_num,custom_grams',
             'ingredient_nutrients' => function($query) {
                 $query->select([
                     'ingredient_nutrients.id',
                     'ingredient_nutrients.ingredient_id',
                     'ingredient_nutrients.nutrient_id',
                     'ingredient_nutrients.amount',
-                    'ingredient_nutrients.amount_per_100g',
                 ])
                 ->join('nutrients', 'ingredient_nutrients.nutrient_id', '=', 'nutrients.id')
                 ->orderBy('nutrients.seq_num', 'asc');
             },
             'ingredient_nutrients.nutrient:id,display_name,unit_id,nutrient_category_id,precision,seq_num',
             'ingredient_nutrients.nutrient.unit:id,name',
+            'density_mass_unit:id,name,g,ml,seq_num,custom_grams',
+            'density_volume_unit:id,name,g,ml,seq_num,custom_grams',
             'custom_units:id,name,seq_num,ingredient_id,custom_unit_amount,custom_mass_amount,custom_mass_unit_id,custom_grams',
+            'custom_units.custom_mass_unit:id,name,g,ml,seq_num',
             'meal:id,name',
         ]);
 
@@ -94,8 +119,10 @@ class Ingredient extends Model
             'ingredient_nutrient_amount_unit',
             'ingredient_nutrients',
             'density_mass_unit_id',
+            'density_mass_unit',
             'density_mass_amount',
             'density_volume_unit_id',
+            'density_volume_unit',
             'density_volume_amount',
             'density_g_ml',
             'custom_units',

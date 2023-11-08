@@ -13,12 +13,11 @@ import H1 from '@/Components/H1ForCrud.vue'
 
 const props = defineProps({
   ingredient: Object,
-  ingredients: Array,
   ingredient_categories: Array,
+  nutrients: Array,
   nutrient_categories: Array,
-  can_view: Boolean,
+  units: Array,
   can_create: Boolean,
-  clone: Boolean
 })
 
 const searchDialog = ref(null)
@@ -34,65 +33,18 @@ export default {
 </script>
 
 <template>
-  <div class="">
+  <div>
     <Head title="New Ingredient" />
-
-    <CrudNavBar>
-
-      <!-- Desktop items -->
-      <template v-slot:desktop-items>
-        <CrudNavBarIndex :href="route('ingredients.index')" />
-        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="ingredient" />
-        <div class="flex ml-auto">
-          <CrudNavBarView v-if="clone" :enabled="can_view" text="View original" :href="route('ingredients.show', ingredient.id)" />
-          <CrudNavBarCreate v-if="clone" :enabled="can_create" text="New" :href="route('ingredients.create')" />
-          <CrudNavBarCloneButton v-if="!clone" :enabled="can_create" @wasClicked="cloneExistingDialog.open()" text="Clone" />
-        </div>
-      </template>
-
-      <!-- Always-displayed mobile item -->
-      <template v-slot:mobile-displayed>
-        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="ingredient" />
-      </template>
-
-      <!-- Mobile menu items -->
-      <template v-slot:mobile-items>
-        <CrudNavBarIndex :href="route('ingredients.index')" />
-        <CrudNavBarView v-if="clone" :enabled="can_view" text="View original" :href="route('ingredients.show', ingredient.id)" />
-        <CrudNavBarCreate v-if="clone" :enabled="can_create" text="New" :href="route('ingredients.create')" />
-        <CrudNavBarCloneButton v-if="!clone" :enabled="can_create" @wasClicked="cloneExistingDialog.open()" text="Clone" />
-      </template>
-
-    </CrudNavBar>
-
     <H1 class="mt-8" text="New Ingredient" />
-    <p v-if="clone && ingredient" class="text-gray-700">(Cloned from {{ingredient.name}})</p>
+    <p v-if="ingredient" class="text-gray-700">(Cloned from {{ingredient.name}})</p>
 
     <CreateOrEdit
       :ingredient="ingredient"
       :ingredient_categories="ingredient_categories"
+      :nutrients="nutrients"
       :nutrient_categories="nutrient_categories"
+      :units="units"
       :create="true"
-    />
-
-    <!-- Search for an ingredient -->
-    <SearchForThingAndGo
-      ref="searchDialog"
-      :things="ingredients"
-      goRoute="ingredients.show"
-      label="Search for another ingredient"
-      title=""
-      action="Go"
-    />
-
-    <!-- Clone an existing ingredient -->
-    <SearchForThingAndGo
-      ref="cloneExistingDialog"
-      :things="ingredients"
-      goRoute="ingredients.clone"
-      label="Search for an ingredient to clone"
-      title="Clone ingredient"
-      action="Clone"
     />
 
   </div>

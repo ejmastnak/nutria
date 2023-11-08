@@ -18,7 +18,6 @@ class Nutrient extends Model
                 'id',
                 'display_name',
                 'unit_id',
-                'unit',
                 'nutrient_category_id',
                 'precision',
                 'seq_num',

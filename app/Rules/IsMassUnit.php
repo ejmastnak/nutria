@@ -16,7 +16,10 @@ class IsMassUnit implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $unit = Unit::find($value);
-        if (is_null($unit)) $fail('The :attribute was not a recognized as a unit.');
+        if (is_null($unit)) {
+            $fail('The :attribute was not a recognized as a unit.');
+            return;
+        }
         if (is_null($unit->g)) $fail('The :attribute must be unit of mass.');
     }
 }

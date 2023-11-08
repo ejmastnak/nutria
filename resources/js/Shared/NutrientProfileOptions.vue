@@ -52,8 +52,9 @@ function updateSelectedIntakeGuideline(newValue) {
       </div>
 
       <SimpleCombobox
-        class="ml-2 w-32"
-        inputClasses="py-1.5"
+        class="ml-2"
+        inputClasses="py-1.5 !w-24"
+        optionsClasses="w-32"
         labelText="Unit"
         labelClasses="sr-only"
         searchKey="name"

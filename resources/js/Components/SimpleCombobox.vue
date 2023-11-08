@@ -29,6 +29,7 @@ const props = defineProps({
   },
   labelClasses: String,
   inputClasses: String,
+  optionsClasses: String,
 })
 
 const emit = defineEmits([ 'update:modelValue' ])
@@ -72,9 +73,9 @@ watch(computedOptions, () => { search() })
           {{labelText}}
         </ComboboxLabel>
 
-        <div class="relative">
+        <div class="relative w-fit">
           <ComboboxInput
-            class="w-full border border-gray-300 rounded-md shadow-sm focus:border focus:border-blue-500"
+            class="border border-gray-300 rounded-md shadow-sm focus:border focus:border-blue-500"
             :class="inputClasses"
             @change="query = $event.target.value"
             :displayValue="(option) => option ? option[searchKey] : ''"
@@ -86,7 +87,7 @@ watch(computedOptions, () => { search() })
 
       </div>
 
-      <ComboboxOptions class="absolute z-50 overflow-hidden mt-0.5 bg-white border border-gray-300 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      <ComboboxOptions class="absolute z-50 overflow-hidden mt-0.5 bg-white border border-gray-300 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" :class="optionsClasses">
         <!-- Options passed as props -->
         <ComboboxOption
           v-for="option in filteredOptions"

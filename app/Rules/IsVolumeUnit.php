@@ -3,6 +3,7 @@
 namespace App\Rules;
 
 use Closure;
+use App\Models\Unit;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 class IsVolumeUnit implements ValidationRule
@@ -15,7 +16,10 @@ class IsVolumeUnit implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $unit = Unit::find($value);
-        if (is_null($unit)) $fail('The :attribute was not a recognized as a unit.');
+        if (is_null($unit)) {
+            $fail('The :attribute was not a recognized as a unit.');
+            return;
+        }
         if (is_null($unit->ml)) $fail('The :attribute must be unit of volume.');
     }
 }

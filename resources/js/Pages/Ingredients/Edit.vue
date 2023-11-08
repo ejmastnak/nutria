@@ -15,17 +15,13 @@ import H1 from '@/Components/H1ForCrud.vue'
 
 const props = defineProps({
   ingredient: Object,
-  ingredients: Array,
   ingredient_categories: Array,
   nutrient_categories: Array,
-  can_view: Boolean,
+  units: Array,
   can_clone: Boolean,
   can_delete: Boolean,
   can_create: Boolean
 })
-
-const searchDialog = ref(null)
-const deleteDialog = ref(null)
 
 </script>
 
@@ -37,63 +33,18 @@ export default {
 </script>
 
 <template>
-  <div class="">
+  <div>
 
     <Head :title="'Edit ' + ingredient.name"/>
-
-    <CrudNavBar>
-
-      <!-- Desktop items -->
-      <template v-slot:desktop-items>
-        <CrudNavBarIndex :href="route('ingredients.index')" />
-        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="ingredient" />
-        <CrudNavBarCreate :enabled="can_create" text="New" :href="route('ingredients.create')" />
-        <div class="flex ml-auto">
-          <CrudNavBarView :enabled="can_view" text="View" :href="route('ingredients.show', ingredient.id)" />
-          <CrudNavBarCloneLink :enabled="can_clone" text="Clone" :href="route('ingredients.clone', ingredient.id)" />
-          <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(ingredient.id)" />
-        </div>
-      </template>
-
-      <!-- Always-displayed mobile item -->
-      <template v-slot:mobile-displayed>
-        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="ingredient" />
-      </template>
-
-      <!-- Mobile menu items -->
-      <template v-slot:mobile-items>
-        <CrudNavBarIndex :href="route('ingredients.index')" />
-        <CrudNavBarCreate :enabled="can_create" text="New" :href="route('ingredients.create')" />
-        <CrudNavBarView :enabled="can_view" text="View" :href="route('ingredients.show', ingredient.id)" />
-        <CrudNavBarCloneLink :enabled="can_clone" text="Clone" :href="route('ingredients.clone', ingredient.id)" />
-        <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(ingredient.id)" />
-      </template>
-
-    </CrudNavBar>
-
-
-
-
     <H1 class="mt-8" :text="'Edit ' + ingredient.name " />
 
     <CreateOrEdit
       :ingredient="ingredient"
       :ingredient_categories="ingredient_categories"
       :nutrient_categories="nutrient_categories"
+      :units="units"
       :create="false"
     />
-
-    <!-- Search for an ingredient -->
-    <SearchForThingAndGo
-      ref="searchDialog"
-      :things="ingredients"
-      goRoute="ingredients.show"
-      label="Search for another ingredient"
-      title=""
-      action="Go"
-    />
-
-    <DeleteDialog ref="deleteDialog" deleteRoute="ingredients.destroy" thing="ingredient" />
 
   </div>
 </template>

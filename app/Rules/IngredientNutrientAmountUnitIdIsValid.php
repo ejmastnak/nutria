@@ -42,9 +42,6 @@ class IngredientNutrientAmountUnitIdIsValid implements DataAwareRule, Validation
         $unit = Unit::find($value);
         if (is_null($unit)) $fail("The ingredient's unit was not recognized.");
 
-        $ingredient = Ingredient::find($data['id']);
-        if (is_null($ingredient)) $fail("The ingredient was not recognized.");
-
         // Allow any mass unit
         if (!is_null($unit->g)) return;
 
@@ -55,6 +52,9 @@ class IngredientNutrientAmountUnitIdIsValid implements DataAwareRule, Validation
             }
             else return;
         }
+
+        $ingredient = Ingredient::find($data['id']);
+        if (is_null($ingredient)) $fail("The ingredient was not recognized.");
 
         // Allow ingredient custom units only for a matching ingredient
         else if (!is_null($unit->ingredient_id)) {
