@@ -36,13 +36,13 @@ class ConvertToGramsService
         // For custom ingredient units
         if (!is_null($unit->ingredient_id)) {
             if ($unit->ingredient_id != $ingredientId) return null;
-            return $amount * $unit->custom_g;
+            return $amount * $unit->custom_grams;
         }
 
         // For custom meal units
         if (!is_null($unit->meal_id)) {
             if ($unit->meal_id != $mealId) return null;
-            return $amount * $unit->custom_g;
+            return $amount * $unit->custom_grams;
         }
 
         return null;

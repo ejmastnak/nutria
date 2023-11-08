@@ -18,8 +18,8 @@ class IngredientService
 
             // Create ingredient
             $ingredient = Ingredient::create([
-                'name' => $data['name'],
                 'fdc_id' => null,
+                'name' => $data['name'],
                 'ingredient_category_id' => $data['ingredient_category_id'],
                 'ingredient_nutrient_amount' => $data['ingredient_nutrient_amount'],
                 'ingredient_nutrient_amount_unit_id' => $data['ingredient_nutrient_amount_unit_id'],
@@ -59,7 +59,7 @@ class IngredientService
                     'amount_per_100g' => AmountPer100gService::computeAmountPer100g(
                         $ingredientNutrient['amount'],
                         $data['ingredient_nutrient_amount'],
-                        $data['ingredient_nutrient_amount_unit'],
+                        $data['ingredient_nutrient_amount_unit_id'],
                         $ingredient->density_g_ml,
                     ),
                 ]);
@@ -132,7 +132,7 @@ class IngredientService
                     'amount_per_100g' => AmountPer100gService::computeAmountPer100g(
                         $ingredientNutrient['amount'],
                         $data['ingredient_nutrient_amount'],
-                        $data['ingredient_nutrient_amount_unit'],
+                        $data['ingredient_nutrient_amount_unit_id'],
                         $ingredient->density_g_ml,
                     ),
                 ]);
