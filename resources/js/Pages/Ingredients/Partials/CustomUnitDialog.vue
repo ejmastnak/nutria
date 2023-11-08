@@ -48,6 +48,13 @@ function confirm() {
   isOpen.value = false
   emit('confirm', customUnit.value)
 }
+
+function okay() {
+  if (customUnit.value.custom_unit.custom_mass_amount === null || customUnit.value.custom_unit.custom_mass_amount === "") {
+    customMassAmountInputRef.value.focus();
+  } else confirm();
+}
+
 function cancel() {
   isOpen.value = false
   allOptionsShowing.value = false
@@ -178,7 +185,7 @@ function handleCustomMassAmountInputEnter() {
           <PrimaryButton @click="allOptionsShowing = true" v-show="!allOptionsShowing" class="ml-2" >
             Next
           </PrimaryButton>
-          <PrimaryButton @click="confirm" v-show="allOptionsShowing" class="ml-2" >
+          <PrimaryButton @click="okay" v-show="allOptionsShowing" class="ml-2" >
             Okay
           </PrimaryButton>
         </div>
