@@ -88,30 +88,6 @@ function updateSelectedIngredientNutrientAmountUnit(newValue) {
   form.ingredient_nutrient_amount_unit_id = newValue.id
 }
 
-function getAllowedIngredientNutrientAmountUnits() {
-  var allowedUnits = props.units.filter(unit => unit.g);
-  if (props.ingredient) {
-    allowedUnits = allowedUnits.concat(props.ingredient.custom_units)
-  }
-  if (form.density_mass_amount && form.density_mass_unit_id && form.density_volume_amount && form.density_volume_unit_id) {
-    allowedUnits = allowedUnits.concat(props.units.filter(unit => unit.ml))
-  }
-  return prepareUnitsForDisplay(allowedUnits, densityGMl.value)
-}
-const allowedIngredientNutrientAmountUnits = ref(getAllowedIngredientNutrientAmountUnits())
-
-function updateAllowedIngredientNutrientAmountUnits() {
-  const newAllowedIngredientNutrientAmountUnits = getAllowedIngredientNutrientAmountUnits()
-  // Switch back to default 100 grams in the edge case when user had selected a
-  // volume unit *and* just deleted the ingredient's density
-  if (!newAllowedIngredientNutrientAmountUnits.map(unit => unit.id).includes(form.ingredient_nutrient_amount_unit.id)) {
-    form.ingredient_nutrient_amount = 100
-    form.ingredient_nutrient_amount_unit_id = props.units.find(unit => unit.name === 'g').id
-    form.ingredient_nutrient_amount_unit = props.units.find(unit => unit.name === 'g')
-  }
-  allowedIngredientNutrientAmountUnits.value = newAllowedIngredientNutrientAmountUnits
-}
-
 // Using a dedicated object instead of form.custom_units to allow for nested
 // object format (used for adding items to list workflow)
 const customUnits = ref(
@@ -125,6 +101,7 @@ const customUnits = ref(
 const customUnitsDialogRef = ref(null)
 function updateCustomUnits(updatedCustomUnits) {
   customUnits.value = updatedCustomUnits
+  updateAllowedIngredientNutrientAmountUnits()
 }
 
 const numCustomUnitErrors = computed(() => {
@@ -135,6 +112,33 @@ const numCustomUnitErrors = computed(() => {
   }
   return n
 })
+
+function getAllowedIngredientNutrientAmountUnits() {
+  var allowedUnits = props.units.filter(unit => unit.g);
+  if (props.ingredient) {
+    // Any prop custom_units that haven't been "deleted" in frontend
+    allowedUnits = allowedUnits.concat(props.ingredient.custom_units.filter(custom_unit => customUnits.value.map(custom_unit => custom_unit.custom_unit.id).includes(custom_unit.id)))
+  }
+  if (form.density_mass_amount && form.density_mass_unit_id && form.density_volume_amount && form.density_volume_unit_id) {
+    allowedUnits = allowedUnits.concat(props.units.filter(unit => unit.ml))
+  }
+  return prepareUnitsForDisplay(allowedUnits, densityGMl.value)
+}
+const allowedIngredientNutrientAmountUnits = ref(getAllowedIngredientNutrientAmountUnits())
+
+function updateAllowedIngredientNutrientAmountUnits() {
+  const newAllowedIngredientNutrientAmountUnits = getAllowedIngredientNutrientAmountUnits()
+  // Switch back to default 100 grams in the edge case when user had selected a
+  // volume unit and just deleted the ingredient's density, or selected a
+  // custom unit and then deleted it.
+  if (!newAllowedIngredientNutrientAmountUnits.map(unit => unit.id).includes(form.ingredient_nutrient_amount_unit.id)) {
+    form.ingredient_nutrient_amount = 100
+    form.ingredient_nutrient_amount_unit_id = props.units.find(unit => unit.name === 'g').id
+    form.ingredient_nutrient_amount_unit = props.units.find(unit => unit.name === 'g')
+  }
+  allowedIngredientNutrientAmountUnits.value = newAllowedIngredientNutrientAmountUnits
+}
+
 
 function submit() {
   // Only submit density fields if all density fields are present
