@@ -94,7 +94,7 @@ class IngredientService
             // Update ingredient's custom units.
             $freshCustomUnitIds = [];
             $numberMassAndVolumeUnits = Unit::numberMassAndVolumeUnits();
-            foreach ($ingredient->custom_units() as $idx=>$customUnit) {
+            foreach ($data['custom_units'] as $idx=>$customUnit) {
                 if (is_null($customUnit['id'])) {
                     $freshCustomUnitIds[] = Unit::create([
                         'name' => $customUnit['name'],
@@ -120,7 +120,7 @@ class IngredientService
             }
 
             // Delete stale custom units
-            foreach ($ingredient->custom_units() as $customUnit) {
+            foreach ($ingredient->custom_units as $customUnit) {
                 if (!in_array($customUnit->id, $freshCustomUnitIds)) $customUnit->delete();
             }
 

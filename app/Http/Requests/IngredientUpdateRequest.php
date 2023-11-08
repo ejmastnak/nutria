@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Nutrient;
 use App\Rules\IsMassUnit;
 use App\Rules\IsVolumeUnit;
+use App\Rules\IsIngredientUnit;
 use App\Rules\IngredientNutrientAmountUnitIdIsValid;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -49,6 +50,7 @@ class IngredientUpdateRequest extends FormRequest
 
             // Custom units
             'custom_units' => ['nullable', 'array', config('validation.max_custom_units')],
+            'custom_units.*.id' => ['nullable', 'integer', 'exists:units,id', new IsIngredientUnit],
             'custom_units.*.name' => ['required', 'distinct', 'min:1', config('validation.max_name_length')],
             'custom_units.*.custom_unit_amount' => ['required', 'numeric', 'gt:0', config('validation.max_ingredient_amount')],
             'custom_units.*.custom_mass_amount' => ['required', 'numeric', 'gt:0', config('validation.max_ingredient_amount')],
