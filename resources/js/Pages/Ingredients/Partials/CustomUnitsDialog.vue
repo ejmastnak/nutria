@@ -40,6 +40,7 @@ function cancel() {
 }
 
 const customUnitDialogRef = ref(null)
+const addCustomUnitButtonRef = ref(null)
 var customUnitIdToUpdate = null
 
 function addCustomUnit() {
@@ -80,6 +81,7 @@ function addOrUpdateCustomUnit(updatedCustomUnit) {
   <Dialog
     :open="isOpen"
     @close="cancel"
+    :initialFocus="addCustomUnitButtonRef"
     class="relative "
   >
     <div class="fixed inset-0 flex items-center justify-center p-4 bg-blue-50/80">
@@ -155,6 +157,7 @@ function addOrUpdateCustomUnit(updatedCustomUnit) {
           <button
             type="button"
             @click="addCustomUnit"
+            ref="addCustomUnitButtonRef"
             class="mt-4 inline-flex foos-center w-fit pl-2 pr-4 py-1 bg-white border border-gray-300 rounded-lg text-gray-900 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"
           >
             <PlusCircleIcon class="text-gray-600 w-6 h-6"/>
