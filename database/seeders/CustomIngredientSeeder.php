@@ -109,7 +109,7 @@ class CustomIngredientSeeder extends Seeder
 
                 Unit::updateOrCreate([
                     'name' => $customUnit['name'],
-                    'seq_num' => $numberMassAndVolumeUnits() + $idx,
+                    'seq_num' => $numberMassAndVolumeUnits + $idx,
                     'ingredient_id' => $Ingredient->id,
                     'custom_unit_amount' => $customUnit['custom_unit_amount'],
                     'custom_mass_amount' => $customUnit['custom_mass_amount'],
