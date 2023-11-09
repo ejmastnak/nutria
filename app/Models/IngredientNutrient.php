@@ -31,12 +31,4 @@ class IngredientNutrient extends Model
     public function nutrient() {
         return $this->belongsTo(Nutrient::class, 'nutrient_id', 'id');
     }
-
-    /**
-     *  Returns the String name of the unit in which this nutrient is measured
-     */
-    public function unit() {
-        return $this->belongsTo(Nutrient::class, 'nutrient_id', 'id')->first()->unit->name;
-    }
-
 }

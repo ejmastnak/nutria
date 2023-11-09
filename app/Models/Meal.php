@@ -56,7 +56,7 @@ class Meal extends Model
     }
 
     public function custom_units() {
-        return $this->hasMany(Unit::class, 'meal_id', 'id');
+        return $this->hasMany(Unit::class, 'meal_id', 'id')->orderBy('seq_num');
     }
 
     public function food_list_meals() {

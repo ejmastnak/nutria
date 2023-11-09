@@ -40,6 +40,7 @@ class Unit extends Model
     public static function getMassAndVolume() {
         return self::whereNotNull('g')
             ->orWhereNotNull('ml')
+            ->orderBy('seq_num')
             ->get([
                 'id',
                 'name',

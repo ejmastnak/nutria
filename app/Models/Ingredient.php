@@ -177,7 +177,7 @@ class Ingredient extends Model
     }
 
     public function custom_units() {
-        return $this->hasMany(Unit::class, 'ingredient_id', 'id');
+        return $this->hasMany(Unit::class, 'ingredient_id', 'id')->orderBy('seq_num');
     }
 
     public function user() {
