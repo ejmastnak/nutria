@@ -131,7 +131,7 @@ class CustomIngredientSeeder extends Seeder
                     $amountPer100g = AmountPer100gService::computeAmountPer100g(
                         $ingredientNutrients[$nutrient->id]['amount'],
                         $ingredient['ingredient_nutrient_amount'],
-                        [ 'id' => $ingredientNutrientAmountUnit->id ],
+                        $ingredientNutrientAmountUnit->id,
                         $densityGMl,
                     );
                     if (is_null($amountPer100g)) {
