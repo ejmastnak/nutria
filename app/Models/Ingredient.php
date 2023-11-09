@@ -58,7 +58,7 @@ class Ingredient extends Model
     public function withCategoryUnitsAndMeal() {
         $this->load(
             'ingredient_category:id,name',
-            'ingredient_nutrient_amount_unit:id,name',
+            'ingredient_nutrient_amount_unit:id,name,seq_num,g,ml,ingredient_id,custom_grams',
             'density_mass_unit:id,name',
             'density_volume_unit:id,name',
             'custom_units:id,name,seq_num,ingredient_id,custom_unit_amount,custom_mass_amount,custom_mass_unit_id,custom_grams',
