@@ -138,6 +138,7 @@ function handleCustomMassAmountInputEnter() {
                 ref="customUnitAmountInputRef"
                 class="w-full py-0.5"
                 type="number"
+                step="any"
                 v-model="customUnit.custom_unit.custom_unit_amount"
               />
             </div>
@@ -154,6 +155,7 @@ function handleCustomMassAmountInputEnter() {
                 ref="customMassAmountInputRef"
                 class="w-full"
                 type="number"
+                step="any"
                 placeholder="100"
                 @keyup.enter="handleCustomMassAmountInputEnter"
                 v-model="customUnit.custom_unit.custom_mass_amount"

@@ -119,6 +119,7 @@ function handleVolumeAmountInputEnter() {
               type="number"
               placeholder="100"
               :min="0"
+              step="any"
               @keyup.enter="handleMassAmountInputEnter"
               v-model="densityObj.density_mass_amount"
             />
@@ -155,6 +156,7 @@ function handleVolumeAmountInputEnter() {
               type="number"
               placeholder="100"
               :min="0"
+              step="any"
               @keyup.enter="handleVolumeAmountInputEnter"
               v-model="densityObj.density_volume_amount"
             />

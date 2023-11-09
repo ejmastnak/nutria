@@ -311,6 +311,7 @@ export default {
             id="ingredient-nutrient-amount"
             class="inline-block w-full py-1"
             type="number"
+            step="any"
             v-model="form.ingredient_nutrient_amount"
           />
           <InputError class="mt-1" :message="form.errors.ingredient_nutrient_amount" />
@@ -372,6 +373,7 @@ export default {
                         type="number"
                         placeholder="0"
                         :min="0"
+                        step="any"
                         class="mt-1 inline-block w-24 py-1 text-right"
                         v-model="ingredient_nutrient.amount"
                       />
