@@ -43,7 +43,7 @@ const scaleFactor = computed(() => {
 <template>
   <section>
 
-    <h2 class="text-lg">Nutrient profile</h2>
+    <h2 class="text-xl">Nutrient profile</h2>
 
     <NutrientProfileOptions
       class="mt-2"

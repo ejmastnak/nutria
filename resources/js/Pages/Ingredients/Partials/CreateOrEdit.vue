@@ -213,7 +213,7 @@ export default {
           <InputLabel for="edit-density-button" value="Ingredient density (optional)" />
           <div class="mt-0.5">
             <p v-if="density">
-              <span class="font-bold">{{round(density, 2)}} {{form.density_mass_unit.name}}/{{form.density_volume_unit.name}}</span>
+              <span class="font-medium">{{round(density, 2)}} {{form.density_mass_unit.name}}/{{form.density_volume_unit.name}}</span>
               <span v-if="form.density_mass_unit.name !== 'g' || form.density_volume_unit.name !== 'ml'">
                 ({{round(densityGMl, 2)}} g/ml)
               </span>

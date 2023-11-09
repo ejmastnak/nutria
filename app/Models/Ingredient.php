@@ -62,6 +62,7 @@ class Ingredient extends Model
             'density_mass_unit:id,name',
             'density_volume_unit:id,name',
             'custom_units:id,name,seq_num,ingredient_id,custom_unit_amount,custom_mass_amount,custom_mass_unit_id,custom_grams',
+            'custom_units.custom_mass_unit:id,name',
             'meal:id,name',
         );
         return $this->only([
