@@ -25,7 +25,17 @@ const emit = defineEmits([
 const localSelectedUnit = ref(props.selectedUnit)
 function updateSelectedUnit(newValue) {
   localSelectedUnit.value = newValue
+
+  // Switch to unit amount if switching to an ingredient/meal unit
+  if (newValue.ingredient_id || newValue.meal_id) updateSelectedUnitAmount(1);
+
   emit('update:selectedUnit', newValue)
+}
+
+const localSelectedUnitAmount = ref(props.selectedUnitAmount)
+function updateSelectedUnitAmount(newValue) {
+  localSelectedUnitAmount.value = newValue
+  emit('update:selectedUnitAmount', newValue)
 }
 
 const localSelectedIntakeGuideline = ref(props.selectedIntakeGuideline)
@@ -46,8 +56,8 @@ function updateSelectedIntakeGuideline(newValue) {
           class="w-24 py-1.5"
           id="selectedUnitAmountInput"
           type="number"
-          :value="selectedUnitAmount"
-          @input="$emit('update:selectedUnitAmount', $event.target.value)"
+          :value="localSelectedUnitAmount"
+          @update:modelValue="newValue => updateSelectedUnitAmount(newValue)"
         />
       </div>
 
@@ -66,7 +76,7 @@ function updateSelectedIntakeGuideline(newValue) {
 
       <!-- Gram equivalent of selected (amount, unit) combo -->
       <p v-if="localSelectedUnit && localSelectedUnit.name !== 'g'" class="ml-2 text-gray-600">
-        ({{round(gramAmountOfUnit(selectedUnitAmount, localSelectedUnit, densityGMl))}} g total)
+        ({{round(gramAmountOfUnit(localSelectedUnitAmount, localSelectedUnit, densityGMl))}} g total)
       </p>
 
     </div>

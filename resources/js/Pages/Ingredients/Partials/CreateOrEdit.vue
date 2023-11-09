@@ -81,11 +81,14 @@ const densityGMl = computed(() => {
     : (Number(form.density_mass_amount) * form.density_mass_unit.g)  / (Number(form.density_volume_amount) * form.density_volume_unit.ml )
 })
 
-
 // Ingredient nutrient amount unit (grams by default)
 function updateSelectedIngredientNutrientAmountUnit(newValue) {
   form.ingredient_nutrient_amount_unit = newValue
   form.ingredient_nutrient_amount_unit_id = newValue.id
+
+  // Switch to unit amount if switching to an ingredient/meal unit
+  if (newValue.ingredient_id || newValue.meal_id) form.ingredient_nutrient_amount = 1;
+
 }
 
 // Using a dedicated object instead of form.custom_units to allow for nested
@@ -115,12 +118,12 @@ const numCustomUnitErrors = computed(() => {
 
 function getAllowedIngredientNutrientAmountUnits() {
   var allowedUnits = props.units.filter(unit => unit.g);
+  if (form.density_mass_amount && form.density_mass_unit_id && form.density_volume_amount && form.density_volume_unit_id) {
+    allowedUnits = allowedUnits.concat(props.units.filter(unit => unit.ml))
+  }
   if (props.ingredient) {
     // Any prop custom_units that haven't been "deleted" in frontend
     allowedUnits = allowedUnits.concat(props.ingredient.custom_units.filter(custom_unit => customUnits.value.map(custom_unit => custom_unit.custom_unit.id).includes(custom_unit.id)))
-  }
-  if (form.density_mass_amount && form.density_mass_unit_id && form.density_volume_amount && form.density_volume_unit_id) {
-    allowedUnits = allowedUnits.concat(props.units.filter(unit => unit.ml))
   }
   return prepareUnitsForDisplay(allowedUnits, densityGMl.value)
 }
