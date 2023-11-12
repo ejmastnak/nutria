@@ -1,4 +1,5 @@
 <script setup>
+import SidebarLayout from "@/Layouts/SidebarLayout.vue";
 import { round } from '@/utils/GlobalFunctions.js'
 import { ref, computed } from 'vue'
 import { Head, router } from '@inertiajs/vue3'
@@ -33,7 +34,7 @@ export default {
 
 <template>
 
-  <div>
+  <SidebarLayout>
     <Head :title="ingredient.name" />
 
     <!-- Ingredient name and descriptive pillboxes -->
@@ -106,5 +107,5 @@ export default {
 
     <CustomUnitsShowDialog ref="customUnitsShowDialogRef" :custom_units="ingredient.custom_units" />
 
-  </div>
+  </SidebarLayout>
 </template>
