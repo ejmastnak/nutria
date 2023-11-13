@@ -41,6 +41,7 @@ class IngredientController extends Controller
     public function create()
     {
         $user = Auth::user();
+        $userId = $user ? $user->id : null;
 
         return Inertia::render('Ingredients/Create', [
             'ingredient' => null,
@@ -48,7 +49,8 @@ class IngredientController extends Controller
             'nutrients' => Nutrient::getWithUnit(),
             'nutrient_categories' => NutrientCategory::getWithName(),
             'units' => Unit::getMassAndVolume(),
-            'can_create' => $user ? $user->can('create', Ingredient::class) : false
+            'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
+            'can_create' => $user ? $user->can('create', Ingredient::class) : false,
         ]);
     }
 
@@ -58,6 +60,7 @@ class IngredientController extends Controller
     public function clone(Ingredient $ingredient)
     {
         $user = Auth::user();
+        $userId = $user ? $user->id : null;
 
         return Inertia::render('Ingredients/Create', [
             'ingredient' => $ingredient->withCategoryUnitsNutrientsAndMeal(),
@@ -65,7 +68,12 @@ class IngredientController extends Controller
             'nutrients' => null,
             'nutrient_categories' => NutrientCategory::getWithName(),
             'units' => Unit::getMassAndVolume(),
-            'can_create' => $user ? $user->can('create', Ingredient::class) : false
+            'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
+            'can_view' => $user ? $user->can('view', $ingredient) : false,
+            'can_create' => $user ? $user->can('create', Ingredient::class) : false,
+            'can_clone' => $user ? $user->can('clone', $ingredient) : false,
+            'can_update' => $user ? $user->can('update', $ingredient) : false,
+            'can_delete' => $user ? $user->can('delete', $ingredient) : false,
         ]);
     }
 
@@ -92,10 +100,12 @@ class IngredientController extends Controller
             'intake_guidelines' => IntakeGuideline::getForUser($userId),
             'nutrient_categories' => NutrientCategory::getWithName(),
             'units' => Unit::getMassAndVolume(),
-            'can_edit' => $user ? $user->can('update', $ingredient) : false,
-            'can_clone' => $user ? $user->can('clone', $ingredient) : false,
-            'can_delete' => $user ? $user->can('delete', $ingredient) : false,
+            'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
+            'can_view' => $user ? $user->can('view', $ingredient) : false,
             'can_create' => $user ? $user->can('create', Ingredient::class) : false,
+            'can_clone' => $user ? $user->can('clone', $ingredient) : false,
+            'can_update' => $user ? $user->can('update', $ingredient) : false,
+            'can_delete' => $user ? $user->can('delete', $ingredient) : false,
         ]);
     }
 
@@ -111,9 +121,12 @@ class IngredientController extends Controller
             'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'nutrient_categories' => NutrientCategory::getWithName(),
             'units' => Unit::getMassAndVolume(),
-            'can_clone' => $user ? $user->can('clone', $ingredient) : false,
-            'can_delete' => $user ? $user->can('delete', $ingredient) : false,
+            'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
+            'can_view' => $user ? $user->can('view', $ingredient) : false,
             'can_create' => $user ? $user->can('create', Ingredient::class) : false,
+            'can_clone' => $user ? $user->can('clone', $ingredient) : false,
+            'can_update' => $user ? $user->can('update', $ingredient) : false,
+            'can_delete' => $user ? $user->can('delete', $ingredient) : false,
         ]);
     }
 

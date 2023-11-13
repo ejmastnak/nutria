@@ -18,9 +18,12 @@ const props = defineProps({
   ingredient_categories: Array,
   nutrient_categories: Array,
   units: Array,
+  user_ingredients: Array,
+  can_view: Boolean,
+  can_create: Boolean,
   can_clone: Boolean,
+  can_update: Boolean,
   can_delete: Boolean,
-  can_create: Boolean
 })
 
 </script>

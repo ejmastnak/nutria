@@ -17,7 +17,12 @@ const props = defineProps({
   nutrients: Array,
   nutrient_categories: Array,
   units: Array,
+  user_ingredients: Array,
   can_create: Boolean,
+  can_view: {type: Boolean, default: false},
+  can_clone: {type: Boolean, default: false},
+  can_update: {type: Boolean, default: false},
+  can_delete: {type: Boolean, default: false},
 })
 
 const searchDialog = ref(null)

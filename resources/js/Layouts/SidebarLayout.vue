@@ -7,20 +7,38 @@ import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
 
+const props = defineProps({
+  page: String,  // "show", "create", "clone", or "edit"
+  route: String,  // "ingredients", "meals", "food-lists", or "intake-guidelines"
+  id: Number,  // id of this thing
+  things: Array,  // list of all things
+  can_view: Boolean,
+  can_create: Boolean,
+  can_clone: Boolean,
+  can_update: Boolean,
+  can_delete: Boolean,
+})
+
 const showingNavigationDropdown = ref(false);
 
 </script>
 
 <template>
   <div class="flex space-x-4">
+
     <nav class="-mt-8 -ml-6">
 
       <!-- Desktop navigation menu -->
-      <div class="fixed hidden sm:block left-0 w-48 p-4 bg-[#fefefe] border-r border-gray-300 flex flex-col min-h-screen">
-        <p>Item 1</p>
-        <p>Item 2</p>
-        <p>Item 3</p>
-        <p>Item 4</p>
+      <div class="fixed hidden sm:block left-0 w-48 p-4 md:px-8 lg:px-10 xl:px-16 bg-[#fefefe] border-r border-gray-300 flex flex-col min-h-screen whitespace-nowrap">
+        <p>All</p>
+        <p>Find another</p>
+        <p>Clone another</p>
+        <p>New</p>
+
+        <p class="mt-4" v-if="page === 'show' || page === 'edit' || page === 'clone'">Show original</p>
+        <p v-if="page === 'show' || page === 'edit' || page === 'clone'">Clone original</p>
+        <p v-if="page === 'show' || page === 'edit' || page === 'clone'">Edit original</p>
+        <p v-if="page === 'show' || page === 'edit' || page === 'clone'">Delete original</p>
       </div>
 
       <!-- Hamburger -->

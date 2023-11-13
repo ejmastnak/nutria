@@ -13,11 +13,11 @@ const showingNavigationDropdown = ref(false);
 
 <template>
   <div class="bg-[#fefefe]">
-    <div class="min-h-screen max-w-6xl">
+    <div class="min-h-screen max-w-6xl md:px-4 lg:px-6 xl:px-12">
       <nav class="mx-auto">
         <!-- Desktop navigation menu -->
         <div class="fixed w-full top-0 inset-x-0 bg-[#fefefe] border-b border-gray-200 z-50">
-          <div class="top-0 inset-x-0 max-w-6xl px-4 pr-4 sm:pr-6 lg:pr-8">
+          <div class="top-0 inset-x-0 max-w-6xl px-4 md:px-8 lg:px-10 xl:px-16 pr-4 sm:pr-6 lg:pr-8">
             <FlashMessage :flash="$page.props.flash" class="h-full" />
 
             <!-- Desktop navigation menu -->

@@ -15,13 +15,17 @@ const props = defineProps({
   intake_guidelines: Array,
   nutrient_categories: Array,
   units: Array,
-  can_edit: Boolean,
+  user_ingredients: Array,
+  can_view: Boolean,
+  can_create: Boolean,
   can_clone: Boolean,
+  can_update: Boolean,
   can_delete: Boolean,
-  can_create: Boolean
 })
 
 const customUnitsShowDialogRef = ref(null)
+
+const ingredients = props.user_ingredients.concat(window.usdaIngredients ? window.usdaIngredients : [])
 
 </script>
 
@@ -34,7 +38,17 @@ export default {
 
 <template>
 
-  <SidebarLayout>
+  <SidebarLayout
+    page="show"
+    route="ingredients"
+    :id="ingredient.id"
+    :things="ingredients"
+    :can_view="can_view"
+    :can_create="can_create"
+    :can_clone="can_clone"
+    :can_update="can_update"
+    :can_delete="can_delete"
+  >
     <Head :title="ingredient.name" />
 
     <!-- Ingredient name and descriptive pillboxes -->
