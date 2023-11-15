@@ -1,17 +1,21 @@
 <script setup>
 import { ref } from 'vue';
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import All from './SidebarPartials/All.vue'
+import FindAnother from './SidebarPartials/FindAnother.vue'
+import CloneAnother from './SidebarPartials/CloneAnother.vue'
+import New from './SidebarPartials/New.vue'
+import ShowOriginal from './SidebarPartials/ShowOriginal.vue'
+import CloneOriginal from './SidebarPartials/CloneOriginal.vue'
+import EditOriginal from './SidebarPartials/EditOriginal.vue'
+import DeleteOriginal from './SidebarPartials/DeleteOriginal.vue'
 
 const props = defineProps({
   page: String,  // "show", "create", "clone", or "edit"
-  route: String,  // "ingredients", "meals", "food-lists", or "intake-guidelines"
+  route_basename: String,  // "ingredients", "meals", "food-lists", or "intake-guidelines"
   id: Number,  // id of this thing
   things: Array,  // list of all things
+  thing: String,  // e.g. "ingredient", "meal", etc.
   can_view: Boolean,
   can_create: Boolean,
   can_clone: Boolean,
@@ -29,16 +33,37 @@ const showingNavigationDropdown = ref(false);
     <nav class="-mt-8 -ml-6">
 
       <!-- Desktop navigation menu -->
-      <div class="fixed hidden sm:block left-0 w-48 p-4 md:px-8 lg:px-10 xl:px-16 bg-[#fefefe] border-r border-gray-300 flex flex-col min-h-screen whitespace-nowrap">
-        <p>All</p>
-        <p>Find another</p>
-        <p>Clone another</p>
-        <p>New</p>
+      <div class="fixed hidden sm:block left-0 w-48 p-2 bg-[#fefefe] border-r border-gray-300 flex flex-col min-h-screen whitespace-nowrap z-50">
+        <div>
+          <All :href="route(route_basename + '.index')" />
+          <FindAnother :things="things" :route_basename="route_basename" />
+          <CloneAnother :things="things" :route_basename="route_basename" :enabled="can_create" />
+          <New :href="route(route_basename + '.create')" :enabled="can_create" />
+        </div>
 
-        <p class="mt-4" v-if="page === 'show' || page === 'edit' || page === 'clone'">Show original</p>
-        <p v-if="page === 'show' || page === 'edit' || page === 'clone'">Clone original</p>
-        <p v-if="page === 'show' || page === 'edit' || page === 'clone'">Edit original</p>
-        <p v-if="page === 'show' || page === 'edit' || page === 'clone'">Delete original</p>
+        <div class="border-t border-gray-200 mt-3 pt-3">
+          <ShowOriginal
+            v-if="page === 'show' || page === 'edit' || page === 'clone'"
+            :href="route(route_basename + '.show', id)"
+            :enabled="can_view"
+          />
+          <CloneOriginal
+            v-if="page === 'show' || page === 'edit' || page === 'clone'"
+            :href="route(route_basename + '.clone', id)"
+            :enabled="can_clone"
+          />
+          <EditOriginal
+            v-if="can_update && (page === 'show' || page === 'edit' || page === 'clone')"
+            :href="route(route_basename + '.edit', id)"
+            :enabled="can_update"
+          />
+          <DeleteOriginal
+            v-if="can_delete && (page === 'show' || page === 'edit' || page === 'clone')"
+            :href="route(route_basename + '.destroy', id)"
+            :thing="thing"
+            :enabled="can_delete"
+          />
+        </div>
       </div>
 
       <!-- Hamburger -->
@@ -56,12 +81,38 @@ const showingNavigationDropdown = ref(false);
       <!-- Mobile navigation menu -->
       <div
         :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }"
-        class="fixed sm:hidden bg-white top-[6.5rem] inset-x-0 p-3 space-y-2 border border-gray-200 shadow rounded"
+        class="fixed sm:hidden bg-white top-[6.5rem] inset-x-0 p-3 space-y-2 border border-gray-200 shadow rounded z-50"
       >
-        <p>Item 1</p>
-        <p>Item 2</p>
-        <p>Item 3</p>
-        <p>Item 4</p>
+        <div>
+          <All :href="route(route_basename + '.index')" />
+          <FindAnother :things="things" :route_basename="route_basename" />
+          <CloneAnother :things="things" :route_basename="route_basename" :enabled="can_create" />
+          <New :href="route(route_basename + '.create')" :enabled="can_create" />
+        </div>
+
+        <div class="border-t border-gray-200 mt-3 pt-3">
+          <ShowOriginal
+            v-if="page === 'show' || page === 'edit' || page === 'clone'"
+            :href="route(route_basename + '.show', id)"
+            :enabled="can_view"
+          />
+          <CloneOriginal
+            v-if="page === 'show' || page === 'edit' || page === 'clone'"
+            :href="route(route_basename + '.clone', id)"
+            :enabled="can_clone"
+          />
+          <EditOriginal
+            v-if="can_update && (page === 'show' || page === 'edit' || page === 'clone')"
+            :href="route(route_basename + '.edit', id)"
+            :enabled="can_update"
+          />
+          <DeleteOriginal
+            v-if="can_delete && (page === 'show' || page === 'edit' || page === 'clone')"
+            :href="route(route_basename + '.destroy', id)"
+            :thing="thing"
+            :enabled="can_delete"
+          />
+        </div>
       </div>
     </nav>
 

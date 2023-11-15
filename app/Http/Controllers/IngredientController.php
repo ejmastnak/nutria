@@ -115,6 +115,7 @@ class IngredientController extends Controller
     public function edit(Ingredient $ingredient)
     {
         $user = Auth::user();
+        $userId = $user ? $user->id : null;
 
         return Inertia::render('Ingredients/Edit', [
             'ingredient' => $ingredient->withCategoryUnitsNutrientsAndMeal(),
