@@ -1,16 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 import { Head } from '@inertiajs/vue3'
+import SidebarLayout from "@/Layouts/SidebarLayout.vue";
 import CreateOrEdit from './Partials/CreateOrEdit.vue'
-import CrudNavBar from '@/Shared/CrudNavBar.vue'
-import CrudNavBarView from '@/Shared/CrudNavBarView.vue'
-import CrudNavBarCloneLink from '@/Shared/CrudNavBarCloneLink.vue'
-import CrudNavBarDelete from '@/Shared/CrudNavBarDelete.vue'
-import CrudNavBarCreate from '@/Shared/CrudNavBarCreate.vue'
-import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
-import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
-import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
-import DeleteDialog from '@/Shared/DeleteDialog.vue'
 import H1 from '@/Components/H1ForCrud.vue'
 
 const props = defineProps({
@@ -26,6 +18,8 @@ const props = defineProps({
   can_delete: Boolean,
 })
 
+const ingredients = props.user_ingredients.concat(window.usdaIngredients ? window.usdaIngredients : [])
+
 </script>
 
 <script>
@@ -36,10 +30,20 @@ export default {
 </script>
 
 <template>
-  <div>
-
+  <SidebarLayout
+    page="edit"
+    route_basename="ingredients"
+    :id="ingredient.id"
+    :things="ingredients"
+    thing="ingredient"
+    :can_view="can_view"
+    :can_create="can_create"
+    :can_clone="can_clone"
+    :can_update="can_update"
+    :can_delete="can_delete"
+  >
     <Head :title="'Edit ' + ingredient.name"/>
-    <H1 class="mt-8" :text="'Edit ' + ingredient.name " />
+    <H1 :text="'Edit ' + ingredient.name " />
 
     <CreateOrEdit
       :ingredient="ingredient"
@@ -49,5 +53,5 @@ export default {
       :create="false"
     />
 
-  </div>
+  </SidebarLayout>
 </template>

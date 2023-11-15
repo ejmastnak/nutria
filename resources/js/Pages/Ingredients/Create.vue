@@ -1,14 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 import { Head } from '@inertiajs/vue3'
+import SidebarLayout from "@/Layouts/SidebarLayout.vue";
 import CreateOrEdit from './Partials/CreateOrEdit.vue'
-import CrudNavBar from '@/Shared/CrudNavBar.vue'
-import CrudNavBarView from '@/Shared/CrudNavBarView.vue'
-import CrudNavBarCreate from '@/Shared/CrudNavBarCreate.vue'
-import CrudNavBarCloneButton from '@/Shared/CrudNavBarCloneButton.vue'
-import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
-import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
-import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
 import H1 from '@/Components/H1ForCrud.vue'
 
 const props = defineProps({
@@ -28,6 +22,8 @@ const props = defineProps({
 const searchDialog = ref(null)
 const cloneExistingDialog = ref(null)
 
+const ingredients = props.user_ingredients.concat(window.usdaIngredients ? window.usdaIngredients : [])
+
 </script>
 
 <script>
@@ -38,9 +34,20 @@ export default {
 </script>
 
 <template>
-  <div>
+  <SidebarLayout
+    :page="ingredient ? 'clone' : 'create'"
+    route_basename="ingredients"
+    :id="ingredient ? ingredient.id : null"
+    :things="ingredients"
+    thing="ingredient"
+    :can_view="can_view"
+    :can_create="can_create"
+    :can_clone="can_clone"
+    :can_update="can_update"
+    :can_delete="can_delete"
+  >
     <Head title="New Ingredient" />
-    <H1 class="mt-8" text="New Ingredient" />
+    <H1 text="New Ingredient" />
     <p v-if="ingredient" class="text-gray-700">(Cloned from {{ingredient.name}})</p>
 
     <CreateOrEdit
@@ -52,5 +59,5 @@ export default {
       :create="true"
     />
 
-  </div>
+  </SidebarLayout>
 </template>

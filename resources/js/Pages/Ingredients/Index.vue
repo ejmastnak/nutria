@@ -12,7 +12,6 @@ import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import MultiSelect from '@/Components/MultiSelect.vue'
 
-// import DeleteDialog from '@/Shared/DeleteDialog.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 
 import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'

@@ -1,8 +1,8 @@
 <script setup>
-import SidebarLayout from "@/Layouts/SidebarLayout.vue";
 import { round } from '@/utils/GlobalFunctions.js'
 import { ref, computed } from 'vue'
 import { Head, router } from '@inertiajs/vue3'
+import SidebarLayout from "@/Layouts/SidebarLayout.vue";
 import NutrientProfile from '@/Shared/NutrientProfile.vue'
 import { EllipsisHorizontalCircleIcon } from '@heroicons/vue/24/outline'
 import H1 from '@/Components/H1ForCrud.vue'
@@ -40,9 +40,10 @@ export default {
 
   <SidebarLayout
     page="show"
-    route="ingredients"
+    route_basename="ingredients"
     :id="ingredient.id"
     :things="ingredients"
+    thing="ingredient"
     :can_view="can_view"
     :can_create="can_create"
     :can_clone="can_clone"
