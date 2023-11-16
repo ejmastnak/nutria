@@ -194,7 +194,7 @@ export default {
         <!-- New ingredient button -->
         <PrimaryLinkButton
           :href="route('ingredients.create')"
-          class="flex ml-auto items-center py-2.0 sm:py-2.5 mt-1 normal-case"
+          class="flex items-center py-2.0 sm:py-2.5 mt-1 normal-case"
           :class="{'!bg-blue-200': !can_create}"
         >
           <PlusCircleIcon class="w-6 h-6" />
@@ -203,7 +203,7 @@ export default {
 
         <!-- Clone ingredient button -->
         <SecondaryButton
-          class="flex ml-auto items-center mt-1 normal-case"
+          class="flex items-center mt-1 normal-case"
           :class="{'!text-gray-300': !can_create}"
           @click="cloneExistingDialog.open()"
         >
@@ -285,7 +285,7 @@ export default {
 
                 </div>
 
-                <div class="">
+                <div>
                   <label for="clear-usda-filters" class="sr-only">
                     Clear filter
                   </label>

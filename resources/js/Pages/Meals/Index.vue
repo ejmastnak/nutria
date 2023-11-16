@@ -4,16 +4,15 @@ import throttle from "lodash/throttle";
 import debounce from "lodash/debounce";
 
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
-import { Head } from '@inertiajs/vue3'
-import { TrashIcon, PlusCircleIcon, DocumentDuplicateIcon, MagnifyingGlassIcon, XMarkIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
+import { Head, router } from '@inertiajs/vue3'
+import { TrashIcon, PlusCircleIcon, DocumentDuplicateIcon, MagnifyingGlassIcon, PencilSquareIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import MyLink from '@/Components/MyLink.vue'
 import H1 from '@/Components/H1ForIndex.vue'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import InputLabel from '@/Components/InputLabel.vue'
-import DeleteDialog from '@/Shared/DeleteDialog.vue'
-import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
-import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
+import DeleteDialog from "@/Components/DeleteDialog.vue";
+import FindAThing from '@/Components/FindAThing.vue'
 
 const props = defineProps({
   meals: Array,
@@ -21,52 +20,68 @@ const props = defineProps({
 })
 
 const cloneExistingDialog = ref(null)
+function cloneExisting(meal) {
+  if (meal && meal.id) router.get(route('meals.clone', meal.id));
+}
+
+let idToDelete = ref(null)
 const deleteDialog = ref(null)
-const searchInput = ref(null)
+function deleteMeal() {
+  if (idToDelete.value) {
+    router.delete(route('meals.destroy', idToDelete.value), {
+      onSuccess: () => {
+        // Updates filtered meals after deleting an meal to ensure the deleted
+        // meal disappears from display.
+        search(userSearchQuery.value)
+      }
+    });
+  }
+  idToDelete.value = null
+}
+
+const searchInputRef = ref(null)
 
 // For fuzzy search over meal names
 const filteredMeals = ref([])
 const fuzzysortOptions = {
   key: 'name',
   all: true,
-  limit: 10,        // don't return more results than this
-  threshold: -10000    // don't return lower scores than this
+  limit: 10,
+  threshold: -10000
 }
 
-const search = ref(sessionStorage.getItem('mealsIndexSearchQuery') ?? "")
+const searchQuery = ref("")
+function search(query) {
+  filteredMeals.value = fuzzysort.go(query.trim(), props.meals, fuzzysortOptions)
+}
 
-// Preserve meal search from previous visit to this page
-onMounted(() => {
-  if (search) {
-    filteredMeals.value = fuzzysort.go(search.value.trim(), props.meals, fuzzysortOptions)
-  }
-})
-
-watch(search, throttle(function (value) {
-  filteredMeals.value = fuzzysort.go(value.trim(), props.meals, fuzzysortOptions)
+watch(searchQuery, throttle(function (value) {
+  search(value)
 }, 300))
 
 // Preserve search query between page visits
 onBeforeUnmount(() => {
-  sessionStorage.setItem('mealsIndexSearchQuery', search.value);
+  sessionStorage.setItem('mealsIndexSearchQuery', searchQuery.value);
 })
 
 // Preserve search query on manual page reload
 window.onbeforeunload = function() {
-  sessionStorage.setItem('mealsIndexSearchQuery', search.value);
+  sessionStorage.setItem('mealsIndexSearchQuery', searchQuery.value);
 }
 
-
-function resetSearch() {
-  search.value = ""
-  searchInput.value.focus()
+function clearSearch() {
+  searchQuery.value = ""
+  searchInputRef.value.focus()
 }
 
-// Updates filteredMeals after deleting a meal to ensure the meal disappears
-// from display
-function updateFuzzySearchOnDeletion(id) {
-  filteredMeals.value = fuzzysort.go(search.value.trim(), props.meals, fuzzysortOptions)
-}
+// Preserve meal search from previous visit to this page
+onMounted(() => {
+  const storedSearchQuery = sessionStorage.getItem('mealsIndexSearchQuery')
+  if (storedSearchQuery) {
+      searchQuery.value = storedSearchQuery
+  }
+  search(searchQuery.value)
+})
 
 </script>
 
@@ -78,7 +93,7 @@ export default {
 </script>
 
 <template>
-  <div class="">
+  <div>
     <Head title="Meals" />
 
     <!-- Title and new meal top row -->
@@ -96,7 +111,7 @@ export default {
         <!-- New meal button -->
         <PrimaryLinkButton
           :href="route('meals.create')"
-          class="flex ml-auto items-center py-2.0 sm:py-2.5 mt-1 normal-case"
+          class="flex items-center py-2.0 sm:py-2.5 mt-1 normal-case"
           :class="{'!bg-blue-200': !can_create}"
         >
           <PlusCircleIcon class="w-6 h-6" />
@@ -105,7 +120,7 @@ export default {
 
         <!-- Clone meal button -->
         <SecondaryButton
-          class="flex ml-auto items-center mt-1 normal-case"
+          class="flex items-center mt-1 normal-case"
           :class="{'!text-gray-300': !can_create}"
           @click="cloneExistingDialog.open()"
         >
@@ -120,23 +135,40 @@ export default {
     <section class="mt-8 border border-gray-200 px-4 py-2 rounded-xl shadow-sm bg-white">
 
       <!-- Input for search -->
-      <div class="px-2 py-4">
+      <div class="px-2 py-4 flex flex-wrap items-end">
+        <div class="">
+          <label for="meal-search" class="ml-1 text-sm text-gray-500">
+            Search by meal name
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <MagnifyingGlassIcon class="w-5 h-5 text-gray-500" />
+            </div>
 
-        <label for="meal-search" class="ml-1 text-sm text-gray-500">
-          Search by meal name
-        </label>
-        <div class="relative">
-          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <MagnifyingGlassIcon class="w-5 h-5 text-gray-500" />
+            <input
+              type="text"
+              id="meal-search"
+              ref="searchInputRef"
+              class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 sm:w-64 md:w-80 lg:w-96 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+              v-model="searchQuery"
+            />
           </div>
+        </div>
 
-          <input
-            type="text"
-            id="meal-search"
-            ref="searchInput"
-            class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 sm:w-64 md:w-80 lg:w-96 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-            v-model="search"
-          />
+        <!-- Clear search button -->
+        <div class="ml-2">
+          <label for="clear-search" class="sr-only">
+            Clear filter
+          </label>
+          <SecondaryButton
+            type="button"
+            id="clear-search"
+            class="normal-case font-normal !tracking-normal !text-sm !px-2 h-fit ml-2"
+            @click="clearSearch"
+          >
+            <XMarkIcon class="w-5 h-5" />
+            <span class="text-gray-600 font-normal ml-1.5">Clear search</span>
+          </SecondaryButton>
         </div>
       </div>
 
@@ -173,12 +205,12 @@ export default {
                   class="mx-auto"
                   :href="route('meals.edit', meal.id)"
                 >
-                <PencilSquareIcon class="w-5 h-5" />
+                  <PencilSquareIcon class="w-5 h-5" />
                 </MyLink>
 
                 <button
                   type="button"
-                  @click="deleteDialog.open(meal.id, meal.ingredient ? {id: meal.ingredient.id, name: meal.ingredient.name} : null)"
+                  @click="idToDelete = meal.id; deleteDialog.open()"
                   class="mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
                 >
                   <TrashIcon class="w-5 h-5 hover:text-red-700" />
@@ -207,17 +239,20 @@ export default {
 
     </section>
 
-    <SearchForThingAndGo
+    <FindAThing
       ref="cloneExistingDialog"
       :things="meals"
-      goRoute="meals.clone"
-      label="Search for a meal to clone"
-      title="Clone meal"
-      action="Clone"
+      dialog_title="Search for a meal to clone"
+      button_text="Okay"
+      @foundAThing="cloneExisting"
     />
 
-    <DeleteDialog ref="deleteDialog" deleteRoute="meals.destroy" thing="meal" @delete="updateFuzzySearchOnDeletion" />
-
+    <DeleteDialog
+      ref="deleteDialog"
+      description="meal"
+      @delete="deleteMeal"
+      @cancel="idToDelete = null"
+    />
 
   </div>
 </template>
