@@ -11,10 +11,9 @@ import H1 from '@/Components/H1ForIndex.vue'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import MultiSelect from '@/Components/MultiSelect.vue'
-
 import DeleteDialog from "@/Components/DeleteDialog.vue";
+import FindAThing from '@/Components/FindAThing.vue'
 
-import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 const props = defineProps({
@@ -27,6 +26,10 @@ const usdaIngredients = window.usdaIngredients ? window.usdaIngredients : []
 const ingredients = usdaIngredients.concat(props.user_ingredients)
 
 const cloneExistingDialog = ref(null)
+function cloneExisting(ingredient) {
+  if (ingredient && ingredient.id) router.get(route('ingredients.clone', ingredient.id));
+}
+
 const usdaSearchInput = ref(null)
 const userSearchInput = ref(null)
 
@@ -447,13 +450,12 @@ export default {
       </TabPanels>
     </TabGroup>
 
-    <SearchForThingAndGo
+    <FindAThing
       ref="cloneExistingDialog"
       :things="ingredients"
-      goRoute="ingredients.clone"
-      label="Search for an ingredient to clone"
-      title="Clone ingredient"
-      action="Clone"
+      dialog_title="Search for an ingredient to clone"
+      button_text="Okay"
+      @foundAThing="cloneExisting"
     />
 
     <DeleteDialog
