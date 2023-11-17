@@ -12,6 +12,7 @@ const props = defineProps({
   nutrientProfiles: Array,
   nutrientCategories: Array,
   units: Array,
+  thing: String,  // "ingredient", "meal", or "foodList"
 })
 
 const selectedUnit = ref(props.defaultUnit)
@@ -50,9 +51,12 @@ const scaleFactor = computed(() => {
       v-model:selected-unit="selectedUnit"
       v-model:selected-unit-amount="selectedUnitAmount"
       v-model:selected-intake-guideline="selectedIntakeGuideline"
+      :defaultUnit="defaultUnit"
+      :defaultUnitAmount="defaultUnitAmount"
       :densityGMl="densityGMl"
       :intakeGuidelines="intakeGuidelines"
       :units="prepareUnitsForDisplay(units, densityGMl)"
+      :thing="thing"
     />
 
     <NutrientProfileTables

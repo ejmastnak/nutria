@@ -118,6 +118,7 @@ export default {
       :nutrientProfiles="nutrient_profiles"
       :nutrientCategories="nutrient_categories"
       :units="units.concat(ingredient.custom_units)"
+      thing="ingredient"
     />
 
     <CustomUnitsShowDialog ref="customUnitsShowDialogRef" :custom_units="ingredient.custom_units" />

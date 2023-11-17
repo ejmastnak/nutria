@@ -12,9 +12,12 @@ const props = defineProps({
   selectedUnit: Object,
   selectedUnitAmount: [Number, String],
   selectedIntakeGuideline: Object,
+  defaultUnit: Object,
+  defaultUnitAmount: Number,
   densityGMl: Number,
   intakeGuidelines: Array,
   units: Array,
+  thing: String,  // "ingredient", "meal", or "foodList"
 })
 
 const emit = defineEmits([
@@ -43,6 +46,11 @@ const localSelectedIntakeGuideline = ref(props.selectedIntakeGuideline)
 function updateSelectedIntakeGuideline(newValue) {
   localSelectedIntakeGuideline.value = newValue
   emit('update:selectedIntakeGuideline', newValue)
+}
+
+function resetToDefaultAmountAndUnit() {
+  updateSelectedUnitAmount(props.defaultUnitAmount)
+  updateSelectedUnit(props.defaultUnit)
 }
 
 function resetTo100G() {
@@ -103,9 +111,11 @@ function resetTo100G() {
           </p>
         </div>
 
-        <PlainButton class="mt-1 text-sm !text-gray-600" @click="resetTo100G">
+        <PlainButton class="mt-1 text-sm !text-gray-600" @click="resetToDefaultAmountAndUnit">
           <ArrowPathIcon class="-ml-1 w-5 h-5 text-gray-500 shrink-0"/>
-          <p class="ml-1">Reset to 100 grams</p>
+          <p class="ml-1" v-if="thing === 'ingredient'">Reset to 100 g</p>
+          <p class="ml-1" v-if="thing === 'meal'">Reset to 1 meal</p>
+          <p class="ml-1" v-if="thing === 'foodList'">Reset to 1 food list</p>
         </PlainButton>
 
         <SimpleCombobox

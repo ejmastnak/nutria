@@ -121,6 +121,7 @@ export default {
       :nutrientProfiles="nutrient_profiles"
       :nutrientCategories="nutrient_categories"
       :units="Array(meal.meal_unit).concat(units)"
+      thing="meal"
     />
 
   </div>
