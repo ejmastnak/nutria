@@ -98,7 +98,7 @@ class MealService
             }
 
             // Update meal's custom unit
-            $unit = Unit::where('meal_id', $meal->id)->first();
+            $unit = $meal->meal_unit;
             if (!is_null($unit)) {
                 $unit->update([
                     'custom_mass_amount' => $mealMassInGrams,

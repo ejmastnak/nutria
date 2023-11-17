@@ -44,7 +44,7 @@ class FoodListController extends Controller
         return Inertia::render('FoodLists/Create', [
             'cloned_from_food_list' => null,
             'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
-            'meals' => Meal::getForUserWithUnits($userId),
+            'meals' => Meal::getForUserWithUnit($userId),
             'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'units' => Unit::getMassAndVolume(),
             'clone' => false,
@@ -63,7 +63,7 @@ class FoodListController extends Controller
         return Inertia::render('FoodLists/Create', [
             'food_list' => $foodList->withIngredientsAndMeals(),
             'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
-            'meals' => Meal::getForUserWithUnits($userId),
+            'meals' => Meal::getForUserWithUnit($userId),
             'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'units' => Unit::getMassAndVolume(),
             'can_create' => $user ? $user->can('create', FoodList::class) : false,
@@ -110,7 +110,7 @@ class FoodListController extends Controller
         return Inertia::render('FoodLists/Edit', [
             'food_list' => $foodList->withIngredientsAndMeals(),
             'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
-            'meals' => Meal::getForUserWithUnits($userId),
+            'meals' => Meal::getForUserWithUnit($userId),
             'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'units' => Unit::getMassAndVolume(),
             'can_view' => $user ? $user->can('view', $foodList) : false,

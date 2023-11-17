@@ -77,6 +77,18 @@ class FoodListSeeder extends Seeder
                 'mass_in_grams' => $foodListMassInGrams
             ]);
 
+            // Create a food-list-specific unit
+            Unit::create([
+                'name' => 'meal',
+                'seq_num' => -1,
+                'food_list_id' => $FoodList->id,
+                'custom_unit_amount' => 1,
+                'custom_mass_amount' => $foodListMassInGrams,
+                'custom_mass_unit_id' => $gramId,
+                'custom_grams' => $foodListMassInGrams,
+            ]);
+
+
         }
 
 

@@ -54,6 +54,18 @@ class MealSeeder extends Seeder
             $Meal->update([
                 'mass_in_grams' => $mealMassInGrams,
             ]);
+
+            // Create a meal-specific unit
+            Unit::create([
+                'name' => 'meal',
+                'seq_num' => -1,
+                'meal_id' => $Meal->id,
+                'custom_unit_amount' => 1,
+                'custom_mass_amount' => $mealMassInGrams,
+                'custom_mass_unit_id' => $gramId,
+                'custom_grams' => $mealMassInGrams,
+            ]);
+
         }
 
 

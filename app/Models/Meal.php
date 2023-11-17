@@ -42,10 +42,10 @@ class Meal extends Model
             ->get(['id', 'name']);
     }
 
-    public static function getForUserWithUnits(?int $userId) {
+    public static function getForUserWithUnit(?int $userId) {
         return is_null($userId) ? [] : self::where('user_id', $userId)
-            ->with('custom_units:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams')
-            ->get(['id', 'name', 'mass_in_grams', 'custom_units']);
+            ->with('custom_unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams')
+            ->get(['id', 'name', 'mass_in_grams']);
     }
 
     public function ingredient() {
@@ -60,8 +60,8 @@ class Meal extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function custom_units() {
-        return $this->hasMany(Unit::class, 'meal_id', 'id')->orderBy('seq_num');
+    public function meal_unit() {
+        return $this->hasOne(Unit::class, 'meal_id', 'id');
     }
 
     public function food_list_meals() {

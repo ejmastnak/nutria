@@ -22,7 +22,7 @@ class FoodList extends Model
             'food_list_ingredients.unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
             'food_list_meals:id,food_list_id,meal_id,amount,unit_id',
             'food_list_meals.meal:id,name,mass_in_grams',
-            'food_list_meals.meal.custom_units:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
+            'food_list_meals.meal.custom_unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
             'food_list_meals.unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
         ]);
         return $this->only([
@@ -49,6 +49,10 @@ class FoodList extends Model
 
     public function user() {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function food_list_unit() {
+        return $this->hasOne(Unit::class, 'food_list_id', 'id');
     }
 
 }

@@ -51,6 +51,17 @@ class FoodListService
             // Add food list's mass in grams
             $foodList->update([ 'mass_in_grams' => $foodListMassInGrams ]);
 
+            // Create a food-list-specific unit
+            Unit::create([
+                'name' => 'meal',
+                'seq_num' => -1,
+                'food_list_id' => $foodList->id,
+                'custom_unit_amount' => 1,
+                'custom_mass_amount' => $foodListMassInGrams,
+                'custom_mass_unit_id' => Unit::gramId(),
+                'custom_grams' => $foodListMassInGrams,
+            ]);
+
         });
         return $foodList;
     }
@@ -134,6 +145,15 @@ class FoodListService
                 if (!in_array($flm->id, $freshFoodListMealIds)) $flm->delete();
             }
             // ------------------------------------------------------------- //
+
+            // Update food list's custom unit
+            $unit = $foodList->food_list_unit;
+            if (!is_null($unit)) {
+                $unit->update([
+                    'custom_mass_amount' => $foodListMassInGrams,
+                    'custom_grams' => $foodListMassInGrams,
+                ]);
+            }
 
             // Update food list after meals and ingredients, to allow
             // calculating food list mass
