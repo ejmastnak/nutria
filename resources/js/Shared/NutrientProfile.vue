@@ -7,7 +7,7 @@ import { prepareUnitsForDisplay, gramAmountOfUnit } from '@/utils/GlobalFunction
 const props = defineProps({
   defaultUnit: Object,
   defaultUnitAmount: Number,
-  densityGMl: Number,
+  densityGMl: Number,  // nullable
   intakeGuidelines: Array,
   nutrientProfiles: Array,
   nutrientCategories: Array,

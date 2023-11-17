@@ -50,6 +50,18 @@ class Unit extends Model
             ]);
     }
 
+    public static function getMass() {
+        return self::whereNotNull('g')
+            ->orderBy('seq_num')
+            ->get([
+                'id',
+                'name',
+                'g',
+                'ml',
+                'seq_num',
+            ]);
+    }
+
     public static function numberMassAndVolumeUnits() {
         return self::whereNotNull('g')->orWhereNotNull('ml')->count();
     }

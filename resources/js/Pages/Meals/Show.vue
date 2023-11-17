@@ -5,6 +5,7 @@ import { ArchiveBoxArrowDownIcon } from '@heroicons/vue/24/outline'
 import { round, roundNonZero } from '@/utils/GlobalFunctions.js'
 import MyLink from '@/Components/MyLink.vue'
 import H1 from '@/Components/H1ForCrud.vue'
+import NutrientProfile from '@/Shared/NutrientProfile.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 
 const props = defineProps({
@@ -12,6 +13,7 @@ const props = defineProps({
   nutrient_profiles: Array,
   intake_guidelines: Array,
   nutrient_categories: Array,
+  units: Array,
   meals: Array,
   can_view: Boolean,
   can_create: Boolean,
@@ -110,6 +112,16 @@ export default {
         Consider <MyLink :colored="true" :href="route('meals.edit', meal.id)">adding some first</MyLink>.
       </div>
     </div>
+
+    <NutrientProfile
+      class="mt-6"
+      :defaultUnit="meal.meal_unit"
+      :defaultUnitAmount="1"
+      :intakeGuidelines="intake_guidelines"
+      :nutrientProfiles="nutrient_profiles"
+      :nutrientCategories="nutrient_categories"
+      :units="Array(meal.meal_unit).concat(units)"
+    />
 
   </div>
 </template>

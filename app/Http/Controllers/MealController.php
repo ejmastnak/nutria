@@ -86,6 +86,7 @@ class MealController extends Controller
             'nutrient_profiles' => $nutrientProfileService->getNutrientProfilesOfMeal($meal->id, $userId),
             'intake_guidelines' => IntakeGuideline::getForUser($userId),
             'nutrient_categories' => NutrientCategory::getWithName(),
+            'units' => Unit::getMass(),
             'meals' => Meal::getForUser($userId),
             'can_view' => $user ? $user->can('view', $meal) : false,
             'can_create' => $user ? $user->can('create', Meal::class) : false,
