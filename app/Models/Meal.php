@@ -21,6 +21,7 @@ class Meal extends Model
             'meal_ingredients.ingredient.custom_units:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
             'meal_ingredients.unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
             'ingredient:id,meal_id,name',
+            'meal_unit:id,name,g,ml,seq_num,meal_id,custom_grams',
         ]);
         return $this->only([
             'id',
@@ -28,6 +29,7 @@ class Meal extends Model
             'mass_in_grams',
             'meal_ingredients',
             'ingredient',
+            'meal_unit',
         ]);
     }
 
