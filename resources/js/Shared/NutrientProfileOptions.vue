@@ -127,7 +127,6 @@ function resetTo100G() {
           @update:modelValue="newValue => updateSelectedIntakeGuideline(newValue)"
         />
 
-
       </PopoverPanel>
 
     </Popover>

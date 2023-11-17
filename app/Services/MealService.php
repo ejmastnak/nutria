@@ -56,7 +56,7 @@ class MealService
         return $meal;
     }
 
-    public function updateMeal(array $data, Meal $meal): ?Meal
+    public function updateMeal(array $data, Meal $meal, NutrientProfileService $nutrientProfileService): ?Meal
     {
         DB::transaction(function () use ($data, $meal) {
 
@@ -114,7 +114,7 @@ class MealService
 
             // Update potential child ingredient
             $childIngredient = Ingredient::where('meal_id', $meal->id)->first();
-            if (!is_null($childIngredient)) $this->updateChildIngredient($meal, $childIngredient);
+            if (!is_null($childIngredient)) $this->updateChildIngredient($meal, $childIngredient, $nutrientProfileService);
 
         });
         return $meal;
@@ -124,7 +124,7 @@ class MealService
 
         // Does a child ingredient for this meal already exist?
         $childIngredient = Ingredient::where('meal_id', $meal->id)->first();
-        if (!is_null($childIngredient)) return $this->updateChildIngredient($meal, $childIngredient);
+        if (!is_null($childIngredient)) return $this->updateChildIngredient($meal, $childIngredient, $nutrientProfileService);
 
         $ingredient = null;
         DB::transaction(function () use ($meal, $userId, &$ingredient, $nutrientProfileService) {
@@ -133,6 +133,8 @@ class MealService
             $ingredient = Ingredient::create([
                 'name' => $meal->name . ' (ingredient)',
                 'ingredient_category_id' => IngredientCategory::otherCategory()->id,
+                'ingredient_nutrient_amount' => 100,
+                'ingredient_nutrient_amount_unit_id' => Unit::gramId(),
                 'meal_id' => $meal->id,
                 'user_id' => $userId,
             ]);
@@ -143,6 +145,7 @@ class MealService
                 IngredientNutrient::create([
                     'ingredient_id' => $ingredient->id,
                     'nutrient_id' => $nutrient->id,
+                    'amount' => $nutrientProfile[$nutrient->id] ? $nutrientProfile[$nutrient->id]->amount * (100/$meal->mass_in_grams) : 0.0,
                     'amount_per_100g' => $nutrientProfile[$nutrient->id] ? $nutrientProfile[$nutrient->id]->amount * (100/$meal->mass_in_grams) : 0.0,
                 ]);
             }
@@ -150,16 +153,17 @@ class MealService
         return $ingredient;
     }
 
-    public function updateChildIngredient(Meal $meal, Ingredient $ingredient): ?Ingredient {
-        DB::transaction(function () use ($meal, $userId, $ingredient, $nutrientProfileService) {
+    public function updateChildIngredient(Meal $meal, Ingredient $ingredient, NutrientProfileService $nutrientProfileService): ?Ingredient {
+        DB::transaction(function () use ($meal, $ingredient, $nutrientProfileService) {
 
             // Update ingredient
-            $ingredient = Ingredient::create([ 'name' => $meal->name . ' (ingredient)' ]);
+            $ingredient->update([ 'name' => $meal->name . ' (ingredient)' ]);
 
             // Update ingredient's nutrients
             $nutrientProfile = $nutrientProfileService->getNutrientIndexedMealProfile($meal->id);
-            foreach ($ingredientNutrient as $ingredient->ingredient_nutrients) {
+            foreach ($ingredient->ingredient_nutrients as $ingredientNutrient) {
                 $ingredientNutrient->update([
+                    'amount' => $nutrientProfile[$ingredientNutrient->nutrient_id] ? $nutrientProfile[$ingredientNutrient->nutrient_id]->amount * (100/$meal->mass_in_grams) : 0.0,
                     'amount_per_100g' => $nutrientProfile[$ingredientNutrient->nutrient_id] ? $nutrientProfile[$ingredientNutrient->nutrient_id]->amount * (100/$meal->mass_in_grams) : 0.0,
                 ]);
             }

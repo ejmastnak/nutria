@@ -119,19 +119,19 @@ class MealController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(MealUpdateRequest $request, Meal $meal, MealService $mealService)
+    public function update(MealUpdateRequest $request, Meal $meal, MealService $mealService, NutrientProfileService $nutrientProfileService)
     {
-        $mealService->updateMeal($request->validated(), $meal);
+        $mealService->updateMeal($request->validated(), $meal, $nutrientProfileService);
         return Redirect::route('meals.show', $meal->id)->with('message', 'Success! Meal updated successfully.');
     }
 
     /**
      *  Saves a Meal as a single Ingredient.
      */
-    public function saveAsIngredient(Meal $meal, MealService $mealService) {
+    public function saveAsIngredient(Meal $meal, MealService $mealService, NutrientProfileService $nutrientProfileService) {
         if (is_null($meal)) return back()->with('message', 'Error. Failed to create ingredient—the parent meal could not be resolved.');  // basic validation
         $user = Auth::user();
-        $ingredient = $mealService->saveAsIngredient($meal, $user->id);
+        $ingredient = $mealService->saveAsIngredient($meal, $user->id, $nutrientProfileService);
         return Redirect::route('ingredients.show', $ingredient->id)->with('message', 'Success! Ingredient successfully created.');
     }
 

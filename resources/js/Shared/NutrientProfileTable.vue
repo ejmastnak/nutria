@@ -57,7 +57,7 @@ function bg(pdv) {
           v-for="nutrient in nutrientProfile"
           class="border-t text-gray-600 font-medium text-sm"
         >
-          <td scope="row" class="px-4 py-2">
+          <td scope="row" class="px-4 py-2 whitespace-nowrap">
             {{nutrient.nutrient}}
           </td>
           <td class="px-3 py-2 text-right whitespace-nowrap">
