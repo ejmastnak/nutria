@@ -26,7 +26,7 @@ class MealController extends Controller
         $user = Auth::user();
         $userId = $user ? $user->id : null;
         return Inertia::render('Meals/Index', [
-            'meals' => Meal::getForUser($userId),
+            'meals' => Meal::getForUserWithChildIngredient($userId),
             'can_create' => $user ? $user->can('create', Meal::class) : false,
         ]);
     }
@@ -83,13 +83,15 @@ class MealController extends Controller
 
         return Inertia::render('Meals/Show', [
             'meal' => $meal->withIngredientsAndChildIngredient(),
-            'nutrient_profiles' => $nutrientProfileService->getNutrientProfilesOfMeal($meal->id),
+            'nutrient_profiles' => $nutrientProfileService->getNutrientProfilesOfMeal($meal->id, $userId),
             'intake_guidelines' => IntakeGuideline::getForUser($userId),
             'nutrient_categories' => NutrientCategory::getWithName(),
-            'can_edit' => $user ? $user->can('update', $meal) : false,
-            'can_clone' => $user ? $user->can('clone', $meal) : false,
-            'can_delete' => $user ? $user->can('delete', $meal) : false,
+            'meals' => Meal::getForUser($userId),
+            'can_view' => $user ? $user->can('view', $meal) : false,
             'can_create' => $user ? $user->can('create', Meal::class) : false,
+            'can_clone' => $user ? $user->can('clone', $meal) : false,
+            'can_update' => $user ? $user->can('update', $meal) : false,
+            'can_delete' => $user ? $user->can('delete', $meal) : false,
             'can_save_as_ingredient' => $user ? $user->can('saveAsIngredient', $meal) : false,
         ]);
     }

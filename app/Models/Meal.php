@@ -33,6 +33,11 @@ class Meal extends Model
 
     public static function getForUser(?int $userId) {
         return is_null($userId) ? [] : self::where('user_id', $userId)
+            ->get(['id', 'name']);
+    }
+
+    public static function getForUserWithChildIngredient(?int $userId) {
+        return is_null($userId) ? [] : self::where('user_id', $userId)
             ->with('ingredient:id,meal_id,name')
             ->get(['id', 'name']);
     }

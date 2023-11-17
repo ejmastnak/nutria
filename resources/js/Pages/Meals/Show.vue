@@ -1,43 +1,25 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { router } from '@inertiajs/vue3'
-import { Head } from '@inertiajs/vue3'
+import { router, Head } from '@inertiajs/vue3'
 import { ArchiveBoxArrowDownIcon } from '@heroicons/vue/24/outline'
-import { round } from '@/utils/GlobalFunctions.js'
-import NutrientProfile from '@/Shared/NutrientProfile.vue'
-import DeleteDialog from '@/Shared/DeleteDialog.vue'
-import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
-import CrudNavBar from '@/Shared/CrudNavBar.vue'
-import CrudNavBarEdit from '@/Shared/CrudNavBarEdit.vue'
-import CrudNavBarCloneLink from '@/Shared/CrudNavBarCloneLink.vue'
-import CrudNavBarDelete from '@/Shared/CrudNavBarDelete.vue'
-import CrudNavBarCreate from '@/Shared/CrudNavBarCreate.vue'
-import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
-import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
+import { round, roundNonZero } from '@/utils/GlobalFunctions.js'
 import MyLink from '@/Components/MyLink.vue'
 import H1 from '@/Components/H1ForCrud.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 
 const props = defineProps({
   meal: Object,
-  meals: Array,
   nutrient_profiles: Array,
   intake_guidelines: Array,
   nutrient_categories: Array,
-  can_edit: Boolean,
-  can_clone: Boolean,
-  can_delete: Boolean,
+  meals: Array,
+  can_view: Boolean,
   can_create: Boolean,
-  can_create_ingredient: Boolean,
+  can_clone: Boolean,
+  can_update: Boolean,
+  can_delete: Boolean,
+  can_save_as_ingredient: Boolean,
 })
-
-const deleteDialog = ref(null)
-const searchDialog = ref(null)
-
-const searchMeal = ref({})
-function search() {
-  router.get(route('meals.show', searchMeal.value.id))
-}
 
 function saveAsIngredient() {
   router.put(route('meals.save-as-ingredient', props.meal.id))
@@ -53,39 +35,10 @@ export default {
 </script>
 
 <template>
+
   <div>
 
     <Head :title="meal.name" />
-
-    <CrudNavBar>
-
-      <!-- Desktop items -->
-      <template v-slot:desktop-items>
-        <CrudNavBarIndex :href="route('meals.index')" />
-        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="meal" />
-        <CrudNavBarCreate :enabled="can_create" :href="route('meals.create')" />
-        <div class="flex ml-auto">
-          <CrudNavBarEdit v-if="can_edit" :enabled="can_edit" :href="route('meals.edit', meal.id)" />
-          <CrudNavBarCloneLink :enabled="can_clone" :href="route('meals.clone', meal.id)" />
-          <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(meal.id, meal.ingredient ? {id: meal.ingredient.id, name: meal.ingredient.name} : null)" />
-        </div>
-      </template>
-
-      <!-- Always-displayed mobile item -->
-      <template v-slot:mobile-displayed>
-        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="meal" />
-      </template>
-
-      <!-- Mobile menu items -->
-      <template v-slot:mobile-items>
-        <CrudNavBarIndex :href="route('meals.index')" />
-        <CrudNavBarCreate :enabled="can_create" :href="route('meals.create')" />
-        <CrudNavBarEdit v-if="can_edit" :enabled="can_edit" :href="route('meals.edit', meal.id)" />
-        <CrudNavBarCloneLink :enabled="can_clone" :href="route('meals.clone', meal.id)" />
-        <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(meal.id, meal.ingredient ? {id: meal.ingredient.id, name: meal.ingredient.name} : null)" />
-      </template>
-
-    </CrudNavBar>
 
     <!-- Meal name and descriptive pillboxes -->
     <div class="mt-8 flex">
@@ -99,14 +52,14 @@ export default {
             Meal
           </div>
           <div class="ml-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit whitespace-nowrap">
-            {{round(Number(meal.mass_in_grams))}} g
+            {{roundNonZero(Number(meal.mass_in_grams))}} g
           </div>
         </div>
       </div>
 
       <SecondaryButton
         class="flex ml-auto items-center h-fit rounded-lg mt-1 normal-case"
-        :class="{'!text-gray-300': !can_create}"
+        :class="{'!text-gray-300': !can_save_as_ingredient}"
         @click="saveAsIngredient"
       >
         <div class="flex items-center sm:whitespace-nowrap">
@@ -146,7 +99,7 @@ export default {
               </MyLink>
             </td>
             <td class="px-3 py-2 text-right whitespace-nowrap">
-              {{round(Number(meal_ingredient.amount), 1)}}
+              {{roundNonZero(Number(meal_ingredient.amount), 1)}}
               {{meal_ingredient.unit.name}}
             </td>
           </tr>
@@ -157,27 +110,6 @@ export default {
         Consider <MyLink :colored="true" :href="route('meals.edit', meal.id)">adding some first</MyLink>.
       </div>
     </div>
-
-    <NutrientProfile
-      v-if="meal.meal_ingredients.length"
-      class="mt-8"
-      :intake_guidelines="intake_guidelines"
-      :nutrient_profiles="nutrient_profiles"
-      :nutrient_categories="nutrient_categories"
-      :defaultMassInGrams="Number(meal.mass_in_grams)"
-      :displayMassInput="true"
-    />
-
-    <SearchForThingAndGo
-      ref="searchDialog"
-      :things="meals"
-      goRoute="meals.show"
-      label="Search for another meal"
-      title=""
-      action="Go"
-    />
-
-    <DeleteDialog ref="deleteDialog" deleteRoute="meals.destroy" thing="meal" />
 
   </div>
 </template>

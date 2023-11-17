@@ -116,7 +116,7 @@ class NutrientProfileService
         return $nutrientProfiles;
     }
 
-    private function profileMeal($mealId) {
+    private function profileMeal($mealId, $intakeGuidelineId) {
         if (is_null(Meal::find($mealId))) return [];
         if (is_null(IntakeGuideline::find($intakeGuidelineId))) return [];
 
