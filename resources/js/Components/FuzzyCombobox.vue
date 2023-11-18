@@ -31,6 +31,10 @@ const props = defineProps({
   throttlems: {  // ms amount used to throttle fuzzy search
     type: Number,
     default: 300,
+  },
+  showIcon: {
+    type: Boolean,
+    default: true,
   }
 })
 
@@ -77,7 +81,7 @@ watch(query, throttle(function (value) {
             @change="query = $event.target.value"
             :displayValue="(option) => option ? option[searchKey] : ''"
           />
-          <ComboboxButton tabindex="0" class="absolute right-0 px-4 rounded-md h-full focus:outline-none focus:border-2 focus:border-blue-500 active:border-0" >
+          <ComboboxButton v-if="showIcon" tabindex="0" class="absolute right-0 px-4 rounded-md h-full focus:outline-none focus:border-2 focus:border-blue-500 active:border-0" >
             <ChevronDownIcon class="w-5 h-5 text-gray-600 shrink-0"/>
           </ComboboxButton>
         </div>

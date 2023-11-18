@@ -42,8 +42,8 @@ class MealController extends Controller
         return Inertia::render('Meals/Create', [
             'meal' => null,
             'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
-            'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'units' => Unit::getMassAndVolume(),
+            'meals' => Meal::getForUser($userId),
             'can_create' => $user ? $user->can('create', Meal::class) : false
         ]);
     }
@@ -58,9 +58,13 @@ class MealController extends Controller
         return Inertia::render('Meals/Create', [
             'meal' => $meal->withIngredientsAndChildIngredient(),
             'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
-            'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'units' => Unit::getMassAndVolume(),
+            'meals' => Meal::getForUser($userId),
+            'can_view' => $user ? $user->can('view', $meal) : false,
             'can_create' => $user ? $user->can('create', Meal::class) : false,
+            'can_clone' => $user ? $user->can('clone', $meal) : false,
+            'can_update' => $user ? $user->can('update', $meal) : false,
+            'can_delete' => $user ? $user->can('delete', $meal) : false,
         ]);
     }
 
@@ -109,6 +113,7 @@ class MealController extends Controller
             'meal' => $meal->withIngredientsAndChildIngredient(),
             'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
             'units' => Unit::getMassAndVolume(),
+            'meals' => Meal::getForUser($userId),
             'can_view' => $user ? $user->can('view', $meal) : false,
             'can_clone' => $user ? $user->can('clone', $meal) : false,
             'can_delete' => $user ? $user->can('delete', $meal) : false,

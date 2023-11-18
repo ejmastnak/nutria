@@ -2,33 +2,21 @@
 import { ref } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import CreateOrEdit from './Partials/CreateOrEdit.vue'
-import CrudNavBar from '@/Shared/CrudNavBar.vue'
-import CrudNavBarView from '@/Shared/CrudNavBarView.vue'
-import CrudNavBarCloneLink from '@/Shared/CrudNavBarCloneLink.vue'
-import CrudNavBarDelete from '@/Shared/CrudNavBarDelete.vue'
-import CrudNavBarCreate from '@/Shared/CrudNavBarCreate.vue'
-import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
-import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
-import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
-import DeleteDialog from '@/Shared/DeleteDialog.vue'
-import MyLink from '@/Components/MyLink.vue'
 import H1 from '@/Components/H1ForCrud.vue'
 
 const props = defineProps({
   meal: Object,
-  meals: Array,
-  ingredients: Array,
-  ingredient_categories: Array,
+  user_ingredients: Array,
   units: Array,
+  meals: Array,
   can_view: Boolean,
+  can_create: Boolean,
   can_clone: Boolean,
+  can_update: Boolean,
   can_delete: Boolean,
-  can_create: Boolean
 })
 
-const searchDialog = ref(null)
-const deleteDialog = ref(null)
-
+const ingredients = props.user_ingredients.concat(window.usdaIngredients ? window.usdaIngredients : [])
 </script>
 
 <script>
@@ -41,58 +29,12 @@ export default {
 <template>
   <div class="">
     <Head :title="'Edit ' + meal.name" />
-
-    <CrudNavBar>
-
-      <!-- Desktop items -->
-      <template v-slot:desktop-items>
-        <CrudNavBarIndex :href="route('meals.index')" />
-        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="meal" />
-        <CrudNavBarCreate :enabled="can_create" text="New" :href="route('meals.create')" />
-        <div class="flex ml-auto">
-          <CrudNavBarView :enabled="can_view" text="View" :href="route('meals.show', meal.id)" />
-          <CrudNavBarCloneLink :enabled="can_clone" text="Clone" :href="route('meals.clone', meal.id)" />
-          <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(meal.id, meal.ingredient ? {id: meal.ingredient.id, name: meal.ingredient.name} : null)" />
-        </div>
-      </template>
-
-      <!-- Always-displayed mobile item -->
-      <template v-slot:mobile-displayed>
-        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="meal" />
-      </template>
-
-      <!-- Mobile menu items -->
-      <template v-slot:mobile-items>
-        <CrudNavBarIndex :href="route('meals.index')" />
-        <CrudNavBarCreate :enabled="can_create" text="New" :href="route('meals.create')" />
-        <CrudNavBarView :enabled="can_view" text="View" :href="route('meals.show', meal.id)" />
-        <CrudNavBarCloneLink :enabled="can_clone" text="Clone" :href="route('meals.clone', meal.id)" />
-        <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(meal.id, meal.ingredient ? {id: meal.ingredient.id, name: meal.ingredient.name} : null)" />
-      </template>
-
-    </CrudNavBar>
-
     <H1 class="mt-8" :text="'Edit ' + meal.name" />
-
     <CreateOrEdit
       :meal="meal"
       :ingredients="ingredients"
-      :ingredient_categories="ingredient_categories"
       :units="units"
       :create="false"
     />
-
-    <!-- Search for a meal -->
-    <SearchForThingAndGo
-      ref="searchDialog"
-      :things="meals"
-      goRoute="meals.show"
-      label="Search for another meal"
-      title=""
-      action="Go"
-    />
-
-    <DeleteDialog ref="deleteDialog" deleteRoute="meals.destroy" thing="meal" />
-
   </div>
 </template>
