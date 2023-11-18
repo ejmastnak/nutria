@@ -58,7 +58,7 @@ class MealService
 
     public function updateMeal(array $data, Meal $meal, NutrientProfileService $nutrientProfileService): ?Meal
     {
-        DB::transaction(function () use ($data, $meal) {
+        DB::transaction(function () use ($data, $meal, $nutrientProfileService) {
 
             $mealMassInGrams = 0;
             $freshMealIngredientIds = [];

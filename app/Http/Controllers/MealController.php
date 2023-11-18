@@ -115,7 +115,9 @@ class MealController extends Controller
             'units' => Unit::getMassAndVolume(),
             'meals' => Meal::getForUser($userId),
             'can_view' => $user ? $user->can('view', $meal) : false,
+            'can_create' => $user ? $user->can('create', Meal::class) : false,
             'can_clone' => $user ? $user->can('clone', $meal) : false,
+            'can_update' => $user ? $user->can('update', $meal) : false,
             'can_delete' => $user ? $user->can('delete', $meal) : false,
             'can_create' => $user ? $user->can('create', Meal::class) : false,
         ]);

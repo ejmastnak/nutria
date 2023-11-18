@@ -7,6 +7,7 @@ import MyLink from '@/Components/MyLink.vue'
 import H1 from '@/Components/H1ForCrud.vue'
 import NutrientProfile from '@/Shared/NutrientProfile.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
+import SidebarLayout from "@/Layouts/SidebarLayout.vue";
 
 const props = defineProps({
   meal: Object,
@@ -38,8 +39,18 @@ export default {
 
 <template>
 
-  <div>
-
+  <SidebarLayout
+    page="show"
+    route_basename="meals"
+    :id="meal.id"
+    :things="meals"
+    thing="meal"
+    :can_view="can_view"
+    :can_create="can_create"
+    :can_clone="can_clone"
+    :can_update="can_update"
+    :can_delete="can_delete"
+  >
     <Head :title="meal.name" />
 
     <!-- Meal name and descriptive pillboxes -->
@@ -124,5 +135,5 @@ export default {
       thing="meal"
     />
 
-  </div>
+  </SidebarLayout>
 </template>

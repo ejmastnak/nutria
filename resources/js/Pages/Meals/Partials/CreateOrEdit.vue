@@ -22,18 +22,22 @@ const props = defineProps({
 const form = useForm({
   id: props.meal ? props.meal.id : null,
   name: props.meal ? props.meal.name : "",
-  meal_ingredients: props.meal ? props.meal.meal_ingredients.map((meal_ingredient, idx) => ({
+  meal_ingredients: [],  // filled in on submit
+})
+
+const mealIngredients = ref(props.meal
+  ? props.meal.meal_ingredients.map((meal_ingredient, idx) => ({
     id: idx,
     meal_ingredient: meal_ingredient,
-  })) : []
-})
+  }))
+  : [])
 
 const nameInput = ref(null)
 
 const mealIngredientTableCellsRef = ref([])
 var nextId = 1
 function addMealIngredient() {
-  form.meal_ingredients.push({
+  mealIngredients.value.push({
     id: nextId,
     meal_ingredient: {
       "id": null,
@@ -57,24 +61,24 @@ function addMealIngredient() {
 }
 
 function updateMealIngredient(idx, newIngredient) {
-  form.meal_ingredients[idx].meal_ingredient.ingredient_id = newIngredient.id
-  form.meal_ingredients[idx].meal_ingredient.ingredient = newIngredient
+  mealIngredients.value[idx].meal_ingredient.ingredient_id = newIngredient.id
+  mealIngredients.value[idx].meal_ingredient.ingredient = newIngredient
 
   // Reset ingredient's unit (to avoid a lingering unit not supported by the
   // new ingredient) and amount (since we're already reseting unit, let's also
   // reset amount for consisten user experience).
-  form.meal_ingredients[idx].meal_ingredient.unit_id = props.units.find(unit => unit.name === 'g').id
-  form.meal_ingredients[idx].meal_ingredient.unit = props.units.find(unit => unit.name === 'g')
-  form.meal_ingredients[idx].meal_ingredient.amount = null
+  mealIngredients.value[idx].meal_ingredient.unit_id = props.units.find(unit => unit.name === 'g').id
+  mealIngredients.value[idx].meal_ingredient.unit = props.units.find(unit => unit.name === 'g')
+  mealIngredients.value[idx].meal_ingredient.amount = null
 }
 
 function deleteMealIngredient(idx) {
-  if (idx >= 0 && idx < form.meal_ingredients.length) form.meal_ingredients.splice(idx, 1)
+  if (idx >= 0 && idx < mealIngredients.value.length) mealIngredients.value.splice(idx, 1)
 }
 
 function submit() {
   // Drop empty ingredients and unpack nested meal_ingredient object
-  form.meal_ingredients = form.meal_ingredients.filter(mi => mi.meal_ingredient.ingredient).map(mi => mi.meal_ingredient)
+  form.meal_ingredients = mealIngredients.value.filter(mi => mi.meal_ingredient.ingredient).map(mi => mi.meal_ingredient)
   if (props.create) {
     form.post(route('meals.store'))
   } else {
@@ -124,7 +128,7 @@ export default {
       <h2 class="text-lg">Meal ingredients</h2>
       <InputError :message="form.errors.meal_ingredients" />
 
-      <table v-if="form.meal_ingredients.length" class="mt-2 text-sm sm:text-base text-left">
+      <table v-if="mealIngredients.length" class="mt-2 text-sm sm:text-base text-left">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
             <th scope="col" class="px-4 py-3 bg-blue-50 w-7/12">
@@ -141,7 +145,7 @@ export default {
         </thead>
         <tbody>
           <tr
-            v-for="(meal_ingredient, idx) in form.meal_ingredients"
+            v-for="(meal_ingredient, idx) in mealIngredients"
             :key="meal_ingredient.id"
             class="border-t text-gray-600"
           >
@@ -152,8 +156,10 @@ export default {
                 :showIcon="false"
                 @update:modelValue="newValue => updateMealIngredient(idx, newValue)"
               />
-              <InputError class="mt-2 text-left" :message="form.errors['meal_ingredients.' + idx + '.id']" />
-              <InputError class="mt-2 text-left" :message="form.errors['meal_ingredients.' + idx + '.ingredient_id']" />
+              <div class="mt-2 text-left">
+                <InputError :message="form.errors['meal_ingredients.' + idx + '.id']" />
+                <InputError :message="form.errors['meal_ingredients.' + idx + '.ingredient_id']" />
+              </div>
             </td>
             <td class="px-4 py-2 text-right">
               <div class="w-fit ml-auto">
@@ -173,7 +179,10 @@ export default {
                 :modelValue="meal_ingredient.meal_ingredient.unit"
                 @update:modelValue="newValue => (meal_ingredient.meal_ingredient.unit_id = newValue.id, meal_ingredient.meal_ingredient.unit = newValue)"
               />
-              <InputError class="mt-2 text-left" :message="form.errors['meal_ingredients.' + idx + '.unit_id']" />
+              <div class="mt-2 text-left">
+                <InputError :message="form.errors['meal_ingredients.' + idx + '.unit_id']" />
+                <InputError :message="form.errors['meal_ingredients.' + idx]" />
+              </div>
             </td>
             <td class="px-4 py-2">
               <button
@@ -219,10 +228,6 @@ export default {
       >
         Cancel
       </SecondaryLinkButton>
-
-      <pre>
-        {{form}}
-      </pre>
 
     </section>
 

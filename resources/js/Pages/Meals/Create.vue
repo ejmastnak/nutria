@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import CreateOrEdit from './Partials/CreateOrEdit.vue'
 import H1 from '@/Components/H1ForCrud.vue'
+import SidebarLayout from "@/Layouts/SidebarLayout.vue";
 
 const props = defineProps({
   meal: Object,
@@ -27,7 +28,18 @@ export default {
 </script>
 
 <template>
-  <div>
+  <SidebarLayout
+    :page="meal ? 'clone' : 'create'"
+    route_basename="meals"
+    :id="meal ? meal.id : null"
+    :things="meals"
+    thing="meal"
+    :can_view="can_view"
+    :can_create="can_create"
+    :can_clone="can_clone"
+    :can_update="can_update"
+    :can_delete="can_delete"
+  >
     <Head title="New Meal" />
     <H1 class="mt-8" text="New Meal" />
     <p v-if="meal" class="text-gray-700">(Cloned from {{meal.name}})</p>
@@ -37,5 +49,5 @@ export default {
       :units="units"
       :create="true"
     />
-  </div>
+  </SidebarLayout>
 </template>

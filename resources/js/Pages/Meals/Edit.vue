@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import CreateOrEdit from './Partials/CreateOrEdit.vue'
 import H1 from '@/Components/H1ForCrud.vue'
+import SidebarLayout from "@/Layouts/SidebarLayout.vue";
 
 const props = defineProps({
   meal: Object,
@@ -27,7 +28,18 @@ export default {
 </script>
 
 <template>
-  <div class="">
+  <SidebarLayout
+    page="edit"
+    route_basename="meals"
+    :id="meal.id"
+    :things="meals"
+    thing="meal"
+    :can_view="can_view"
+    :can_create="can_create"
+    :can_clone="can_clone"
+    :can_update="can_update"
+    :can_delete="can_delete"
+  >
     <Head :title="'Edit ' + meal.name" />
     <H1 class="mt-8" :text="'Edit ' + meal.name" />
     <CreateOrEdit
@@ -36,5 +48,5 @@ export default {
       :units="units"
       :create="false"
     />
-  </div>
+  </SidebarLayout>
 </template>
