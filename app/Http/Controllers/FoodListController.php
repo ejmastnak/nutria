@@ -89,13 +89,16 @@ class FoodListController extends Controller
 
         return Inertia::render('FoodLists/Show', [
             'food_list' => $foodList->withIngredientsAndMeals(),
-            'nutrient_profiles' => $nutrientProfileService->getNutrientProfilesOfFoodList($foodList->id),
-            'intake_guidelines' => IntakeGuideline::forUser($userId),
+            'nutrient_profiles' => $nutrientProfileService->getNutrientProfilesOfFoodList($foodList->id, $userId),
+            'intake_guidelines' => IntakeGuideline::getForUser($userId),
             'nutrient_categories' => NutrientCategory::getWithName(),
-            'can_edit' => $user ? $user->can('update', $foodList) : false,
+            'units' => Unit::getMass(),
+            'food_lists' => FoodList::getForUser($userId),
+            'can_view' => $user ? $user->can('view', $foodList) : false,
+            'can_create' => $user ? $user->can('create', FoodList::class) : false,
             'can_clone' => $user ? $user->can('clone', $foodList) : false,
+            'can_update' => $user ? $user->can('update', $foodList) : false,
             'can_delete' => $user ? $user->can('delete', $foodList) : false,
-            'can_create' => $user ? $user->can('create', FoodList::class) : false
         ]);
     }
 

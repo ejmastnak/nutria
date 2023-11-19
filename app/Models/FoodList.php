@@ -18,19 +18,21 @@ class FoodList extends Model
         $this->load([
             'food_list_ingredients:id,food_list_id,ingredient_id,amount,unit_id',
             'food_list_ingredients.ingredient:id,name',
-            'food_list_ingredients.ingredient.customUnits:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
+            'food_list_ingredients.ingredient.custom_units:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
             'food_list_ingredients.unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
             'food_list_meals:id,food_list_id,meal_id,amount,unit_id',
             'food_list_meals.meal:id,name,mass_in_grams',
-            'food_list_meals.meal.custom_unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
+            'food_list_meals.meal.meal_unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
             'food_list_meals.unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
+            'food_list_unit:id,name,g,ml,seq_num,food_list_id,custom_grams',
         ]);
         return $this->only([
             'id',
             'name',
             'mass_in_grams',
-            'foodList_ingredients',
+            'food_list_ingredients',
             'food_list_meals',
+            'food_list_unit',
         ]);
     }
 
@@ -39,12 +41,12 @@ class FoodList extends Model
             ->get(['id', 'name']);
     }
 
-    public function foodList_ingredients() {
+    public function food_list_ingredients() {
         return $this->hasMany(FoodListIngredient::class, 'food_list_id', 'id')->orderBy('seq_num');
     }
 
     public function food_list_meals() {
-        return $this->hasMany(FoodListMeal::class, 'food_list_id', 'id')->orderBy('idx');
+        return $this->hasMany(FoodListMeal::class, 'food_list_id', 'id')->orderBy('seq_num');
     }
 
     public function user() {

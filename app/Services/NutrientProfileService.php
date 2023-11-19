@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Models\Meal;
 use App\Models\Ingredient;
+use App\Models\FoodList;
 use App\Models\IntakeGuideline;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -188,7 +189,7 @@ class NutrientProfileService
         return $nutrientProfiles;
     }
 
-    private function profileFoodList($foodListId) {
+    private function profileFoodList($foodListId, $intakeGuidelineId) {
         if (is_null(FoodList::find($foodListId))) return [];
         if (is_null(IntakeGuideline::find($intakeGuidelineId))) return [];
 

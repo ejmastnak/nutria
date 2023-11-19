@@ -79,7 +79,7 @@ class FoodListSeeder extends Seeder
 
             // Create a food-list-specific unit
             Unit::create([
-                'name' => 'meal',
+                'name' => 'food list',
                 'seq_num' => -1,
                 'food_list_id' => $FoodList->id,
                 'custom_unit_amount' => 1,
