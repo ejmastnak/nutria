@@ -37,7 +37,7 @@ class HasMealsIfNoIngredients implements DataAwareRule, ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (count($value) == 0 && count($this->data['food_list_ingredients']) == 0) {
-            $fail('Include at least one meal or ingredient.');
+            $fail('Include at least one meal (or one ingredient).');
         }
     }
 }

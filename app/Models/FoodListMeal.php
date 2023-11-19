@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class FoodListMeal extends Model
@@ -17,6 +18,13 @@ class FoodListMeal extends Model
         'mass_in_grams',
         'seq_num',
     ];
+
+    protected function amount(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => $value + 0,
+        );
+    }
 
     public function food_list() {
         return $this->belongsTo(FoodList::class, 'food_list_id', 'id');

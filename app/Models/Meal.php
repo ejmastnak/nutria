@@ -46,7 +46,7 @@ class Meal extends Model
 
     public static function getForUserWithUnit(?int $userId) {
         return is_null($userId) ? [] : self::where('user_id', $userId)
-            ->with('custom_unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams')
+            ->with('meal_unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams')
             ->get(['id', 'name', 'mass_in_grams']);
     }
 

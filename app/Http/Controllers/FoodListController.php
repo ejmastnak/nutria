@@ -42,12 +42,11 @@ class FoodListController extends Controller
         $userId = $user ? $user->id : null;
 
         return Inertia::render('FoodLists/Create', [
-            'cloned_from_food_list' => null,
+            'food_list' => null,
             'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
             'meals' => Meal::getForUserWithUnit($userId),
-            'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'units' => Unit::getMassAndVolume(),
-            'clone' => false,
+            'food_lists' => FoodList::getForUser($userId),
             'can_create' => $user ? $user->can('create', FoodList::class) : false,
         ]);
     }
@@ -64,9 +63,13 @@ class FoodListController extends Controller
             'food_list' => $foodList->withIngredientsAndMeals(),
             'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
             'meals' => Meal::getForUserWithUnit($userId),
-            'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'units' => Unit::getMassAndVolume(),
+            'food_lists' => FoodList::getForUser($userId),
+            'can_view' => $user ? $user->can('view', $foodList) : false,
             'can_create' => $user ? $user->can('create', FoodList::class) : false,
+            'can_clone' => $user ? $user->can('clone', $foodList) : false,
+            'can_update' => $user ? $user->can('update', $foodList) : false,
+            'can_delete' => $user ? $user->can('delete', $foodList) : false,
         ]);
     }
 
@@ -75,6 +78,7 @@ class FoodListController extends Controller
      */
     public function store(FoodListStoreRequest $request, FoodListService $foodListService)
     {
+        dd("Validated");
         $foodList = $foodListService->storeFoodList($request->validated(), $request->user()->id);
         return Redirect::route('food-lists.show', $foodList->id)->with('message', 'Success! Food List created successfully.');
     }
@@ -114,12 +118,13 @@ class FoodListController extends Controller
             'food_list' => $foodList->withIngredientsAndMeals(),
             'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
             'meals' => Meal::getForUserWithUnit($userId),
-            'ingredient_categories' => IngredientCategory::getWithNameSorted(),
             'units' => Unit::getMassAndVolume(),
+            'food_lists' => FoodList::getForUser($userId),
             'can_view' => $user ? $user->can('view', $foodList) : false,
+            'can_create' => $user ? $user->can('create', FoodList::class) : false,
             'can_clone' => $user ? $user->can('clone', $foodList) : false,
+            'can_update' => $user ? $user->can('update', $foodList) : false,
             'can_delete' => $user ? $user->can('delete', $foodList) : false,
-            'can_create' => $user ? $user->can('create', FoodList::class) : false
         ]);
     }
 
@@ -128,6 +133,7 @@ class FoodListController extends Controller
      */
     public function update(FoodListUpdateRequest $request, FoodList $foodList, FoodListService $foodListService)
     {
+        dd("Validated");
         $foodListService->updateFoodList($request->validated(), $foodList);
         return Redirect::route('food-lists.show', $foodList->id)->with('message', 'Success! Food List updated successfully.');
     }
