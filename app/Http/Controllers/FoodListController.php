@@ -78,7 +78,6 @@ class FoodListController extends Controller
      */
     public function store(FoodListStoreRequest $request, FoodListService $foodListService)
     {
-        dd("Validated");
         $foodList = $foodListService->storeFoodList($request->validated(), $request->user()->id);
         return Redirect::route('food-lists.show', $foodList->id)->with('message', 'Success! Food List created successfully.');
     }
@@ -133,7 +132,6 @@ class FoodListController extends Controller
      */
     public function update(FoodListUpdateRequest $request, FoodList $foodList, FoodListService $foodListService)
     {
-        dd("Validated");
         $foodListService->updateFoodList($request->validated(), $foodList);
         return Redirect::route('food-lists.show', $foodList->id)->with('message', 'Success! Food List updated successfully.');
     }

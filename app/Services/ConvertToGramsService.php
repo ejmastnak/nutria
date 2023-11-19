@@ -23,11 +23,10 @@ class ConvertToGramsService
         // For mass units
         if (!is_null($unit->g)) return $amount * $unit->g;
 
-        $ingredient = Ingredient::find($ingredientId);
-        if (is_null($ingredient)) return null;
-
         // For volume units
         if (!is_null($unit->ml)) {
+            $ingredient = Ingredient::find($ingredientId);
+            if (is_null($ingredient)) return null;
             if (is_null($ingredient->density_g_ml)) return null;
             // Convert volume amount to ml, then from ml to grams
             return $amount * $unit->ml * $ingredient->density_g_ml;

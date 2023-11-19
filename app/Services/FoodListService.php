@@ -23,7 +23,7 @@ class FoodListService
             ]);
 
             // Create FoodListIngredients
-            foreach (data['food_list_ingredients'] as $idx=>$fli) {
+            foreach ($data['food_list_ingredients'] as $idx=>$fli) {
                 $fli = FoodListIngredient::create([
                     'food_list_id' => $foodList->id,
                     'ingredient_id' => $fli['ingredient_id'],
@@ -36,7 +36,7 @@ class FoodListService
             }
 
             // Create FoodListMeal
-            foreach (data['food_list_meals'] as $idx=>$flm) {
+            foreach ($data['food_list_meals'] as $idx=>$flm) {
                 $flm = FoodListMeal::create([
                     'food_list_id' => $foodList->id,
                     'meal_id' => $flm['meal_id'],
