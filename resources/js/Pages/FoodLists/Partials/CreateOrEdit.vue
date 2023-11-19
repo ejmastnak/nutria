@@ -368,10 +368,6 @@ export default {
 
     </section>
 
-    <pre>
-      {{form.errors}}
-    </pre>
-
   </form>
 
 </template>

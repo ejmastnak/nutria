@@ -2,8 +2,9 @@
 import { ref, computed } from 'vue'
 import { router, Head } from '@inertiajs/vue3'
 import { roundNonZero } from '@/utils/GlobalFunctions.js'
-import NutrientProfile from '@/Shared/NutrientProfile.vue'
 import H1 from '@/Components/H1ForCrud.vue'
+import NutrientProfile from '@/Shared/NutrientProfile.vue'
+import SidebarLayout from "@/Layouts/SidebarLayout.vue";
 import MyLink from '@/Components/MyLink.vue'
 
 const props = defineProps({
@@ -30,10 +31,20 @@ export default {
 </script>
 
 <template>
-
-  <div>
-
+  <SidebarLayout
+    page="show"
+    route_basename="food-lists"
+    :id="food_list.id"
+    :things="food_lists"
+    thing="food_list"
+    :can_view="can_view"
+    :can_create="can_create"
+    :can_clone="can_clone"
+    :can_update="can_update"
+    :can_delete="can_delete"
+  >
     <Head :title="food_list.name" />
+
     <div>
 
       <H1 :text="food_list.name" />
@@ -143,5 +154,5 @@ export default {
       thing="foodList"
     />
 
-  </div>
+  </SidebarLayout>
 </template>

@@ -1,8 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 import { Head } from '@inertiajs/vue3'
-import CreateOrEdit from './Partials/CreateOrEdit.vue'
 import H1 from '@/Components/H1ForCrud.vue'
+import CreateOrEdit from './Partials/CreateOrEdit.vue'
+import SidebarLayout from "@/Layouts/SidebarLayout.vue";
 
 const props = defineProps({
   food_list: Object,
@@ -28,8 +29,18 @@ export default {
 </script>
 
 <template>
-
-  <div>
+  <SidebarLayout
+    page="edit"
+    route_basename="food-lists"
+    :id="food_list.id"
+    :things="food_lists"
+    thing="food_list"
+    :can_view="can_view"
+    :can_create="can_create"
+    :can_clone="can_clone"
+    :can_update="can_update"
+    :can_delete="can_delete"
+  >
     <Head :title="'Edit ' + food_list.name" />
 
     <H1 class="mt-8" :text="'Edit ' + food_list.name" />
@@ -42,5 +53,5 @@ export default {
       :create="false"
     />
 
-  </div>
+  </SidebarLayout>
 </template>

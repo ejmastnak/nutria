@@ -1,8 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
-import CreateOrEdit from './Partials/CreateOrEdit.vue'
 import H1 from '@/Components/H1ForCrud.vue'
+import CreateOrEdit from './Partials/CreateOrEdit.vue'
+import SidebarLayout from "@/Layouts/SidebarLayout.vue";
 
 const props = defineProps({
   food_list: Object,
@@ -28,8 +29,18 @@ export default {
 </script>
 
 <template>
-
-  <div>
+  <SidebarLayout
+    :page="food_list ? 'clone' : 'create'"
+    route_basename="food-lists"
+    :id="food_list ? food_list.id : null"
+    :things="food_lists"
+    thing="food list"
+    :can_view="can_view"
+    :can_create="can_create"
+    :can_clone="can_clone"
+    :can_update="can_update"
+    :can_delete="can_delete"
+  >
     <Head title="New Food List" />
     <H1 class="mt-8" text="New Food List" />
     <p v-if="food_list" class="text-gray-700">(Cloned from {{food_list.name}})</p>
@@ -42,5 +53,5 @@ export default {
       :create="true"
     />
 
-  </div>
+  </SidebarLayout>
 </template>
