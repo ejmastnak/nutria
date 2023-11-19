@@ -11,16 +11,16 @@ import EditOriginal from './SidebarPartials/EditOriginal.vue'
 import DeleteOriginal from './SidebarPartials/DeleteOriginal.vue'
 
 const props = defineProps({
-  page: String,  // "show", "create", "clone", or "edit"
+  page: String,  // "index", "show", "create", "clone", or "edit"
   route_basename: String,  // "ingredients", "meals", "food-lists", or "intake-guidelines"
   id: Number,  // id of this thing
   things: Array,  // list of all things
   thing: String,  // e.g. "ingredient", "meal", etc.
-  can_view: Boolean,
   can_create: Boolean,
-  can_clone: Boolean,
-  can_update: Boolean,
-  can_delete: Boolean,
+  can_view: {type: Boolean, default: false},
+  can_clone: {type: Boolean, default: false},
+  can_update: {type: Boolean, default: false},
+  can_delete: {type: Boolean, default: false},
 })
 
 const showingNavigationDropdown = ref(false);

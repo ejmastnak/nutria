@@ -54,7 +54,7 @@ export default {
     <Head :title="meal.name" />
 
     <!-- Meal name and descriptive pillboxes -->
-    <div class="mt-8 flex">
+    <div class="flex">
 
       <div class="grow-[2] mr-4">
         <H1 :text="meal.name" />

@@ -5,13 +5,12 @@ import debounce from "lodash/debounce";
 import { ref, watch, onMounted, onBeforeUnmount, computed } from 'vue'
 import { Head, router } from '@inertiajs/vue3'
 import { TrashIcon, PlusCircleIcon, DocumentDuplicateIcon, MagnifyingGlassIcon, XMarkIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
-import MyLink from '@/Components/MyLink.vue'
 import H1 from '@/Components/H1ForIndex.vue'
-import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
+import SidebarLayout from "@/Layouts/SidebarLayout.vue";
+import MyLink from '@/Components/MyLink.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import MultiSelect from '@/Components/MultiSelect.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
-import FindAThing from '@/Components/FindAThing.vue'
 
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
@@ -23,11 +22,6 @@ const props = defineProps({
 
 const usdaIngredients = window.usdaIngredients ? window.usdaIngredients : []
 const ingredients = usdaIngredients.concat(props.user_ingredients)
-
-const cloneExistingDialog = ref(null)
-function cloneExisting(ingredient) {
-  if (ingredient && ingredient.id) router.get(route('ingredients.clone', ingredient.id));
-}
 
 const usdaSearchInput = ref(null)
 const userSearchInput = ref(null)
@@ -175,43 +169,22 @@ export default {
 </script>
 
 <template>
-
-  <div class="">
+  <SidebarLayout
+    page="index"
+    route_basename="ingredients"
+    :id="null"
+    :things="ingredients"
+    thing="ingredient"
+    :can_create="can_create"
+  >
     <Head title="Ingredients" />
 
     <!-- Title and new ingredient top row -->
-    <div class="flex">
-
-      <div class="mr-2 p-1">
-        <H1 text="Ingredients" />
-        <p class="mt-2 w-11/12 4 sm:w-2/3 text-gray-500">
-          Use this page as an overview of ingredients from the USDA database—or ingredients you have created yourself.
-        </p>
-      </div>
-
-      <div class="flex flex-col ml-auto w-fit">
-
-        <!-- New ingredient button -->
-        <PrimaryLinkButton
-          :href="route('ingredients.create')"
-          class="flex items-center py-2.0 sm:py-2.5 mt-1 normal-case"
-          :class="{'!bg-blue-200': !can_create}"
-        >
-          <PlusCircleIcon class="w-6 h-6" />
-          <p class="ml-2 font-semibold text-base whitespace-nowrap">New ingredient</p>
-        </PrimaryLinkButton>
-
-        <!-- Clone ingredient button -->
-        <SecondaryButton
-          class="flex items-center mt-1 normal-case"
-          :class="{'!text-gray-300': !can_create}"
-          @click="cloneExistingDialog.open()"
-        >
-          <DocumentDuplicateIcon class="w-6 h-6" />
-          <p class="ml-2 font-semibold text-base whitespace-nowrap">Clone existing</p>
-        </SecondaryButton>
-
-      </div>
+    <div class="mr-2 p-1">
+      <H1 text="Ingredients" />
+      <p class="mt-2 w-11/12 4 sm:w-2/3 text-gray-500">
+        Use this page as an overview of ingredients from the USDA database—or ingredients you have created yourself.
+      </p>
     </div>
 
     <TabGroup @change="changeTab" :defaultIndex="Number(selectedTab)">
@@ -338,7 +311,7 @@ export default {
               </tbody>
             </table>
             <p v-show="numDisplayedUsdaIngredients === 0 && usdaSearchQuery !== ''" class="ml-3" >
-                No results found. Try a less restrictive filter or search?
+              No results found. Try a less restrictive filter or search?
             </p>
           </section>
         </TabPanel>
@@ -462,16 +435,8 @@ export default {
                 :href="route('ingredients.create')"
                 class="text-blue-500"
               >
-                creating a new ingredient
+                creating a new ingredient.
               </MyLink>
-              or
-              <button
-                type="button"
-                class="text-blue-500 hover:text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-700 p-px rounded-md"
-                @click="cloneExistingDialog.open()"
-              >
-                cloning an existing ingredient.
-              </button>
             </span>
             <span v-else>You need to <MyLink :href="route('login')" class="text-blue-500">log in</MyLink> to create ingredients.</span>
           </section>
@@ -480,14 +445,6 @@ export default {
       </TabPanels>
     </TabGroup>
 
-    <FindAThing
-      ref="cloneExistingDialog"
-      :things="ingredients"
-      dialog_title="Search for an ingredient to clone"
-      button_text="Okay"
-      @foundAThing="cloneExisting"
-    />
-
     <DeleteDialog
       ref="deleteDialog"
       description="ingredient"
@@ -495,5 +452,5 @@ export default {
       @cancel="idToDelete = null"
     />
 
-  </div>
+  </SidebarLayout>
 </template>

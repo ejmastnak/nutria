@@ -5,9 +5,10 @@ import debounce from "lodash/debounce";
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { Head, router } from '@inertiajs/vue3'
 import { TrashIcon, MagnifyingGlassIcon, XMarkIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
+import H1 from '@/Components/H1ForIndex.vue'
+import SidebarLayout from "@/Layouts/SidebarLayout.vue";
 import MyLink from '@/Components/MyLink.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
-import H1 from '@/Components/H1ForIndex.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 import FindAThing from '@/Components/FindAThing.vue'
 
@@ -85,7 +86,14 @@ export default {
 </script>
 
 <template>
-  <div>
+  <SidebarLayout
+    page="index"
+    route_basename="food-lists"
+    :id="null"
+    :things="food_lists"
+    thing="food list"
+    :can_create="can_create"
+  >
     <Head title="Food Lists" />
 
     <!-- Title and new food list top row -->
@@ -214,5 +222,5 @@ export default {
       @cancel="idToDelete = null"
     />
 
-  </div>
+  </SidebarLayout>
 </template>

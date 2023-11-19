@@ -2,27 +2,19 @@
 import fuzzysort from 'fuzzysort'
 import throttle from "lodash/throttle";
 import debounce from "lodash/debounce";
-
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { Head, router } from '@inertiajs/vue3'
 import { TrashIcon, PlusCircleIcon, DocumentDuplicateIcon, MagnifyingGlassIcon, PencilSquareIcon, XMarkIcon } from '@heroicons/vue/24/outline'
-import MyLink from '@/Components/MyLink.vue'
 import H1 from '@/Components/H1ForIndex.vue'
-import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
+import SidebarLayout from "@/Layouts/SidebarLayout.vue";
+import MyLink from '@/Components/MyLink.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
-import InputLabel from '@/Components/InputLabel.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
-import FindAThing from '@/Components/FindAThing.vue'
 
 const props = defineProps({
   meals: Array,
   can_create: Boolean
 })
-
-const cloneExistingDialog = ref(null)
-function cloneExisting(meal) {
-  if (meal && meal.id) router.get(route('meals.clone', meal.id));
-}
 
 let idToDelete = ref(null)
 const deleteDialog = ref(null)
@@ -38,8 +30,6 @@ function deleteMeal() {
   }
   idToDelete.value = null
 }
-
-const searchInputRef = ref(null)
 
 // For fuzzy search over meal names
 const filteredMeals = ref([])
@@ -69,6 +59,7 @@ window.onbeforeunload = function() {
   sessionStorage.setItem('mealsIndexSearchQuery', searchQuery.value);
 }
 
+const searchInputRef = ref(null)
 function clearSearch() {
   searchQuery.value = ""
   searchInputRef.value.focus()
@@ -93,50 +84,31 @@ export default {
 </script>
 
 <template>
-  <div>
+  <SidebarLayout
+    page="index"
+    route_basename="meals"
+    :id="null"
+    :things="meals"
+    thing="meal"
+    :can_create="can_create"
+  >
     <Head title="Meals" />
 
     <!-- Title and new meal top row -->
-    <div class="flex">
-
-      <div class="mr-2 p-1">
-        <H1 text="Meals" />
-        <p class="mt-2 w-11/12 4 sm:w-2/3 text-gray-500">
-          Use this page as an overview of meals you have created.
-        </p>
-      </div>
-
-      <div class="flex flex-col ml-auto w-fit">
-
-        <!-- New meal button -->
-        <PrimaryLinkButton
-          :href="route('meals.create')"
-          class="flex items-center py-2.0 sm:py-2.5 mt-1 normal-case"
-          :class="{'!bg-blue-200': !can_create}"
-        >
-          <PlusCircleIcon class="w-6 h-6" />
-          <p class="ml-2 font-semibold text-base whitespace-nowrap">New meal</p>
-        </PrimaryLinkButton>
-
-        <!-- Clone meal button -->
-        <SecondaryButton
-          class="flex items-center mt-1 normal-case"
-          :class="{'!text-gray-300': !can_create}"
-          @click="cloneExistingDialog.open()"
-        >
-          <DocumentDuplicateIcon class="w-6 h-6" />
-          <p class="ml-2 font-semibold text-base whitespace-nowrap">Clone existing</p>
-        </SecondaryButton>
-
-      </div>
+    <div class="mr-2 p-1">
+      <H1 text="Meals" />
+      <p class="mt-2 w-11/12 4 sm:w-2/3 text-gray-500">
+        Use this page as an overview of meals you have created.
+      </p>
     </div>
+
 
     <!-- Meal table -->
     <section class="mt-8 border border-gray-200 px-4 py-2 rounded-xl shadow-sm bg-white">
 
       <!-- Input for search -->
       <div class="px-2 py-4 flex flex-wrap items-end">
-        <div class="">
+        <div>
           <label for="meal-search" class="ml-1 text-sm text-gray-500">
             Search by meal name
           </label>
@@ -239,14 +211,6 @@ export default {
 
     </section>
 
-    <FindAThing
-      ref="cloneExistingDialog"
-      :things="meals"
-      dialog_title="Search for a meal to clone"
-      button_text="Okay"
-      @foundAThing="cloneExisting"
-    />
-
     <DeleteDialog
       ref="deleteDialog"
       description="meal"
@@ -254,5 +218,5 @@ export default {
       @cancel="idToDelete = null"
     />
 
-  </div>
+  </SidebarLayout>
 </template>
