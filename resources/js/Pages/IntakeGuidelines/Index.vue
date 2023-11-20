@@ -2,17 +2,16 @@
 import fuzzysort from 'fuzzysort'
 import throttle from "lodash/throttle";
 import debounce from "lodash/debounce";
-
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
-import { Head } from '@inertiajs/vue3'
-import { TrashIcon, PlusCircleIcon, DocumentDuplicateIcon, MagnifyingGlassIcon, XMarkIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
+import { Head, router } from '@inertiajs/vue3'
+import { TrashIcon, MagnifyingGlassIcon, XMarkIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import H1 from '@/Components/H1ForIndex.vue'
+import SidebarLayout from "@/Layouts/SidebarLayout.vue";
 import MyLink from '@/Components/MyLink.vue'
 import PrimaryLinkButton from '@/Components/PrimaryLinkButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import InputLabel from '@/Components/InputLabel.vue'
-import DeleteDialog from '@/Shared/DeleteDialog.vue'
-import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
+import DeleteDialog from '@/Components/DeleteDialog.vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 const props = defineProps({
@@ -20,9 +19,20 @@ const props = defineProps({
   can_create: Boolean
 })
 
-const cloneExistingDialog = ref(null)
+let idToDelete = ref(null)
 const deleteDialog = ref(null)
-const searchInput = ref(null)
+function deleteIntakeGuideline() {
+  if (idToDelete.value) {
+    router.delete(route('intake-guidelines.destroy', idToDelete.value), {
+      onSuccess: () => {
+        // Updates filtered intake guidelines after deletion to ensure the
+        // deleted intake guideline disappears from display.
+        search(searchQuery.value)
+      }
+    });
+  }
+  idToDelete.value = null
+}
 
 // For fuzzy search over intake guideline names
 const filteredIntakeGuidelines = ref([])
@@ -33,39 +43,39 @@ const fuzzysortOptions = {
   threshold: -10000
 }
 
-const search = ref(sessionStorage.getItem('intakeGuidelineIndexSearchQuery') ?? "")
+const searchQuery = ref("")
+function search(query) {
+  filteredIntakeGuidelines.value = fuzzysort.go(query.trim(), props.intake_guidelines, fuzzysortOptions)
+}
 
-// Preserve intake guideline search from previous visit to this page
-onMounted(() => {
-  if (search) {
-    filteredIntakeGuidelines.value = fuzzysort.go(search.value.trim(), props.intake_guidelines, fuzzysortOptions)
-  }
-})
-
-watch(search, throttle(function (value) {
-  filteredIntakeGuidelines.value = fuzzysort.go(value.trim(), props.intake_guidelines, fuzzysortOptions)
+watch(searchQuery, throttle(function (value) {
+  search(value)
 }, 300))
 
 // Preserve search query between page visits
 onBeforeUnmount(() => {
-  sessionStorage.setItem('intakeGuidelineIndexSearchQuery', search.value);
+  sessionStorage.setItem('intakeGuidelineIndexSearchQuery', searchQuery.value);
 })
 
 // Preserve search query on manual page reload
 window.onbeforeunload = function() {
-  sessionStorage.setItem('intakeGuidelineIndexSearchQuery', search.value);
+  sessionStorage.setItem('intakeGuidelineIndexSearchQuery', searchQuery.value);
 }
 
-function resetSearch() {
-  search.value = ""
-  searchInput.value.focus()
+const searchInputRef = ref(null)
+function clearSearch() {
+  searchQuery.value = ""
+  searchInputRef.value.focus()
 }
 
-// Updates filteredIntakeGuidelines after deleting a intake guideline to ensure the
-// intake guideline disappears from display
-function updateFuzzySearchOnDeletion(id) {
-  filteredIntakeGuidelines.value = fuzzysort.go(search.value.trim(), props.intake_guidelines, fuzzysortOptions)
-}
+// Preserve search from previous visit to this page
+onMounted(() => {
+  const storedSearchQuery = sessionStorage.getItem('intakeGuidelineIndexSearchQuery')
+  if (storedSearchQuery) {
+      searchQuery.value = storedSearchQuery
+  }
+  search(searchQuery.value)
+})
 
 </script>
 
@@ -77,65 +87,62 @@ export default {
 </script>
 
 <template>
-  <div class="">
+  <SidebarLayout
+    page="index"
+    route_basename="intake-guidelines"
+    :id="null"
+    :things="intake_guidelines"
+    thing="intake guidelines"
+    :can_create="can_create"
+  >
     <Head title="Intake Guidelines" />
 
-    <!-- Title and new intake guideline top row -->
-    <div class="flex">
-
-      <div class="mr-2 p-1">
-        <H1 text="Intake Guidelines" />
-        <p class="mt-2 w-11/12 4 sm:w-2/3 text-gray-500">
-          Use this page as an overview of intake guidelines you have created.
-        </p>
-      </div>
-
-      <div class="flex flex-col ml-auto w-fit">
-
-        <!-- New intake guideline button -->
-        <PrimaryLinkButton
-          :href="route('intake-guidelines.create')"
-          class="flex ml-auto items-center py-2.0 sm:py-2.5 mt-1 normal-case"
-          :class="{'!bg-blue-200': !can_create}"
-        >
-          <PlusCircleIcon class="w-6 h-6" />
-          <p class="ml-2 font-semibold text-base whitespace-nowrap">New intake guideline</p>
-        </PrimaryLinkButton>
-
-        <!-- Clone intake guideline button -->
-        <SecondaryButton
-          class="flex ml-auto items-center mt-1 normal-case"
-          :class="{'!text-gray-300': !can_create}"
-          @click="cloneExistingDialog.open()"
-        >
-          <DocumentDuplicateIcon class="w-6 h-6" />
-          <p class="ml-2 font-semibold text-base whitespace-nowrap">Clone existing</p>
-        </SecondaryButton>
-
-      </div>
+    <!-- Title -->
+    <div class="mr-2 p-1">
+      <H1 text="Intake Guidelines" />
+      <p class="mt-2 w-11/12 4 sm:w-2/3 text-gray-500">
+        Use this page as an overview of intake guidelines you have created.
+      </p>
     </div>
 
-    <!-- intake guideline table -->
+    <!-- Intake guideline table -->
     <section class="mt-8 border border-gray-200 px-4 py-2 rounded-xl shadow-sm bg-white">
 
       <!-- Input for search -->
-      <div class="px-2 py-4">
+      <div class="px-2 py-4 flex flex-wrap items-end">
+        <div>
+          <label for="intake-guideline-search" class="ml-1 text-sm text-gray-500">
+            Search by intake guideline name
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <MagnifyingGlassIcon class="w-5 h-5 text-gray-500" />
+            </div>
 
-        <label for="intake-guideline-search" class="ml-1 text-sm text-gray-500">
-          Search by intake guideline name
-        </label>
-        <div class="relative">
-          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <MagnifyingGlassIcon class="w-5 h-5 text-gray-500" />
+            <input
+              type="text"
+              id="intake-guideline-search"
+              ref="searchInputRef"
+              class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 sm:w-64 md:w-80 lg:w-96 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+              v-model="searchQuery"
+            />
           </div>
+        </div>
 
-          <input
-            type="text"
-            id="intake-guideline-search"
-            ref="searchInput"
-            class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 sm:w-64 md:w-80 lg:w-96 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-            v-model="search"
-          />
+        <!-- Clear search button -->
+        <div class="ml-2">
+          <label for="clear-search" class="sr-only">
+            Clear filter
+          </label>
+          <SecondaryButton
+            type="button"
+            id="clear-search"
+            class="normal-case font-normal !tracking-normal !text-sm !px-2 h-fit ml-2"
+            @click="clearSearch"
+          >
+            <XMarkIcon class="w-5 h-5" />
+            <span class="text-gray-600 font-normal ml-1.5">Clear search</span>
+          </SecondaryButton>
         </div>
       </div>
 
@@ -152,16 +159,16 @@ export default {
         </thead>
         <tbody>
           <tr
-            v-for="profile in filteredIntakeGuidelines.map(ig => ig.obj)" :key="profile.id"
+            v-for="intake_guideline in filteredIntakeGuidelines.map(ig => ig.obj)" :key="intake_guideline.id"
             class="border-b"
           >
             <!-- Link to intake guideline show page -->
             <td scope="row" class="px-5 py-4 font-medium text-gray-900">
               <MyLink
                 class="text-gray-800"
-                :href="route('intake-guidelines.show', profile.id)"
+                :href="route('intake-guidelines.show', intake_guideline.id)"
               >
-                {{profile.name}}
+                {{intake_guideline.name}}
               </MyLink>
             </td>
             <!-- Edit and delete icons -->
@@ -170,16 +177,16 @@ export default {
 
                 <MyLink
                   class="mx-auto"
-                  v-if="profile.can_edit"
-                  :href="route('intake-guidelines.edit', profile.id)"
+                  v-if="intake_guideline.can_update"
+                  :href="route('intake-guidelines.edit', intake_guideline.id)"
                 >
                   <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
                 </MyLink>
 
                 <button
                   type="button"
-                  v-if="profile.can_delete"
-                  @click="deleteDialog.open(profile.id)"
+                  v-if="intake_guideline.can_delete"
+                  @click="idToDelete = intake_guideline.id; deleteDialog.open()"
                   class="mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
                 >
                   <TrashIcon class="w-5 h-5 hover:text-red-700" />
@@ -197,16 +204,12 @@ export default {
 
     </section>
 
-    <SearchForThingAndGo
-      ref="cloneExistingDialog"
-      :things="intake_guidelines"
-      goRoute="intake-guidelines.clone"
-      label="Search for an intake guideline to clone"
-      title="Clone intake guideline"
-      action="Clone"
+    <DeleteDialog
+      ref="deleteDialog"
+      description="intake guideline"
+      @delete="deleteIntakeGuideline"
+      @cancel="idToDelete = null"
     />
 
-    <DeleteDialog ref="deleteDialog" deleteRoute="intake-guidelines.destroy" thing="intake guideline" @delete="updateFuzzySearchOnDeletion" />
-
-  </div>
+  </SidebarLayout>
 </template>

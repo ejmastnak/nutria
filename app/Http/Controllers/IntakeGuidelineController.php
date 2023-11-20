@@ -20,9 +20,8 @@ class IntakeGuidelineController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $userId = $user ? $user->id : null;
         return Inertia::render('IntakeGuidelines/Index', [
-            'intake_guidelines' => IntakeGuideline::getForUserWithPermissions($userId),
+            'intake_guidelines' => IntakeGuideline::getForUserWithPermissions($user),
             'can_create' => $user ? $user->can('create', IntakeGuideline::class) : false,
         ]);
     }

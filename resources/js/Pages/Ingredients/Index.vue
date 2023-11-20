@@ -179,7 +179,7 @@ export default {
   >
     <Head title="Ingredients" />
 
-    <!-- Title and new ingredient top row -->
+    <!-- Title -->
     <div class="mr-2 p-1">
       <H1 text="Ingredients" />
       <p class="mt-2 w-11/12 4 sm:w-2/3 text-gray-500">
