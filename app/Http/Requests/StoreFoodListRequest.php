@@ -48,4 +48,24 @@ class StoreFoodListRequest extends FormRequest
 
         ];
     }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'food_list_ingredients.*.ingredient_id' => 'ingredient_id',
+            'food_list_ingredients.*.amount' => 'amount',
+            'food_list_ingredients.*.unit_id' => 'unit_id',
+            'food_list_ingredients.*' => 'food list ingredient',
+            'food_list_meals.*.meal_id' => 'meal_id',
+            'food_list_meals.*.amount' => 'amount',
+            'food_list_meals.*.unit_id' => 'unit_id',
+            'food_list_meals.*' => 'food list meal',
+        ];
+    }
+
 }

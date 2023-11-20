@@ -36,4 +36,20 @@ class UpdateMealRequest extends FormRequest
             'meal_ingredients.*' => [new IngredientUnitIsConsistent],
         ];
     }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'meal_ingredients.*.ingredient_id' => 'ingredient_id',
+            'meal_ingredients.*.amount' => 'amount',
+            'meal_ingredients.*.unit_id' => 'unit_id',
+            'meal_ingredients.*' => 'meal ingredient',
+        ];
+    }
+
 }

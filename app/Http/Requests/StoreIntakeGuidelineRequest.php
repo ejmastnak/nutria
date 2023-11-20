@@ -34,4 +34,18 @@ class StoreIntakeGuidelineRequest extends FormRequest
             'intake_guideline_nutrients.*.rdi' => ['nullable', 'numeric', 'gte:0', config('validation.max_nutrient_amount')],
         ];
     }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'intake_guideline_nutrients.*.nutrient_id' => 'nutrient_id',
+            'intake_guideline_nutrients.*.rdi' => 'RDI',
+        ];
+    }
+
 }

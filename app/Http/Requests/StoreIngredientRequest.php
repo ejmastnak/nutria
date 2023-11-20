@@ -64,20 +64,19 @@ class StoreIngredientRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'ingredient_category_id' => 'ingredient category',
             'ingredient_nutrient_amount' => 'amount',
-            'ingredient_nutrient_amount_unit_id' => 'unit',
+            'ingredient_nutrient_amount_unit_id' => 'unit_id',
             'ingredient_nutrients' => 'ingredient nutrients',
-            'ingredient_nutrients.*.nutrient_id' => 'nutrient',
+            'ingredient_nutrients.*.nutrient_id' => 'nutrient_id',
             'ingredient_nutrients.*.amount' => 'amount',
             'density_mass_amount' => 'amount',
-            'density_mass_unit_id' => 'unit',
+            'density_mass_unit_id' => 'unit_id',
             'density_volume_amount' => 'amount',
-            'density_volume_unit_id' => 'unit',
+            'density_volume_unit_id' => 'unit_id',
             'custom_units.*.name' => 'name',
             'custom_units.*.custom_unit_amount' => 'amount',
             'custom_units.*.custom_mass_amount' => 'amount',
-            'custom_units.*.custom_mass_unit_id' => 'unit',
+            'custom_units.*.custom_mass_unit_id' => 'unit_id',
         ];
     }
 
