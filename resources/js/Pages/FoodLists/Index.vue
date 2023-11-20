@@ -25,7 +25,7 @@ function deleteFoodList() {
       onSuccess: () => {
         // Updates filtered food lists after deleting an food list to ensure
         // the deleted food list disappears from display.
-        search(userSearchQuery.value)
+        search(searchQuery.value)
       }
     });
   }
@@ -96,7 +96,7 @@ export default {
   >
     <Head title="Food Lists" />
 
-    <!-- Title and new food list top row -->
+    <!-- Title -->
     <div class="mr-2 p-1">
       <H1 text="Food Lists" />
       <p class="mt-2 w-11/12 4 sm:w-2/3 text-gray-500">
@@ -183,7 +183,7 @@ export default {
 
                 <button
                   type="button"
-                  @click="deleteDialog.open(foodList.id)"
+                  @click="idToDelete = foodList.id; deleteDialog.open()"
                   class="mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
                 >
                   <TrashIcon class="w-5 h-5 hover:text-red-700" />

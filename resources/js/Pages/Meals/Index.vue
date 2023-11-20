@@ -24,7 +24,7 @@ function deleteMeal() {
       onSuccess: () => {
         // Updates filtered meals after deleting an meal to ensure the deleted
         // meal disappears from display.
-        search(userSearchQuery.value)
+        search(searchQuery.value)
       }
     });
   }
@@ -94,14 +94,13 @@ export default {
   >
     <Head title="Meals" />
 
-    <!-- Title and new meal top row -->
+    <!-- Title -->
     <div class="mr-2 p-1">
       <H1 text="Meals" />
       <p class="mt-2 w-11/12 4 sm:w-2/3 text-gray-500">
         Use this page as an overview of meals you have created.
       </p>
     </div>
-
 
     <!-- Meal table -->
     <section class="mt-8 border border-gray-200 px-4 py-2 rounded-xl shadow-sm bg-white">
