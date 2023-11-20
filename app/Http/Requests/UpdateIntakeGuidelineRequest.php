@@ -2,19 +2,19 @@
 
 namespace App\Http\Requests;
 
-use App\Models\IntakeGuideline;
 use App\Models\Nutrient;
 use Illuminate\Foundation\Http\FormRequest;
 
-class IntakeGuidelineStoreRequest extends FormRequest
+class UpdateIntakeGuidelineRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
+        $intakeGuideline = $this->route('intake_guideline');
         $user = $this->user();
-        return $user && $user->can('create', IntakeGuideline::class);
+        return $intakeGuideline && $user && $user->can('update', $intakeGuideline);
     }
 
     /**
@@ -30,6 +30,7 @@ class IntakeGuidelineStoreRequest extends FormRequest
 
             // Intake guideline nutrients
             'intake_guideline_nutrients' => ['required', 'array', 'min:' . $numNutrients, 'max:' . $numNutrients],
+            'intake_guideline_nutrients.*.id' => ['required', 'integer', 'exists:intake_guideline_nutrients,id'],
             'intake_guideline_nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'exists:nutrients,id'],
             'intake_guideline_nutrients.*.rdi' => ['nullable', 'numeric', 'gte:0', config('validation.max_nutrient_amount')],
         ];

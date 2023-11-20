@@ -10,8 +10,8 @@ use App\Models\Nutrient;
 use App\Models\Unit;
 use App\Services\IngredientService;
 use App\Services\NutrientProfileService;
-use App\Http\Requests\IngredientStoreRequest;
-use App\Http\Requests\IngredientUpdateRequest;
+use App\Http\Requests\StoreIngredientRequest;
+use App\Http\Requests\UpdateIngredientRequest;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -80,7 +80,7 @@ class IngredientController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(IngredientStoreRequest $request, IngredientService $ingredientService)
+    public function store(StoreIngredientRequest $request, IngredientService $ingredientService)
     {
         $ingredient = $ingredientService->storeIngredient($request->validated(), $request->user()->id);
         return Redirect::route('ingredients.show', $ingredient->id)->with('message', 'Success! Ingredient created successfully.');
@@ -134,7 +134,7 @@ class IngredientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(IngredientUpdateRequest $request, Ingredient $ingredient, IngredientService $ingredientService)
+    public function update(UpdateIngredientRequest $request, Ingredient $ingredient, IngredientService $ingredientService)
     {
         // Restrict updating ingredient derived from a meal
         if (!is_null($ingredient->meal_id)) return back()->with('message', 'Error. Updating this ingredient is intentionally restricted doing so would break the relationship with the parent meal. Update the parent meal instead.');

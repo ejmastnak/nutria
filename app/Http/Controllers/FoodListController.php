@@ -9,8 +9,8 @@ use App\Models\NutrientCategory;
 use App\Models\IngredientCategory;
 use App\Models\Unit;
 use App\Models\IntakeGuideline;
-use App\Http\Requests\FoodListStoreRequest;
-use App\Http\Requests\FoodListUpdateRequest;
+use App\Http\Requests\StoreFoodListRequest;
+use App\Http\Requests\UpdateFoodListRequest;
 use App\Services\FoodListService;
 use App\Services\NutrientProfileService;
 use Illuminate\Support\Facades\Auth;
@@ -76,7 +76,7 @@ class FoodListController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(FoodListStoreRequest $request, FoodListService $foodListService)
+    public function store(StoreFoodListRequest $request, FoodListService $foodListService)
     {
         $foodList = $foodListService->storeFoodList($request->validated(), $request->user()->id);
         return Redirect::route('food-lists.show', $foodList->id)->with('message', 'Success! Food List created successfully.');
@@ -130,7 +130,7 @@ class FoodListController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(FoodListUpdateRequest $request, FoodList $foodList, FoodListService $foodListService)
+    public function update(UpdateFoodListRequest $request, FoodList $foodList, FoodListService $foodListService)
     {
         $foodListService->updateFoodList($request->validated(), $foodList);
         return Redirect::route('food-lists.show', $foodList->id)->with('message', 'Success! Food List updated successfully.');

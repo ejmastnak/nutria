@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Rules\IngredientUnitIsConsistent;
 use Illuminate\Foundation\Http\FormRequest;
 
-class MealUpdateRequest extends FormRequest
+class UpdateMealRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

@@ -8,8 +8,8 @@ use App\Models\IngredientCategory;
 use App\Models\NutrientCategory;
 use App\Models\IntakeGuideline;
 use App\Models\Unit;
-use App\Http\Requests\MealStoreRequest;
-use App\Http\Requests\MealUpdateRequest;
+use App\Http\Requests\StoreMealRequest;
+use App\Http\Requests\UpdateMealRequest;
 use App\Services\MealService;
 use App\Services\NutrientProfileService;
 use Illuminate\Support\Facades\Redirect;
@@ -71,7 +71,7 @@ class MealController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(MealStoreRequest $request, MealService $mealService)
+    public function store(StoreMealRequest $request, MealService $mealService)
     {
         $meal = $mealService->storeMeal($request->validated(), $request->user()->id);
         return Redirect::route('meals.show', $meal->id)->with('message', 'Success! Meal created successfully.');
@@ -126,7 +126,7 @@ class MealController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(MealUpdateRequest $request, Meal $meal, MealService $mealService, NutrientProfileService $nutrientProfileService)
+    public function update(UpdateMealRequest $request, Meal $meal, MealService $mealService, NutrientProfileService $nutrientProfileService)
     {
         $mealService->updateMeal($request->validated(), $meal, $nutrientProfileService);
         return Redirect::route('meals.show', $meal->id)->with('message', 'Success! Meal updated successfully.');

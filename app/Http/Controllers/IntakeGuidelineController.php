@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\IntakeGuideline;
 use App\Models\NutrientCategory;
 use App\Models\Nutrient;
-use App\Http\Requests\IntakeGuidelineStoreRequest;
-use App\Http\Requests\IntakeGuidelineUpdateRequest;
+use App\Http\Requests\StoreIntakeGuidelineRequest;
+use App\Http\Requests\UpdateIntakeGuidelineRequest;
 use App\Services\IntakeGuidelineService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -66,9 +66,8 @@ class IntakeGuidelineController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(IntakeGuidelineStoreRequest $request, IntakeGuidelineService $intakeGuidelineService)
+    public function store(StoreIntakeGuidelineRequest $request, IntakeGuidelineService $intakeGuidelineService)
     {
-        dd("Validated");
         $intakeGuideline = $intakeGuidelineService->storeIntakeGuideline($request->validated(), $request->user()->id);
         return Redirect::route('intake-guidelines.show', $intakeGuideline->id)->with('message', 'Success! Intake Guideline created successfully.');
     }
@@ -116,9 +115,8 @@ class IntakeGuidelineController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(IntakeGuidelineUpdateRequest $request, IntakeGuideline $intakeGuideline, IntakeGuidelineService $intakeGuidelineService)
+    public function update(UpdateIntakeGuidelineRequest $request, IntakeGuideline $intakeGuideline, IntakeGuidelineService $intakeGuidelineService)
     {
-        dd("Validated");
         $intakeGuidelineService->updateIntakeGuideline($request->validated(), $intakeGuideline);
         return Redirect::route('intake-guidelines.show', $intakeGuideline->id)->with('message', 'Success! Intake Guideline updated successfully.');
     }

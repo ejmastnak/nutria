@@ -10,7 +10,7 @@ use App\Rules\IsIngredientUnit;
 use App\Rules\IngredientNutrientAmountUnitIdIsValid;
 use Illuminate\Foundation\Http\FormRequest;
 
-class IngredientStoreRequest extends FormRequest
+class StoreIngredientRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
