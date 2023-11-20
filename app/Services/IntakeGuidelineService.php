@@ -23,7 +23,7 @@ class IntakeGuidelineService
                 IntakeGuidelineNutrient::create([
                     'intake_guideline_id' => $intakeGuideline->id,
                     'nutrient_id' => $ign['nutrient_id'],
-                    'rdi' => $ign['rdi'],
+                    'rdi' => $ign['rdi'] ? $ign['rdi'] : 0.0,
                 ]);
             }
 
@@ -42,7 +42,7 @@ class IntakeGuidelineService
             foreach ($data['intake_guideline_nutrients'] as $ign) {
                 $IntakeGuidelineNutrient = IntakeGuidelineNutrient::find($ign['id']);
                 $IntakeGuidelineNutrient->update([
-                    'rdi' => $ign['rdi'],
+                    'rdi' => $ign['rdi'] ? $ign['rdi'] : 0.0,
                 ]);
             }
         });

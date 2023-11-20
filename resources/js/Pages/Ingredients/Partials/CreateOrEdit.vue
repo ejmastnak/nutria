@@ -142,7 +142,6 @@ function updateAllowedIngredientNutrientAmountUnits() {
   allowedIngredientNutrientAmountUnits.value = newAllowedIngredientNutrientAmountUnits
 }
 
-
 function submit() {
   // Only submit density fields if all density fields are present
   if (form.density_mass_amount === null || form.density_mass_amount === "" || form.density_mass_unit_id === null || form.density_volume_amount === null || form.density_volume_amount === "" || form.density_volume_unit_id === null) {

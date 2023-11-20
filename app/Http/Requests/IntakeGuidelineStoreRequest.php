@@ -31,7 +31,7 @@ class IntakeGuidelineStoreRequest extends FormRequest
             // Intake guideline nutrients
             'intake_guideline_nutrients' => ['required', 'array', 'min:' . $numNutrients, 'max:' . $numNutrients],
             'intake_guideline_nutrients.*.nutrient_id' => ['required', 'distinct', 'integer', 'exists:nutrients,id'],
-            'intake_guideline_nutrients.*.rdi' => ['required', 'numeric', 'gte:0', config('validation.max_nutrient_amount')],
+            'intake_guideline_nutrients.*.rdi' => ['nullable', 'numeric', 'gte:0', config('validation.max_nutrient_amount')],
         ];
     }
 }

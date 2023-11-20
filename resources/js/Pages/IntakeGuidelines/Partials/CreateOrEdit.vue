@@ -13,32 +13,27 @@ import InputError from '@/Components/InputError.vue'
 
 const props = defineProps({
   intake_guideline: Object,
+  nutrients: Array,
   nutrient_categories: Array,
   create: Boolean
 })
 
 const form = useForm({
-  name: props.create ? "" : props.intake_guideline.name,
-  intake_guideline_nutrients: props.intake_guideline.intake_guideline_nutrients.map((intake_guideline_nutrient, index) => ({
-    idx: index,
-    id: props.create ? 0 : intake_guideline_nutrient.id,
-    nutrient_id: intake_guideline_nutrient.nutrient_id,
-    rdi: round(Number(intake_guideline_nutrient.rdi), intake_guideline_nutrient.nutrient.precision).toString(),
-    nutrient: {
-      id: intake_guideline_nutrient.nutrient.id,
-      name: intake_guideline_nutrient.nutrient.display_name,
-      unit_id: intake_guideline_nutrient.nutrient.unit_id,
-      nutrient_category_id: intake_guideline_nutrient.nutrient.nutrient_category_id,
-      unit: intake_guideline_nutrient.nutrient.unit
-    }
-  }))
+  id: props.intake_guideline ? props.intake_guideline.id : null,
+  name: props.intake_guideline ? props.intake_guideline.name : "",
+  intake_guideline_nutrients: props.intake_guideline
+    ? props.intake_guideline.intake_guideline_nutrients
+    : props.nutrients.map((nutrient) => ({
+      id: null,
+      rdi: null,
+      nutrient_id: nutrient.id,
+      nutrient: nutrient
+    })),
 })
 
 const nameInput = ref(null)
 onMounted(() => {
-  if (props.create) {
-    nameInput.value.focus()
-  }
+  if (props.intake_guideline === null) nameInput.value.focus()
 })
 
 function submit() {
@@ -80,11 +75,17 @@ export default {
     </section>
 
     <!-- Intake Guideline nutrient table -->
-    <section class="mt-8">
+    <section class="mt-4">
 
-      <InputError :message="form.errors.intake_guideline_nutrients" />
+      <h2 class="text-lg">Recommended Daily Intakes</h2>
 
-      <div class="grid grid-cols-1 lg:flex md:gap-x-8">
+      <p class="max-w-md text-gray-700 text-sm">
+        Fill out the recommended daily intakes for each macronutrient, mineral, and vitamin.
+      </p>
+
+      <InputError class="mt-1" :message="form.errors.intake_guideline_nutrients" />
+
+      <div class="mt-2 grid grid-cols-1 lg:flex md:gap-x-8">
         <div
           v-for="nc in nutrient_categories"
           :key="nc.id"
@@ -108,24 +109,25 @@ export default {
               </thead>
               <tbody>
                 <tr
-                  v-for="intake_guideline_nutrient in form.intake_guideline_nutrients.filter(intake_guideline_nutrient => intake_guideline_nutrient.nutrient.nutrient_category_id === nc.id)"
+                  v-for="intake_guideline_nutrient in form.intake_guideline_nutrients.filter(ign => ign.nutrient.nutrient_category_id === nc.id)"
                   class="border-t text-gray-600"
                 >
-                  <td scope="row" class="px-3 py-2">
-                    {{intake_guideline_nutrient.nutrient.name}}
+                  <td scope="row" class="px-3 py-2 whitespace-nowrap">
+                    {{intake_guideline_nutrient.nutrient.display_name}}
                   </td>
                   <td class="pl-2 pr-2 py-2 text-right">
                     <div class="flex items-baseline">
                       <TextInput
-                        type="text"
+                        type="number"
+                        placeholder="0"
+                        step="any"
                         class="mt-1 block w-24 py-1 text-right"
                         v-model="intake_guideline_nutrient.rdi"
-                        required
                       />
                     </div>
-                    <InputError class="mt-2 text-left" :message="form.errors['intake_guideline_nutrients.' + intake_guideline_nutrient.idx + '.id']" />
-                    <InputError class="mt-2 text-left" :message="form.errors['intake_guideline_nutrients.' + intake_guideline_nutrient.idx + '.nutrient_id']" />
-                    <InputError class="mt-2 text-left" :message="form.errors['intake_guideline_nutrients.' + intake_guideline_nutrient.idx + '.rdi']" />
+                    <InputError class="mt-2 text-left" :message="form.errors['intake_guideline_nutrients.' + String(intake_guideline_nutrient.nutrient.seq_num - 1) + '.id']" />
+                    <InputError class="mt-2 text-left" :message="form.errors['intake_guideline_nutrients.' + String(intake_guideline_nutrient.nutrient.seq_num - 1) + '.nutrient_id']" />
+                    <InputError class="mt-2 text-left" :message="form.errors['intake_guideline_nutrients.' + String(intake_guideline_nutrient.nutrient.seq_num - 1) + '.rdi']" />
                   </td>
                   <td class="pl-0 pr-4 py-2 text-left whitespace-nowrap">
                     {{intake_guideline_nutrient.nutrient.unit.name}}

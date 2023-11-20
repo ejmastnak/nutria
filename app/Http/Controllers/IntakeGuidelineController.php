@@ -32,11 +32,13 @@ class IntakeGuidelineController extends Controller
     public function create()
     {
         $user = Auth::user();
+        $userId = $user ? $user->id : null;
 
         return Inertia::render('IntakeGuidelines/Create', [
-            'cloned_from_intake_guideline' => null,
+            'intake_guideline' => null,
             'nutrients' => Nutrient::getWithUnit(),
             'nutrient_categories' => NutrientCategory::getWithName(),
+            'intake_guidelines' => IntakeGuideline::getForUser($userId),
             'can_create' => $user ? $user->can('create', IntakeGuideline::class) : false,
         ]);
     }
@@ -47,12 +49,18 @@ class IntakeGuidelineController extends Controller
     public function clone(IntakeGuideline $intakeGuideline)
     {
         $user = Auth::user();
+        $userId = $user ? $user->id : null;
 
         return Inertia::render('IntakeGuidelines/Create', [
-            'cloned_from_intake_guideline' => $intakeGuideline->withNutrients(),
+            'intake_guideline' => $intakeGuideline->withNutrients(),
             'nutrients' => null,
             'nutrient_categories' => NutrientCategory::getWithName(),
+            'intake_guidelines' => IntakeGuideline::getForUser($userId),
+            'can_view' => $user ? $user->can('view', $intakeGuideline) : false,
             'can_create' => $user ? $user->can('create', IntakeGuideline::class) : false,
+            'can_clone' => $user ? $user->can('clone', $intakeGuideline) : false,
+            'can_update' => $user ? $user->can('update', $intakeGuideline) : false,
+            'can_delete' => $user ? $user->can('delete', $intakeGuideline) : false,
         ]);
     }
     /**
@@ -60,6 +68,7 @@ class IntakeGuidelineController extends Controller
      */
     public function store(IntakeGuidelineStoreRequest $request, IntakeGuidelineService $intakeGuidelineService)
     {
+        dd("Validated");
         $intakeGuideline = $intakeGuidelineService->storeIntakeGuideline($request->validated(), $request->user()->id);
         return Redirect::route('intake-guidelines.show', $intakeGuideline->id)->with('message', 'Success! Intake Guideline created successfully.');
     }
@@ -90,14 +99,17 @@ class IntakeGuidelineController extends Controller
     public function edit(IntakeGuideline $intakeGuideline)
     {
         $user = Auth::user();
+        $userId = $user ? $user->id : null;
 
         return Inertia::render('IntakeGuidelines/Edit', [
             'intake_guideline' => $intakeGuideline->withNutrients(),
             'nutrient_categories' => NutrientCategory::getWithName(),
+            'intake_guidelines' => IntakeGuideline::getForUser($userId),
             'can_view' => $user ? $user->can('view', $intakeGuideline) : false,
-            'can_clone' => $user ? $user->can('clone', $intakeGuideline) : false,
-            'can_delete' => $user ? $user->can('delete', $intakeGuideline) : false,
             'can_create' => $user ? $user->can('create', IntakeGuideline::class) : false,
+            'can_clone' => $user ? $user->can('clone', $intakeGuideline) : false,
+            'can_update' => $user ? $user->can('update', $intakeGuideline) : false,
+            'can_delete' => $user ? $user->can('delete', $intakeGuideline) : false,
         ]);
     }
 
@@ -106,6 +118,7 @@ class IntakeGuidelineController extends Controller
      */
     public function update(IntakeGuidelineUpdateRequest $request, IntakeGuideline $intakeGuideline, IntakeGuidelineService $intakeGuidelineService)
     {
+        dd("Validated");
         $intakeGuidelineService->updateIntakeGuideline($request->validated(), $intakeGuideline);
         return Redirect::route('intake-guidelines.show', $intakeGuideline->id)->with('message', 'Success! Intake Guideline updated successfully.');
     }

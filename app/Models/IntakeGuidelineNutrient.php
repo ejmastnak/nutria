@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class IntakeGuidelineNutrient extends Model
@@ -14,6 +15,13 @@ class IntakeGuidelineNutrient extends Model
         'nutrient_id',
         'rdi',
     ];
+
+    protected function rdi(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => $value + 0,
+        );
+    }
 
     public function intake_guideline() {
         return $this->belongsTo(IntakeGuideline::class, 'intake_guideline_id', 'id');
