@@ -70,14 +70,17 @@ class IntakeGuidelineController extends Controller
     public function show(IntakeGuideline $intakeGuideline)
     {
         $user = Auth::user();
+        $userId = $user ? $user->id : null;
 
         return Inertia::render('IntakeGuidelines/Show', [
             'intake_guideline' => $intakeGuideline->withNutrients(),
             'nutrient_categories' => NutrientCategory::getWithName(),
-            'can_edit' => $user ? $user->can('update', $intakeGuideline) : false,
-            'can_clone' => $user ? $user->can('clone', $intakeGuideline) : false,
-            'can_delete' => $user ? $user->can('delete', $intakeGuideline) : false,
+            'intake_guidelines' => IntakeGuideline::getForUser($userId),
+            'can_view' => $user ? $user->can('view', $intakeGuideline) : false,
             'can_create' => $user ? $user->can('create', IntakeGuideline::class) : false,
+            'can_clone' => $user ? $user->can('clone', $intakeGuideline) : false,
+            'can_update' => $user ? $user->can('update', $intakeGuideline) : false,
+            'can_delete' => $user ? $user->can('delete', $intakeGuideline) : false,
         ]);
     }
 

@@ -17,7 +17,7 @@ class IntakeGuideline extends Model
         // The long query is to ensure intake_guideline_nutrients are ordered by
         // nutrients.seq_num
         $this->load([
-            'intakeGuidelineNutrients' => function($query) {
+            'intake_guideline_nutrients' => function($query) {
                 $query->select([
                     'intake_guideline_nutrients.id',
                     'intake_guideline_nutrients.intake_guideline_id',

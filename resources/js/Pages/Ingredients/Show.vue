@@ -1,11 +1,10 @@
 <script setup>
 import { round } from '@/utils/GlobalFunctions.js'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { Head, router } from '@inertiajs/vue3'
+import H1 from '@/Components/H1ForCrud.vue'
 import SidebarLayout from "@/Layouts/SidebarLayout.vue";
 import NutrientProfile from '@/Shared/NutrientProfile.vue'
-import { EllipsisHorizontalCircleIcon } from '@heroicons/vue/24/outline'
-import H1 from '@/Components/H1ForCrud.vue'
 import MyLink from '@/Components/MyLink.vue'
 import CustomUnitsShowDialog from './Partials/CustomUnitsShowDialog.vue'
 

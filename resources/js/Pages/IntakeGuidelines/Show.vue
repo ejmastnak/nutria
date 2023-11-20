@@ -1,28 +1,19 @@
 <script setup>
 import { ref } from 'vue'
-import { router } from '@inertiajs/vue3'
-import { Head } from '@inertiajs/vue3'
-import IntakeGuideline from './Partials/IntakeGuideline.vue'
-import FuzzyCombobox from '@/Shared/FuzzyCombobox.vue'
-import DeleteDialog from '@/Shared/DeleteDialog.vue'
-import SearchForThingAndGo from '@/Shared/SearchForThingAndGo.vue'
-import CrudNavBar from '@/Shared/CrudNavBar.vue'
-import CrudNavBarEdit from '@/Shared/CrudNavBarEdit.vue'
-import CrudNavBarCloneLink from '@/Shared/CrudNavBarCloneLink.vue'
-import CrudNavBarDelete from '@/Shared/CrudNavBarDelete.vue'
-import CrudNavBarCreate from '@/Shared/CrudNavBarCreate.vue'
-import CrudNavBarIndex from '@/Shared/CrudNavBarIndex.vue'
-import CrudNavBarSearch from '@/Shared/CrudNavBarSearch.vue'
+import { Head, router } from '@inertiajs/vue3'
 import H1 from '@/Components/H1ForCrud.vue'
+import SidebarLayout from "@/Layouts/SidebarLayout.vue";
+import IntakeGuideline from './Partials/IntakeGuideline.vue'
 
 const props = defineProps({
   intake_guideline: Object,
-  intake_guidelines: Array,
   nutrient_categories: Array,
-  can_edit: Boolean,
+  intake_guidelines: Array,
+  can_view: Boolean,
+  can_create: Boolean,
   can_clone: Boolean,
+  can_update: Boolean,
   can_delete: Boolean,
-  can_create: Boolean
 })
 
 const searchDialog = ref(null)
@@ -43,50 +34,32 @@ export default {
 </script>
 
 <template>
-  <div>
+  <SidebarLayout
+    page="show"
+    route_basename="intake-guidelines"
+    :id="intake_guideline.id"
+    :things="intake_guidelines"
+    thing="intake guideline"
+    :can_view="can_view"
+    :can_create="can_create"
+    :can_clone="can_clone"
+    :can_update="can_update"
+    :can_delete="can_delete"
+  >
     <Head :title="intake_guideline.name" />
 
-    <CrudNavBar>
-
-      <!-- Desktop items -->
-      <template v-slot:desktop-items>
-        <CrudNavBarIndex :href="route('intake-guidelines.index')" />
-        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="intake guideline" />
-        <CrudNavBarCreate :enabled="can_create" :href="route('intake-guidelines.create')" />
-        <div class="flex ml-auto">
-          <CrudNavBarEdit v-if="can_edit" :enabled="can_edit" :href="route('intake-guidelines.edit', intake_guideline.id)" />
-          <CrudNavBarCloneLink :enabled="can_clone" :href="route('intake-guidelines.clone', intake_guideline.id)" />
-          <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(intake_guideline.id)" />
-        </div>
-      </template>
-
-      <!-- Always-displayed mobile item -->
-      <template v-slot:mobile-displayed>
-        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="intake guideline" />
-      </template>
-
-      <!-- Mobile menu items -->
-      <template v-slot:mobile-items>
-        <CrudNavBarIndex :href="route('intake-guidelines.index')" />
-        <CrudNavBarSearch @wasClicked="searchDialog.open()" thing="intake guideline" />
-        <CrudNavBarCreate :enabled="can_create" :href="route('intake-guidelines.create')" />
-        <CrudNavBarEdit v-if="can_edit" :enabled="can_edit" :href="route('intake-guidelines.edit', intake_guideline.id)" />
-        <CrudNavBarCloneLink :enabled="can_clone" :href="route('intake-guidelines.clone', intake_guideline.id)" />
-        <CrudNavBarDelete v-if="can_delete" :enabled="can_delete" @wasClicked="deleteDialog.open(intake_guideline.id)" />
-      </template>
-
-    </CrudNavBar>
-
-    <div class="mt-8">
+    <div>
       <H1 :text="intake_guideline.name" />
-      <!-- intake guideline pillbox label category -->
+      <!-- Intake guideline pillbox label category -->
       <div class="mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
         Intake Guideline
       </div>
     </div>
 
-    <section class="mt-8">
-      <h2 class="text-lg">Recommended daily intakes</h2>
+    <section class="mt-4">
+      <p class="max-w-md text-gray-700 text-sm">
+        This page shows the recommended daily intakes (RDIs) for macronutrients, minerals, and vitamins for this intake guideline.
+      </p>
       <IntakeGuideline
         class="w-full mt-4"
         :intake_guideline_nutrients="intake_guideline.intake_guideline_nutrients"
@@ -94,16 +67,5 @@ export default {
       />
     </section>
 
-    <SearchForThingAndGo
-      ref="searchDialog"
-      :things="intake_guidelines"
-      goRoute="intake-guidelines.show"
-      label="Search for another intake guideline"
-      title=""
-      action="Go"
-    />
-
-    <DeleteDialog ref="deleteDialog" deleteRoute="intake-guidelines.destroy" thing="intake guideline" />
-
-  </div>
+  </SidebarLayout>
 </template>
