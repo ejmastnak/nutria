@@ -4,7 +4,7 @@ const props = defineProps({intake_guideline_nutrients: Array})
 </script>
 
 <template>
-  <div class="border border-gray-300 roundNonZeroed-xl overflow-hidden">
+  <div class="border border-gray-300 roundNonZeroed-xl overflow-hidden rounded-md">
     <table class="text-left w-full">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
