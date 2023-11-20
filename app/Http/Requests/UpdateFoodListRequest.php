@@ -32,7 +32,7 @@ class UpdateFoodListRequest extends FormRequest
             'name' => ['required', 'min:1', config('validation.max_name_length')],
 
             // Food list ingredients
-            'food_list_ingredients' => ['nullable', 'array', 'min:1', config('validation.max_food_list_ingredients'), new HasIngredientsIfNoMeals],
+            'food_list_ingredients' => ['nullable', 'array', config('validation.max_food_list_ingredients'), new HasIngredientsIfNoMeals],
             'food_list_ingredients.*.id' => ['nullable', 'integer', 'exists:food_list_ingredients,id'],
             'food_list_ingredients.*.ingredient_id' => ['required', 'integer', 'exists:ingredients,id'],
             'food_list_ingredients.*.amount' => ['required', 'numeric', 'gt:0'],
@@ -40,7 +40,7 @@ class UpdateFoodListRequest extends FormRequest
             'food_list_ingredients.*' => [new IngredientUnitIsConsistent],
 
             // Food list meals
-            'food_list_meals' => ['nullable', 'array', 'min:1', config('validation.max_food_list_meals'), new HasMealsIfNoIngredients],
+            'food_list_meals' => ['nullable', 'array', config('validation.max_food_list_meals'), new HasMealsIfNoIngredients],
             'food_list_meals.*.id' => ['nullable', 'integer', 'exists:food_list_meals,id'],
             'food_list_meals.*.meal_id' => ['required', 'integer', 'exists:meals,id'],
             'food_list_meals.*.amount' => ['required', 'numeric', 'gt:0'],
