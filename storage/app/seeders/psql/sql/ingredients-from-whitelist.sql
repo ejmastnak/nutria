@@ -6,7 +6,7 @@
 delete from units where ingredient_id is not null;
 alter table units drop constraint units_ingredient_id_foreign;
 truncate table ingredients restart identity cascade;
-alter table units add constraint units_ingredient_id_foreign foreign key (ingredient_id) references ingredients(id);
+alter table units add constraint units_ingredient_id_foreign foreign key (ingredient_id) references ingredients(id) on delete cascade;
 
 -- Populates ingredients table.
 -- Ingredients
