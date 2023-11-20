@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('intake_guideline_nutrients', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('intake_guideline_id')->references('id')->on('intake_guidelines');
+            $table->foreignId('intake_guideline_id')->references('id')->on('intake_guidelines')->cascadeOnDelete();
             $table->foreignId('nutrient_id')->references('id')->on('nutrients');
             $table->decimal('rdi', 10, 4);
         });
