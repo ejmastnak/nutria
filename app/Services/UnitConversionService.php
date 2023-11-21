@@ -13,7 +13,7 @@ class UnitConversionService
 {
     /**
      *  Returns the number of grams equal to `amount` of the Unit with
-     *  `unit_id`, or `null` if the conversion is not possible.
+     *  `unit_id`.
      */
     public static function convertToGrams(float $amount, int $unitId, ?int $ingredientId, ?int $mealId): ?float
     {
@@ -43,6 +43,30 @@ class UnitConversionService
         }
 
         throw new \ValueError("Unable to convert inputed amount and unit to grams.");
+    }
+
+    /**
+     *  Returns the number of kilograms equal to `amount` of the Unit with
+     *  `unit_id`.
+     */
+    public static function convertToKilograms(float $amount, int $unitId): ?float
+    {
+        $unit = Unit::find($unitId);
+        if (is_null($unit)) throw new \ValueError("Could not find Unit with id " . $unitId);
+        if (!is_null($unit->g)) return $amount * $unit->g / 1000.0;
+        throw new \ValueError("Unable to convert inputed amount and unit to kilograms.");
+    }
+
+    /**
+     *  Returns the number of pounds equal to `amount` of the Unit with
+     *  `unit_id`.
+     */
+    public static function convertToPounds(float $amount, int $unitId): ?float
+    {
+        $unit = Unit::find($unitId);
+        if (is_null($unit)) throw new \ValueError("Could not find Unit with id " . $unitId);
+        if (!is_null($unit->g)) return $amount * $unit->g / 453.592;
+        throw new \ValueError("Unable to convert inputed amount and unit to pounds.");
     }
 
 }

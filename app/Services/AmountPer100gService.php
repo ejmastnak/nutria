@@ -14,7 +14,7 @@ class AmountPer100gService
 {
     /**
      *  Returns the number of grams equal to `amount` of the Unit with
-     *  `unit_id`, or `null` if the conversion is not possible.
+     *  `unit_id`.
      */
     public static function computeAmountPer100g(float $nutrientAmount, float $ingredientAmount, int $ingredientAmountUnitId, ?float $ingredientDensityGMl): ?float
     {
