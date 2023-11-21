@@ -9,7 +9,7 @@ use App\Models\Unit;
  *  FoodListIngredients, FoodListMeal, etc. from user-specified units to grams,
  *  e.g. when creating Meals and FoodLists.
  */
-class ConvertToGramsService
+class UnitConversionService
 {
     /**
      *  Returns the number of grams equal to `amount` of the Unit with

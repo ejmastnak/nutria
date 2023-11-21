@@ -11,7 +11,7 @@ use App\Models\Nutrient;
 use App\Models\Ingredient;
 use App\Models\IngredientNutrient;
 use App\Services\ComputeDensityService;
-use App\Services\ConvertToGramsService;
+use App\Services\UnitConversionService;
 use App\Services\AmountPer100gService;
 use Illuminate\Support\Facades\DB;
 
@@ -114,7 +114,7 @@ class CustomIngredientSeeder extends Seeder
                     'custom_unit_amount' => $customUnit['custom_unit_amount'],
                     'custom_mass_amount' => $customUnit['custom_mass_amount'],
                     'custom_mass_unit_id' => $customMassUnit->id,
-                    'custom_grams' => ConvertToGramsService::convertToGrams($customUnit['custom_mass_amount'], $customMassUnit->id, null, null)/$customUnit['custom_unit_amount'],
+                    'custom_grams' => UnitConversionService::convertToGrams($customUnit['custom_mass_amount'], $customMassUnit->id, null, null)/$customUnit['custom_unit_amount'],
                 ]);
             }
 
