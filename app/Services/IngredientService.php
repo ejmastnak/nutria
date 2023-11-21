@@ -46,7 +46,7 @@ class IngredientService
                     'custom_unit_amount' => $customUnit['custom_unit_amount'],
                     'custom_mass_amount' => $customUnit['custom_mass_amount'],
                     'custom_mass_unit_id' => $customUnit['custom_mass_unit_id'],
-                    'custom_grams' => UnitConversionService::convertToGrams($customUnit['custom_mass_amount'], $customUnit['custom_mass_unit_id'], null, null)/$customUnit['custom_unit_amount'],
+                    'custom_grams' => UnitConversionService::convertToGrams($customUnit['custom_mass_amount'], $customUnit['custom_mass_unit_id'], null, null, null)/$customUnit['custom_unit_amount'],
                 ]);
             }
 
@@ -103,7 +103,7 @@ class IngredientService
                         'custom_unit_amount' => $customUnit['custom_unit_amount'],
                         'custom_mass_amount' => $customUnit['custom_mass_amount'],
                         'custom_mass_unit_id' => $customUnit['custom_mass_unit_id'],
-                        'custom_grams' => UnitConversionService::convertToGrams($customUnit['custom_mass_amount'], $customUnit['custom_mass_unit_id'], null, null)/$customUnit['custom_unit_amount'],
+                        'custom_grams' => UnitConversionService::convertToGrams($customUnit['custom_mass_amount'], $customUnit['custom_mass_unit_id'], null, null, null)/$customUnit['custom_unit_amount'],
                     ])->id;
                 } else {
                     $CustomUnit = Unit::find($customUnit['id']);
@@ -113,7 +113,7 @@ class IngredientService
                         'custom_unit_amount' => $customUnit['custom_unit_amount'],
                         'custom_mass_amount' => $customUnit['custom_mass_amount'],
                         'custom_mass_unit_id' => $customUnit['custom_mass_unit_id'],
-                        'custom_grams' => UnitConversionService::convertToGrams($customUnit['custom_mass_amount'], $customUnit['custom_mass_unit_id'], null, null)/$customUnit['custom_unit_amount'],
+                        'custom_grams' => UnitConversionService::convertToGrams($customUnit['custom_mass_amount'], $customUnit['custom_mass_unit_id'], null, null, null)/$customUnit['custom_unit_amount'],
                     ]);
                     $freshCustomUnitIds[] = $CustomUnit['id'];
                 }

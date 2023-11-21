@@ -114,7 +114,7 @@ class CustomIngredientSeeder extends Seeder
                     'custom_unit_amount' => $customUnit['custom_unit_amount'],
                     'custom_mass_amount' => $customUnit['custom_mass_amount'],
                     'custom_mass_unit_id' => $customMassUnit->id,
-                    'custom_grams' => UnitConversionService::convertToGrams($customUnit['custom_mass_amount'], $customMassUnit->id, null, null)/$customUnit['custom_unit_amount'],
+                    'custom_grams' => UnitConversionService::convertToGrams($customUnit['custom_mass_amount'], $customMassUnit->id, null, null, null)/$customUnit['custom_unit_amount'],
                 ]);
             }
 
