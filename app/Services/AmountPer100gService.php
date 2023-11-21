@@ -16,19 +16,16 @@ class AmountPer100gService
      *  Returns the number of grams equal to `amount` of the Unit with
      *  `unit_id`, or `null` if the conversion is not possible.
      */
-    public static function computeAmountPer100g(?float $nutrientAmount, float $ingredientAmount, int $ingredientAmountUnitId, ?float $ingredientDensityGMl): ?float
+    public static function computeAmountPer100g(float $nutrientAmount, float $ingredientAmount, int $ingredientAmountUnitId, ?float $ingredientDensityGMl): ?float
     {
-        if (is_null($nutrientAmount)) return 0.0;
-
         $unit = Unit::find($ingredientAmountUnitId);
-        if (is_null($unit)) return null;
+        if (is_null($unit)) throw new \ValueError("Could not find Unit with id " . $unitId);
 
         // For mass units
         if (!is_null($unit->g)) return $nutrientAmount * (100 / ($unit->g * $ingredientAmount));
 
         // For volume units
-        if (!is_null($unit->ml)) {
-            if (is_null($ingredientDensityGMl)) return null;
+        if (!is_null($unit->ml) && !is_null($ingredientDensityGMl)) {
             // Convert volume amount to ml, then from ml to grams
             return $nutrientAmount * (100 / ($ingredientAmount * $unit->ml * $ingredientDensityGMl));
         }
@@ -38,7 +35,7 @@ class AmountPer100gService
             return $nutrientAmount * (100 / ($unit->custom_grams * $ingredientAmount));
         }
 
-        return null;
+        throw new \ValueError("Unable to compute amount of nutrient per 100 g of ingredient.");
     }
 
 }

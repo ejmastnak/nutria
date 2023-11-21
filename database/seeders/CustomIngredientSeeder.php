@@ -134,10 +134,6 @@ class CustomIngredientSeeder extends Seeder
                         $ingredientNutrientAmountUnit->id,
                         $densityGMl,
                     );
-                    if (is_null($amountPer100g)) {
-                        $this->command->info("Warning: failed to compute nutrient amount per 100 grams for nutrient " . $nutrient->name . " when seeding custom ingredient " . $ingredient['name'] . ".");
-                        continue;
-                    }
                     IngredientNutrient::updateOrCreate([
                         'ingredient_id' => $Ingredient->id,
                         'nutrient_id' => $nutrient->id,

@@ -57,7 +57,7 @@ class IngredientService
                     'nutrient_id' => $ingredientNutrient['nutrient_id'],
                     'amount' => is_null($ingredientNutrient['amount']) ? 0.0 : $ingredientNutrient['amount'],
                     'amount_per_100g' => AmountPer100gService::computeAmountPer100g(
-                        $ingredientNutrient['amount'],
+                        is_null($ingredientNutrient['amount']) ? 0.0 : $ingredientNutrient['amount'],
                         $data['ingredient_nutrient_amount'],
                         $data['ingredient_nutrient_amount_unit_id'],
                         $ingredient->density_g_ml,
@@ -130,7 +130,7 @@ class IngredientService
                 $IngredientNutrient->update([
                     'amount' => is_null($ingredientNutrient['amount']) ? 0.0 : $ingredientNutrient['amount'],
                     'amount_per_100g' => AmountPer100gService::computeAmountPer100g(
-                        $ingredientNutrient['amount'],
+                        is_null($ingredientNutrient['amount']) ? 0.0 : $ingredientNutrient['amount'],
                         $data['ingredient_nutrient_amount'],
                         $data['ingredient_nutrient_amount_unit_id'],
                         $ingredient->density_g_ml,

@@ -18,7 +18,7 @@ class UnitConversionService
     public static function convertToGrams(float $amount, int $unitId, ?int $ingredientId, ?int $mealId): ?float
     {
         $unit = Unit::find($unitId);
-        if (is_null($unit)) return null;
+        if (is_null($unit)) throw new \ValueError("Could not find Unit with id " . $unitId);
 
         // For mass units
         if (!is_null($unit->g)) return $amount * $unit->g;
@@ -26,25 +26,23 @@ class UnitConversionService
         // For volume units
         if (!is_null($unit->ml)) {
             $ingredient = Ingredient::find($ingredientId);
-            if (is_null($ingredient)) return null;
-            if (is_null($ingredient->density_g_ml)) return null;
-            // Convert volume amount to ml, then from ml to grams
-            return $amount * $unit->ml * $ingredient->density_g_ml;
+            if (!is_null($ingredient) && !is_null($ingredient->density_g_ml)) {
+                // Convert volume amount to ml, then from ml to grams
+                return $amount * $unit->ml * $ingredient->density_g_ml;
+            }
         }
 
         // For custom ingredient units
-        if (!is_null($unit->ingredient_id)) {
-            if ($unit->ingredient_id != $ingredientId) return null;
+        if (!is_null($unit->ingredient_id) && $unit->ingredient_id === $ingredientId) {
             return $amount * $unit->custom_grams;
         }
 
         // For custom meal units
-        if (!is_null($unit->meal_id)) {
-            if ($unit->meal_id != $mealId) return null;
+        if (!is_null($unit->meal_id) && $unit->meal_id === $mealId) {
             return $amount * $unit->custom_grams;
         }
 
-        return null;
+        throw new \ValueError("Unable to convert inputed amount and unit to grams.");
     }
 
 }
