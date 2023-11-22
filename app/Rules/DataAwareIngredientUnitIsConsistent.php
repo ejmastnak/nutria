@@ -6,14 +6,34 @@ use Closure;
 use App\Models\Unit;
 use App\Models\Ingredient;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Contracts\Validation\DataAwareRule;
 
 /**
- *  Ensures a MealIngredient or FoodListIngredient's amount is specified in a
- *  unit supported by the underlying Ingredient. Expects as input a PHP array
- *  with a `unit_id` and `ingredient_id` key.
+ *  Equivalent of IngredientUnitIsConsistent, but instead relying on
+ *  DataAwareRule to access request data. Intended for use with
+ *  IngredientIntakeRecordRequests.
  */
-class IngredientUnitIsConsistent implements ValidationRule
+class DataAwareIngredientUnitIsConsistent implements ValidationRule, DataAwareRule
 {
+
+    /**
+     * All of the data under validation.
+     *
+     * @var array<string, mixed>
+     */
+    protected $data = [];
+
+    /**
+     * Set the data under validation.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function setData(array $data): static
+    {
+        $this->data = $data;
+        return $this;
+    }
+
     /**
      * Run the validation rule.
      *
@@ -21,10 +41,10 @@ class IngredientUnitIsConsistent implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $unit = Unit::find($value['unit_id']);
+        $unit = Unit::find($data['unit_id']);
         if (is_null($unit)) $fail("The :attribute's unit was not recognized.");
 
-        $ingredient = Ingredient::find($value['ingredient_id']);
+        $ingredient = Ingredient::find($data['ingredient_id']);
         if (is_null($ingredient)) $fail("The :attribute's ingredient was not recognized.");
 
         // Allow any mass unit
