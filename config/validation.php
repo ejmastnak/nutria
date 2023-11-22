@@ -20,4 +20,6 @@ return [
     'max_food_list_ingredients' => "max:500",
     // Max number of meals in a food list
     'max_food_list_meals' => "max:500",
+    // Generic cap on amounts
+    'generic_max_amount' => 'max:100000000',
 ];
