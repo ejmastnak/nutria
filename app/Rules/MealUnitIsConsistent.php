@@ -21,10 +21,16 @@ class MealUnitIsConsistent implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $unit = Unit::find($value['unit_id']);
-        if (is_null($unit)) $fail("The :attribute's unit was not recognized.");
+        if (is_null($unit)) {
+            $fail("The :attribute's unit was not recognized.");
+            return;
+        }
 
         $meal = Meal::find($value['meal_id']);
-        if (is_null($meal)) $fail("The :attribute's meal was not recognized.");
+        if (is_null($meal)) {
+            $fail("The :attribute's meal was not recognized.");
+            return;
+        }
 
         // Allow any mass unit
         if (!is_null($unit->g)) return;
@@ -32,7 +38,10 @@ class MealUnitIsConsistent implements ValidationRule
         // Allow meal custom units only for a matching meal
         else if (!is_null($unit->meal_id)) {
             if ($unit->meal_id === $meal->id) return;
-            else $fail("The meal does not support the unit " . $unit->name . " .");
+            else {
+                $fail("The meal does not support the unit " . $unit->name . " .");
+                return;
+            }
         }
 
         // Fail all other cases

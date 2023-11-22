@@ -41,18 +41,27 @@ class DataAwareMealUnitIsConsistent implements ValidationRule, DataAwareRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $unit = Unit::find($data['unit_id']);
-        if (is_null($unit)) $fail("The :attribute's unit was not recognized.");
+        if (is_null($unit)) {
+            $fail("The :attribute's unit was not recognized.");
+            return;
+        }
 
         // Allow any mass unit
         if (!is_null($unit->g)) return;
 
         $meal = Meal::find($data['meal_id']);
-        if (is_null($meal)) $fail("The :attribute's meal was not recognized.");
+        if (is_null($meal)) {
+            $fail("The :attribute's meal was not recognized.");
+            return;
+        }
 
         // Allow only the meal unit for the matching meal
         else if (!is_null($unit->meal_id)) {
             if ($unit->meal_id === $meal->id) return;
-            else $fail("The meal does not support the unit " . $unit->name . " .");
+            else {
+                $fail("The meal does not support the unit " . $unit->name . " .");
+                return;
+            }
         }
 
         // Fail all other cases

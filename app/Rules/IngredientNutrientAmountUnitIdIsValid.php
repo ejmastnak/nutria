@@ -40,7 +40,10 @@ class IngredientNutrientAmountUnitIdIsValid implements DataAwareRule, Validation
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $unit = Unit::find($value);
-        if (is_null($unit)) $fail("The ingredient's unit was not recognized.");
+        if (is_null($unit)) {
+            $fail("The ingredient's unit was not recognized.");
+            return;
+        }
 
         // Allow any mass unit
         if (!is_null($unit->g)) return;
@@ -49,13 +52,17 @@ class IngredientNutrientAmountUnitIdIsValid implements DataAwareRule, Validation
         else if (!is_null($unit->ml)) {
             if (is_null($this->data['density_mass_unit_id']) || is_null($this->data['density_mass_amount']) || is_null($this->data['density_volume_unit_id']) || is_null($this->data['density_volume_unit_id'])) {
                 $fail("The ingredient does not have a valid density, so its amount cannot be expressed in a unit of volume.");
+                return;
             }
             else return;
         }
 
         // A custom unit
         else if (!is_null($unit->ingredient_id)) {
-            if (is_null($this->data['custom_units']) || count($this->data['custom_units']) === 0) $fail("The ingredient's unit is not valid.");
+            if (is_null($this->data['custom_units']) || count($this->data['custom_units']) === 0) {
+                $fail("The ingredient's unit is not valid.");
+                return;
+            }
 
             // Check for a matching unit entry in ingredient's custom units
             $matchingCustomUnitExists = false;
@@ -65,7 +72,10 @@ class IngredientNutrientAmountUnitIdIsValid implements DataAwareRule, Validation
                     break;
                 }
             }
-            if (!$matchingCustomUnitExists) $fail("This ingredient unit is not valid. Perhaps it was just deleted?");
+            if (!$matchingCustomUnitExists) {
+                $fail("This ingredient unit is not valid. Perhaps it was just deleted?");
+                return;
+            }
         }
 
         // Fail all other cases
