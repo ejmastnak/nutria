@@ -15,7 +15,7 @@ class UnitConversionService
      *  Returns the number of grams equal to `amount` of the Unit with
      *  `unit_id`.
      */
-    public static function convertToGrams(float $amount, int $unitId, int $ingredientId, int $mealId, int $foodListId): ?float
+    public static function convertToGrams(float $amount, int $unitId, ?int $ingredientId, ?int $mealId, ?int $foodListId): ?float
     {
         $unit = Unit::find($unitId);
         if (is_null($unit)) throw new \ValueError("Could not find Unit with id " . $unitId);
