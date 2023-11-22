@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\IngredientUnitIsConsistent;
+use App\Rules\IngredientOwnedByUser;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateMealRequest extends FormRequest
@@ -30,7 +31,7 @@ class UpdateMealRequest extends FormRequest
             // Meal ingredients
             'meal_ingredients' => ['required', 'array', 'min:1', config('validation.max_meal_ingredients')],
             'meal_ingredients.*.id' => ['nullable', 'integer', 'exists:meal_ingredients,id'],
-            'meal_ingredients.*.ingredient_id' => ['required', 'integer', 'exists:ingredients,id'],
+            'meal_ingredients.*.ingredient_id' => ['required', 'integer', 'exists:ingredients,id', new IngredientOwnedByUser],
             'meal_ingredients.*.amount' => ['required', 'numeric', 'gt:0', config('validation.max_ingredient_amount')],
             'meal_ingredients.*.unit_id' => ['required', 'integer', 'exists:units,id'],
             'meal_ingredients.*' => [new IngredientUnitIsConsistent],
