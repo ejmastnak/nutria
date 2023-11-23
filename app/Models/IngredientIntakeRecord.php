@@ -19,6 +19,16 @@ class IngredientIntakeRecord extends Model
         'user_id',
     ];
 
+    public static function getForUser(?int $userId) {
+        return is_null($userId) ? [] : self::where('user_id', $userId)
+            ->with([
+                'unit:id,name,g,ml,seq_num,ingredient_id,custom_grams',
+                'ingredient:id,name,density_g_ml',
+                'ingredient.custom_units:id,name,g,ml,seq_num,ingredient_id,custom_grams',
+            ])
+            ->get(['id', 'ingredient_id', 'amount', 'unit_id', 'date', 'time']);
+    }
+
     public function ingredient() {
         return $this->belongsTo(Ingredient::class, 'ingredient_id', 'id');
     }

@@ -19,6 +19,12 @@ class BodyWeightRecord extends Model
         'user_id',
     ];
 
+    public static function getForUser(?int $userId) {
+        return is_null($userId) ? [] : self::where('user_id', $userId)
+            ->with('unit:id,name')
+            ->get(['id', 'amount', 'unit_id', 'date', 'time']);
+    }
+
     public function unit() {
         return $this->belongsTo(Unit::class, 'unit_id', 'id');
     }

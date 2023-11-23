@@ -19,6 +19,16 @@ class MealIntakeRecord extends Model
         'user_id',
     ];
 
+    public static function getForUser(?int $userId) {
+        return is_null($userId) ? [] : self::where('user_id', $userId)
+            ->with([
+                'unit:id,name,g,ml,seq_num,meal_id,custom_grams',
+                'meal:id,name',
+                'meal.meal_unit:id,name,g,ml,seq_num,meal_id,custom_grams',
+            ])
+            ->get(['id', 'meal_id', 'amount', 'unit_id', 'date', 'time']);
+    }
+
     public function meal() {
         return $this->belongsTo(Meal::class, 'meal_id', 'id');
     }

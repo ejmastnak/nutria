@@ -19,6 +19,16 @@ class FoodListIntakeRecord extends Model
         'user_id',
     ];
 
+    public static function getForUser(?int $userId) {
+        return is_null($userId) ? [] : self::where('user_id', $userId)
+            ->with([
+                'unit:id,name,g,ml,seq_num,food_list_id,custom_grams',
+                'food_list:id,name',
+                'food_list.food_list_unit:id,name,g,ml,seq_num,food_list_id,custom_grams',
+            ])
+            ->get(['id', 'food_list_id', 'amount', 'unit_id', 'date', 'time']);
+    }
+
     public function food_list() {
         return $this->belongsTo(FoodList::class, 'food_list_id', 'id');
     }

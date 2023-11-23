@@ -41,6 +41,12 @@ class FoodList extends Model
             ->get(['id', 'name']);
     }
 
+    public static function getForUserWithUnit(?int $userId) {
+        return is_null($userId) ? [] : self::where('user_id', $userId)
+            ->with('food_list_unit:id,name,g,ml,seq_num,food_list_id,custom_grams')
+            ->get(['id', 'name']);
+    }
+
     public function food_list_ingredients() {
         return $this->hasMany(FoodListIngredient::class, 'food_list_id', 'id')->orderBy('seq_num');
     }

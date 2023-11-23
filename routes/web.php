@@ -6,6 +6,8 @@ use App\Http\Controllers\MealController;
 use App\Http\Controllers\FoodListController;
 use App\Http\Controllers\IntakeGuidelineController;
 use App\Http\Controllers\BodyWeightRecordController;
+use App\Http\Controllers\LogController;
+use App\Http\Controllers\TrendController;
 use App\Models\Ingredient;
 use App\Models\Meal;
 use App\Models\FoodList;
@@ -79,14 +81,6 @@ Route::middleware('auth')->group(function () {
         Route::put('intake-guidelines/{intake_guideline}', [IntakeGuidelineController::class, 'update'])->name('intake-guidelines.update')->can('update', 'intake_guideline');
         Route::delete('intake-guidelines/{intake_guideline}', [IntakeGuidelineController::class, 'destroy'])->name('intake-guidelines.destroy')->can('delete', 'intake_guideline');
 
-        // Log data and view trends
-        Route::get('/log', function () {
-            return Inertia::render('Log');
-        })->name('log');
-        Route::get('/trends', function () {
-            return Inertia::render('Trends');
-        })->name('trends');
-
         # BodyWeightRecords
         Route::post('body-weight-records', [BodyWeightRecordController::class, 'store'])->name('body-weight-records.store')->can('create', BodyWeightRecord::class);
         Route::put('body-weight-records/{body_weight_record}', [BodyWeightRecordController::class, 'update'])->name('body-weight-record.update')->can('update', 'body_weight_record');
@@ -107,6 +101,9 @@ Route::middleware('auth')->group(function () {
         Route::put('food-list-intake-records/{food_list_intake_record}', [FoodListIntakeRecordController::class, 'update'])->name('food-list-intake-record.update')->can('update', 'food_list_intake_record');
         Route::delete('food-list-intake-records/{food_list_intake_record}', [FoodListIntakeRecordController::class, 'destroy'])->name('food-list-intake-records.destroy')->can('delete', 'food_list_intake_record');
 
+        # Main pages for logging data and viewing trends in data
+        Route::get('/log', [LogController::class, 'index'])->name('log');
+        Route::get('/trends', [TrendController::class, 'index'])->name('trends');
 });
 
 // These routes are available to unauthenticated users.
