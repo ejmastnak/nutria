@@ -39,7 +39,7 @@ class FoodListIntakeRecordSeeder extends Seeder
                 'food_list_id' => $foodList->id,
                 'amount' => $foodListIntakeRecord['amount'],
                 'unit_id' => $unit->id,
-                'mass_in_grams' => UnitConversionService::convertToGrams($foodListIntakeRecord['amount'], $foodListIntakeRecord['unit_id'], null, null, $foodList->id),
+                'mass_in_grams' => UnitConversionService::convertToGrams($foodListIntakeRecord['amount'], $unit->id, null, null, $foodList->id),
                 'date' => $foodListIntakeRecord['date'],
                 'time' => $foodListIntakeRecord['time'],
                 'user_id' => $foodListIntakeRecord['user_id'],

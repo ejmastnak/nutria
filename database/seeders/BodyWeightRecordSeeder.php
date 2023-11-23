@@ -28,8 +28,8 @@ class BodyWeightRecordSeeder extends Seeder
             BodyWeightRecord::updateOrCreate([
                 'amount' => $bodyWeightRecord['amount'],
                 'unit_id' => $unit->id,
-                'kg' => UnitConversionService::convertToKilograms($bodyWeightRecord['amount'], $bodyWeightRecord['unit_id']),
-                'lb' => UnitConversionService::convertToPounds($bodyWeightRecord['amount'], $bodyWeightRecord['unit_id']),
+                'kg' => UnitConversionService::convertToKilograms($bodyWeightRecord['amount'], $unit->id),
+                'lb' => UnitConversionService::convertToPounds($bodyWeightRecord['amount'], $unit->id),
                 'date' => $bodyWeightRecord['date'],
                 'time' => $bodyWeightRecord['time'],
                 'user_id' => $bodyWeightRecord['user_id'],
