@@ -28,7 +28,7 @@ class StoreBodyWeightRecordRequest extends FormRequest
             'amount' => ['required', 'numeric', 'gt:0', config('validation.generic_max_amount')],
             'unit_id' => ['required', 'integer', 'exists:units,id', new IsMassUnit],
             'date' => ['required', 'string', 'date_format:Y-m-d'],
-            'time' => ['nullable', 'string', 'date_format:H:i'],
+            'time' => ['nullable', 'string', 'date_format:H:i:s'],
         ];
     }
 }
