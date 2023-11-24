@@ -34,6 +34,8 @@ class MealIntakeRecord extends Model
                 'meal:id,name',
                 'meal.meal_unit:id,name,g,ml,seq_num,meal_id,custom_grams',
             ])
+            ->orderBy('date')
+            ->orderBy('time')
             ->get(['id', 'meal_id', 'amount', 'unit_id', 'date', 'time']);
     }
 

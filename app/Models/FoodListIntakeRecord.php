@@ -34,6 +34,8 @@ class FoodListIntakeRecord extends Model
                 'food_list:id,name',
                 'food_list.food_list_unit:id,name,g,ml,seq_num,food_list_id,custom_grams',
             ])
+            ->orderBy('date')
+            ->orderBy('time')
             ->get(['id', 'food_list_id', 'amount', 'unit_id', 'date', 'time']);
     }
 
