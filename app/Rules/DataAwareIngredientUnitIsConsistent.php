@@ -41,13 +41,13 @@ class DataAwareIngredientUnitIsConsistent implements ValidationRule, DataAwareRu
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $unit = Unit::find($data['unit_id']);
+        $unit = Unit::find($this->data['unit_id']);
         if (is_null($unit)) {
             $fail("The :attribute's unit was not recognized.");
             return;
         }
 
-        $ingredient = Ingredient::find($data['ingredient_id']);
+        $ingredient = Ingredient::find($this->data['ingredient_id']);
         if (is_null($ingredient)) {
             $fail("The :attribute's ingredient was not recognized.");
             return;

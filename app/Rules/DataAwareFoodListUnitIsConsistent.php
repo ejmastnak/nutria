@@ -40,13 +40,13 @@ class DataAwareFoodListUnitIsConsistent implements ValidationRule, DataAwareRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $unit = Unit::find($data['unit_id']);
+        $unit = Unit::find($this->data['unit_id']);
         if (is_null($unit)) {
             $fail("The :attribute's unit was not recognized.");
             return;
         }
 
-        $foodList = FoodList::find($data['food_list_id']);
+        $foodList = FoodList::find($this->data['food_list_id']);
         if (is_null($foodList)) {
             $fail("The :attribute's food list was not recognized.");
             return;

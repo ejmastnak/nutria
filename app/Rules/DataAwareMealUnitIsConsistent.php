@@ -40,7 +40,7 @@ class DataAwareMealUnitIsConsistent implements ValidationRule, DataAwareRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $unit = Unit::find($data['unit_id']);
+        $unit = Unit::find($this->data['unit_id']);
         if (is_null($unit)) {
             $fail("The :attribute's unit was not recognized.");
             return;
@@ -49,7 +49,7 @@ class DataAwareMealUnitIsConsistent implements ValidationRule, DataAwareRule
         // Allow any mass unit
         if (!is_null($unit->g)) return;
 
-        $meal = Meal::find($data['meal_id']);
+        $meal = Meal::find($this->data['meal_id']);
         if (is_null($meal)) {
             $fail("The :attribute's meal was not recognized.");
             return;
