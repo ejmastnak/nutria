@@ -2,9 +2,12 @@
 import { ref, onBeforeUnmount, onMounted } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import MyLink from '@/Components/MyLink.vue'
+import LogBodyWeightDialog from './Partials/LogBodyWeightDialog.vue'
 import BodyWeightRecords from './Partials/BodyWeightRecords.vue'
 import FoodIntakeRecords from './Partials/FoodIntakeRecords.vue'
 import NutrientProfileTrends from './Partials/NutrientProfileTrends.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
+import PrimaryButton from '@/Components/PrimaryButton.vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 const props = defineProps({
@@ -24,6 +27,8 @@ const selectedTab = ref(sessionStorage.getItem('trendsIndexSelectedTab') ?? 0)
 function changeTab(index) {
   selectedTab.value = index
 }
+
+const logBodyWeightDialogRef = ref(null)
 
 // Preserve selected tab page visits
 onBeforeUnmount(() => {
@@ -94,10 +99,15 @@ export default {
 
         <!-- Body weight trends-->
         <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-md w-fit">
+          <SecondaryButton @click="logBodyWeightDialogRef.open(null)" >
+            Log body weight
+          </SecondaryButton>
           <BodyWeightRecords
-            class="overflow-hidden rounded-md w-fit"
+            class="mt-1 overflow-hidden rounded-md w-fit"
             :body_weight_records="body_weight_records"
+            :units="units"
           />
+          <LogBodyWeightDialog :units="units" ref="logBodyWeightDialogRef" />
         </TabPanel>
 
         <!-- Food intake ingredients -->

@@ -61,3 +61,17 @@ export const gramAmountOfUnit = function(amount, unit, densityGMl) {
     return amount
   }
 }
+
+// Returns current date in YYYY-MM-DD format
+export const nowYYYYMMDD = function() {
+  const date = new Date()
+  var month = '' + (date.getMonth() + 1)
+  var day = '' + date.getDate()
+  var year = date.getFullYear()
+
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
+
+  return [year, month, day].join('-');
+}
+
