@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->decimal('kg', 10, 4);
             $table->decimal('lb', 10, 4);
             $table->date('date');
-            $table->time('time');
+            $table->time('time')->nullable();
             $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->timestamps();
         });

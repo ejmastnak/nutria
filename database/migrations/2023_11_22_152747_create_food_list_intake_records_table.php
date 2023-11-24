@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('unit_id')->references('id')->on('units');
             $table->decimal('mass_in_grams', 10, 4);
             $table->date('date');
-            $table->time('time');
+            $table->time('time')->nullable();
             $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->timestamps();
         });
