@@ -9,6 +9,7 @@ use App\Models\FoodListIntakeRecord;
 use App\Models\Ingredient;
 use App\Models\Meal;
 use App\Models\FoodList;
+use App\Models\Unit;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -29,6 +30,7 @@ class TrendController extends Controller
             'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
             'meals' => Meal::getForUserWithUnit($userId),
             'food_lists' => FoodList::getForUserWithUnit($userId),
+            'units' => Unit::getMassAndVolume(),
         ]);
     }
 }

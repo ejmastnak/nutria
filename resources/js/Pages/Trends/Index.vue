@@ -15,6 +15,7 @@ const props = defineProps({
   user_ingredients: Array,
   meals: Array,
   food_lists: Array,
+  units: Array,
 })
 
 const ingredients = props.user_ingredients.concat(window.usdaIngredients ? window.usdaIngredients : [])
