@@ -42,7 +42,7 @@ class MealIntakeRecordSeeder extends Seeder
                 'unit_id' => $unit->id,
                 'mass_in_grams' => UnitConversionService::convertToGrams($mealIntakeRecord['amount'], $unit->id, null, $meal->id, null),
                 'date' => $mealIntakeRecord['date'],
-                'time' => $mealIntakeRecord['time'],
+                'time' => isset($mealIntakeRecord['time']) ? $mealIntakeRecord['time'] : null,
                 'user_id' => $mealIntakeRecord['user_id'],
             ]);
         }

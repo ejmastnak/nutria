@@ -31,7 +31,7 @@ class BodyWeightRecordSeeder extends Seeder
                 'kg' => UnitConversionService::convertToKilograms($bodyWeightRecord['amount'], $unit->id),
                 'lb' => UnitConversionService::convertToPounds($bodyWeightRecord['amount'], $unit->id),
                 'date' => $bodyWeightRecord['date'],
-                'time' => $bodyWeightRecord['time'],
+                'time' => isset($bodyWeightRecord['time']) ? $bodyWeightRecord['time'] : null,
                 'user_id' => $bodyWeightRecord['user_id'],
             ]);
         }
