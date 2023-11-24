@@ -7,6 +7,7 @@ import FoodIntakeRecords from './Partials/FoodIntakeRecords.vue'
 import NutrientProfileTrends from './Partials/NutrientProfileTrends.vue'
 import LogBodyWeightDialog from './Partials/LogBodyWeightDialog.vue'
 import LogIngredientIntakeDialog from './Partials/LogIngredientIntakeDialog.vue'
+import LogMealIntakeDialog from './Partials/LogMealIntakeDialog.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
@@ -31,6 +32,8 @@ function changeTab(index) {
 
 const logBodyWeightDialogRef = ref(null)
 const logIngredientIntakeDialogRef = ref(null)
+const logMealIntakeDialogRef = ref(null)
+const logFoodListIntakeDialogRef = ref(null)
 
 // Preserve selected tab page visits
 onBeforeUnmount(() => {
@@ -117,6 +120,9 @@ export default {
           <SecondaryButton @click="logIngredientIntakeDialogRef.open(null)" >
             Log Ingredient
           </SecondaryButton>
+          <SecondaryButton @click="logMealIntakeDialogRef.open(null)" class="ml-1" >
+            Log Meal
+          </SecondaryButton>
           <FoodIntakeRecords
             class="mt-1 overflow-hidden rounded-md"
             :ingredient_intake_records="ingredient_intake_records"
@@ -131,6 +137,11 @@ export default {
             :ingredients="ingredients"
             :units="units"
             ref="logIngredientIntakeDialogRef"
+          />
+          <LogMealIntakeDialog
+            :meals="meals"
+            :units="units"
+            ref="logMealIntakeDialogRef"
           />
         </TabPanel>
 

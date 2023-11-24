@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { TrashIcon, PencilSquareIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
 import LogIngredientIntakeDialog from './LogIngredientIntakeDialog.vue'
+import LogMealIntakeDialog from './LogMealIntakeDialog.vue'
 import MyLink from '@/Components/MyLink.vue'
 import { roundNonZero } from '@/utils/GlobalFunctions.js'
 const props = defineProps({
@@ -36,8 +37,7 @@ function openUpdateDialog(foodItem) {
   if (foodItem.type === INGREDIENT) {
     logIngredientIntakeDialogRef.value.open(foodItem)
   } else if (foodItem.type === MEAL) {
-    // logMealIntakeDialogRef.value.open(foodItem)
-    alert("Not yet");
+    logMealIntakeDialogRef.value.open(foodItem)
   } else if (foodItem.type === FOOD_LIST) {
     // logFoodListIntakeDialogRef.value.open(foodItem)
     alert("Not yet");
@@ -79,7 +79,7 @@ function openUpdateDialog(foodItem) {
             <p v-if="foodItem.type === MEAL" class="flex items-center">
               <button
                 type="button"
-                @click="logIngredientIntakeDialogRef.open(foodItem)"
+                @click="logMealIntakeDialogRef.open(foodItem)"
                 class="inline-block px-px rounded-md hover:underline focus:outline-none focus:ring-2 focus:ring-blue-700 whitespace-nowrap"
               >
                 {{foodItem.meal.name}}
@@ -91,7 +91,7 @@ function openUpdateDialog(foodItem) {
             <p v-if="foodItem.type === FOOD_LIST" class="flex items-center">
               <button
                 type="button"
-                @click="logIngredientIntakeDialogRef.open(foodItem)"
+                @click="logFoodListIntakeDialogRef.open(foodItem)"
                 class="inline-block px-px rounded-md hover:underline focus:outline-none focus:ring-2 focus:ring-blue-700 whitespace-nowrap"
               >
                 {{foodItem.food_list.name}}
@@ -135,6 +135,11 @@ function openUpdateDialog(foodItem) {
       :ingredients="ingredients"
       :units="units"
       ref="logIngredientIntakeDialogRef"
+    />
+    <LogMealIntakeDialog
+      :meals="meals"
+      :units="units"
+      ref="logMealIntakeDialogRef"
     />
   </div>
 </template>
