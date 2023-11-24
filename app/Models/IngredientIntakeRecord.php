@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class IngredientIntakeRecord extends Model
@@ -18,6 +19,13 @@ class IngredientIntakeRecord extends Model
         'time',
         'user_id',
     ];
+
+    protected function amount(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => $value + 0,
+        );
+    }
 
     public static function getForUser(?int $userId) {
         return is_null($userId) ? [] : self::where('user_id', $userId)
