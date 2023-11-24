@@ -1,6 +1,11 @@
 <script setup>
+import { ref, onBeforeUnmount, onMounted } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import MyLink from '@/Components/MyLink.vue'
+import BodyWeightRecords from './Partials/BodyWeightRecords.vue'
+import FoodIntakeRecords from './Partials/FoodIntakeRecords.vue'
+import NutrientProfileTrends from './Partials/NutrientProfileTrends.vue'
+import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 const props = defineProps({
   body_weight_records: Array,
@@ -13,6 +18,20 @@ const props = defineProps({
 })
 
 const ingredients = props.user_ingredients.concat(window.usdaIngredients ? window.usdaIngredients : [])
+
+const selectedTab = ref(sessionStorage.getItem('trendsIndexSelectedTab') ?? 0)
+function changeTab(index) {
+  selectedTab.value = index
+}
+
+// Preserve selected tab page visits
+onBeforeUnmount(() => {
+  sessionStorage.setItem('trendsIndexSelectedTab', selectedTab.value);
+})
+// Preserve search query on manual page reload
+window.onbeforeunload = function() {
+  sessionStorage.setItem('trendsIndexSelectedTab', selectedTab.value);
+}
 </script>
 
 <script>
@@ -27,15 +46,76 @@ export default {
     <Head title="Trends" />
 
     <h1 class="text-xl">Trends</h1>
-    <ul class="mt-4">
-      <li>Body weight.</li>
-      <li>Food intake.</li>
-      <li>Nutrient profile trends.</li>
-    </ul>
+    <p class="text-gray-500">
+      This page shows your body weight and food intake data.
+    </p>
 
-    <pre>
-      {{food_list_intake_records}}
-    </pre>
+    <TabGroup @change="changeTab" :defaultIndex="Number(selectedTab)">
+
+      <TabList class="mt-4 rounded w-fit border-b space-x-2">
+
+        <Tab as="template" v-slot="{ selected }">
+          <button
+            class="px-4 py-2 text-sm text-gray-600 focus:outline-none transition ease-in-out duration-150"
+            :class="{
+              'text-gray-800 font-semibold border-b-2 border-blue-500': selected,
+              'hover:border-b-2 hover:border-gray-300': !selected
+            }" >
+            Body Weight
+          </button>
+        </Tab>
+
+        <Tab as="template" v-slot="{ selected }">
+          <button
+            class="px-4 py-2 text-sm text-gray-600 focus:outline-none transition ease-in-out duration-150"
+            :class="{
+              'text-gray-800 font-semibold border-b-2 border-blue-500': selected,
+              'hover:border-b-2 hover:border-gray-300': !selected
+            }" >
+            Food Intake
+          </button>
+        </Tab>
+
+        <Tab as="template" v-slot="{ selected }">
+          <button
+            class="px-4 py-2 text-sm text-gray-600 focus:outline-none transition ease-in-out duration-150"
+            :class="{
+              'text-gray-800 font-semibold border-b-2 border-blue-500': selected,
+              'hover:border-b-2 hover:border-gray-300': !selected
+            }" >
+            Nutrient Profile
+          </button>
+        </Tab>
+
+      </TabList>
+
+      <TabPanels class="mt-2">
+
+        <!-- Body weight trends-->
+        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-md w-fit">
+          <BodyWeightRecords
+            class="overflow-hidden rounded-md w-fit"
+            :body_weight_records="body_weight_records"
+          />
+        </TabPanel>
+
+        <!-- Food intake ingredients -->
+        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded">
+          <FoodIntakeRecords
+            class="overflow-hidden rounded-md"
+            :ingredient_intake_records="ingredient_intake_records"
+            :meal_intake_records="meal_intake_records"
+            :food_list_intake_records="food_list_intake_records"
+          />
+        </TabPanel>
+
+        <!-- Nutrient profile trends -->
+        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded">
+          <NutrientProfileTrends class="overflow-hidden rounded-md" />
+        </TabPanel>
+
+      </TabPanels>
+    </TabGroup>
 
   </div>
 </template>
