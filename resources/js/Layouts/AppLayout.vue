@@ -6,6 +6,7 @@ import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import FlashMessage from '@/Shared/FlashMessage.vue'
 import { Link } from '@inertiajs/vue3';
+import FoodPopover from './Partials/FoodPopover.vue'
 
 const showingNavigationDropdown = ref(false);
 
@@ -29,17 +30,26 @@ const showingNavigationDropdown = ref(false);
                   <NavLink :href="route('home')" :active="route().current('home')" >
                     Home
                   </NavLink>
-                  <NavLink class="hidden sm:inline-flex" :href="route('ingredients.index')" :active="route().current('ingredients.index')" >
+                  <div class="relative hidden sm:block lg:hidden">
+                    <FoodPopover />
+                  </div>
+                  <NavLink class="hidden lg:inline-flex" :href="route('ingredients.index')" :active="route().current('ingredients.index')" >
                     Ingredients
                   </NavLink>
-                  <NavLink class="hidden sm:inline-flex" :href="route('meals.index')" :active="route().current('meals.index')">
+                  <NavLink class="hidden lg:inline-flex" :href="route('meals.index')" :active="route().current('meals.index')">
                     Meals
                   </NavLink>
-                  <NavLink class="hidden sm:inline-flex" :href="route('food-lists.index')" :active="route().current('food-lists.index')">
+                  <NavLink class="hidden lg:inline-flex" :href="route('food-lists.index')" :active="route().current('food-lists.index')">
                     Food Lists
                   </NavLink>
                   <NavLink class="hidden sm:inline-flex" :href="route('intake-guidelines.index')" :active="route().current('intake-guidelines.index')">
                     Intake Guidelines
+                  </NavLink>
+                  <NavLink class="hidden sm:inline-flex" :href="route('trends')" :active="route().current('trends')">
+                    Trends
+                  </NavLink>
+                  <NavLink class="hidden sm:inline-flex" :href="route('log')" :active="route().current('log')">
+                    Log Data
                   </NavLink>
                 </div>
 
@@ -151,6 +161,12 @@ const showingNavigationDropdown = ref(false);
             </ResponsiveNavLink>
             <ResponsiveNavLink :href="route('intake-guidelines.index')" :active="route().current('intake-guidelines.index')">
               Intake Guidelines
+            </ResponsiveNavLink>
+            <ResponsiveNavLink :href="route('trends')" :active="route().current('trends')">
+              Trends
+            </ResponsiveNavLink>
+            <ResponsiveNavLink :href="route('log')" :active="route().current('log')">
+              Log Data
             </ResponsiveNavLink>
             <!-- Display log in link for unauthenticated users -->
             <ResponsiveNavLink

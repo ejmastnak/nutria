@@ -33,7 +33,7 @@ const showingNavigationDropdown = ref(false);
     <nav class="-mt-8 -ml-6">
 
       <!-- Desktop navigation menu -->
-      <div class="fixed hidden sm:block left-0 w-48 p-2 bg-[#fefefe] border-r border-gray-300 flex flex-col min-h-screen whitespace-nowrap z-50">
+      <div class="fixed hidden sm:block left-0 w-48 p-2 bg-[#fefefe] border-r border-gray-300 flex flex-col min-h-screen whitespace-nowrap z-40">
         <div>
           <All :href="route(route_basename + '.index')" />
           <FindAnother :things="things" :route_basename="route_basename" />
