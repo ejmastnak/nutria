@@ -9,14 +9,18 @@ import TextInput from '@/Components/TextInput.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import InputError from '@/Components/InputError.vue'
 import SimpleCombobox from '@/Components/SimpleCombobox.vue'
+import FuzzyCombobox from '@/Components/FuzzyCombobox.vue'
 import { TransitionRoot, Dialog, DialogPanel, DialogTitle, DialogDescription } from '@headlessui/vue'
 
 const props = defineProps({
+  ingredients: Array,
   units: Array,
 })
 
 const form = useForm({
   id: null,
+  ingredient_id: null,
+  ingredient: null,
   amount: null,
   unit_id: null,
   unit: null,
@@ -26,13 +30,15 @@ const form = useForm({
 
 defineExpose({ open })
 const isOpen = ref(false)
-function open(bodyWeightRecord) {
-  form.id = bodyWeightRecord ? bodyWeightRecord.id : null
-  form.amount = bodyWeightRecord ? bodyWeightRecord.amount : null
-  form.unit_id = bodyWeightRecord ? bodyWeightRecord.unit_id : props.units.find(unit => unit.name === 'kg').id
-  form.unit = bodyWeightRecord ? bodyWeightRecord.unit : props.units.find(unit => unit.name === 'kg')
-  form.date = bodyWeightRecord ? bodyWeightRecord.date : nowYYYYMMDD()
-  form.time = (bodyWeightRecord && bodyWeightRecord.time) ? bodyWeightRecord.time : null
+function open(ingredientIntakeRecord) {
+  form.id = ingredientIntakeRecord ? ingredientIntakeRecord.id : null
+  form.ingredient_id = ingredientIntakeRecord ? ingredientIntakeRecord.ingredient_id : null
+  form.ingredient = ingredientIntakeRecord ? ingredientIntakeRecord.ingredient : {}
+  form.amount = ingredientIntakeRecord ? ingredientIntakeRecord.amount : null
+  form.unit_id = ingredientIntakeRecord ? ingredientIntakeRecord.unit_id : props.units.find(unit => unit.name === 'g').id
+  form.unit = ingredientIntakeRecord ? ingredientIntakeRecord.unit : props.units.find(unit => unit.name === 'g')
+  form.date = ingredientIntakeRecord ? ingredientIntakeRecord.date : nowYYYYMMDD()
+  form.time = (ingredientIntakeRecord && ingredientIntakeRecord.time) ? ingredientIntakeRecord.time : null
 
   isOpen.value = true
 }
@@ -43,11 +49,11 @@ function cancel() {
 }
 function confirm() {
   if (form.id) {
-    form.put(route('body-weight-records.update', form.id), {
+    form.put(route('ingredient-intake-records.update', form.id), {
       onSuccess: () => cancel()
     })
   } else {
-    form.post(route('body-weight-records.store'), {
+    form.post(route('ingredient-intake-records.store'), {
       onSuccess: () => cancel()
     })
   }
@@ -63,12 +69,26 @@ function confirm() {
     class="relative "
   >
     <div class="fixed inset-0 flex items-center justify-center p-4 bg-blue-50/80">
-      <DialogPanel class="px-6 pt-6 w-full max-w-sm rounded-lg bg-white shadow max-h-[600px] overflow-auto">
+      <DialogPanel class="px-6 pt-6 w-full max-w-md rounded-lg bg-white shadow max-h-[600px] overflow-auto">
         <form @submit.prevent="submit">
 
           <DialogTitle class="text-lg font-bold text-gray-600">
-            Log Body Weight
+            Log Ingredient Intake
           </DialogTitle>
+
+          <div class="mt-2">
+            <FuzzyCombobox
+              labelText="Ingredient"
+              :options="ingredients"
+              :modelValue="form.ingredient"
+              :showIcon="false"
+              @update:modelValue="newValue => {
+                form.ingredient = newValue
+                form.ingredient_id = newValue.id
+              }"
+            />
+            <InputError :message="form.errors.ingredient_id" />
+          </div>
 
           <!-- Weight and Unit -->
           <div class="mt-2 flex items-baseline">
@@ -80,8 +100,8 @@ function confirm() {
                 id="amount"
                 class="w-full"
                 type="number"
-                placeholder="0"
                 step="any"
+                placeholder="0"
                 v-model="form.amount"
                 required
               />
@@ -89,11 +109,11 @@ function confirm() {
             </div>
 
             <!-- Unit -->
-            <div class="ml-4 w-20">
+            <div class="ml-4 w-40">
               <SimpleCombobox
-                :options="units.filter(unit => unit.name === 'kg' || unit.name === 'lb')"
+                :options="units.filter(unit => unit.g || (unit.ml && (form.ingredient && form.ingredient.density_g_ml))).concat(form.ingredient ? form.ingredient.custom_units : [])"
                 labelText="Unit"
-                inputClasses="w-20"
+                inputClasses="w-40"
                 :modelValue="form.unit"
                 @update:modelValue="newValue => {
                   form.unit = newValue

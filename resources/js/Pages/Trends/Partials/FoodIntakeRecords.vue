@@ -1,13 +1,17 @@
 <script setup>
-import { computed } from 'vue'
-import { TrashIcon } from '@heroicons/vue/24/outline'
-import { PencilSquareIcon } from '@heroicons/vue/24/outline'
+import { computed, ref } from 'vue'
+import { TrashIcon, PencilSquareIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
+import LogIngredientIntakeDialog from './LogIngredientIntakeDialog.vue'
 import MyLink from '@/Components/MyLink.vue'
 import { roundNonZero } from '@/utils/GlobalFunctions.js'
 const props = defineProps({
   ingredient_intake_records: Array,
   meal_intake_records: Array,
   food_list_intake_records: Array,
+  ingredients: Array,
+  meals: Array,
+  food_lists: Array,
+  units: Array,
 })
 
 const INGREDIENT=0
@@ -23,6 +27,23 @@ const foodItems = computed(() => {
     return 0;
   })
 })
+
+const logIngredientIntakeDialogRef = ref(null)
+const logMealIntakeDialogRef = ref(null)
+const logFoodListIntakeDialogRef = ref(null)
+
+function openUpdateDialog(foodItem) {
+  if (foodItem.type === INGREDIENT) {
+    logIngredientIntakeDialogRef.value.open(foodItem)
+  } else if (foodItem.type === MEAL) {
+    // logMealIntakeDialogRef.value.open(foodItem)
+    alert("Not yet");
+  } else if (foodItem.type === FOOD_LIST) {
+    // logFoodListIntakeDialogRef.value.open(foodItem)
+    alert("Not yet");
+  }
+}
+
 </script>
 
 <template>
@@ -43,19 +64,40 @@ const foodItems = computed(() => {
           class="border-b"
         >
           <td class="px-8 py-4">
-            <p v-if="foodItem.type === INGREDIENT">
-              <MyLink :href="route('ingredients.show', foodItem.ingredient.id)">
+            <p v-if="foodItem.type === INGREDIENT" class="flex items-center">
+              <button
+                type="button"
+                @click="logIngredientIntakeDialogRef.open(foodItem)"
+                class="inline-block px-px rounded-md hover:underline focus:outline-none focus:ring-2 focus:ring-blue-700 whitespace-nowrap"
+              >
                 {{foodItem.ingredient.name}}
+              </button>
+              <MyLink :href="route('ingredients.show', foodItem.ingredient.id)">
+                <ArrowTopRightOnSquareIcon class="ml-0.5 w-5 h-5 text-gray-500" />
               </MyLink>
             </p>
-            <p v-if="foodItem.type === MEAL">
-              <MyLink :href="route('meals.show', foodItem.meal.id)">
+            <p v-if="foodItem.type === MEAL" class="flex items-center">
+              <button
+                type="button"
+                @click="logIngredientIntakeDialogRef.open(foodItem)"
+                class="inline-block px-px rounded-md hover:underline focus:outline-none focus:ring-2 focus:ring-blue-700 whitespace-nowrap"
+              >
                 {{foodItem.meal.name}}
+              </button>
+              <MyLink :href="route('meals.show', foodItem.meal.id)">
+                <ArrowTopRightOnSquareIcon class="ml-0.5 w-5 h-5 text-gray-500" />
               </MyLink>
             </p>
-            <p v-if="foodItem.type === FOOD_LIST">
-              <MyLink :href="route('food-lists.show', foodItem.food_list.id)">
+            <p v-if="foodItem.type === FOOD_LIST" class="flex items-center">
+              <button
+                type="button"
+                @click="logIngredientIntakeDialogRef.open(foodItem)"
+                class="inline-block px-px rounded-md hover:underline focus:outline-none focus:ring-2 focus:ring-blue-700 whitespace-nowrap"
+              >
                 {{foodItem.food_list.name}}
+              </button>
+              <MyLink :href="route('food-lists.show', foodItem.food_list.id)">
+                <ArrowTopRightOnSquareIcon class="ml-0.5 w-5 h-5 text-gray-500" />
               </MyLink>
             </p>
           </td>
@@ -70,7 +112,15 @@ const foodItems = computed(() => {
           </td>
           <td>
             <div class="flex items-center px-8">
-              <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
+              <button
+                type="button"
+                @click="openUpdateDialog(foodItem)"
+                class="mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
+              >
+                <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
+              </button>
+
+
               <TrashIcon class="ml-1 w-5 h-5 hover:text-red-700" />
             </div>
           </td>
@@ -80,5 +130,11 @@ const foodItems = computed(() => {
     <p v-else>
       You haven't created any food intake records yet!
     </p>
+
+    <LogIngredientIntakeDialog
+      :ingredients="ingredients"
+      :units="units"
+      ref="logIngredientIntakeDialogRef"
+    />
   </div>
 </template>

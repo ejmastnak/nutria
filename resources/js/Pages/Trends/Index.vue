@@ -2,10 +2,11 @@
 import { ref, onBeforeUnmount, onMounted } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import MyLink from '@/Components/MyLink.vue'
-import LogBodyWeightDialog from './Partials/LogBodyWeightDialog.vue'
 import BodyWeightRecords from './Partials/BodyWeightRecords.vue'
 import FoodIntakeRecords from './Partials/FoodIntakeRecords.vue'
 import NutrientProfileTrends from './Partials/NutrientProfileTrends.vue'
+import LogBodyWeightDialog from './Partials/LogBodyWeightDialog.vue'
+import LogIngredientIntakeDialog from './Partials/LogIngredientIntakeDialog.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
@@ -29,6 +30,7 @@ function changeTab(index) {
 }
 
 const logBodyWeightDialogRef = ref(null)
+const logIngredientIntakeDialogRef = ref(null)
 
 // Preserve selected tab page visits
 onBeforeUnmount(() => {
@@ -112,11 +114,23 @@ export default {
 
         <!-- Food intake ingredients -->
         <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded">
+          <SecondaryButton @click="logIngredientIntakeDialogRef.open(null)" >
+            Log Ingredient
+          </SecondaryButton>
           <FoodIntakeRecords
-            class="overflow-hidden rounded-md"
+            class="mt-1 overflow-hidden rounded-md"
             :ingredient_intake_records="ingredient_intake_records"
             :meal_intake_records="meal_intake_records"
             :food_list_intake_records="food_list_intake_records"
+            :ingredients="ingredients"
+            :meals="meals"
+            :food_lists="food_lists"
+            :units="units"
+          />
+          <LogIngredientIntakeDialog
+            :ingredients="ingredients"
+            :units="units"
+            ref="logIngredientIntakeDialogRef"
           />
         </TabPanel>
 
