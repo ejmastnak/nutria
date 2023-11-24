@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Http\Requests\IsMassUnit;
+use App\Rules\IsMassUnit;
 
 class UpdateBodyWeightRecordRequest extends FormRequest
 {
