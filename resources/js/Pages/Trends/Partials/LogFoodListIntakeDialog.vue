@@ -12,14 +12,14 @@ import FuzzyCombobox from '@/Components/FuzzyCombobox.vue'
 import { TransitionRoot, Dialog, DialogPanel, DialogTitle, DialogDescription } from '@headlessui/vue'
 
 const props = defineProps({
-  meals: Array,
+  food_lists: Array,
   units: Array,
 })
 
 const form = useForm({
   id: null,
-  meal_id: null,
-  meal: null,
+  food_list_id: null,
+  food_list: null,
   amount: null,
   unit_id: null,
   unit: null,
@@ -29,15 +29,15 @@ const form = useForm({
 
 defineExpose({ open })
 const isOpen = ref(false)
-function open(mealIntakeRecord) {
-  form.id = mealIntakeRecord ? mealIntakeRecord.id : null
-  form.meal_id = mealIntakeRecord ? mealIntakeRecord.meal_id : null
-  form.meal = mealIntakeRecord ? mealIntakeRecord.meal : {}
-  form.amount = mealIntakeRecord ? mealIntakeRecord.amount : null
-  form.unit_id = mealIntakeRecord ? mealIntakeRecord.unit_id : null
-  form.unit = mealIntakeRecord ? mealIntakeRecord.unit : {}
-  form.date = mealIntakeRecord ? mealIntakeRecord.date : nowYYYYMMDD()
-  form.time = (mealIntakeRecord && mealIntakeRecord.time) ? mealIntakeRecord.time : null
+function open(foodListIntakeRecord) {
+  form.id = foodListIntakeRecord ? foodListIntakeRecord.id : null
+  form.food_list_id = foodListIntakeRecord ? foodListIntakeRecord.food_list_id : null
+  form.food_list = foodListIntakeRecord ? foodListIntakeRecord.food_list : {}
+  form.amount = foodListIntakeRecord ? foodListIntakeRecord.amount : null
+  form.unit_id = foodListIntakeRecord ? foodListIntakeRecord.unit_id : null
+  form.unit = foodListIntakeRecord ? foodListIntakeRecord.unit : {}
+  form.date = foodListIntakeRecord ? foodListIntakeRecord.date : nowYYYYMMDD()
+  form.time = (foodListIntakeRecord && foodListIntakeRecord.time) ? foodListIntakeRecord.time : null
 
   isOpen.value = true
 }
@@ -48,11 +48,11 @@ function cancel() {
 }
 function confirm() {
   if (form.id) {
-    form.put(route('meal-intake-records.update', form.id), {
+    form.put(route('food-list-intake-records.update', form.id), {
       onSuccess: () => cancel()
     })
   } else {
-    form.post(route('meal-intake-records.store'), {
+    form.post(route('food-list-intake-records.store'), {
       onSuccess: () => cancel()
     })
   }
@@ -72,24 +72,24 @@ function confirm() {
         <form @submit.prevent="submit">
 
           <DialogTitle class="text-lg font-bold text-gray-600">
-            Log Meal Intake
+            Log Food List Intake
           </DialogTitle>
 
           <div class="mt-2">
             <FuzzyCombobox
-              labelText="Meal"
-              :options="meals"
-              :modelValue="form.meal"
+              labelText="Food list"
+              :options="food_lists"
+              :modelValue="form.food_list"
               :showIcon="false"
               @update:modelValue="newValue => {
-                form.meal = newValue
-                form.meal_id = newValue.id
+                form.food_list = newValue
+                form.food_list_id = newValue.id
                 form.amount = 1
-                form.unit = newValue.meal_unit
-                form.unit_id = newValue.meal_unit.id
+                form.unit = newValue.food_list_unit
+                form.unit_id = newValue.food_list_unit.id
               }"
             />
-            <InputError :message="form.errors.meal_id" />
+            <InputError :message="form.errors.food_list_id" />
           </div>
 
           <!-- Weight and Unit -->
@@ -113,7 +113,7 @@ function confirm() {
             <!-- Unit -->
             <div class="ml-4 w-40">
               <SimpleCombobox
-                :options="units.filter(unit => unit.g).concat(form.meal ? Array(form.meal.meal_unit) : [])"
+                :options="form.food_list ? Array(form.food_list.food_list_unit) : []"
                 labelText="Unit"
                 inputClasses="w-40"
                 :modelValue="form.unit"

@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { TrashIcon, PencilSquareIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
 import LogIngredientIntakeDialog from './LogIngredientIntakeDialog.vue'
 import LogMealIntakeDialog from './LogMealIntakeDialog.vue'
+import LogFoodListIntakeDialog from './LogFoodListIntakeDialog.vue'
 import MyLink from '@/Components/MyLink.vue'
 import { roundNonZero } from '@/utils/GlobalFunctions.js'
 const props = defineProps({
@@ -39,8 +40,7 @@ function openUpdateDialog(foodItem) {
   } else if (foodItem.type === MEAL) {
     logMealIntakeDialogRef.value.open(foodItem)
   } else if (foodItem.type === FOOD_LIST) {
-    // logFoodListIntakeDialogRef.value.open(foodItem)
-    alert("Not yet");
+    logFoodListIntakeDialogRef.value.open(foodItem)
   }
 }
 
@@ -140,6 +140,11 @@ function openUpdateDialog(foodItem) {
       :meals="meals"
       :units="units"
       ref="logMealIntakeDialogRef"
+    />
+    <LogFoodListIntakeDialog
+      :food_lists="food_lists"
+      :units="units"
+      ref="logFoodListIntakeDialogRef"
     />
   </div>
 </template>

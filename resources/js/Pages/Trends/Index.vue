@@ -8,6 +8,7 @@ import NutrientProfileTrends from './Partials/NutrientProfileTrends.vue'
 import LogBodyWeightDialog from './Partials/LogBodyWeightDialog.vue'
 import LogIngredientIntakeDialog from './Partials/LogIngredientIntakeDialog.vue'
 import LogMealIntakeDialog from './Partials/LogMealIntakeDialog.vue'
+import LogFoodListIntakeDialog from './Partials/LogFoodListIntakeDialog.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
@@ -123,6 +124,9 @@ export default {
           <SecondaryButton @click="logMealIntakeDialogRef.open(null)" class="ml-1" >
             Log Meal
           </SecondaryButton>
+          <SecondaryButton @click="logFoodListIntakeDialogRef.open(null)" class="ml-1" >
+            Log Food List
+          </SecondaryButton>
           <FoodIntakeRecords
             class="mt-1 overflow-hidden rounded-md"
             :ingredient_intake_records="ingredient_intake_records"
@@ -142,6 +146,11 @@ export default {
             :meals="meals"
             :units="units"
             ref="logMealIntakeDialogRef"
+          />
+          <LogFoodListIntakeDialog
+            :food_lists="food_lists"
+            :units="units"
+            ref="logFoodListIntakeDialogRef"
           />
         </TabPanel>
 
