@@ -24,10 +24,10 @@ const FOOD_LIST=2
 
 const foodItems = computed(() => {
   return props.ingredient_intake_records.map((record) => {record['type'] = INGREDIENT; return record}).concat(props.meal_intake_records.map((record) => {record['type'] = MEAL; return record}), props.food_list_intake_records.map((record) => {record['type'] = FOOD_LIST; return record})).sort((a, b) => {
-    if (a.date > b.date) return 1;
-    if (a.date < b.date) return -1;
-    if (a.time > b.time) return 1;
-    if (a.time < b.time) return -1;
+    if (a.date > b.date) return -1;
+    if (a.date < b.date) return 1;
+    if (a.time > b.time) return -1;
+    if (a.time < b.time) return 1;
     return 0;
   })
 })

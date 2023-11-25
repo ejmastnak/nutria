@@ -10,6 +10,7 @@ import LogMealIntakeDialog from './Partials/LogMealIntakeDialog.vue'
 import LogFoodListIntakeDialog from './Partials/LogFoodListIntakeDialog.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
+import SidebarLayout from "@/Layouts/SidebarLayout.vue";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 const props = defineProps({
@@ -53,7 +54,13 @@ export default {
 </script>
 
 <template>
-  <div>
+  <SidebarLayout
+    page="trends"
+    :units="units"
+    :ingredients="ingredients"
+    :meals="meals"
+    :food_lists="food_lists"
+  >
     <Head title="Trends" />
 
     <h1 class="text-xl">Trends</h1>
@@ -65,17 +72,7 @@ export default {
 
       <TabList class="mt-4 rounded w-fit border-b space-x-2">
 
-        <Tab as="template" v-slot="{ selected }">
-          <button
-            class="px-4 py-2 text-sm text-gray-600 focus:outline-none transition ease-in-out duration-150"
-            :class="{
-              'text-gray-800 font-semibold border-b-2 border-blue-500': selected,
-              'hover:border-b-2 hover:border-gray-300': !selected
-            }" >
-            Body Weight
-          </button>
-        </Tab>
-
+        <!-- Food Intake -->
         <Tab as="template" v-slot="{ selected }">
           <button
             class="px-4 py-2 text-sm text-gray-600 focus:outline-none transition ease-in-out duration-150"
@@ -87,6 +84,19 @@ export default {
           </button>
         </Tab>
 
+        <!-- Body Weight -->
+        <Tab as="template" v-slot="{ selected }">
+          <button
+            class="px-4 py-2 text-sm text-gray-600 focus:outline-none transition ease-in-out duration-150"
+            :class="{
+              'text-gray-800 font-semibold border-b-2 border-blue-500': selected,
+              'hover:border-b-2 hover:border-gray-300': !selected
+            }" >
+            Body Weight
+          </button>
+        </Tab>
+
+        <!-- Nutrient Profile trends -->
         <Tab as="template" v-slot="{ selected }">
           <button
             class="px-4 py-2 text-sm text-gray-600 focus:outline-none transition ease-in-out duration-150"
@@ -102,32 +112,21 @@ export default {
 
       <TabPanels class="mt-2">
 
-        <!-- Body weight trends-->
-        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-md w-fit">
-          <SecondaryButton @click="logBodyWeightDialogRef.open(null)" >
-            Log body weight
-          </SecondaryButton>
-          <BodyWeightRecords
-            class="mt-1 overflow-hidden rounded-md w-fit"
-            :body_weight_records="body_weight_records"
-            :units="units"
-          />
-          <LogBodyWeightDialog :units="units" ref="logBodyWeightDialogRef" />
-        </TabPanel>
-
         <!-- Food intake ingredients -->
         <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded w-fit">
-          <SecondaryButton @click="logIngredientIntakeDialogRef.open(null)" >
-            Log Ingredient
-          </SecondaryButton>
-          <SecondaryButton @click="logMealIntakeDialogRef.open(null)" class="ml-1" >
-            Log Meal
-          </SecondaryButton>
-          <SecondaryButton @click="logFoodListIntakeDialogRef.open(null)" class="ml-1" >
-            Log Food List
-          </SecondaryButton>
+          <div class="flex gap-x-1.5">
+            <SecondaryButton @click="logIngredientIntakeDialogRef.open(null)" >
+              Log Ingredient
+            </SecondaryButton>
+            <SecondaryButton @click="logMealIntakeDialogRef.open(null)" >
+              Log Meal
+            </SecondaryButton>
+            <SecondaryButton @click="logFoodListIntakeDialogRef.open(null)" >
+              Log Food List
+            </SecondaryButton>
+          </div>
           <FoodIntakeRecords
-            class="mt-1 overflow-hidden rounded-md w-fit"
+            class="mt-2 overflow-hidden rounded-md w-fit"
             :ingredient_intake_records="ingredient_intake_records"
             :meal_intake_records="meal_intake_records"
             :food_list_intake_records="food_list_intake_records"
@@ -153,6 +152,19 @@ export default {
           />
         </TabPanel>
 
+        <!-- Body weight trends-->
+        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-md w-fit">
+          <SecondaryButton @click="logBodyWeightDialogRef.open(null)" >
+            Log body weight
+          </SecondaryButton>
+          <BodyWeightRecords
+            class="mt-2 overflow-hidden rounded-md w-fit"
+            :body_weight_records="body_weight_records"
+            :units="units"
+          />
+          <LogBodyWeightDialog :units="units" ref="logBodyWeightDialogRef" />
+        </TabPanel>
+
         <!-- Nutrient profile trends -->
         <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded">
           <NutrientProfileTrends class="overflow-hidden rounded-md" />
@@ -161,5 +173,5 @@ export default {
       </TabPanels>
     </TabGroup>
 
-  </div>
+  </SidebarLayout>
 </template>

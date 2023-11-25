@@ -9,6 +9,8 @@ import ShowOriginal from './SidebarPartials/ShowOriginal.vue'
 import CloneOriginal from './SidebarPartials/CloneOriginal.vue'
 import EditOriginal from './SidebarPartials/EditOriginal.vue'
 import DeleteOriginal from './SidebarPartials/DeleteOriginal.vue'
+import LogBodyWeight from './SidebarPartials/LogBodyWeight.vue'
+import LogFoodIntake from './SidebarPartials/LogFoodIntake.vue'
 
 const props = defineProps({
   page: String,  // "index", "show", "create", "clone", "edit", or "trends"
@@ -22,7 +24,10 @@ const props = defineProps({
   can_update: {type: Boolean, default: false},
   can_delete: {type: Boolean, default: false},
   // For trends
-  things: {type: Array, default: []},  // list of all things
+  units: {type: Array, default: []},
+  ingredients: {type: Array, default: []},
+  meals: {type: Array, default: []},
+  food_lists: {type: Array, default: []},
 })
 
 const showingNavigationDropdown = ref(false);
@@ -72,13 +77,16 @@ const showingNavigationDropdown = ref(false);
         </div>
 
         <!-- For Trends page -->
-        <!-- <div v-if="page === 'trends'"> -->
-        <div>
-          Log Body Weight
+        <div v-if="page === 'trends'">
+          <LogFoodIntake
+            :units="units"
+            :ingredients="ingredients"
+            :meals="meals"
+            :food_lists="food_lists"
+          />
+          <LogBodyWeight :units="units" />
         </div>
-        <div>
-          Log Food Intake
-        </div>
+
       </div>
 
       <!-- Hamburger -->
