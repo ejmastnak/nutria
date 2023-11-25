@@ -147,25 +147,46 @@ const showingNavigationDropdown = ref(false);
           <!-- Links in mobile navigation menu -->
           <div class="pt-2 pb-3 space-y-1">
 
-            <ResponsiveNavLink :href="route('ingredients.index')" :active="route().current('ingredients.index')" >
+            <ResponsiveNavLink
+              :href="route('ingredients.index')"
+              :active="route().current('ingredients.index')"
+              @click="showingNavigationDropdown = false"
+            >
               Ingredients
             </ResponsiveNavLink>
-            <ResponsiveNavLink :href="route('meals.index')" :active="route().current('meals.index')">
+            <ResponsiveNavLink
+              :href="route('meals.index')"
+              :active="route().current('meals.index')"
+              @click="showingNavigationDropdown = false"
+            >
               Meals
             </ResponsiveNavLink>
-            <ResponsiveNavLink :href="route('food-lists.index')" :active="route().current('food-lists.index')">
+            <ResponsiveNavLink
+              :href="route('food-lists.index')"
+              :active="route().current('food-lists.index')"
+              @click="showingNavigationDropdown = false"
+            >
               Food Lists
             </ResponsiveNavLink>
-            <ResponsiveNavLink :href="route('intake-guidelines.index')" :active="route().current('intake-guidelines.index')">
+            <ResponsiveNavLink
+              :href="route('intake-guidelines.index')"
+              :active="route().current('intake-guidelines.index')"
+              @click="showingNavigationDropdown = false"
+            >
               Intake Guidelines
             </ResponsiveNavLink>
-            <ResponsiveNavLink :href="route('data')" :active="route().current('data')">
+            <ResponsiveNavLink
+              :href="route('data')"
+              :active="route().current('data')"
+              @click="showingNavigationDropdown = false"
+            >
               Your Data
             </ResponsiveNavLink>
             <!-- Display log in link for unauthenticated users -->
             <ResponsiveNavLink
               v-if="!$page.props.auth.user"
               :href="route('login')"
+              @click="showingNavigationDropdown = false"
             >
               Log In
             </ResponsiveNavLink>
@@ -184,8 +205,17 @@ const showingNavigationDropdown = ref(false);
             </div>
 
             <div class="mt-3 space-y-1">
-              <ResponsiveNavLink :href="route('profile.edit')"> Profile </ResponsiveNavLink>
-              <ResponsiveNavLink :href="route('logout')" method="post" as="button">
+              <ResponsiveNavLink
+                :href="route('profile.edit')"
+                @click="showingNavigationDropdown = false"
+              >
+                Profile
+              </ResponsiveNavLink>
+              <ResponsiveNavLink
+                :href="route('logout')"
+                method="post" as="button"
+                @click="showingNavigationDropdown = false"
+              >
                 Log Out
               </ResponsiveNavLink>
             </div>
