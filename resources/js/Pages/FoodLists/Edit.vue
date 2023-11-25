@@ -43,7 +43,7 @@ export default {
   >
     <Head :title="'Edit ' + food_list.name" />
 
-    <H1 class="mt-8" :text="'Edit ' + food_list.name" />
+    <H1 :text="'Edit ' + food_list.name" />
 
     <CreateOrEdit
       :food_list="food_list"

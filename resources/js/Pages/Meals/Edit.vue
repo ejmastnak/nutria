@@ -41,7 +41,7 @@ export default {
     :can_delete="can_delete"
   >
     <Head :title="'Edit ' + meal.name" />
-    <H1 class="mt-8" :text="'Edit ' + meal.name" />
+    <H1 :text="'Edit ' + meal.name" />
     <CreateOrEdit
       :meal="meal"
       :ingredients="ingredients"

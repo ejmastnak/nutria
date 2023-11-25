@@ -39,7 +39,7 @@ export default {
     :can_delete="can_delete"
   >
     <Head :title="'Edit ' + intake_guideline.name" />
-    <H1 class="mt-8" :text="'Edit ' + intake_guideline.name" />
+    <H1 :text="'Edit ' + intake_guideline.name" />
 
     <CreateOrEdit
       :intake_guideline="intake_guideline"

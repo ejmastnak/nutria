@@ -41,7 +41,7 @@ export default {
   >
     <Head title="New Intake Guideline" />
 
-    <H1 class="mt-8" text="New Intake Guideline" />
+    <H1 text="New Intake Guideline" />
     <p v-if="intake_guideline" class="text-gray-700">(Cloned from {{intake_guideline.name}})</p>
 
     <CreateOrEdit

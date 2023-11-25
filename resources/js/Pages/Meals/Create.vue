@@ -41,7 +41,7 @@ export default {
     :can_delete="can_delete"
   >
     <Head title="New Meal" />
-    <H1 class="mt-8" text="New Meal" />
+    <H1 text="New Meal" />
     <p v-if="meal" class="text-gray-700">(Cloned from {{meal.name}})</p>
     <CreateOrEdit
       :meal="meal"
