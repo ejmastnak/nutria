@@ -1,9 +1,11 @@
 <script setup>
 import { computed, ref } from 'vue'
+import { router } from '@inertiajs/vue3'
 import { TrashIcon, PencilSquareIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
 import LogIngredientIntakeDialog from './LogIngredientIntakeDialog.vue'
 import LogMealIntakeDialog from './LogMealIntakeDialog.vue'
 import LogFoodListIntakeDialog from './LogFoodListIntakeDialog.vue'
+import DeleteDialog from "@/Components/DeleteDialog.vue";
 import MyLink from '@/Components/MyLink.vue'
 import { roundNonZero } from '@/utils/GlobalFunctions.js'
 const props = defineProps({
@@ -42,6 +44,37 @@ function openUpdateDialog(foodItem) {
   } else if (foodItem.type === FOOD_LIST) {
     logFoodListIntakeDialogRef.value.open(foodItem)
   }
+}
+
+const idToDelete = ref(null)
+const deleteRouteName = ref(null)
+const thingToDelete = ref(null)
+const deleteDialogRef = ref(null)
+
+function openDeleteDialog(foodItem) {
+  idToDelete.value = foodItem.id
+  if (foodItem.type === INGREDIENT) {
+    deleteRouteName.value = "ingredient-intake-records.destroy"
+    thingToDelete.value = "ingredient intake record"
+    deleteDialogRef.value.open(foodItem)
+  } else if (foodItem.type === MEAL) {
+    deleteRouteName.value = "meal-intake-records.destroy"
+    thingToDelete.value = "meal intake record"
+    deleteDialogRef.value.open(foodItem)
+  } else if (foodItem.type === FOOD_LIST) {
+    deleteRouteName.value = "food-list-intake-records.destroy"
+    thingToDelete.value = "food list intake record"
+    deleteDialogRef.value.open(foodItem)
+  }
+}
+
+function deleteBodyWeightRecord() {
+  if (idToDelete.value && deleteRouteName.value) {
+      router.delete(route(deleteRouteName.value, idToDelete.value));
+  }
+  idToDelete.value = null
+  deleteRouteName.value = null
+  thingToDelete.value = null
 }
 
 </script>
@@ -119,9 +152,14 @@ function openUpdateDialog(foodItem) {
               >
                 <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
               </button>
+              <button
+                type="button"
+                @click="openDeleteDialog(foodItem)"
+                class="ml-1 mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
+              >
+                <TrashIcon class="w-5 h-5 hover:text-red-700" />
+              </button>
 
-
-              <TrashIcon class="ml-1 w-5 h-5 hover:text-red-700" />
             </div>
           </td>
         </tr>
@@ -146,5 +184,12 @@ function openUpdateDialog(foodItem) {
       :units="units"
       ref="logFoodListIntakeDialogRef"
     />
+    <DeleteDialog
+      ref="deleteDialogRef"
+      :description="thingToDelete"
+      @delete="deleteBodyWeightRecord"
+      @cancel="idToDelete = null; typeToDelete = null"
+    />
+
   </div>
 </template>
