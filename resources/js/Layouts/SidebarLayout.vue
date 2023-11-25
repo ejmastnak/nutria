@@ -40,7 +40,7 @@ const showingNavigationDropdown = ref(false);
     <nav class="-mt-8 -ml-6">
 
       <!-- Desktop navigation menu -->
-      <div class="fixed hidden sm:block left-0 w-48 p-2 bg-[#fefefe] border-r border-gray-300 flex flex-col min-h-screen whitespace-nowrap z-40">
+      <div class="fixed hidden md:block left-0 w-48 pt-4 p-2 bg-[#fefefe] border-r border-gray-300 flex flex-col min-h-screen whitespace-nowrap z-40">
 
         <!-- For all CRUD pages -->
         <div v-if="(page === 'index' || page === 'create' || page === 'show' || page === 'edit' || page === 'clone')" >
@@ -90,7 +90,7 @@ const showingNavigationDropdown = ref(false);
       </div>
 
       <!-- Hamburger -->
-      <div class="fixed left-0 sm:hidden bg-white w-full border-b border-gray-100">
+      <div class="fixed left-0 md:hidden bg-white w-full border-b border-gray-100">
         <button
           @click="showingNavigationDropdown = !showingNavigationDropdown"
           class="inline-flex items-center justify-center pl-3 p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
@@ -104,7 +104,7 @@ const showingNavigationDropdown = ref(false);
       <!-- Mobile navigation menu -->
       <div
         :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }"
-        class="fixed sm:hidden bg-white top-[6.5rem] inset-x-0 p-3 space-y-2 border border-gray-200 shadow rounded z-50"
+        class="fixed md:hidden bg-white top-[6.5rem] inset-x-0 p-3 space-y-2 border border-gray-200 shadow rounded z-50"
       >
         <!-- For all CRUD pages -->
         <div v-if="(page === 'index' || page === 'create' || page === 'show' || page === 'edit' || page === 'clone')" >
@@ -143,7 +143,7 @@ const showingNavigationDropdown = ref(false);
     </nav>
 
     <!-- Page Content -->
-    <div class="pl-2 sm:pl-60 mt-4 sm:mt-0 w-full">
+    <div class="pl-2 md:pl-48 md:pl-52 mt-4 md:mt-0 w-full">
       <slot />
     </div>
   </div>
