@@ -128,28 +128,28 @@ export default {
       <h2 class="text-lg">Meal ingredients</h2>
       <InputError :message="form.errors.meal_ingredients" />
 
-      <table v-if="mealIngredients.length" class="mt-2 text-sm sm:text-base text-left">
+      <table v-if="mealIngredients.length" class="mt-2 text-sm sm:text-base text-left w-full">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
-            <th scope="col" class="px-4 py-3 bg-blue-50 w-7/12">
+            <th scope="col" class="px-4 py-3 bg-blue-50 w-3/4">
               Ingredient
             </th>
-            <th scope="col" class="px-4 py-3 bg-blue-100 text-right w-2/12">
+            <th scope="col" class="px-4 py-3 bg-blue-100 text-right">
               Amount
             </th>
-            <th scope="col" class="px-4 py-3 bg-blue-50 w-2/12">
+            <th scope="col" class="px-4 py-3 bg-blue-50">
               Unit
             </th>
-            <th scope="col" class="px-4 py-3 bg-blue-100 w-1/12" />
+            <th scope="col" class="px-4 py-3 bg-blue-100 w-12" />
           </tr>
         </thead>
         <tbody>
           <tr
             v-for="(meal_ingredient, idx) in mealIngredients"
             :key="meal_ingredient.id"
-            class="border-t text-gray-600"
+            class="border-t text-gray-600 align-top"
           >
-            <td ref="mealIngredientTableCellsRef" scope="row" class="px-5 py-2">
+            <td ref="mealIngredientTableCellsRef" scope="row" class="pr-2 py-2">
               <FuzzyCombobox
                 :options="ingredients"
                 :modelValue="meal_ingredient.meal_ingredient.ingredient"
@@ -166,7 +166,7 @@ export default {
                 <TextInput
                   type="number"
                   placeholder="0"
-                  class="mt-1 block w-24 py-1 text-right"
+                  class="w-24 text-right"
                   v-model="meal_ingredient.meal_ingredient.amount"
                   required
                 />
@@ -175,9 +175,10 @@ export default {
             </td>
             <td class="px-4 py-2 text-right">
               <SimpleCombobox
-                :options="units.filter(unit => unit.g || (unit.ml && (meal_ingredient.meal_ingredient.ingredient && meal_ingredient.meal_ingredient.ingredient.density_g_ml))).concat(meal_ingredient.meal_ingredient.ingredient.custom_units)"
+                :options="units.filter(unit => unit.g || (unit.ml && (meal_ingredient.meal_ingredient.ingredient && meal_ingredient.meal_ingredient.ingredient.density_g_ml))).concat(meal_ingredient.meal_ingredient.ingredient.custom_units ? meal_ingredient.meal_ingredient.ingredient.custom_units : [])"
                 :modelValue="meal_ingredient.meal_ingredient.unit"
                 @update:modelValue="newValue => (meal_ingredient.meal_ingredient.unit_id = newValue.id, meal_ingredient.meal_ingredient.unit = newValue)"
+                inputClasses="w-28"
               />
               <div class="mt-2 text-left">
                 <InputError :message="form.errors['meal_ingredients.' + idx + '.unit_id']" />
@@ -188,9 +189,9 @@ export default {
               <button
                 type="button"
                 @click="deleteMealIngredient(idx)"
-                class="ml-1 p-1 text-gray-700 hover:text-red-700"
+                class="ml-1 p-1 text-gray-600 hover:text-red-700 mt-1"
               >
-                <TrashIcon class="w-6 h-6 text-gray-600" />
+                <TrashIcon class="w-6 h-6" />
               </button>
             </td>
           </tr>

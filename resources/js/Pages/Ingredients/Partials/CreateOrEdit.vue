@@ -201,6 +201,7 @@ export default {
           labelText="Ingredient category"
           :modelValue="form.ingredient_category"
           @update:modelValue="newValue => updateSelectedIngredientCategory(newValue)"
+          inputClasses="w-80"
         />
         <InputError class="mt-2" :message="form.errors.ingredient_category_id" />
       </div>
@@ -332,7 +333,7 @@ export default {
           <InputError class="mt-1" :message="form.errors.ingredient_nutrient_amount_unit_id" />
         </div>
 
-        <p class="ml-2 text-md text-gray-600"><span class="hidden sm:inline">of ingredient</span>)</p>
+        <p class="ml-8 pl-0.5 text-md text-gray-600"><span class="hidden sm:inline">of ingredient</span>)</p>
       </div>
 
       <InputError class="mt-1" :message="form.errors.ingredient_nutrients" />

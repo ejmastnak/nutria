@@ -180,25 +180,25 @@ export default {
       <table v-if="foodListIngredients.length" class="mt-2 text-sm sm:text-base text-left">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
-            <th scope="col" class="px-4 py-3 bg-blue-50 w-7/12">
+            <th scope="col" class="px-4 py-3 bg-blue-50 w-3/4">
               Ingredient
             </th>
-            <th scope="col" class="px-4 py-3 bg-blue-100 text-right w-2/12">
+            <th scope="col" class="px-4 py-3 bg-blue-100 text-right">
               Amount
             </th>
-            <th scope="col" class="px-4 py-3 bg-blue-50 w-2/12">
+            <th scope="col" class="px-4 py-3 bg-blue-50">
               Unit
             </th>
-            <th scope="col" class="px-4 py-3 bg-blue-100 w-1/12" />
+            <th scope="col" class="px-4 py-3 bg-blue-100 w-10" />
           </tr>
         </thead>
         <tbody>
           <tr
             v-for="(food_list_ingredient, idx) in foodListIngredients"
             :key="food_list_ingredient.id"
-            class="border-t text-gray-600"
+            class="border-t text-gray-600 align-top"
           >
-            <td ref="foodListIngredientTableCellsRef" scope="row" class="px-5 py-2">
+            <td ref="foodListIngredientTableCellsRef" scope="row" class="pr-2 py-2">
               <FuzzyCombobox
                 :options="ingredients"
                 :modelValue="food_list_ingredient.food_list_ingredient.ingredient"
@@ -215,7 +215,7 @@ export default {
                 <TextInput
                   type="number"
                   placeholder="0"
-                  class="mt-1 block w-24 py-1 text-right"
+                  class="block w-24 text-right"
                   v-model="food_list_ingredient.food_list_ingredient.amount"
                   required
                 />
@@ -224,9 +224,10 @@ export default {
             </td>
             <td class="px-4 py-2 text-right">
               <SimpleCombobox
-                :options="units.filter(unit => unit.g || (unit.ml && (food_list_ingredient.food_list_ingredient.ingredient && food_list_ingredient.food_list_ingredient.ingredient.density_g_ml))).concat(food_list_ingredient.food_list_ingredient.ingredient.custom_units)"
+                :options="units.filter(unit => unit.g || (unit.ml && (food_list_ingredient.food_list_ingredient.ingredient && food_list_ingredient.food_list_ingredient.ingredient.density_g_ml))).concat(food_list_ingredient.food_list_ingredient.ingredient.custom_units ? food_list_ingredient.food_list_ingredient.ingredient.custom_units : [])"
                 :modelValue="food_list_ingredient.food_list_ingredient.unit"
                 @update:modelValue="newValue => (food_list_ingredient.food_list_ingredient.unit_id = newValue.id, food_list_ingredient.food_list_ingredient.unit = newValue)"
+                inputClasses="w-28"
               />
               <div class="mt-2 text-left">
                 <InputError :message="form.errors['food_list_ingredients.' + idx + '.unit_id']" />
@@ -237,9 +238,9 @@ export default {
               <button
                 type="button"
                 @click="deleteFoodListIngredient(idx)"
-                class="ml-1 p-1 text-gray-700 hover:text-red-700"
+                class="ml-1 p-1 text-gray-600 hover:text-red-700 mt-1"
               >
-                <TrashIcon class="w-6 h-6 text-gray-600" />
+                <TrashIcon class="w-6 h-6" />
               </button>
             </td>
           </tr>
@@ -268,25 +269,25 @@ export default {
       <table v-if="foodListMeals.length" class="mt-2 text-sm sm:text-base text-left">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
-            <th scope="col" class="px-4 py-3 bg-blue-50 w-7/12">
+            <th scope="col" class="px-4 py-3 bg-blue-50 w-3/4">
               Meal
             </th>
-            <th scope="col" class="px-4 py-3 bg-blue-100 text-right w-2/12">
+            <th scope="col" class="px-4 py-3 bg-blue-100 text-right">
               Amount
             </th>
-            <th scope="col" class="px-4 py-3 bg-blue-50 w-2/12">
+            <th scope="col" class="px-4 py-3 bg-blue-50">
               Unit
             </th>
-            <th scope="col" class="px-4 py-3 bg-blue-100 w-1/12" />
+            <th scope="col" class="px-4 py-3 bg-blue-100 w-10" />
           </tr>
         </thead>
         <tbody>
           <tr
             v-for="(food_list_meal, idx) in foodListMeals"
             :key="food_list_meal.id"
-            class="border-t text-gray-600"
+            class="border-t text-gray-600 align-top"
           >
-            <td ref="foodListMealTableCellsRef" scope="row" class="px-5 py-2">
+            <td ref="foodListMealTableCellsRef" scope="row" class="pr-2 py-2">
               <FuzzyCombobox
                 :options="meals"
                 :modelValue="food_list_meal.food_list_meal.meal"
@@ -303,7 +304,7 @@ export default {
                 <TextInput
                   type="number"
                   placeholder="0"
-                  class="mt-1 block w-24 py-1 text-right"
+                  class="block w-24 text-right"
                   v-model="food_list_meal.food_list_meal.amount"
                   required
                 />
@@ -315,6 +316,7 @@ export default {
                 :options="Array(food_list_meal.food_list_meal.meal.meal_unit).concat(units.filter(unit => unit.g))"
                 :modelValue="food_list_meal.food_list_meal.unit"
                 @update:modelValue="newValue => (food_list_meal.food_list_meal.unit_id = newValue.id, food_list_meal.food_list_meal.unit = newValue)"
+                inputClasses="w-28"
               />
               <div class="mt-2 text-left">
                 <InputError :message="form.errors['food_list_meals.' + idx + '.unit_id']" />
@@ -325,9 +327,9 @@ export default {
               <button
                 type="button"
                 @click="deleteFoodListMeal(idx)"
-                class="ml-1 p-1 text-gray-700 hover:text-red-700"
+                class="ml-1 p-1 text-gray-600 hover:text-red-700 mt-1"
               >
-                <TrashIcon class="w-6 h-6 text-gray-600" />
+                <TrashIcon class="w-6 h-6" />
               </button>
             </td>
           </tr>
