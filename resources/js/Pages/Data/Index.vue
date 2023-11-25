@@ -64,8 +64,8 @@ export default {
     <Head title="Data" />
 
     <h1 class="text-xl">Data</h1>
-    <p class="text-gray-500">
-      This page shows your body weight and food intake data.
+    <p class="mt-2 text-gray-500">
+      Use this page to view and manage your body weight and food intake data.
     </p>
 
     <TabGroup @change="changeTab" :defaultIndex="Number(selectedTab)">

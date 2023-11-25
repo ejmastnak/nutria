@@ -99,8 +99,8 @@ export default {
     <!-- Title -->
     <div class="mr-2 p-1">
       <H1 text="Food Lists" />
-      <p class="mt-2 w-11/12 4 sm:w-2/3 text-gray-500">
-        Use this page as an overview of food lists you have created.
+      <p class="mt-2 max-w-md text-gray-500">
+        Use this page to view and manage your food lists.
       </p>
     </div>
 

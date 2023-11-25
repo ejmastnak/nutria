@@ -182,8 +182,8 @@ export default {
     <!-- Title -->
     <div class="mr-2 p-1">
       <H1 text="Ingredients" />
-      <p class="mt-2 w-11/12 4 sm:w-2/3 text-gray-500">
-        Use this page as an overview of ingredients from the USDA database—or ingredients you have created yourself.
+      <p class="mt-2 max-w-md text-gray-500">
+        Use this page as an overview of ingredients from the USDA database—or to view and manage ingredients you have created yourself.
       </p>
     </div>
 
