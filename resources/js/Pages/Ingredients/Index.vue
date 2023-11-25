@@ -218,14 +218,14 @@ export default {
       <TabPanels class="mt-2">
 
         <!-- Ingredients in USDA database -->
-        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-xl">
-          <section class="border border-gray-200 p-4 rounded-xl shadow-sm bg-white">
+        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-xl w-fit overflow-auto">
+          <section class="border border-gray-200 p-4 rounded-xl shadow-sm w-fit">
             <h2 class="text-lg">Ingredients from the USDA database</h2>
 
             <div class="flex flex-col sm:flex-row items-start sm:items-end px-2 py-4">
 
               <!-- Input for search -->
-              <div class="sm:mr-3">
+              <div>
                 <label for="usda-search" class="ml-1 text-sm text-gray-500">
                   Search by ingredient name
                 </label>
@@ -265,7 +265,7 @@ export default {
                   <SecondaryButton
                     type="button"
                     id="clear-usda-filters"
-                    class="normal-case font-normal !tracking-normal !text-sm !px-2 h-fit ml-2"
+                    class="normal-case font-normal !tracking-normal !text-sm !px-2 h-fit ml-2 whitespace-nowrap"
                     @click="resetUsdaSearch"
                   >
                     <XMarkIcon class="w-5 h-5" />
@@ -317,11 +317,11 @@ export default {
         </TabPanel>
 
         <!-- User ingredients -->
-        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-xl">
-          <section v-if="user_ingredients.length" class="border border-gray-200 shadow-sm p-4 rounded-xl bg-white" >
+        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-xl w-fit overflow-auto">
+          <section v-if="user_ingredients.length" class="border border-gray-200 shadow-sm p-4 rounded-xl bg-white w-fit" >
             <h2 class="text-lg">Your ingredients</h2>
 
-            <div class="p-4 flex">
+            <div class="flex flex-col sm:flex-row items-start sm:items-end px-2 py-4">
               <div>
 
                 <label for="user-search" class="ml-1 text-sm text-gray-500">
@@ -365,7 +365,7 @@ export default {
                     @click="resetUserSearch"
                   >
                     <XMarkIcon class="w-5 h-5" />
-                    <span class="text-gray-600 font-normal ml-1.5">Clear filter</span>
+                    <span class="text-gray-600 font-normal ml-1.5 whitespace-nowrap">Clear filter</span>
                   </SecondaryButton>
                 </div>
               </div>
@@ -400,25 +400,20 @@ export default {
                   <td class="px-6 py-4">
                     {{ingredient.ingredient_category.name}}
                   </td>
-                  <td>
-                    <div class="flex items-center px-1.5">
-
-                      <MyLink
-                        class="mx-auto"
-                        :href="route('ingredients.edit', ingredient.id)"
-                      >
-                        <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
-                      </MyLink>
-
-                      <button
-                        type="button"
-                        @click="idToDelete = ingredient.id; deleteDialog.open()"
-                        class="mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
-                      >
-                        <TrashIcon class="w-5 h-5 hover:text-red-700" />
-                      </button>
-
-                    </div>
+                  <td class="flex items-center px-2 py-4">
+                    <MyLink
+                      class="mx-auto"
+                      :href="route('ingredients.edit', ingredient.id)"
+                    >
+                      <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
+                    </MyLink>
+                    <button
+                      type="button"
+                      @click="idToDelete = ingredient.id; deleteDialog.open()"
+                      class="mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
+                    >
+                      <TrashIcon class="w-5 h-5 hover:text-red-700" />
+                    </button>
                   </td>
                 </tr>
               </tbody>

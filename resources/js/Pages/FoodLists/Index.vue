@@ -108,7 +108,7 @@ export default {
     <section class="mt-8 border border-gray-200 px-4 py-2 rounded-xl shadow-sm bg-white">
 
       <!-- Input for search -->
-      <div class="px-2 py-4 flex flex-wrap items-end">
+      <div class="px-2 py-4 flex flex-wrap items-end gap-x-2 gap-y-2">
         <div>
           <label for="food-list-search" class="ml-1 text-sm text-gray-500">
             Search by food list name
@@ -129,14 +129,14 @@ export default {
         </div>
 
         <!-- Clear search button -->
-        <div class="ml-2">
+        <div>
           <label for="clear-search" class="sr-only">
-            Clear filter
+            Clear search
           </label>
           <SecondaryButton
             type="button"
             id="clear-search"
-            class="normal-case font-normal !tracking-normal !text-sm !px-2 h-fit ml-2"
+            class="normal-case font-normal !tracking-normal !text-sm !px-2 h-fit"
             @click="clearSearch"
           >
             <XMarkIcon class="w-5 h-5" />
