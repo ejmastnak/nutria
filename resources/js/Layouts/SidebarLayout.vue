@@ -143,7 +143,7 @@ const showingNavigationDropdown = ref(false);
     </nav>
 
     <!-- Page Content -->
-    <div class="pl-2 md:pl-48 md:pl-52 mt-4 md:mt-0 w-full">
+    <div class="pl-2 md:pl-48 lg:pl-52 mt-4 md:mt-0 w-full">
       <slot />
     </div>
   </div>
