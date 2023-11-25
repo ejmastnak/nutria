@@ -53,7 +53,7 @@ class DataAwareFoodListUnitIsConsistent implements ValidationRule, DataAwareRule
         }
 
         // Allow only the food list unit for the matching food list
-        if (!is_null($unit->meal_id)) {
+        if (!is_null($unit->food_list_id)) {
             if ($unit->food_list_id === $foodList->id) return;
             else {
                 $fail("The food list does not support the unit " . $unit->name . " .");

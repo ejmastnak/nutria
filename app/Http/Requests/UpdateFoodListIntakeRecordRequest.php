@@ -3,8 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\FoodListOwnedByUser;
 use App\Rules\DataAwareFoodListUnitIsConsistent;
+use App\Rules\FoodListOwnedByUser;
 
 class UpdateFoodListIntakeRecordRequest extends FormRequest
 {
