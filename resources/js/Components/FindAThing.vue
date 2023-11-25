@@ -51,7 +51,7 @@ function confirm() {
 
 <template>
   <Dialog :open="isOpen" @close="cancel" class="relative z-50">
-    <div class="fixed inset-0 flex items-center justify-center p-4 bg-blue-50/80">
+    <div class="fixed inset-0 flex items-center justify-center p-4 bg-blue-50/80 overflow-y-auto">
       <DialogPanel class="flex flex-col px-6 pt-6 w-full max-w-md rounded-lg bg-white shadow">
 
         <DialogTitle class="text-lg font-bold text-gray-600">{{dialog_title}}</DialogTitle>
