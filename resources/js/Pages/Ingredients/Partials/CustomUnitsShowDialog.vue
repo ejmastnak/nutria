@@ -22,7 +22,7 @@ function close() { isOpen.value = false }
   <Dialog
     :open="isOpen"
     @close="close"
-    class="relative "
+    class="relative z-50"
   >
     <div class="fixed inset-0 flex items-center justify-center p-4 bg-blue-50/80">
       <DialogPanel class="px-6 pt-6 w-full max-w-sm rounded-lg bg-white shadow max-h-[600px] overflow-auto">
