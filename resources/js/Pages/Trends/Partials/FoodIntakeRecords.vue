@@ -95,42 +95,25 @@ function deleteBodyWeightRecord() {
       <tbody>
         <tr
           v-for="foodItem in foodItems" :key="foodItem.id + '-' + foodItem.type"
-          class="border-b"
+          class="border-b hover:bg-gray-100 cursor-pointer"
+          @click="openUpdateDialog(foodItem)"
         >
           <td class="px-8 py-4">
-            <p v-if="foodItem.type === INGREDIENT" class="flex items-center">
-              <button
-                type="button"
-                @click="logIngredientIntakeDialogRef.open(foodItem)"
-                class="inline-block px-px rounded-md hover:underline focus:outline-none focus:ring-2 focus:ring-blue-700 whitespace-nowrap"
-              >
-                {{foodItem.ingredient.name}}
-              </button>
-              <MyLink :href="route('ingredients.show', foodItem.ingredient.id)">
+            <p v-if="foodItem.type === INGREDIENT" class="flex items-center whitespace-nowrap">
+              {{foodItem.ingredient.name}}
+              <MyLink @click.stop :href="route('ingredients.show', foodItem.ingredient.id)">
                 <ArrowTopRightOnSquareIcon class="ml-0.5 w-5 h-5 text-gray-500" />
               </MyLink>
             </p>
-            <p v-if="foodItem.type === MEAL" class="flex items-center">
-              <button
-                type="button"
-                @click="logMealIntakeDialogRef.open(foodItem)"
-                class="inline-block px-px rounded-md hover:underline focus:outline-none focus:ring-2 focus:ring-blue-700 whitespace-nowrap"
-              >
-                {{foodItem.meal.name}}
-              </button>
-              <MyLink :href="route('meals.show', foodItem.meal.id)">
+            <p v-if="foodItem.type === MEAL" class="flex items-center whitespace-nowrap">
+              {{foodItem.meal.name}}
+              <MyLink @click.stop :href="route('meals.show', foodItem.meal.id)">
                 <ArrowTopRightOnSquareIcon class="ml-0.5 w-5 h-5 text-gray-500" />
               </MyLink>
             </p>
-            <p v-if="foodItem.type === FOOD_LIST" class="flex items-center">
-              <button
-                type="button"
-                @click="logFoodListIntakeDialogRef.open(foodItem)"
-                class="inline-block px-px rounded-md hover:underline focus:outline-none focus:ring-2 focus:ring-blue-700 whitespace-nowrap"
-              >
-                {{foodItem.food_list.name}}
-              </button>
-              <MyLink :href="route('food-lists.show', foodItem.food_list.id)">
+            <p v-if="foodItem.type === FOOD_LIST" class="flex items-center whitespace-nowrap">
+              {{foodItem.food_list.name}}
+              <MyLink @click.stop :href="route('food-lists.show', foodItem.food_list.id)">
                 <ArrowTopRightOnSquareIcon class="ml-0.5 w-5 h-5 text-gray-500" />
               </MyLink>
             </p>
@@ -149,17 +132,17 @@ function deleteBodyWeightRecord() {
             <p v-if="foodItem.type === MEAL">Meal</p>
             <p v-if="foodItem.type === FOOD_LIST">Food List</p>
           </td>
-          <td class="flex items-center px-8">
+          <td class="flex items-center px-8 py-4 h-full">
             <button
               type="button"
-              @click="openUpdateDialog(foodItem)"
+              @click.stop="openUpdateDialog(foodItem)"
               class="mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
             >
               <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
             </button>
             <button
               type="button"
-              @click="openDeleteDialog(foodItem)"
+              @click.stop="openDeleteDialog(foodItem)"
               class="ml-1 mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
             >
               <TrashIcon class="w-5 h-5 hover:text-red-700" />

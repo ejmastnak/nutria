@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onBeforeUnmount, onMounted } from 'vue'
 import { Head } from '@inertiajs/vue3'
-import MyLink from '@/Components/MyLink.vue'
 import BodyWeightRecords from './Partials/BodyWeightRecords.vue'
 import FoodIntakeRecords from './Partials/FoodIntakeRecords.vue'
 import NutrientProfileTrends from './Partials/NutrientProfileTrends.vue'
@@ -117,7 +116,7 @@ export default {
         </TabPanel>
 
         <!-- Food intake ingredients -->
-        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded">
+        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded w-fit">
           <SecondaryButton @click="logIngredientIntakeDialogRef.open(null)" >
             Log Ingredient
           </SecondaryButton>
@@ -128,7 +127,7 @@ export default {
             Log Food List
           </SecondaryButton>
           <FoodIntakeRecords
-            class="mt-1 overflow-hidden rounded-md"
+            class="mt-1 overflow-hidden rounded-md w-fit"
             :ingredient_intake_records="ingredient_intake_records"
             :meal_intake_records="meal_intake_records"
             :food_list_intake_records="food_list_intake_records"
