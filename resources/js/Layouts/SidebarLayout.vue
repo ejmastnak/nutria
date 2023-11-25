@@ -13,7 +13,7 @@ import LogBodyWeight from './SidebarPartials/LogBodyWeight.vue'
 import LogFoodIntake from './SidebarPartials/LogFoodIntake.vue'
 
 const props = defineProps({
-  page: String,  // "index", "show", "create", "clone", "edit", or "trends"
+  page: String,  // "index", "show", "create", "clone", "edit", or "data"
   route_basename: {type: String, default: ""},  // "ingredients", "meals", "food-lists", or "intake-guidelines"
   id: {type: Number, default: null},  // id of this thing
   things: {type: Array, default: []},  // list of all things
@@ -23,7 +23,7 @@ const props = defineProps({
   can_clone: {type: Boolean, default: false},
   can_update: {type: Boolean, default: false},
   can_delete: {type: Boolean, default: false},
-  // For trends
+  // For data page
   units: {type: Array, default: []},
   ingredients: {type: Array, default: []},
   meals: {type: Array, default: []},
@@ -76,8 +76,8 @@ const showingNavigationDropdown = ref(false);
           />
         </div>
 
-        <!-- For Trends page -->
-        <div v-if="page === 'trends'">
+        <!-- For Data page -->
+        <div v-if="page === 'data'">
           <LogFoodIntake
             :units="units"
             :ingredients="ingredients"

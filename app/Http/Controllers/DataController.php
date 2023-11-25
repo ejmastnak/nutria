@@ -13,7 +13,7 @@ use App\Models\Unit;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
-class TrendController extends Controller
+class DataController extends Controller
 {
     /**
      * Show the overview page for trends in logged data
@@ -22,7 +22,7 @@ class TrendController extends Controller
     {
         $user = Auth::user();
         $userId = $user ? $user->id : null;
-        return Inertia::render('Trends/Index', [
+        return Inertia::render('Data/Index', [
             'body_weight_records' => BodyWeightRecord::getForUser($userId),
             'ingredient_intake_records' => IngredientIntakeRecord::getForUser($userId),
             'meal_intake_records' => MealIntakeRecord::getForUser($userId),

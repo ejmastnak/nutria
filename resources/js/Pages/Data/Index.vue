@@ -26,7 +26,7 @@ const props = defineProps({
 
 const ingredients = props.user_ingredients.concat(window.usdaIngredients ? window.usdaIngredients : [])
 
-const selectedTab = ref(sessionStorage.getItem('trendsIndexSelectedTab') ?? 0)
+const selectedTab = ref(sessionStorage.getItem('dataIndexSelectedTab') ?? 0)
 function changeTab(index) {
   selectedTab.value = index
 }
@@ -38,11 +38,11 @@ const logFoodListIntakeDialogRef = ref(null)
 
 // Preserve selected tab page visits
 onBeforeUnmount(() => {
-  sessionStorage.setItem('trendsIndexSelectedTab', selectedTab.value);
+  sessionStorage.setItem('dataIndexSelectedTab', selectedTab.value);
 })
 // Preserve search query on manual page reload
 window.onbeforeunload = function() {
-  sessionStorage.setItem('trendsIndexSelectedTab', selectedTab.value);
+  sessionStorage.setItem('dataIndexSelectedTab', selectedTab.value);
 }
 </script>
 
@@ -55,15 +55,15 @@ export default {
 
 <template>
   <SidebarLayout
-    page="trends"
+    page="data"
     :units="units"
     :ingredients="ingredients"
     :meals="meals"
     :food_lists="food_lists"
   >
-    <Head title="Trends" />
+    <Head title="Data" />
 
-    <h1 class="text-xl">Trends</h1>
+    <h1 class="text-xl">Data</h1>
     <p class="text-gray-500">
       This page shows your body weight and food intake data.
     </p>
@@ -96,7 +96,7 @@ export default {
           </button>
         </Tab>
 
-        <!-- Nutrient Profile trends -->
+        <!-- Nutrient Profile data -->
         <Tab as="template" v-slot="{ selected }">
           <button
             class="px-4 py-2 text-sm text-gray-600 focus:outline-none transition ease-in-out duration-150"
@@ -152,7 +152,7 @@ export default {
           />
         </TabPanel>
 
-        <!-- Body weight trends-->
+        <!-- Body weight data-->
         <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-md w-fit">
           <SecondaryButton @click="logBodyWeightDialogRef.open(null)" >
             Log body weight
@@ -165,7 +165,7 @@ export default {
           <LogBodyWeightDialog :units="units" ref="logBodyWeightDialogRef" />
         </TabPanel>
 
-        <!-- Nutrient profile trends -->
+        <!-- Nutrient profile data -->
         <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded">
           <NutrientProfileTrends class="overflow-hidden rounded-md" />
         </TabPanel>

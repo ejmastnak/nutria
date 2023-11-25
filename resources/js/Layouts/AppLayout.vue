@@ -45,11 +45,8 @@ const showingNavigationDropdown = ref(false);
                   <NavLink class="hidden sm:inline-flex" :href="route('intake-guidelines.index')" :active="route().current('intake-guidelines.index')">
                     Intake Guidelines
                   </NavLink>
-                  <NavLink class="hidden sm:inline-flex" :href="route('trends')" :active="route().current('trends')">
-                    Trends
-                  </NavLink>
-                  <NavLink class="hidden sm:inline-flex" :href="route('log')" :active="route().current('log')">
-                    Log Data
+                  <NavLink class="hidden sm:inline-flex" :href="route('data')" :active="route().current('data')">
+                    Your Data
                   </NavLink>
                 </div>
 
@@ -162,11 +159,8 @@ const showingNavigationDropdown = ref(false);
             <ResponsiveNavLink :href="route('intake-guidelines.index')" :active="route().current('intake-guidelines.index')">
               Intake Guidelines
             </ResponsiveNavLink>
-            <ResponsiveNavLink :href="route('trends')" :active="route().current('trends')">
-              Trends
-            </ResponsiveNavLink>
-            <ResponsiveNavLink :href="route('log')" :active="route().current('log')">
-              Log Data
+            <ResponsiveNavLink :href="route('data')" :active="route().current('data')">
+              Your Data
             </ResponsiveNavLink>
             <!-- Display log in link for unauthenticated users -->
             <ResponsiveNavLink

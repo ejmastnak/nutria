@@ -9,8 +9,7 @@ use App\Http\Controllers\BodyWeightRecordController;
 use App\Http\Controllers\IngredientIntakeRecordController;
 use App\Http\Controllers\MealIntakeRecordController;
 use App\Http\Controllers\FoodListIntakeRecordController;
-use App\Http\Controllers\LogController;
-use App\Http\Controllers\TrendController;
+use App\Http\Controllers\DataController;
 use App\Models\Ingredient;
 use App\Models\Meal;
 use App\Models\FoodList;
@@ -107,9 +106,8 @@ Route::middleware('auth')->group(function () {
     Route::put('food-list-intake-records/{food_list_intake_record}', [FoodListIntakeRecordController::class, 'update'])->name('food-list-intake-records.update')->can('update', 'food_list_intake_record');
     Route::delete('food-list-intake-records/{food_list_intake_record}', [FoodListIntakeRecordController::class, 'destroy'])->name('food-list-intake-records.destroy')->can('delete', 'food_list_intake_record');
 
-    # Main pages for logging data and viewing trends in data
-    Route::get('/log', [LogController::class, 'index'])->name('log');
-    Route::get('/trends', [TrendController::class, 'index'])->name('trends');
+    # Main page for logging data and viewing trends in data
+    Route::get('/data', [DataController::class, 'index'])->name('data');
 });
 
 // These routes are available to unauthenticated users.

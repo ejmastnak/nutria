@@ -2,7 +2,7 @@
 import { Link, router } from '@inertiajs/vue3'
 import { ref } from 'vue'
 import { ScaleIcon } from '@heroicons/vue/24/outline'
-import LogBodyWeightDialog from '@/Pages/Trends/Partials/LogBodyWeightDialog.vue'
+import LogBodyWeightDialog from '@/Pages/Data/Partials/LogBodyWeightDialog.vue'
 import SidebarButton from './SidebarButton.vue'
 import SidebarIcon from './SidebarIcon.vue'
 
