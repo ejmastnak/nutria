@@ -8,6 +8,7 @@ import SidebarIcon from './SidebarIcon.vue'
 
 const props = defineProps({
   things: Array,
+  thing: String,
   route_basename: String,
 })
 
@@ -31,7 +32,7 @@ function search(thing) {
   <FindAThing
     ref="searchDialog"
     :things="things"
-    dialog_title="Search for another ingredient"
+    :dialog_title="'Search for another ' + thing"
     button_text="Okay"
     @foundAThing="search"
   />

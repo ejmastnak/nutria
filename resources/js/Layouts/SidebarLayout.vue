@@ -11,16 +11,18 @@ import EditOriginal from './SidebarPartials/EditOriginal.vue'
 import DeleteOriginal from './SidebarPartials/DeleteOriginal.vue'
 
 const props = defineProps({
-  page: String,  // "index", "show", "create", "clone", or "edit"
-  route_basename: String,  // "ingredients", "meals", "food-lists", or "intake-guidelines"
-  id: Number,  // id of this thing
-  things: Array,  // list of all things
-  thing: String,  // e.g. "ingredient", "meal", etc.
-  can_create: Boolean,
+  page: String,  // "index", "show", "create", "clone", "edit", or "trends"
+  route_basename: {type: String, default: ""},  // "ingredients", "meals", "food-lists", or "intake-guidelines"
+  id: {type: Number, default: null},  // id of this thing
+  things: {type: Array, default: []},  // list of all things
+  thing: {type: String, default: ""},  // e.g. "ingredient", "meal", etc.
+  can_create: {type: Boolean, default: false},
   can_view: {type: Boolean, default: false},
   can_clone: {type: Boolean, default: false},
   can_update: {type: Boolean, default: false},
   can_delete: {type: Boolean, default: false},
+  // For trends
+  things: {type: Array, default: []},  // list of all things
 })
 
 const showingNavigationDropdown = ref(false);
@@ -34,35 +36,48 @@ const showingNavigationDropdown = ref(false);
 
       <!-- Desktop navigation menu -->
       <div class="fixed hidden sm:block left-0 w-48 p-2 bg-[#fefefe] border-r border-gray-300 flex flex-col min-h-screen whitespace-nowrap z-40">
-        <div>
+
+        <!-- For all CRUD pages -->
+        <div v-if="(page === 'index' || page === 'create' || page === 'show' || page === 'edit' || page === 'clone')" >
           <All :href="route(route_basename + '.index')" />
-          <FindAnother :things="things" :route_basename="route_basename" />
-          <CloneAnother :things="things" :route_basename="route_basename" :enabled="can_create" />
+          <FindAnother :things="things" :thing="thing" :route_basename="route_basename" />
+          <CloneAnother :things="things" :thing="thing" :route_basename="route_basename" :enabled="can_create" />
           <New :href="route(route_basename + '.create')" :enabled="can_create" />
         </div>
 
-        <div class="border-t border-gray-200 mt-3 pt-3">
+        <!-- For Show, Edit, Clone pages -->
+        <div
+          v-if="(page === 'show' || page === 'edit' || page === 'clone')"
+          class="border-t border-gray-200 mt-3 pt-3"
+        >
           <ShowOriginal
-            v-if="page === 'show' || page === 'edit' || page === 'clone'"
             :href="route(route_basename + '.show', id)"
             :enabled="can_view"
           />
           <CloneOriginal
-            v-if="page === 'show' || page === 'edit' || page === 'clone'"
             :href="route(route_basename + '.clone', id)"
             :enabled="can_clone"
           />
           <EditOriginal
-            v-if="can_update && (page === 'show' || page === 'edit' || page === 'clone')"
+            v-if="can_update"
             :href="route(route_basename + '.edit', id)"
             :enabled="can_update"
           />
           <DeleteOriginal
-            v-if="can_delete && (page === 'show' || page === 'edit' || page === 'clone')"
+            v-if="can_delete"
             :href="route(route_basename + '.destroy', id)"
             :thing="thing"
             :enabled="can_delete"
           />
+        </div>
+
+        <!-- For Trends page -->
+        <!-- <div v-if="page === 'trends'"> -->
+        <div>
+          Log Body Weight
+        </div>
+        <div>
+          Log Food Intake
         </div>
       </div>
 
@@ -83,31 +98,34 @@ const showingNavigationDropdown = ref(false);
         :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }"
         class="fixed sm:hidden bg-white top-[6.5rem] inset-x-0 p-3 space-y-2 border border-gray-200 shadow rounded z-50"
       >
-        <div>
+        <!-- For all CRUD pages -->
+        <div v-if="(page === 'index' || page === 'create' || page === 'show' || page === 'edit' || page === 'clone')" >
           <All :href="route(route_basename + '.index')" />
-          <FindAnother :things="things" :route_basename="route_basename" />
-          <CloneAnother :things="things" :route_basename="route_basename" :enabled="can_create" />
+          <FindAnother :things="things" :thing="thing" :route_basename="route_basename" />
+          <CloneAnother :things="things" :thing="thing" :route_basename="route_basename" :enabled="can_create" />
           <New :href="route(route_basename + '.create')" :enabled="can_create" />
         </div>
 
-        <div class="border-t border-gray-200 mt-3 pt-3">
+        <!-- For Show, Edit, Clone pages -->
+        <div
+          v-if="page === 'show' || page === 'edit' || page === 'clone'"
+          class="border-t border-gray-200 mt-3 pt-3"
+        >
           <ShowOriginal
-            v-if="page === 'show' || page === 'edit' || page === 'clone'"
             :href="route(route_basename + '.show', id)"
             :enabled="can_view"
           />
           <CloneOriginal
-            v-if="page === 'show' || page === 'edit' || page === 'clone'"
             :href="route(route_basename + '.clone', id)"
             :enabled="can_clone"
           />
           <EditOriginal
-            v-if="can_update && (page === 'show' || page === 'edit' || page === 'clone')"
+            v-if="can_update"
             :href="route(route_basename + '.edit', id)"
             :enabled="can_update"
           />
           <DeleteOriginal
-            v-if="can_delete && (page === 'show' || page === 'edit' || page === 'clone')"
+            v-if="can_delete"
             :href="route(route_basename + '.destroy', id)"
             :thing="thing"
             :enabled="can_delete"
