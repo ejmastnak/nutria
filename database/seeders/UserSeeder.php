@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
 
         User::updateOrCreate([
         'name' => 'admin',
+        'username' => 'admin',
         'email' => 'admin@ejmastnak.com',
         'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
         'is_registered' => true,
@@ -27,7 +28,7 @@ class UserSeeder extends Seeder
 
         User::updateOrCreate([
         'name' => 'registered',
-        'email' => 'registered@ejmastnak.com',
+        'username' => 'registered',
         'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
         'is_registered' => true,
         'is_paying' => false,
@@ -36,6 +37,7 @@ class UserSeeder extends Seeder
 
         User::updateOrCreate([
         'name' => 'paying',
+        'username' => 'paying',
         'email' => 'paying@ejmastnak.com',
         'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
         'is_registered' => true,
