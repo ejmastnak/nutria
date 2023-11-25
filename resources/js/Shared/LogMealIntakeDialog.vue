@@ -113,7 +113,7 @@ function confirm() {
             <!-- Unit -->
             <div class="ml-4 w-40">
               <SimpleCombobox
-                :options="units.filter(unit => unit.g).concat(form.meal ? Array(form.meal.meal_unit) : [])"
+                :options="units.filter(unit => unit.g).concat(form.meal.meal_unit ? Array(form.meal.meal_unit) : [])"
                 labelText="Unit"
                 inputClasses="w-40"
                 :modelValue="form.unit"
@@ -124,6 +124,7 @@ function confirm() {
               />
               <InputError :message="form.errors.unit_id" />
             </div>
+
           </div>
 
           <!-- Date -->

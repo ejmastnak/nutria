@@ -113,7 +113,7 @@ function confirm() {
             <!-- Unit -->
             <div class="ml-4 w-40">
               <SimpleCombobox
-                :options="form.food_list ? Array(form.food_list.food_list_unit) : []"
+                :options="form.food_list.food_list_unit ? Array(form.food_list.food_list_unit) : []"
                 labelText="Unit"
                 inputClasses="w-40"
                 :modelValue="form.unit"

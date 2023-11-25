@@ -110,7 +110,7 @@ function confirm() {
             <!-- Unit -->
             <div class="ml-4 w-40">
               <SimpleCombobox
-                :options="units.filter(unit => unit.g || (unit.ml && (form.ingredient && form.ingredient.density_g_ml))).concat(form.ingredient ? form.ingredient.custom_units : [])"
+                :options="units.filter(unit => unit.g || (unit.ml && (form.ingredient && form.ingredient.density_g_ml))).concat((form.ingredient && form.ingredient.custom_units) ? form.ingredient.custom_units : [])"
                 labelText="Unit"
                 inputClasses="w-40"
                 :modelValue="form.unit"
