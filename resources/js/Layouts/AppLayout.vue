@@ -194,7 +194,8 @@ const showingNavigationDropdown = ref(false);
       </nav>
 
       <!-- Page Content -->
-      <main class="mt-24 pb-6 px-4 sm:px-6">
+      <!-- mt-16 because top navbar has height h-16 -->
+      <main class="mt-16 pt-4 pb-6 px-4 sm:px-6">
         <slot />
       </main>
     </div>
