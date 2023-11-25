@@ -4,7 +4,7 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import FlashMessage from '@/Shared/FlashMessage.vue'
+import FlashMessage from './Partials/FlashMessage.vue'
 import { Link } from '@inertiajs/vue3';
 import FoodPopover from './Partials/FoodPopover.vue'
 

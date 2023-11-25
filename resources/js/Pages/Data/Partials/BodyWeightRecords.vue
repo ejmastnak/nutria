@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { TrashIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
-import LogBodyWeightDialog from './LogBodyWeightDialog.vue'
+import LogBodyWeightDialog from '@/Shared/LogBodyWeightDialog.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 
 const props = defineProps({

@@ -2,9 +2,9 @@
 import { computed, ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { TrashIcon, PencilSquareIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
-import LogIngredientIntakeDialog from './LogIngredientIntakeDialog.vue'
-import LogMealIntakeDialog from './LogMealIntakeDialog.vue'
-import LogFoodListIntakeDialog from './LogFoodListIntakeDialog.vue'
+import LogIngredientIntakeDialog from '@/Shared/LogIngredientIntakeDialog.vue'
+import LogMealIntakeDialog from '@/Shared/LogMealIntakeDialog.vue'
+import LogFoodListIntakeDialog from '@/Shared/LogFoodListIntakeDialog.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 import MyLink from '@/Components/MyLink.vue'
 import { roundNonZero } from '@/utils/GlobalFunctions.js'
