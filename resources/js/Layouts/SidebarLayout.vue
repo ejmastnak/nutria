@@ -139,6 +139,18 @@ const showingNavigationDropdown = ref(false);
             :enabled="can_delete"
           />
         </div>
+
+        <!-- For Data page -->
+        <div v-if="page === 'data'">
+          <LogFoodIntake
+            :units="units"
+            :ingredients="ingredients"
+            :meals="meals"
+            :food_lists="food_lists"
+          />
+          <LogBodyWeight :units="units" />
+        </div>
+
       </div>
     </nav>
 
