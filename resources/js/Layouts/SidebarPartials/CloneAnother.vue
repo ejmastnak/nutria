@@ -36,7 +36,7 @@ function search(thing) {
   <FindAThing
     ref="searchDialog"
     :things="things"
-    :dialog_title="'Search for a ' + (thing === 'ingredient' ? 'n ' : ' ') + thing + ' to clone'"
+    :dialog_title="'Search for a' + (thing === 'ingredient' ? 'n ' : ' ') + thing + ' to clone'"
     button_text="Okay"
     @foundAThing="search"
   />
