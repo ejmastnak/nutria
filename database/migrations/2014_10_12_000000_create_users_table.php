@@ -17,9 +17,9 @@ return new class extends Migration {
             $table->string('email')->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->boolean('is_registered');
-            $table->boolean('is_paying');
-            $table->boolean('is_admin');
+            $table->boolean('is_registered')->default(true);
+            $table->boolean('is_paying')->default(false);
+            $table->boolean('is_admin')->default(false);
             $table->boolean('has_special_full_access')->default(false);
             $table->rememberToken();
             $table->timestamps();
