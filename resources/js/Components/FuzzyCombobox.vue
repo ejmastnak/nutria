@@ -77,7 +77,7 @@ watch(query, throttle(function (value) {
 
         <div class="relative">
           <ComboboxInput
-            class="w-full border border-gray-300 rounded-md shadow-sm focus:border focus:border-blue-500"
+            class="w-full border border-gray-300 rounded-md shadow-sm focus:border focus:border-blue-500 text-ellipsis"
             @change="query = $event.target.value"
             :displayValue="(option) => option ? option[searchKey] : ''"
           />

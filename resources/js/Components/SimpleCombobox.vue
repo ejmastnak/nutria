@@ -73,14 +73,14 @@ watch(computedOptions, () => { search() })
           {{labelText}}
         </ComboboxLabel>
 
-        <div class="relative w-fit">
+        <div class="flex w-fit">
           <ComboboxInput
-            class="border border-gray-300 rounded-md shadow-sm focus:border focus:border-blue-500"
+            class="border border-gray-300 rounded-bl-md rounded-tl-md shadow-sm focus:border focus:border-blue-500 text-ellipsis"
             :class="inputClasses"
             @change="query = $event.target.value"
             :displayValue="(option) => option ? option[searchKey] : ''"
           />
-          <ComboboxButton tabindex="0" class="absolute right-0 px-4 rounded-md h-full focus:outline-none focus:border-2 focus:border-blue-500 active:border-0" >
+          <ComboboxButton class="px-1 focus:outline-none focus:border-2 focus:border-blue-500 active:border-0 bg-white rounded-br-md rounded-tr-md border-y border-r border-gray-300" >
             <ChevronDownIcon class="w-5 h-5 text-gray-600 shrink-0"/>
           </ComboboxButton>
         </div>
