@@ -70,7 +70,7 @@ export default {
 
     <TabGroup @change="changeTab" :defaultIndex="Number(selectedTab)">
 
-      <TabList class="mt-4 rounded w-fit border-b space-x-2">
+      <TabList class="mt-4 rounded w-fit border-b space-x-2 whitespace-nowrap flex">
 
         <!-- Food Intake -->
         <Tab as="template" v-slot="{ selected }">

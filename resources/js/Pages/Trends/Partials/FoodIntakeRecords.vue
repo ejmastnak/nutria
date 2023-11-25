@@ -122,10 +122,13 @@ function deleteBodyWeightRecord() {
             {{roundNonZero(Number(foodItem.amount))}}
             {{foodItem.unit.name}}
           </td>
-          <td class="px-8 py-4">
-            {{(new Date(foodItem.date)).toLocaleDateString('en-GB', {
-              day: 'numeric', month: 'long', year: 'numeric'
-            })}}
+          <td class="px-8 py-4 whitespace-nowrap">
+            <span class="hidden md:inline">
+              {{(new Date(foodItem.date)).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}}
+            </span>
+            <span class="md:hidden">
+              {{(new Date(foodItem.date)).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}}
+            </span>
           </td>
           <td class="px-4 py-4">
             <p v-if="foodItem.type === INGREDIENT">Ingredient</p>
