@@ -88,7 +88,8 @@ function deleteBodyWeightRecord() {
           <!-- Amount and unit food -->
           <th scope="col" class="px-8 py-3 bg-blue-200">Amount</th>
           <th scope="col" class="px-8 py-3 bg-blue-100">Date</th>
-          <th scope="col" class="px-8 py-3 bg-blue-200" />
+          <th scope="col" class="px-8 py-3 bg-blue-200">Type</th>
+          <th scope="col" class="px-8 py-3 bg-blue-100" />
         </tr>
       </thead>
       <tbody>
@@ -143,24 +144,26 @@ function deleteBodyWeightRecord() {
               day: 'numeric', month: 'long', year: 'numeric'
             })}}
           </td>
-          <td>
-            <div class="flex items-center px-8">
-              <button
-                type="button"
-                @click="openUpdateDialog(foodItem)"
-                class="mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
-              >
-                <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
-              </button>
-              <button
-                type="button"
-                @click="openDeleteDialog(foodItem)"
-                class="ml-1 mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
-              >
-                <TrashIcon class="w-5 h-5 hover:text-red-700" />
-              </button>
-
-            </div>
+          <td class="px-4 py-4">
+            <p v-if="foodItem.type === INGREDIENT">Ingredient</p>
+            <p v-if="foodItem.type === MEAL">Meal</p>
+            <p v-if="foodItem.type === FOOD_LIST">Food List</p>
+          </td>
+          <td class="flex items-center px-8">
+            <button
+              type="button"
+              @click="openUpdateDialog(foodItem)"
+              class="mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
+            >
+              <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
+            </button>
+            <button
+              type="button"
+              @click="openDeleteDialog(foodItem)"
+              class="ml-1 mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
+            >
+              <TrashIcon class="w-5 h-5 hover:text-red-700" />
+            </button>
           </td>
         </tr>
       </tbody>
