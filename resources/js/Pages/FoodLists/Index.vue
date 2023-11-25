@@ -147,13 +147,13 @@ export default {
 
       <table
         v-show="filteredFoodLists.length"
-        class="mt-2 sm:table-fixed w-full text-sm sm:text-base text-left text-gray-500">
+        class="mt-2 w-full text-sm sm:text-base text-left text-gray-500">
         <thead class="text-xs text-gray-700 uppercase bg-blue-100">
           <tr>
-            <th scope="col" class="px-6 py-3 w-11/12">
+            <th scope="col" class="px-6 py-3">
               Name
             </th>
-            <th scope="col" class="px-6 py-3 w-1/12 bg-blue-100" />
+            <th scope="col" class="px-6 py-3 w-16 bg-blue-100" />
           </tr>
         </thead>
         <tbody>

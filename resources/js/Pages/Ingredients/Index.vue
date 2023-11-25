@@ -218,8 +218,8 @@ export default {
       <TabPanels class="mt-2">
 
         <!-- Ingredients in USDA database -->
-        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-xl w-fit overflow-auto">
-          <section class="border border-gray-200 p-4 rounded-xl shadow-sm w-fit">
+        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-xl w-full overflow-auto">
+          <section class="border border-gray-200 p-4 rounded-xl shadow-sm w-full">
             <h2 class="text-lg">Ingredients from the USDA database</h2>
 
             <div class="flex flex-col sm:flex-row items-start sm:items-end px-2 py-4">
@@ -278,7 +278,7 @@ export default {
 
             <table
               v-show="filteredUsdaIngredients.length"
-              class="mt-2 sm:table-fixed w-full text-sm sm:text-base text-left text-gray-500">
+              class="mt-2 w-full text-sm sm:text-base text-left text-gray-500">
               <thead class="text-xs text-gray-700 uppercase bg-blue-100">
                 <tr>
                   <th scope="col" class="px-6 py-3">
@@ -317,8 +317,8 @@ export default {
         </TabPanel>
 
         <!-- User ingredients -->
-        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-xl w-fit overflow-auto">
-          <section v-if="user_ingredients.length" class="border border-gray-200 shadow-sm p-4 rounded-xl bg-white w-fit" >
+        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-xl w-full overflow-auto">
+          <section v-if="user_ingredients.length" class="border border-gray-200 shadow-sm p-4 rounded-xl bg-white w-full" >
             <h2 class="text-lg">Your ingredients</h2>
 
             <div class="flex flex-col sm:flex-row items-start sm:items-end px-2 py-4">
@@ -371,7 +371,7 @@ export default {
               </div>
             </div>
 
-            <table class="mt-2 sm:table-fixed w-full text-sm sm:text-base text-left text-gray-500">
+            <table class="mt-2 w-full text-sm sm:text-base text-left text-gray-500">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
                   <th scope="col" class="px-6 py-3 bg-blue-100">
@@ -380,7 +380,7 @@ export default {
                   <th scope="col" class="px-6 py-3 w-4/12 bg-blue-200">
                     Type
                   </th>
-                  <th scope="col" class="px-6 py-3 w-1/12 bg-blue-100" />
+                  <th scope="col" class="px-6 py-3 w-16 bg-blue-100" />
                 </tr>
               </thead>
               <tbody>
@@ -446,6 +446,5 @@ export default {
       @delete="deleteIngredient"
       @cancel="idToDelete = null"
     />
-
   </SidebarLayout>
 </template>

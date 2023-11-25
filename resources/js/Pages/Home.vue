@@ -11,7 +11,7 @@ export default {
 </script>
 
 <template>
-  <div class="">
+  <div>
     <Head title="Home" />
 
     <h1 class="text-xl">Nutria Nutrition</h1>

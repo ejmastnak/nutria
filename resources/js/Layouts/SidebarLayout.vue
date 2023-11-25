@@ -40,7 +40,7 @@ const showingNavigationDropdown = ref(false);
     <!-- -mt-4 to compensate for pt-4 in AppLayout -->
     <nav class="-mt-4">
       <!-- Desktop navigation menu -->
-      <div class="fixed hidden md:block left-0 w-48 p-2 bg-[#fefefe] border-r border-gray-300 flex flex-col min-h-screen whitespace-nowrap z-40">
+      <div class="fixed hidden md:block left-0 w-48 pt-3 p-2 bg-[#fefefe] border-r border-gray-300 flex flex-col min-h-screen whitespace-nowrap z-40">
 
         <!-- For all CRUD pages -->
         <div v-if="(page === 'index' || page === 'create' || page === 'show' || page === 'edit' || page === 'clone')" >
