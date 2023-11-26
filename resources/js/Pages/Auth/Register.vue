@@ -33,22 +33,6 @@ function cancel() {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="name" value="Name" />
-
-                <TextInput
-                    id="name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
-
-                <InputError class="mt-2" :message="form.errors.name" />
-            </div>
-
-            <div class="mt-4">
                 <InputLabel for="username" value="Username" />
 
                 <TextInput
@@ -93,6 +77,21 @@ function cancel() {
                 <InputError class="mt-2" :message="form.errors.password_confirmation" />
             </div>
 
+            <div class="mt-8 border-t border-gray-200 pt-6">
+                <InputLabel for="name" value="Name (optional)" />
+
+                <TextInput
+                    id="name"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.name"
+                    autofocus
+                    autocomplete="name"
+                />
+
+                <InputError class="mt-2" :message="form.errors.name" />
+            </div>
+
             <div class="mt-4">
                 <InputLabel for="email" value="Email (optional)" />
 
@@ -107,7 +106,7 @@ function cancel() {
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
-            <div class="flex items-center justify-end mt-4">
+            <div class="flex items-center justify-end mt-12">
                 <Link
                     :href="route('login')"
                     class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
