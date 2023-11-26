@@ -24,18 +24,20 @@ DENSITY_CANDIDATES_TXT=$(CURDIR)/density-candidates.txt
 # Create and populates SR tables
 .PHONY: sr
 sr:
-	@echo "" >> $(MAIN)
-	@echo "" >> $(MAIN)
 	@cat $(SR_SQL) >> $(MAIN)
 
 # Creates and populates temporary unit-related tables
 .PHONY: tmp_units
 tmp_units:
+	@echo "" >> $(MAIN)
+	@echo "" >> $(MAIN)
 	@cat $(TMP_UNITS_SQL) >> $(MAIN)
 
 # Creates and populates temporary density whitelist table
 .PHONY: tmp_density_whitelist
 tmp_density_whitelist:
+	@echo "" >> $(MAIN)
+	@echo "" >> $(MAIN)
 	@cat $(DENSITY_WHITELIST_SQL) >> $(MAIN)
 
 # Creates and populates temporary ingredient whitelist table
@@ -92,8 +94,9 @@ custom_units: tmp_units food_portion tmp_density_whitelist
 	@cat $(CUSTOM_UNITS_SQL) >> $(MAIN)
 
 # Creates a list of candidate ingredients for computing density
+# Extra psql flags are to suppress header rows, alignment whitespace, etc.
 density-candidates.txt: clean density_candidates
-	psql --quiet -d $(DB) -U $(DB_USER) -f $(MAIN) > $(DENSITY_CANDIDATES_TXT)
+	psql --quiet -A -t -d $(DB) -U $(DB_USER) -f $(MAIN) > $(DENSITY_CANDIDATES_TXT)
 
 # Creates seed script
 main.sql: clean ingredient_nutrients density custom_units;
