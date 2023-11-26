@@ -14,6 +14,8 @@ export default {
   <div class="mt-2">
     <Head title="Home" />
 
+    Hello, world!
+
     <h1 class="text-2xl text-gray-900">Welcome to Nutria Nutrition!</h1>
 
     <p class="mt-4 text-gray-700 max-w-lg">
