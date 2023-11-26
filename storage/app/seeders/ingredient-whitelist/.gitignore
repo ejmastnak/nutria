@@ -1,0 +1,6 @@
+*
+!.gitignore
+!README.md
+!prepare-candidates.bash
+!whitelist2csv.bash
+!ingredient-whitelist.txt

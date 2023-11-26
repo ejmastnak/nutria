@@ -1,3 +1,4 @@
 *
-!psql/
 !.gitignore
+!psql/
+!ingredient-whitelist/
