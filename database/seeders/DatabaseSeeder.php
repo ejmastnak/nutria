@@ -11,6 +11,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
         $this->call([
             UserSeeder::class,
             UnitSeeder::class,
@@ -18,14 +19,21 @@ class DatabaseSeeder extends Seeder
             NutrientSeeder::class,
             IngredientCategorySeeder::class,
             IngredientSeeder::class,
-            CustomIngredientSeeder::class,
-            MealSeeder::class,
-            FoodListSeeder::class,
             IntakeGuidelineSeeder::class,
-            BodyWeightRecordSeeder::class,
-            IngredientIntakeRecordSeeder::class,
-            MealIntakeRecordSeeder::class,
-            FoodListIntakeRecordSeeder::class,
         ]);
+
+        // Additional seeders for local development
+        if (\App::environment('local')) {
+            $this->call([
+                CustomIngredientSeeder::class,
+                MealSeeder::class,
+                FoodListSeeder::class,
+                BodyWeightRecordSeeder::class,
+                IngredientIntakeRecordSeeder::class,
+                MealIntakeRecordSeeder::class,
+                FoodListIntakeRecordSeeder::class,
+            ]);
+        }
+
     }
 }

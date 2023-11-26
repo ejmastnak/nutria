@@ -17,8 +17,12 @@ class IntakeGuidelineSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->seed('json/intake-guidelines.json');
+        if (\App::environment('local')) $this->seed('json/intake-guidelines-local.json');
+    }
 
-        $json = Storage::disk('seeders')->get('json/intake-guidelines.json');
+    private function seed(string $file) {
+        $json = Storage::disk('seeders')->get($file);
         $intakeGuidelines = json_decode($json, true);
 
         foreach ($intakeGuidelines as $intakeGuideline) {
@@ -57,6 +61,5 @@ class IntakeGuidelineSeeder extends Seeder
             }
 
         }
-
     }
 }

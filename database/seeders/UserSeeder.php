@@ -15,8 +15,6 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-
-
         if (\App::environment('local')) {
             User::updateOrCreate([
                 'name' => 'admin',
