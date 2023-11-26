@@ -16,8 +16,8 @@ class IngredientSeeder extends Seeder
     {
         $result = Process::path(storage_path('app/seeders/psql'))
         ->env([
-            'DB' => env('DB_DATABASE'),
-            'DB_USERNAME' => env('DB_USERNAME'),
+            'DB' => config('database.connections.' . config('database.default') . '.database'),
+            'DB_USERNAME' => config('database.connections.' . config('database.default') . '.username'),
             'SEED_INGREDIENTS_FROM_WHITELIST' => 1,
         ])
         ->run("make seed");
@@ -30,3 +30,8 @@ class IngredientSeeder extends Seeder
         }
     }
 }
+
+
+
+>
+
