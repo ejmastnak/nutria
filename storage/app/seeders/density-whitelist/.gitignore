@@ -1,0 +1,5 @@
+*
+!.gitignore
+!README.md
+!whitelist2csv.bash
+!density-whitelist.txt

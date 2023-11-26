@@ -1,0 +1,72 @@
+94948|174817|Beverages|Alcoholic beverage, distilled, rum, 80 proof
+89544|171908|Beverages|Alcoholic beverages, wine, rose
+85131|169572|Beverages|Alcoholic beverage, beer, light, BUD LIGHT
+85137|169575|Beverages|Alcoholic beverage, beer, light, low carb
+83688|168747|Beverages|Alcoholic beverage, beer, regular, BUDWEISER
+83690|168748|Beverages|Alcoholic beverage, beer, light, BUDWEISER SELECT
+94950|174818|Beverages|Alcoholic beverage, distilled, vodka, 80 proof
+93826|174145|Beverages|Alcoholic beverage, beer, light, higher alcohol
+81780|167697|Dairy and Egg Products|Milk, buttermilk, fluid, cultured, reduced fat
+87459|170872|Dairy and Egg Products|Milk, lowfat, fluid, 1% milkfat, with added vitamin A and vitamin D
+87464|170874|Dairy and Egg Products|Milk, buttermilk, fluid, cultured, lowfat
+87486|170882|Dairy and Egg Products|Milk, sheep, fluid
+87492|170885|Dairy and Egg Products|Whey, acid, fluid
+88314|171265|Dairy and Egg Products|Milk, whole, 3.25% milkfat, with added vitamin D
+88320|171267|Dairy and Egg Products|Milk, reduced fat, fluid, 2% milkfat, with added vitamin A and vitamin D
+88325|171269|Dairy and Egg Products|Milk, nonfat, fluid, with added vitamin A and vitamin D (fat free or skim)
+88350|171278|Dairy and Egg Products|Milk, goat, fluid, with added vitamin D
+88358|171282|Dairy and Egg Products|Whey, sweet, fluid
+90080|172205|Dairy and Egg Products|Milk, reduced fat, fluid, 2% milkfat, without added vitamin A and vitamin D
+90101|172217|Dairy and Egg Products|Milk, whole, 3.25% milkfat, without added vitamin A and vitamin D
+90117|172225|Dairy and Egg Products|Milk, buttermilk, fluid, whole
+92516|173432|Dairy and Egg Products|Milk, nonfat, fluid, without added vitamin A and vitamin D (fat free or skim)
+92542|173441|Dairy and Egg Products|Milk, fluid, 1% fat, without added vitamin A and vitamin D
+92855|173573|Fats and Oils|Oil, avocado
+92862|173576|Fats and Oils|Oil, oat
+92866|173577|Fats and Oils|Fish oil, cod liver
+92869|173578|Fats and Oils|Fish oil, sardine
+88704|171427|Fats and Oils|Oil, hazelnut
+88692|171423|Fats and Oils|Oil, poppyseed
+88668|171413|Fats and Oils|Oil, olive, salad or cooking
+88662|171411|Fats and Oils|Oil, soybean, salad or cooking
+88659|171410|Fats and Oils|Oil, peanut, salad or cooking
+81792|167702|Fats and Oils|Oil, flaxseed, cold pressed
+87816|171031|Fats and Oils|Oil, almond
+90375|172336|Fats and Oils|Oil, canola
+90378|172337|Fats and Oils|Oil, mustard
+90381|172338|Fats and Oils|Oil, sunflower, high oleic (70% and over)
+90389|172340|Fats and Oils|Fish oil, herring
+90392|172341|Fats and Oils|Fish oil, menhaden
+90398|172343|Fats and Oils|Fish oil, salmon
+90463|172370|Fats and Oils|Oil, vegetable, soybean, refined
+87813|171030|Fats and Oils|Oil, walnut
+87807|171028|Fats and Oils|Oil, grapeseed
+87804|171027|Fats and Oils|Oil, safflower, salad or cooking, high oleic (primary safflower oil of commerce)
+87801|171026|Fats and Oils|Oil, safflower, salad or cooking, linoleic, (over 70%)
+87798|171025|Fats and Oils|Oil, sunflower, linoleic, (approx. 65%)
+87781|171017|Fats and Oils|Oil, sunflower, linoleic (less than 60%)
+87778|171016|Fats and Oils|Oil, sesame, salad or cooking
+87769|171013|Fats and Oils|Oil, rice bran
+85578|169867|Fats and Oils|Oil, corn and canola
+86169|170172|Nut and Seed Products|Nuts, coconut milk, raw (liquid expressed from grated meat and water)
+86171|170173|Nut and Seed Products|Nuts, coconut milk, canned (liquid expressed from grated meat and water)
+82677|168212|Fruits and Fruit Juices|Cranberry juice blend, 100% juice, bottled, with added vitamin C and calcium
+82495|168117|Fruits and Fruit Juices|Cranberry juice, unsweetened
+82575|168157|Fruits and Fruit Juices|Lime juice, canned or bottled, unsweetened
+81894|167748|Fruits and Fruit Juices|Lemon juice from concentrate, canned or bottled
+84237|169100|Fruits and Fruit Juices|Orange juice, chilled, includes from concentrate
+81947|167771|Fruits and Fruit Juices|Apple juice, canned or bottled, unsweetened, with added ascorbic acid
+85690|169925|Fruits and Fruit Juices|Tangerine juice, raw
+82006|167807|Fruits and Fruit Juices|Cherry juice, tart
+91855|173042|Fruits and Fruit Juices|Grape juice, canned or bottled, unsweetened, without added ascorbic acid
+91853|173041|Fruits and Fruit Juices|Grape juice, canned or bottled, unsweetened, with added ascorbic acid
+89188|171687|Fruits and Fruit Juices|Acerola juice, raw
+94072|174278|Legumes and Legume Products|Soy sauce made from soy (tamari)
+90635|172446|Legumes and Legume Products|Soymilk, original and vanilla, unfortified
+90679|172473|Legumes and Legume Products|Soy sauce made from soy and wheat (shoyu), low sodium
+90654|172456|Legumes and Legume Products|Soymilk, original and vanilla, with added calcium, vitamins A and D
+83862|168836|Sweets|Syrups, corn, dark
+83864|168837|Sweets|Syrups, corn, light
+85299|169659|Sweets|Syrups, corn, high-fructose
+86358|170276|Sweets|Syrup, maple, Canadian
+86828|170545|Vegetables and Vegetable Products|Tomato juice, canned, without salt added

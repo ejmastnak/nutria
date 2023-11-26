@@ -2,3 +2,4 @@
 !.gitignore
 !psql/
 !ingredient-whitelist/
+!density-whitelist/
