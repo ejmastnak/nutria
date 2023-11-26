@@ -1,6 +1,4 @@
 *
-!Makefile
-!ingredients.sql
-!sql/
-!csv/
 !.gitignore
+!Makefile
+!sql/
