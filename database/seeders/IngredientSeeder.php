@@ -14,7 +14,13 @@ class IngredientSeeder extends Seeder
      */
     public function run(): void
     {
-        $result = Process::path(storage_path('app/seeders/psql'))->run("make seed");
+        $result = Process::path(storage_path('app/seeders/psql'))
+        ->env([
+            'DB' => env('DB_DATABASE'),
+            'DB_USERNAME' => env('DB_USERNAME'),
+            'SEED_INGREDIENTS_FROM_WHITELIST' => 1,
+        ])
+        ->run("make seed");
         $this->command->info("stdout\n" . $result->output());
         $this->command->info("stderr\n" . $result->errorOutput());
         if($result->failed()) {

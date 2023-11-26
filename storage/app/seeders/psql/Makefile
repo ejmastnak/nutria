@@ -1,7 +1,9 @@
-DB=diet
-DB_USER=diet
-
-SEED_INGREDIENTS_FROM_WHITELIST=1
+# Expects the following environment variables to be defined when running make:
+# - DB name of database
+# - DB_USERNAME name of database user
+# - SEED_INGREDIENTS_FROM_WHITELIST set to 1 to seed ingredients table only
+#   with whitelisted ingredients; set to any other value to seed with all
+#   ingredients in FDC database
 
 # Main build script to set up database
 MAIN=$(CURDIR)/main.sql
@@ -96,7 +98,7 @@ custom_units: tmp_units food_portion tmp_density_whitelist
 # Creates a list of candidate ingredients for computing density
 # Extra psql flags are to suppress header rows, alignment whitespace, etc.
 density-candidates.txt: clean density_candidates
-	psql --quiet -A -t -d $(DB) -U $(DB_USER) -f $(MAIN) > $(DENSITY_CANDIDATES_TXT)
+	psql --quiet -A -t -d $(DB) -U $(DB_USERNAME) -f $(MAIN) > $(DENSITY_CANDIDATES_TXT)
 
 # Creates seed script
 main.sql: clean ingredient_nutrients density custom_units;
@@ -104,7 +106,7 @@ main.sql: clean ingredient_nutrients density custom_units;
 # Runs seed script
 .PHONY: seed
 seed: main.sql
-	psql -d $(DB) -U $(DB_USER) -f $(MAIN)
+	psql -d $(DB) -U $(DB_USERNAME) -f $(MAIN)
 
 # Removes seed script
 clean:
