@@ -41,7 +41,7 @@ function cancel() {
   form.reset()
   isOpen.value = false
 }
-function confirm() {
+function submit() {
   if (form.id) {
     form.put(route('body-weight-records.update', form.id), {
       onSuccess: () => cancel()
@@ -147,8 +147,8 @@ function confirm() {
             <SecondaryButton @click="cancel" class="ml-2" >
               Cancel
             </SecondaryButton>
-            <PrimaryButton @click="confirm" class="ml-2" >
-              Okay
+            <PrimaryButton class="ml-2" >
+              Save
             </PrimaryButton>
           </div>
 
