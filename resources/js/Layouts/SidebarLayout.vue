@@ -104,7 +104,7 @@ const showingNavigationDropdown = ref(false);
       <!-- Mobile navigation menu -->
       <div
         :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }"
-        class="fixed md:hidden bg-white top-[6.5rem] inset-x-0 p-3 space-y-2 border border-gray-200 shadow rounded z-50"
+        class="fixed md:hidden bg-white top-[6.5rem] inset-x-0 p-3 space-y-2 border border-gray-200 shadow rounded z-40"
       >
         <!-- For all CRUD pages -->
         <div v-if="(page === 'index' || page === 'create' || page === 'show' || page === 'edit' || page === 'clone')" >
