@@ -143,7 +143,7 @@ function confirm() {
               id="time"
               class="w-full bg-white"
               type="time"
-              step="1"
+              step="60"
               v-model="form.time"
             />
             <InputError :message="form.errors.time" />

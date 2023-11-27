@@ -20,6 +20,10 @@ class BodyWeightRecord extends Model
         'user_id',
     ];
 
+    protected $casts = [
+        'time' => 'datetime:H:i',
+    ];
+
     protected function amount(): Attribute
     {
         return Attribute::make(
