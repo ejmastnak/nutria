@@ -1,7 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useForm } from '@inertiajs/vue3'
-import { round, roundNonZero, nowYYYYMMDD } from '@/utils/GlobalFunctions.js'
+import { round, roundNonZero, nowYYYYMMDD, nowHHmm } from '@/utils/GlobalFunctions.js'
+import { ClockIcon } from '@heroicons/vue/24/outline'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
@@ -117,16 +118,22 @@ function confirm() {
           </div>
 
           <!-- Time -->
-          <div class="mt-3 w-40">
-            <InputLabel for="time" value="Time (optional)" />
-            <TextInput
-              id="time"
-              class="w-full bg-white"
-              type="time"
-              step="60"
-              v-model="form.time"
-            />
-            <InputError :message="form.errors.time" />
+          <div class="mt-3 flex items-end">
+            <div class="w-40">
+              <InputLabel for="time" value="Time (optional)" />
+              <TextInput
+                id="time"
+                class="w-full bg-white"
+                type="time"
+                step="60"
+                v-model="form.time"
+              />
+              <InputError :message="form.errors.time" />
+            </div>
+            <SecondaryButton @click="form.time = nowHHmm()" class="ml-2 h-fit">
+              <ClockIcon class="w-5 h-5 -ml-1 w-6 h-6 text-gray-600 shrink-0"/>
+              <p class="ml-1">Now</p>
+            </SecondaryButton>
           </div>
 
           <!-- Cancel/Confirm buttons -->

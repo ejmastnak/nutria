@@ -75,3 +75,13 @@ export const nowYYYYMMDD = function() {
   return [year, month, day].join('-');
 }
 
+
+// Returns current time in HH-mm format
+export const nowHHmm = function() {
+  const date = new Date()
+  var h = date.getHours()
+  var m = date.getMinutes()
+  if (h.length < 2) h = '0' + h;
+  if (m.length < 2) m = '0' + m;
+  return h + ':' + m
+}
