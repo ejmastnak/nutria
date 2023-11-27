@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import { round, roundNonZero, nowYYYYMMDD, nowHHmm } from '@/utils/GlobalFunctions.js'
-import { ClockIcon } from '@heroicons/vue/24/outline'
+import { ClockIcon, CalendarIcon } from '@heroicons/vue/24/outline'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
@@ -105,16 +105,22 @@ function confirm() {
           </div>
 
           <!-- Date -->
-          <div class="mt-3 w-40">
-            <InputLabel for="date" value="Date" />
-            <TextInput
-              id="date"
-              class="w-full bg-white"
-              type="date"
-              v-model="form.date"
-              required
-            />
-            <InputError :message="form.errors.date" />
+          <div class="mt-3 flex items-end">
+            <div class="w-40">
+              <InputLabel for="date" value="Date" />
+              <TextInput
+                id="date"
+                class="w-full bg-white"
+                type="date"
+                v-model="form.date"
+                required
+              />
+              <InputError :message="form.errors.date" />
+            </div>
+            <SecondaryButton @click="form.date = nowYYYYMMDD()" class="ml-2 h-fit">
+              <CalendarIcon class="w-5 h-5 -ml-1 w-6 h-6 text-gray-600 shrink-0"/>
+              <p class="ml-1">Today</p>
+            </SecondaryButton>
           </div>
 
           <!-- Time -->
