@@ -65,8 +65,8 @@ export const gramAmountOfUnit = function(amount, unit, densityGMl) {
 // Returns current date in YYYY-MM-DD format
 export const nowYYYYMMDD = function() {
   const date = new Date()
-  var month = '' + (date.getMonth() + 1)
-  var day = '' + date.getDate()
+  var month = String((date.getMonth() + 1))
+  var day = String(date.getDate())
   var year = date.getFullYear()
 
   if (month.length < 2) month = '0' + month;
@@ -79,8 +79,8 @@ export const nowYYYYMMDD = function() {
 // Returns current time in HH-mm format
 export const nowHHmm = function() {
   const date = new Date()
-  var h = date.getHours()
-  var m = date.getMinutes()
+  var h = String(date.getHours())
+  var m = String(date.getMinutes())
   if (h.length < 2) h = '0' + h;
   if (m.length < 2) m = '0' + m;
   return h + ':' + m
