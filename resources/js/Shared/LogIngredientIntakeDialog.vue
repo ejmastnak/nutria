@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useForm } from '@inertiajs/vue3'
-import { round, roundNonZero, nowYYYYMMDD, nowHHmm } from '@/utils/GlobalFunctions.js'
+import { nowYYYYMMDD, nowHHmm, getLocalYYYYMMDD, getLocalHHMM, getUTCDateTime } from '@/utils/GlobalFunctions.js'
 import { ClockIcon, CalendarIcon } from '@heroicons/vue/24/outline'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -26,6 +26,7 @@ const form = useForm({
   unit: null,
   date: null,
   time: null,
+  date_time_utc: null,
 })
 
 defineExpose({ open })
@@ -37,9 +38,8 @@ function open(ingredientIntakeRecord) {
   form.amount = ingredientIntakeRecord ? ingredientIntakeRecord.amount : null
   form.unit_id = ingredientIntakeRecord ? ingredientIntakeRecord.unit_id : props.units.find(unit => unit.name === 'g').id
   form.unit = ingredientIntakeRecord ? ingredientIntakeRecord.unit : props.units.find(unit => unit.name === 'g')
-  form.date = ingredientIntakeRecord ? ingredientIntakeRecord.date : nowYYYYMMDD()
-  form.time = (ingredientIntakeRecord && ingredientIntakeRecord.time) ? ingredientIntakeRecord.time : null
-
+  form.date = ingredientIntakeRecord ? getLocalYYYYMMDD(ingredientIntakeRecord.date_time_utc) : nowYYYYMMDD()
+  form.time = ingredientIntakeRecord ? getLocalHHMM(ingredientIntakeRecord.date_time_utc) : nowHHmm()
   isOpen.value = true
 }
 function cancel() {
@@ -48,6 +48,7 @@ function cancel() {
   isOpen.value = false
 }
 function submit() {
+  form.date_time_utc = getUTCDateTime(form.date + " " + form.time + ":00")
   if (form.id) {
     form.put(route('ingredient-intake-records.update', form.id), {
       onSuccess: () => cancel()
@@ -146,7 +147,7 @@ function submit() {
           <!-- Time -->
           <div class="mt-3 flex items-end">
             <div class="w-40">
-              <InputLabel for="time" value="Time (optional)" />
+              <InputLabel for="time" value="Time" />
               <TextInput
                 id="time"
                 class="w-full bg-white"

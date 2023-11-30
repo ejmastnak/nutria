@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useForm } from '@inertiajs/vue3'
-import { round, roundNonZero, nowYYYYMMDD, nowHHmm } from '@/utils/GlobalFunctions.js'
+import { nowYYYYMMDD, nowHHmm, getLocalYYYYMMDD, getLocalHHMM, getUTCDateTime } from '@/utils/GlobalFunctions.js'
 import { ClockIcon, CalendarIcon } from '@heroicons/vue/24/outline'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -26,6 +26,7 @@ const form = useForm({
   unit: null,
   date: null,
   time: null,
+  date_time_utc: null,
 })
 
 defineExpose({ open })
@@ -37,8 +38,8 @@ function open(mealIntakeRecord) {
   form.amount = mealIntakeRecord ? mealIntakeRecord.amount : null
   form.unit_id = mealIntakeRecord ? mealIntakeRecord.unit_id : null
   form.unit = mealIntakeRecord ? mealIntakeRecord.unit : {}
-  form.date = mealIntakeRecord ? mealIntakeRecord.date : nowYYYYMMDD()
-  form.time = (mealIntakeRecord && mealIntakeRecord.time) ? mealIntakeRecord.time : null
+  form.date = mealIntakeRecord ? getLocalYYYYMMDD(mealIntakeRecord.date_time_utc) : nowYYYYMMDD()
+  form.time = mealIntakeRecord ? getLocalHHMM(mealIntakeRecord.date_time_utc) : nowHHmm()
 
   isOpen.value = true
 }
@@ -48,6 +49,7 @@ function cancel() {
   isOpen.value = false
 }
 function submit() {
+  form.date_time_utc = getUTCDateTime(form.date + " " + form.time + ":00")
   if (form.id) {
     form.put(route('meal-intake-records.update', form.id), {
       onSuccess: () => cancel()
@@ -150,7 +152,7 @@ function submit() {
           <!-- Time -->
           <div class="mt-3 flex items-end">
             <div class="w-40">
-              <InputLabel for="time" value="Time (optional)" />
+              <InputLabel for="time" value="Time" />
               <TextInput
                 id="time"
                 class="w-full bg-white"

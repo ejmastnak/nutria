@@ -29,8 +29,7 @@ class UpdateIngredientIntakeRecordRequest extends FormRequest
             'ingredient_id' => ['required', 'integer', 'exists:ingredients,id', new IngredientOwnedByUser],
             'amount' => ['required', 'numeric', 'gt:0', config('validation.max_ingredient_amount')],
             'unit_id' => ['required', 'integer', 'exists:units,id', new DataAwareIngredientUnitIsConsistent],
-            'date' => ['required', 'string', 'date_format:Y-m-d'],
-            'time' => ['nullable', 'string', 'date_format:H:i:s,H:i'],
+            'date_time_utc' => ['required', 'string', 'date_format:Y-m-d H:i,Y-m-d H:i:s'],
         ];
     }
 }

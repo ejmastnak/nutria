@@ -7,7 +7,7 @@ import LogMealIntakeDialog from '@/Shared/LogMealIntakeDialog.vue'
 import LogFoodListIntakeDialog from '@/Shared/LogFoodListIntakeDialog.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 import MyLink from '@/Components/MyLink.vue'
-import { roundNonZero } from '@/utils/GlobalFunctions.js'
+import { roundNonZero, getHumanReadableLocalDate } from '@/utils/GlobalFunctions.js'
 const props = defineProps({
   ingredient_intake_records: Array,
   meal_intake_records: Array,
@@ -24,10 +24,8 @@ const FOOD_LIST=2
 
 const foodItems = computed(() => {
   return props.ingredient_intake_records.map((record) => {record['type'] = INGREDIENT; return record}).concat(props.meal_intake_records.map((record) => {record['type'] = MEAL; return record}), props.food_list_intake_records.map((record) => {record['type'] = FOOD_LIST; return record})).sort((a, b) => {
-    if (a.date > b.date) return -1;
-    if (a.date < b.date) return 1;
-    if (a.time > b.time) return -1;
-    if (a.time < b.time) return 1;
+    if (a.date_time_utc > b.date_time_utc) return -1;
+    if (a.date_time_utc < b.date_time_utc) return 1;
     return 0;
   })
 })
@@ -124,10 +122,10 @@ function deleteBodyWeightRecord() {
           </td>
           <td class="px-8 py-4 whitespace-nowrap">
             <span class="hidden md:inline">
-              {{(new Date(foodItem.date)).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}}
+              {{getHumanReadableLocalDate(foodItem.date_time_utc)}}
             </span>
             <span class="md:hidden">
-              {{(new Date(foodItem.date)).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}}
+              {{getHumanReadableLocalDate(foodItem.date_time_utc, longMonth=false)}}
             </span>
           </td>
           <td class="px-4 py-4">

@@ -15,13 +15,8 @@ class IngredientIntakeRecord extends Model
         'amount',
         'unit_id',
         'mass_in_grams',
-        'date',
-        'time',
+        'date_time_utc',
         'user_id',
-    ];
-
-    protected $casts = [
-        'time' => 'datetime:H:i',
     ];
 
     protected function amount(): Attribute
@@ -38,9 +33,8 @@ class IngredientIntakeRecord extends Model
                 'ingredient:id,name,density_g_ml',
                 'ingredient.custom_units:id,name,g,ml,seq_num,ingredient_id,custom_grams',
             ])
-            ->orderBy('date')
-            ->orderBy('time')
-            ->get(['id', 'ingredient_id', 'amount', 'unit_id', 'date', 'time']);
+            ->orderBy('date_time_utc')
+            ->get(['id', 'ingredient_id', 'amount', 'unit_id', 'date_time_utc']);
     }
 
     public function ingredient() {

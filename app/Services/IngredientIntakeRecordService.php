@@ -13,8 +13,7 @@ class IngredientIntakeRecordService
             'ingredient_id' => $data['ingredient_id'],
             'unit_id' => $data['unit_id'],
             'mass_in_grams' => UnitConversionService::convertToGrams($data['amount'], $data['unit_id'], $data['ingredient_id'], null, null),
-            'date' => $data['date'],
-            'time' => $data['time'],
+            'date_time_utc' => $data['date_time_utc'],
             'user_id' => $userId,
         ]);
     }
@@ -26,8 +25,7 @@ class IngredientIntakeRecordService
             'ingredient_id' => $data['ingredient_id'],
             'unit_id' => $data['unit_id'],
             'mass_in_grams' => UnitConversionService::convertToGrams($data['amount'], $data['unit_id'], $data['ingredient_id'], null, null),
-            'date' => $data['date'],
-            'time' => $data['time'],
+            'date_time_utc' => $data['date_time_utc'],
         ]);
         return $ingredientIntakeRecord;
     }

@@ -127,7 +127,7 @@ function submit() {
           <!-- Time -->
           <div class="mt-3 flex items-end">
             <div class="w-40">
-              <InputLabel for="time" value="Time (optional)" />
+              <InputLabel for="time" value="Time" />
               <TextInput
                 id="time"
                 class="w-full bg-white"

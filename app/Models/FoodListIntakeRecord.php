@@ -15,13 +15,8 @@ class FoodListIntakeRecord extends Model
         'amount',
         'unit_id',
         'mass_in_grams',
-        'date',
-        'time',
+        'date_time_utc',
         'user_id',
-    ];
-
-    protected $casts = [
-        'time' => 'datetime:H:i',
     ];
 
     protected function amount(): Attribute
@@ -38,9 +33,8 @@ class FoodListIntakeRecord extends Model
                 'food_list:id,name',
                 'food_list.food_list_unit:id,name,g,ml,seq_num,food_list_id,custom_grams',
             ])
-            ->orderBy('date')
-            ->orderBy('time')
-            ->get(['id', 'food_list_id', 'amount', 'unit_id', 'date', 'time']);
+            ->orderBy('date_time_utc')
+            ->get(['id', 'food_list_id', 'amount', 'unit_id', 'date_time_utc']);
     }
 
     public function food_list() {

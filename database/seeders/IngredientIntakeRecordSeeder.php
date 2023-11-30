@@ -39,8 +39,7 @@ class IngredientIntakeRecordSeeder extends Seeder
                 'amount' => $ingredientIntakeRecord['amount'],
                 'unit_id' => $unit->id,
                 'mass_in_grams' => UnitConversionService::convertToGrams($ingredientIntakeRecord['amount'], $unit->id, $ingredient->id, null, null),
-                'date' => $ingredientIntakeRecord['date'],
-                'time' => isset($ingredientIntakeRecord['time']) ? $ingredientIntakeRecord['time'] : null,
+                'date_time_utc' => $ingredientIntakeRecord['date'] . ' ' . $ingredientIntakeRecord['time'],
                 'user_id' => $ingredientIntakeRecord['user_id'],
             ]);
         }
