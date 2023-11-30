@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
+import { getLocalYYYYMMDD, getLocalHHMM, getHumanReadableLocalDate } from '@/utils/GlobalFunctions.js'
 import { TrashIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import LogBodyWeightDialog from '@/Shared/LogBodyWeightDialog.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
@@ -49,9 +50,7 @@ function deleteBodyWeightRecord() {
             {{body_weight_record.unit.name}}
           </td>
           <td class="px-8 py-4">
-            {{(new Date(body_weight_record.date)).toLocaleDateString('en-GB', {
-              day: 'numeric', month: 'long', year: 'numeric'
-            })}}
+            {{getHumanReadableLocalDate(body_weight_record.date_time_utc)}}
           </td>
           <td>
             <div class="flex items-center px-8">

@@ -16,8 +16,7 @@ return new class extends Migration {
             $table->foreignId('unit_id')->references('id')->on('units');
             $table->decimal('kg', 10, 4);
             $table->decimal('lb', 10, 4);
-            $table->date('date');
-            $table->time('time')->nullable();
+            $table->dateTime('date_time_utc');
             $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->timestamps();
         });

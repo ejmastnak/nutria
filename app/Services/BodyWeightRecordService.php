@@ -13,8 +13,7 @@ class BodyWeightRecordService
             'unit_id' => $data['unit_id'],
             'kg' => UnitConversionService::convertToKilograms($data['amount'], $data['unit_id']),
             'lb' => UnitConversionService::convertToPounds($data['amount'], $data['unit_id']),
-            'date' => $data['date'],
-            'time' => $data['time'],
+            'date_time_utc' => $data['date_time_utc'],
             'user_id' => $userId,
         ]);
     }
@@ -26,8 +25,7 @@ class BodyWeightRecordService
             'unit_id' => $data['unit_id'],
             'kg' => UnitConversionService::convertToKilograms($data['amount'], $data['unit_id']),
             'lb' => UnitConversionService::convertToPounds($data['amount'], $data['unit_id']),
-            'date' => $data['date'],
-            'time' => $data['time'],
+            'date_time_utc' => $data['date_time_utc'],
         ]);
         return $bodyWeightRecord;
     }

@@ -15,13 +15,8 @@ class BodyWeightRecord extends Model
         'unit_id',
         'kg',
         'lb',
-        'date',
-        'time',
+        'date_time_utc',
         'user_id',
-    ];
-
-    protected $casts = [
-        'time' => 'datetime:H:i',
     ];
 
     protected function amount(): Attribute
@@ -34,9 +29,8 @@ class BodyWeightRecord extends Model
     public static function getForUser(?int $userId) {
         return is_null($userId) ? [] : self::where('user_id', $userId)
             ->with('unit:id,name')
-            ->orderBy('date')
-            ->orderBy('time')
-            ->get(['id', 'amount', 'unit_id', 'date', 'time']);
+            ->orderBy('date_time_utc')
+            ->get(['id', 'amount', 'unit_id', 'date_time_utc']);
     }
 
     public function unit() {

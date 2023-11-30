@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useForm } from '@inertiajs/vue3'
-import { round, roundNonZero, nowYYYYMMDD, nowHHmm } from '@/utils/GlobalFunctions.js'
+import { nowYYYYMMDD, nowHHmm, getLocalYYYYMMDD, getLocalHHMM, getUTCDateTime } from '@/utils/GlobalFunctions.js'
 import { ClockIcon, CalendarIcon } from '@heroicons/vue/24/outline'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -22,6 +22,7 @@ const form = useForm({
   unit: null,
   date: null,
   time: null,
+  date_time_utc: null,
 })
 
 defineExpose({ open })
@@ -31,9 +32,8 @@ function open(bodyWeightRecord) {
   form.amount = bodyWeightRecord ? bodyWeightRecord.amount : null
   form.unit_id = bodyWeightRecord ? bodyWeightRecord.unit_id : props.units.find(unit => unit.name === 'kg').id
   form.unit = bodyWeightRecord ? bodyWeightRecord.unit : props.units.find(unit => unit.name === 'kg')
-  form.date = bodyWeightRecord ? bodyWeightRecord.date : nowYYYYMMDD()
-  form.time = (bodyWeightRecord && bodyWeightRecord.time) ? bodyWeightRecord.time : null
-
+  form.date = bodyWeightRecord ? getLocalYYYYMMDD(bodyWeightRecord.date_time_utc) : nowYYYYMMDD()
+  form.time = bodyWeightRecord ? getLocalHHMM(bodyWeightRecord.date_time_utc) : nowHHmm()
   isOpen.value = true
 }
 function cancel() {
@@ -42,6 +42,7 @@ function cancel() {
   isOpen.value = false
 }
 function submit() {
+  form.date_time_utc = getUTCDateTime(form.date + " " + form.time + ":00")
   if (form.id) {
     form.put(route('body-weight-records.update', form.id), {
       onSuccess: () => cancel()

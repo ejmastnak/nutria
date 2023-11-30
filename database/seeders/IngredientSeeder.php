@@ -30,8 +30,3 @@ class IngredientSeeder extends Seeder
         }
     }
 }
-
-
-
->
-
