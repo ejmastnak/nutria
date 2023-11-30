@@ -85,3 +85,87 @@ export const nowHHmm = function() {
   if (m.length < 2) m = '0' + m;
   return h + ':' + m
 }
+
+// Input a "YYYY-MM-DD HH:mm:ss" string representing a UTC date time.
+// Output a "YYYY-MM-DD" string representing date in local time.
+// Yes it is a bit ridiculous doing this manually, but I prefer not to rely on
+// Date.toLocaleDateString().
+export const getLocalYYYYMMDD = function (dateTimeUTC) {
+    const y = dateTimeUTC.substring(0, 4)
+    const mo = Number(dateTimeUTC.substring(5, 7)) - 1
+    const d = dateTimeUTC.substring(8, 10)
+    const h = dateTimeUTC.substring(11, 13)
+    const min = dateTimeUTC.substring(14, 16)
+    const s = dateTimeUTC.substring(17, 19)
+    const localDate = new Date(Date.UTC(y, mo, d, h, min, s))
+
+    const localYYYY = String(localDate.getFullYear())
+    var localMM = String(localDate.getMonth() + 1)
+    var localDD = String(localDate.getDate())
+    if (localMM.length < 2) localMM = '0' + localMM;
+    if (localDD.length < 2) localDD = '0' + localDD;
+
+    return localYYYY + "-" + localMM + "-" + localDD
+}
+
+// Input a "YYYY-MM-DD HH:mm:ss" string representing a UTC date time.
+// Output a "HH:mm" string representing time in local time.
+// Yes it is a bit ridiculous doing this manually, but I prefer not to rely on
+// Date.toLocaleTimeString().
+export const getLocalHHMM = function (dateTimeUTC) {
+    const y = dateTimeUTC.substring(0, 4)
+    const mo = Number(dateTimeUTC.substring(5, 7)) - 1
+    const d = dateTimeUTC.substring(8, 10)
+    const h = dateTimeUTC.substring(11, 13)
+    const min = dateTimeUTC.substring(14, 16)
+    const s = dateTimeUTC.substring(17, 19)
+    const localDate = new Date(Date.UTC(y, mo, d, h, min, s))
+
+    const localHH = String(localDate.getHours())
+    var localMM = String(localDate.getMinutes())
+    if (localHH.length < 2) localHH = '0' + localHH;
+    if (localMM.length < 2) localMM = '0' + localMM;
+
+    return localHH + ":" + localMM
+}
+
+// Input a "YYYY-MM-DD HH:mm:ss" string representing a UTC date time.
+// Output a human-readable representation of the date (the date only, not also
+// the time) in a format similar to en-GB, e.g. "1 January 1970".
+export const getHumanReadableLocalDate = function (dateTimeUTC, longMonth=true) {
+    const y = dateTimeUTC.substring(0, 4)
+    const mo = Number(dateTimeUTC.substring(5, 7)) - 1
+    const d = dateTimeUTC.substring(8, 10)
+    const h = dateTimeUTC.substring(11, 13)
+    const min = dateTimeUTC.substring(14, 16)
+    const s = dateTimeUTC.substring(17, 19)
+    const localDate = new Date(Date.UTC(y, mo, d, h, min, s))
+
+    const months = longMonth
+        ? ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    return localDate.getDate() + " " + months[localDate.getMonth()] + " " + localDate.getFullYear()
+}
+
+// Input a "YYYY-MM-DD HH:mm:ss" string representing a local date time.
+// Output a "YYYY-MM-DD HH:mm:ss" string representing the corresponding UTC
+// date time.
+export const getUTCDateTime = function (localDateTimeString) {
+    const localDate = new Date(localDateTimeString)
+
+    const y = String(localDate.getUTCFullYear())
+    var mo = String(localDate.getUTCMonth() + 1)
+    var d = String(localDate.getUTCDate())
+    var h = String(localDate.getUTCHours())
+    var min = String(localDate.getUTCMinutes())
+    var s = String(localDate.getUTCSeconds())
+
+    if (mo.length < 2) mo = '0' + mo;
+    if (d.length < 2) d = '0' + d;
+    if (h.length < 2) h = '0' + h;
+    if (min.length < 2) min = '0' + min;
+    if (s.length < 2) s = '0' + s;
+
+    return y + "-" + mo + "-" + d + " " + h + ":" + min + ":" + s
+}
