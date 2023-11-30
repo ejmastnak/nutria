@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useForm } from '@inertiajs/vue3'
-import { nowYYYYMMDD, nowHHmm, getLocalYYYYMMDD, getLocalHHMM, getUTCDateTime } from '@/utils/GlobalFunctions.js'
+import { getCurrentLocalYYYYMMDD, getCurrentLocalHHmm, getLocalYYYYMMDD, getLocalHHMM, getUTCDateTime } from '@/utils/GlobalFunctions.js'
 import { ClockIcon, CalendarIcon } from '@heroicons/vue/24/outline'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -38,8 +38,8 @@ function open(ingredientIntakeRecord) {
   form.amount = ingredientIntakeRecord ? ingredientIntakeRecord.amount : null
   form.unit_id = ingredientIntakeRecord ? ingredientIntakeRecord.unit_id : props.units.find(unit => unit.name === 'g').id
   form.unit = ingredientIntakeRecord ? ingredientIntakeRecord.unit : props.units.find(unit => unit.name === 'g')
-  form.date = ingredientIntakeRecord ? getLocalYYYYMMDD(ingredientIntakeRecord.date_time_utc) : nowYYYYMMDD()
-  form.time = ingredientIntakeRecord ? getLocalHHMM(ingredientIntakeRecord.date_time_utc) : nowHHmm()
+  form.date = ingredientIntakeRecord ? getLocalYYYYMMDD(ingredientIntakeRecord.date_time_utc) : getCurrentLocalYYYYMMDD()
+  form.time = ingredientIntakeRecord ? getLocalHHMM(ingredientIntakeRecord.date_time_utc) : getCurrentLocalHHmm()
   isOpen.value = true
 }
 function cancel() {
@@ -138,7 +138,7 @@ function submit() {
               />
               <InputError :message="form.errors.date" />
             </div>
-            <SecondaryButton @click="form.date = nowYYYYMMDD()" class="ml-2 h-fit">
+            <SecondaryButton @click="form.date = getCurrentLocalYYYYMMDD()" class="ml-2 h-fit">
               <CalendarIcon class="w-5 h-5 -ml-1 w-6 h-6 text-gray-600 shrink-0"/>
               <p class="ml-1">Today</p>
             </SecondaryButton>
@@ -157,7 +157,7 @@ function submit() {
               />
               <InputError :message="form.errors.time" />
             </div>
-            <SecondaryButton @click="form.time = nowHHmm()" class="ml-2 h-fit">
+            <SecondaryButton @click="form.time = getCurrentLocalHHmm()" class="ml-2 h-fit">
               <ClockIcon class="w-5 h-5 -ml-1 w-6 h-6 text-gray-600 shrink-0"/>
               <p class="ml-1">Now</p>
             </SecondaryButton>

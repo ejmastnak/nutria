@@ -62,8 +62,8 @@ export const gramAmountOfUnit = function(amount, unit, densityGMl) {
   }
 }
 
-// Returns current date in YYYY-MM-DD format
-export const nowYYYYMMDD = function() {
+// Returns current local date in YYYY-MM-DD format
+export const getCurrentLocalYYYYMMDD = function() {
   const date = new Date()
   var month = String((date.getMonth() + 1))
   var day = String(date.getDate())
@@ -76,8 +76,8 @@ export const nowYYYYMMDD = function() {
 }
 
 
-// Returns current time in HH-mm format
-export const nowHHmm = function() {
+// Returns current local time in HH-mm format
+export const getCurrentLocalHHmm = function() {
   const date = new Date()
   var h = String(date.getHours())
   var m = String(date.getMinutes())
