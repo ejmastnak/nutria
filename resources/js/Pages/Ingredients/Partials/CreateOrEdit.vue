@@ -91,10 +91,6 @@ const densityGMl = computed(() => {
 function updateSelectedIngredientNutrientAmountUnit(newValue) {
   form.ingredient_nutrient_amount_unit = newValue
   form.ingredient_nutrient_amount_unit_id = newValue.id
-
-  // Switch to unit amount if switching to an ingredient/meal unit
-  if (newValue.ingredient_id || newValue.meal_id) form.ingredient_nutrient_amount = 1;
-
 }
 
 // Using a dedicated object instead of form.custom_units to allow for nested
