@@ -44,7 +44,6 @@ function cancel() {
 function submit() {
   // Append seconds to match H:i:s, if time input returns H:i format
   form.date_time_utc = getUTCDateTime(form.date + " " + form.time + (form.time.length === 5 ? ":00" : ""))
-  alert(form.date_time_utc);
   if (form.id) {
     form.put(route('body-weight-records.update', form.id), {
       onSuccess: () => cancel()
@@ -158,13 +157,6 @@ function submit() {
               Save
             </PrimaryButton>
           </div>
-
-          <pre>
-            {{form.date}}
-            {{form.date.length}}
-            {{form.time}}
-            {{form.time.length}}
-          </pre>
 
         </form>
       </DialogPanel>
