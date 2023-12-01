@@ -49,8 +49,12 @@ function updateSelectedIntakeGuideline(newValue) {
 }
 
 function resetToDefaultAmountAndUnit() {
-  updateSelectedUnitAmount(props.defaultUnitAmount)
-  updateSelectedUnit(props.defaultUnit)
+  if (props.thing === 'ingredient') {
+    resetTo100G()
+  } else {
+    updateSelectedUnitAmount(props.defaultUnitAmount)
+    updateSelectedUnit(props.defaultUnit)
+  }
 }
 
 function resetTo100G() {
