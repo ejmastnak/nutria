@@ -34,4 +34,17 @@ class UpdateFoodListIntakeRecordRequest extends FormRequest
             'date_time_utc' => ['required', 'string', 'date_format:Y-m-d H:i,Y-m-d H:i:s'],
         ];
     }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'date_time_utc' => 'combined date and time',
+        ];
+    }
+
 }
