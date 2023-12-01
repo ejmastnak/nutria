@@ -43,6 +43,7 @@ function cancel() {
 }
 function submit() {
   form.date_time_utc = getUTCDateTime(form.date + " " + form.time + ":00")
+  alert(form.date_time_utc);
   if (form.id) {
     form.put(route('body-weight-records.update', form.id), {
       onSuccess: () => cancel()
@@ -156,6 +157,11 @@ function submit() {
               Save
             </PrimaryButton>
           </div>
+
+          <pre>
+            {{date}}
+            {{time}}
+          </pre>
 
         </form>
       </DialogPanel>
