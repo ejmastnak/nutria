@@ -152,20 +152,26 @@ export const getHumanReadableLocalDate = function (dateTimeUTC, longMonth=true) 
 // Output a "YYYY-MM-DD HH:mm:ss" string representing the corresponding UTC
 // date time.
 export const getUTCDateTime = function (localDateTimeString) {
-    const localDate = new Date(localDateTimeString)
+    const y = localDateTimeString.substring(0, 4)
+    const mo = Number(localDateTimeString.substring(5, 7)) - 1
+    const d = localDateTimeString.substring(8, 10)
+    const h = localDateTimeString.substring(11, 13)
+    const min = localDateTimeString.substring(14, 16)
+    const s = localDateTimeString.substring(17, 19)
+    const localDate = new Date(y, mo, d, h, min, s)
 
-    const y = String(localDate.getUTCFullYear())
-    var mo = String(localDate.getUTCMonth() + 1)
-    var d = String(localDate.getUTCDate())
-    var h = String(localDate.getUTCHours())
-    var min = String(localDate.getUTCMinutes())
-    var s = String(localDate.getUTCSeconds())
+    const utcY = String(localDate.getUTCFullYear())
+    var utcMo = String(localDate.getUTCMonth() + 1)
+    var utcD = String(localDate.getUTCDate())
+    var utcH = String(localDate.getUTCHours())
+    var utcMin = String(localDate.getUTCMinutes())
+    var utcS = String(localDate.getUTCSeconds())
 
-    if (mo.length < 2) mo = '0' + mo;
-    if (d.length < 2) d = '0' + d;
-    if (h.length < 2) h = '0' + h;
-    if (min.length < 2) min = '0' + min;
-    if (s.length < 2) s = '0' + s;
+    if (utcMo.length < 2) utcMo = '0' + utcMo;
+    if (utcD.length < 2) utcD = '0' + utcD;
+    if (utcH.length < 2) utcH = '0' + utcH;
+    if (utcMin.length < 2) utcMin = '0' + utcMin;
+    if (utcS.length < 2) utcS = '0' + utcS;
 
-    return y + "-" + mo + "-" + d + " " + h + ":" + min + ":" + s
+    return utcY + "-" + utcMo + "-" + utcD + " " + utcH + ":" + utcMin + ":" + utcS
 }
