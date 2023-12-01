@@ -30,8 +30,8 @@ const localSelectedUnit = ref(props.selectedUnit)
 function updateSelectedUnit(newValue) {
   localSelectedUnit.value = newValue
 
-  // Switch to unit amount if switching to an ingredient/meal unit
-  if (newValue.ingredient_id || newValue.meal_id) updateSelectedUnitAmount(1);
+  // Switch to unit amount if switching to a meal unit
+  if (newValue.meal_id) updateSelectedUnitAmount(1);
 
   emit('update:selectedUnit', newValue)
 }

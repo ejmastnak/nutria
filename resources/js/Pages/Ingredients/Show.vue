@@ -110,8 +110,8 @@ export default {
 
     <NutrientProfile
       class="mt-6"
-      :defaultUnit="ingredient.ingredient_nutrient_amount_unit"
-      :defaultUnitAmount="ingredient.ingredient_nutrient_amount"
+      :defaultUnit="units.find(unit => unit.name === 'g')"
+      :defaultUnitAmount="100"
       :densityGMl="ingredient.density_g_ml"
       :intakeGuidelines="intake_guidelines"
       :nutrientProfiles="nutrient_profiles"
