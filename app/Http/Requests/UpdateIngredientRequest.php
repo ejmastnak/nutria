@@ -77,7 +77,7 @@ class UpdateIngredientRequest extends FormRequest
             'density_volume_unit_id' => 'unit',
             'custom_units.*.name' => 'name',
             'custom_units.*.custom_unit_amount' => 'amount',
-            'custom_units.*.custom_mass_amount' => 'amount',
+            'custom_units.*.custom_mass_amount' => 'weight',
             'custom_units.*.custom_mass_unit_id' => 'unit_id',
         ];
     }
