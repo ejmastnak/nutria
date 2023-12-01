@@ -121,7 +121,7 @@ export const getLocalHHMM = function (dateTimeUTC) {
     const s = dateTimeUTC.substring(17, 19)
     const localDate = new Date(Date.UTC(y, mo, d, h, min, s))
 
-    const localHH = String(localDate.getHours())
+    var localHH = String(localDate.getHours())
     var localMM = String(localDate.getMinutes())
     if (localHH.length < 2) localHH = '0' + localHH;
     if (localMM.length < 2) localMM = '0' + localMM;
