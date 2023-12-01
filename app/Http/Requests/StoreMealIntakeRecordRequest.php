@@ -29,6 +29,8 @@ class StoreMealIntakeRecordRequest extends FormRequest
             'meal_id' => ['required', 'integer', 'exists:meals,id', new MealOwnedByUser],
             'amount' => ['required', 'numeric', 'gt:0', config('validation.generic_max_amount')],
             'unit_id' => ['required', 'integer', 'exists:units,id', new DataAwareMealUnitIsConsistent],
+            'date' => ['required', 'string', 'date_format:Y-m-d'],
+            'time' => ['required', 'string', 'date_format:H:i,H:i:s'],
             'date_time_utc' => ['required', 'string', 'date_format:Y-m-d H:i,Y-m-d H:i:s'],
         ];
     }

@@ -168,6 +168,10 @@ function submit() {
             </SecondaryButton>
           </div>
 
+          <div class="mt-2">
+              <InputError :message="form.errors.date_time_utc" />
+          </div>
+
           <!-- Cancel/Confirm buttons -->
           <div class="flex mt-5 -mx-6 px-4 py-3 bg-gray-50">
             <SecondaryButton @click="cancel" class="ml-2" >
