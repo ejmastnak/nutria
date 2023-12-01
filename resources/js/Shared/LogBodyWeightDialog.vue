@@ -160,7 +160,9 @@ function submit() {
 
           <pre>
             {{form.date}}
+            {{form.date.length}}
             {{form.time}}
+            {{form.time.length}}
           </pre>
 
         </form>
