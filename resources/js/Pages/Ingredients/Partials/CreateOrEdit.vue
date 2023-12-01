@@ -42,13 +42,19 @@ const form = useForm({
   ingredient_nutrient_amount: props.ingredient ? props.ingredient.ingredient_nutrient_amount : 100,
   ingredient_nutrient_amount_unit_id: props.ingredient ? props.ingredient.ingredient_nutrient_amount_unit_id : props.units.find(unit => unit.name === 'g').id,
   ingredient_nutrient_amount_unit: props.ingredient ? props.ingredient.ingredient_nutrient_amount_unit : props.units.find(unit => unit.name === 'g'),
-  ingredient_nutrients: props.ingredient ? props.ingredient.ingredient_nutrients : props.nutrients.map((nutrient) => ({
-    id: null,
-    ingredient_id: null,
-    nutrient_id: nutrient.id,
-    amount: null,
-    nutrient: nutrient,
-  })),
+  // Reset zero amounts to null, to make it easier for user to fill values in.
+  ingredient_nutrients: props.ingredient
+    ? props.ingredient.ingredient_nutrients.map((ingredient_nutrient) => {
+      if (ingredient_nutrient.amount == 0) ingredient_nutrient.amount = null;
+      return ingredient_nutrient
+    })
+    : props.nutrients.map((nutrient) => ({
+      id: null,
+      ingredient_id: null,
+      nutrient_id: nutrient.id,
+      amount: null,
+      nutrient: nutrient,
+    })),
 })
 
 const nameInput = ref(null)

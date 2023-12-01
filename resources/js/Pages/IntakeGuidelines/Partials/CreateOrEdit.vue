@@ -20,8 +20,12 @@ const props = defineProps({
 const form = useForm({
   id: props.intake_guideline ? props.intake_guideline.id : null,
   name: props.intake_guideline ? props.intake_guideline.name : "",
+  // Reset zero amounts to null, to make it easier for user to fill values in.
   intake_guideline_nutrients: props.intake_guideline
-    ? props.intake_guideline.intake_guideline_nutrients
+        ? props.intake_guideline.intake_guideline_nutrients.map((intake_guideline_nutrient) => {
+          if (intake_guideline_nutrient.rdi == 0) intake_guideline_nutrient.rdi = null;
+          return intake_guideline_nutrient
+        })
     : props.nutrients.map((nutrient) => ({
       id: null,
       rdi: null,
