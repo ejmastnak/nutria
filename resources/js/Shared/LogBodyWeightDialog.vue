@@ -159,8 +159,8 @@ function submit() {
           </div>
 
           <pre>
-            {{date}}
-            {{time}}
+            {{form.date}}
+            {{form.time}}
           </pre>
 
         </form>
