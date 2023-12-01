@@ -25,10 +25,9 @@ defineExpose({ open })
 const emit = defineEmits(['confirm', 'cancel'])
 
 const customUnit = ref({})
-const errors = ref({})
+const errors = ref({})  // from backend validation
+const clientSideErrors = ref({})  // from client-side validation
 var isNew = false
-
-const nameInputRef = ref(null)
 
 const isOpen = ref(false)
 const allOptionsShowing = ref(false)
@@ -41,18 +40,58 @@ function open(custom_unit, passedErrors, passedIsNew) {
   isNew = passedIsNew
   isOpen.value = true
 }
+const nameInputRef = ref(null)
 const customMassAmountInputRef = ref(null)
 const customUnitAmountInputRef = ref(null)
 
-function confirm() {
-  isOpen.value = false
-  emit('confirm', customUnit.value)
+function passesValidation() {
+
+  // Check that custom unit name is not empty
+  if (customUnit.value.custom_unit.name === null || customUnit.value.custom_unit.name.length === 0) {
+    clientSideErrors.value['name'] = "A name is required."
+    nameInputRef.value.focus()
+    return false
+  }
+
+  // Check that custom_unit_amount is not empty
+  if (customUnit.value.custom_unit.custom_unit_amount === null || customUnit.value.custom_unit.custom_unit_amount.length === 0) {
+    clientSideErrors.value['custom_unit_amount'] = "The amount must be a number greater than 0."
+    customUnitAmountInputRef.value.focus()
+    return false
+  }
+
+  // Check that custom_mass_amount is not empty
+  if (customUnit.value.custom_unit.custom_mass_amount === null || customUnit.value.custom_unit.custom_mass_amount.length === 0) {
+    clientSideErrors.value['custom_mass_amount'] = "The weight must be a number greater than 0."
+    customMassAmountInputRef.value.focus()
+    return false
+  }
+
+  // Check that custom_unit_amount is gt:0
+  const unitAmount = Number(customUnit.value.custom_unit.custom_unit_amount)
+  if (isNaN(unitAmount) || unitAmount <= 0) {
+    clientSideErrors.value['custom_unit_amount'] = "The amount must be a number greater than 0."
+    customUnitAmountInputRef.value.focus()
+    return false
+  }
+
+  // Check that custom_mass_amount is gt:0
+  const massAmount = Number(customUnit.value.custom_unit.custom_mass_amount)
+  if (isNaN(massAmount) || massAmount <= 0) {
+    clientSideErrors.value['custom_mass_amount'] = "The weight must be a number greater than 0."
+    customMassAmountInputRef.value.focus()
+    return false
+  }
+
+  return true
 }
 
-function okay() {
-  if (customUnit.value.custom_unit.custom_mass_amount === null || customUnit.value.custom_unit.custom_mass_amount === "") {
-    customMassAmountInputRef.value.focus();
-  } else confirm();
+function confirm() {
+  if (passesValidation()) {
+    isOpen.value = false
+    emit('confirm', customUnit.value)
+    clientSideErrors.value = {}
+  }
 }
 
 function cancel() {
@@ -60,6 +99,7 @@ function cancel() {
   allOptionsShowing.value = false
   isNew = false
   emit('cancel')
+  clientSideErrors.value = {}
 }
 
 function handleNameInputEnter() {
@@ -69,27 +109,13 @@ function handleNameInputEnter() {
       customMassAmountInputRef.value.focus();
     }, 0);
   }
-  else {
-    if (customUnit.value.custom_unit.name && customUnit.value.custom_unit.custom_unit_amount && customUnit.value.custom_unit.custom_mass_amount && customUnit.value.custom_unit.custom_mass_unit) confirm();
-    else if (!customUnit.value.custom_unit.name || customUnit.value.custom_unit.name.length === 0) return;
-    else if (!customUnit.value.custom_unit.custom_unit_amount) {
-      customUnitAmountInputRef.value.focus();
-    }
-    else if (!customUnit.value.custom_unit.custom_mass_amount) {
-      customMassAmountInputRef.value.focus();
-    }
-  }
-
+  else confirm();
 }
 
-function handleCustomMassAmountInputEnter() {
-  if (customUnit.value.custom_unit.name && customUnit.value.custom_unit.custom_unit_amount && customUnit.value.custom_unit.custom_mass_amount && customUnit.value.custom_unit.custom_mass_unit) confirm();
-  else if (!customUnit.value.custom_unit.name) {
-    nameInputRef.value.focus()
-  }
-  else if (!customUnit.value.custom_unit.custom_unit_amount) {
-    customUnitAmountInputRef.value.focus();
-  }
+function handleCustomAmountInputEnter() {
+  if (customUnit.value.custom_unit.custom_mass_amount === null || customUnit.value.custom_unit.custom_mass_amount.length === 0) {
+    customMassAmountInputRef.value.focus()
+  } else confirm();
 }
 
 </script>
@@ -126,11 +152,12 @@ function handleCustomMassAmountInputEnter() {
             required
           />
           <InputError class="mt-1" :message="errors.name" />
+          <InputError class="mt-1" :message="clientSideErrors.name" />
         </div>
 
         <div v-show="allOptionsShowing" class="mt-5">
           <!-- Custom unit amount -->
-          <div class="mt-2 flex items-baseline text-gray-600 text-sm">
+          <div class="mt-2 flex items-baseline text-sm">
             <div class="w-16">
               <InputLabel for="custom-unit-amount" class="sr-only" value="Amount" />
               <TextInput
@@ -139,12 +166,14 @@ function handleCustomMassAmountInputEnter() {
                 class="w-full py-0.5"
                 type="number"
                 step="any"
+                @keyup.enter="handleCustomAmountInputEnter"
                 v-model="customUnit.custom_unit.custom_unit_amount"
               />
             </div>
             <p class="ml-2">{{customUnit.custom_unit.name}} weighs...</p>
           </div>
           <InputError class="mt-1" :message="errors.custom_unit_amount" />
+          <InputError class="mt-1" :message="clientSideErrors.custom_unit_amount" />
 
           <div class="mt-3 flex items-baseline">
             <!-- Custom mass amount -->
@@ -157,10 +186,11 @@ function handleCustomMassAmountInputEnter() {
                 type="number"
                 step="any"
                 placeholder="100"
-                @keyup.enter="handleCustomMassAmountInputEnter"
+                @keyup.enter="confirm"
                 v-model="customUnit.custom_unit.custom_mass_amount"
               />
               <InputError :message="errors.custom_mass_amount" />
+              <InputError :message="clientSideErrors.custom_mass_amount" />
             </div>
             <div class="ml-4 w-20">
               <SimpleCombobox
@@ -187,7 +217,7 @@ function handleCustomMassAmountInputEnter() {
           <PrimaryButton @click="allOptionsShowing = true" v-show="!allOptionsShowing" class="ml-2" >
             Next
           </PrimaryButton>
-          <PrimaryButton @click="okay" v-show="allOptionsShowing" class="ml-2" >
+          <PrimaryButton @click="confirm" v-show="allOptionsShowing" class="ml-2" >
             Okay
           </PrimaryButton>
         </div>
