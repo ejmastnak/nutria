@@ -86,6 +86,9 @@ function passesValidation() {
 
 function confirm() {
   if (passesValidation()) {
+    // We set the newly-created unit's gram value so that
+    // GlobalFunctions.prepareUnitsForDisplay() will include the unit's mass.
+    customUnit.value.custom_unit.custom_grams = customUnit.value.custom_unit.custom_mass_amount * customUnit.value.custom_unit.custom_mass_unit.g / customUnit.value.custom_unit.custom_unit_amount
     isOpen.value = false
     emit('confirm', customUnit.value)
     clientSideErrors.value = {}
