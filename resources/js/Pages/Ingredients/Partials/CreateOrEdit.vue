@@ -40,7 +40,6 @@ const form = useForm({
     custom_unit: custom_unit,
   })) : [],
   ingredient_nutrient_amount: props.ingredient ? props.ingredient.ingredient_nutrient_amount : 100,
-  ingredient_nutrient_amount_unit_id: props.ingredient ? props.ingredient.ingredient_nutrient_amount_unit_id : props.units.find(unit => unit.name === 'g').id,
   ingredient_nutrient_amount_unit: props.ingredient ? props.ingredient.ingredient_nutrient_amount_unit : props.units.find(unit => unit.name === 'g'),
   // Reset zero amounts to null, to make it easier for user to fill values in.
   ingredient_nutrients: props.ingredient
@@ -87,12 +86,6 @@ const densityGMl = computed(() => {
     : (Number(form.density_mass_amount) * form.density_mass_unit.g)  / (Number(form.density_volume_amount) * form.density_volume_unit.ml )
 })
 
-// Ingredient nutrient amount unit (grams by default)
-function updateSelectedIngredientNutrientAmountUnit(newValue) {
-  form.ingredient_nutrient_amount_unit = newValue
-  form.ingredient_nutrient_amount_unit_id = newValue.id
-}
-
 // Using a dedicated object instead of form.custom_units to allow for nested
 // object format (used for adding items to list workflow)
 const customUnits = ref(
@@ -119,28 +112,49 @@ const numCustomUnitErrors = computed(() => {
 })
 
 function getAllowedIngredientNutrientAmountUnits() {
+  // Begin with all mass units
   var allowedUnits = props.units.filter(unit => unit.g);
+  // Add volume units for ingredients with a density
   if (form.density_mass_amount && form.density_mass_unit_id && form.density_volume_amount && form.density_volume_unit_id) {
     allowedUnits = allowedUnits.concat(props.units.filter(unit => unit.ml))
   }
-  if (props.ingredient) {
-    // Any prop custom_units that haven't been "deleted" in frontend
-    allowedUnits = allowedUnits.concat(props.ingredient.custom_units.filter(custom_unit => customUnits.value.map(custom_unit => custom_unit.custom_unit.id).includes(custom_unit.id)))
-  }
+  // Add any defined custom units
+  allowedUnits = allowedUnits.concat(customUnits.value.map(custom_unit => custom_unit.custom_unit))
   return prepareUnitsForDisplay(allowedUnits, densityGMl.value)
 }
 const allowedIngredientNutrientAmountUnits = ref(getAllowedIngredientNutrientAmountUnits())
 
+// Helper function to check if two units are equal when checking if user is
+// using a disallowed ingredientNutrientAmountUnit.
+function unitsAreEqual(a, b) {
+  // For existing units
+  if (a.id && b.id) return a.id === b.id;
+  // For newly created custom units
+  else if (a.id === null && b.id === null) {
+    return (a.name === b.name && a.custom_unit_amount === b.custom_unit_amount && a.custom_mass_amount === b.custom_mass_amount && a.custom_mass_unit_id === b.cmass_unit_id)
+  }
+  // Comparing a newly-created custom unit to an existing unit
+  else return false;
+}
+
 function updateAllowedIngredientNutrientAmountUnits() {
   const newAllowedIngredientNutrientAmountUnits = getAllowedIngredientNutrientAmountUnits()
+
   // Switch back to default 100 grams in the edge case when user had selected a
-  // volume unit and just deleted the ingredient's density, or selected a
+  // volume unit but just deleted the ingredient's density, or selected a
   // custom unit and then deleted it.
-  if (!newAllowedIngredientNutrientAmountUnits.map(unit => unit.id).includes(form.ingredient_nutrient_amount_unit.id)) {
+  var match = false
+  for (var i = 0; i < newAllowedIngredientNutrientAmountUnits.length; i++) {
+    if (unitsAreEqual(newAllowedIngredientNutrientAmountUnits[i], form.ingredient_nutrient_amount_unit)) {
+      match = true
+      break
+    }
+  }
+  if (!match) {
     form.ingredient_nutrient_amount = 100
-    form.ingredient_nutrient_amount_unit_id = props.units.find(unit => unit.name === 'g').id
     form.ingredient_nutrient_amount_unit = props.units.find(unit => unit.name === 'g')
   }
+
   allowedIngredientNutrientAmountUnits.value = newAllowedIngredientNutrientAmountUnits
 }
 
@@ -329,10 +343,9 @@ export default {
             labelClasses="sr-only"
             inputClasses="py-1 w-24"
             optionsClasses="w-32"
-            :modelValue="form.ingredient_nutrient_amount_unit"
-            @update:modelValue="newValue => updateSelectedIngredientNutrientAmountUnit(newValue)"
+            v-model="form.ingredient_nutrient_amount_unit"
           />
-          <InputError class="mt-1" :message="form.errors.ingredient_nutrient_amount_unit_id" />
+          <InputError class="mt-1" :message="form.errors.ingredient_nutrient_amount_unit" />
         </div>
 
         <p class="ml-8 pl-0.5 text-md text-gray-600"><span class="hidden sm:inline">of ingredient</span>)</p>
