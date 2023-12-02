@@ -33,8 +33,6 @@ const isOpen = ref(false)
 const allOptionsShowing = ref(false)
 function open(custom_unit, passedErrors, passedIsNew) {
   customUnit.value = cloneDeep(custom_unit)
-  customUnit.value.custom_unit.custom_unit_amount = customUnit.value.custom_unit.custom_unit_amount
-  customUnit.value.custom_unit.custom_mass_amount = customUnit.value.custom_unit.custom_mass_amount
   errors.value = passedErrors
   if (customUnit.value.custom_unit.name && customUnit.value.custom_unit.name.length > 0) allOptionsShowing.value = true;
   isNew = passedIsNew
