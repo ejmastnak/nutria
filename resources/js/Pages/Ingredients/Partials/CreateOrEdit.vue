@@ -131,7 +131,7 @@ function unitsAreEqual(a, b) {
   if (a.id && b.id) return a.id === b.id;
   // For newly created custom units
   else if (a.id === null && b.id === null) {
-    return (a.name === b.name && a.custom_unit_amount === b.custom_unit_amount && a.custom_mass_amount === b.custom_mass_amount && a.custom_mass_unit_id === b.cmass_unit_id)
+    return (a.name === b.name && a.custom_unit_amount === b.custom_unit_amount && a.custom_mass_amount === b.custom_mass_amount && a.custom_mass_unit_id === b.custom_mass_unit_id)
   }
   // Comparing a newly-created custom unit to an existing unit
   else return false;
