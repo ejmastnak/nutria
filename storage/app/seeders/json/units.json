@@ -1,0 +1,128 @@
+[
+  {
+    "name": "g",
+    "full_name": "gram",
+    "g": 1.0,
+    "ml": null,
+    "seq_num": 1
+  },
+  {
+    "name": "kg",
+    "full_name": "kilogram",
+    "g": 1000,
+    "ml": null,
+    "seq_num": 2
+  },
+  {
+    "name": "mg",
+    "full_name": "milligram",
+    "g": null,
+    "ml": null,
+    "seq_num": null
+  },
+  {
+    "name": "ug",
+    "full_name": "microgram",
+    "g": null,
+    "ml": null,
+    "seq_num": null
+  },
+  {
+    "name": "kcal",
+    "full_name": "kilocalorie",
+    "g": null,
+    "ml": null,
+    "seq_num": null
+  },
+  {
+    "name": "kJ",
+    "full_name": "kilojoule",
+    "g": null,
+    "ml": null,
+    "seq_num": null
+  },
+  {
+    "name": "IU",
+    "full_name": "international unit",
+    "g": null,
+    "ml": null,
+    "seq_num": null
+  },
+  {
+    "name": "mg NE",
+    "full_name": "milligram niacin equivalent",
+    "g": null,
+    "ml": null,
+    "seq_num": null
+  },
+  {
+    "name": "ug DFE",
+    "full_name": "microgram dietary folate equivalent",
+    "g": null,
+    "ml": null,
+    "seq_num": null
+  },
+  {
+    "name": "ug RAE",
+    "full_name": "microgram retinol activity equivalent",
+    "g": null,
+    "ml": null,
+    "seq_num": null
+  },
+  {
+    "name": "oz",
+    "full_name": "ounce",
+    "g": 28.3495,
+    "ml": null,
+    "seq_num": 3
+  },
+  {
+    "name": "lb",
+    "full_name": "pound",
+    "g": 453.59237,
+    "ml": null,
+    "seq_num": 4
+  },
+  {
+    "name": "ml",
+    "full_name": "milliliter",
+    "g": null,
+    "ml": 1.0,
+    "seq_num": 5
+  },
+  {
+    "name": "liter",
+    "full_name": "liter",
+    "g": null,
+    "ml": 1000.0,
+    "seq_num": 6
+  },
+  {
+    "name": "tbsp",
+    "full_name": "tablespoon",
+    "g": null,
+    "ml": 14.7868,
+    "seq_num": 7
+  },
+  {
+    "name": "fl oz",
+    "full_name": "fluid ounce",
+    "g": null,
+    "ml": 29.5735295625,
+    "seq_num": 8
+  },
+  {
+    "name": "cup",
+    "full_name": "cup",
+    "g": null,
+    "ml": 236.5882365,
+    "seq_num": 9
+  },
+  {
+    "name": "qt",
+    "full_name": "quart",
+    "g": null,
+    "ml": 946.352946,
+    "seq_num": 10
+  }
+]

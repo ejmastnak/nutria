@@ -1,0 +1,7 @@
+*
+!.gitignore
+!ingredient-categories.json
+!intake-guidelines.json
+!nutrient-categories.json
+!nutrients.json
+!units.json

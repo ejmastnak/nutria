@@ -1,5 +1,6 @@
 *
 !.gitignore
 !psql/
+!json/
 !ingredient-whitelist/
 !density-whitelist/

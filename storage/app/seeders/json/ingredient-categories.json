@@ -1,0 +1,83 @@
+[
+  {
+    "fdc_id": 1,
+    "name": "Dairy and Egg Products"
+  },
+  {
+    "fdc_id": 2,
+    "name": "Spices and Herbs"
+  },
+  {
+    "fdc_id": 4,
+    "name": "Fats and Oils"
+  },
+  {
+    "fdc_id": 5,
+    "name": "Poultry Products"
+  },
+  {
+    "fdc_id": 7,
+    "name": "Sausages and Luncheon Meats"
+  },
+  {
+    "fdc_id": 8,
+    "name": "Breakfast Cereals"
+  },
+  {
+    "fdc_id": 9,
+    "name": "Fruits and Fruit Juices"
+  },
+  {
+    "fdc_id": 10,
+    "name": "Pork Products"
+  },
+  {
+    "fdc_id": 11,
+    "name": "Vegetables and Vegetable Products"
+  },
+  {
+    "fdc_id": 12,
+    "name": "Nut and Seed Products"
+  },
+  {
+    "fdc_id": 13,
+    "name": "Beef Products"
+  },
+  {
+    "fdc_id": 14,
+    "name": "Beverages"
+  },
+  {
+    "fdc_id": 15,
+    "name": "Finfish and Shellfish Products"
+  },
+  {
+    "fdc_id": 16,
+    "name": "Legumes and Legume Products"
+  },
+  {
+    "fdc_id": 17,
+    "name": "Lamb, Veal, and Game Products"
+  },
+  {
+    "fdc_id": 18,
+    "name": "Baked Products"
+  },
+  {
+    "fdc_id": 19,
+    "name": "Sweets"
+  },
+  {
+    "fdc_id": 20,
+    "name": "Cereal Grains and Pasta"
+  },
+  {
+    "fdc_id": 24,
+    "name": "American Indian/Alaska Native Foods"
+  },
+  {
+    "fdc_id": 29,
+    "name": "Other"
+  }
+]
+

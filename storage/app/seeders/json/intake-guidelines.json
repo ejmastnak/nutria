@@ -1,0 +1,212 @@
+[
+  {
+    "name": "FDA guideline",
+    "user_id": null,
+    "intake_guideline_nutrients": [
+      {
+        "nutrient_id": 1003,
+        "name": "Protein",
+        "rdi": 50,
+        "unit": "g"
+      },
+      {
+        "nutrient_id": 1004,
+        "name": "Total lipid (fat)",
+        "rdi": 78,
+        "unit": "g"
+      },
+      {
+        "nutrient_id": 1005,
+        "name": "Carbohydrate, by difference",
+        "rdi": 275,
+        "unit": "g"
+      },
+      {
+        "nutrient_id": 1008,
+        "name": "Energy",
+        "rdi": 2000,
+        "unit": "kcal"
+      },
+      {
+        "nutrient_id": 1051,
+        "name": "Water",
+        "rdi": 3000,
+        "unit": "g"
+      },
+      {
+        "nutrient_id": 1079,
+        "name": "Fiber, total dietary",
+        "rdi": 28,
+        "unit": "g"
+      },
+      {
+        "nutrient_id": 1087,
+        "name": "Calcium, Ca",
+        "rdi": 1300,
+        "unit": "mg"
+      },
+      {
+        "nutrient_id": 1089,
+        "name": "Iron, Fe",
+        "rdi": 18,
+        "unit": "mg"
+      },
+      {
+        "nutrient_id": 1090,
+        "name": "Magnesium, Mg",
+        "rdi": 420,
+        "unit": "mg"
+      },
+      {
+        "nutrient_id": 1091,
+        "name": "Phosphorus, P",
+        "rdi": 1250,
+        "unit": "mg"
+      },
+      {
+        "nutrient_id": 1092,
+        "name": "Potassium, K",
+        "rdi": 4700,
+        "unit": "mg"
+      },
+      {
+        "nutrient_id": 1093,
+        "name": "Sodium, Na",
+        "rdi": 2300,
+        "unit": "mg"
+      },
+      {
+        "nutrient_id": 1095,
+        "name": "Zinc, Zn",
+        "rdi": 11,
+        "unit": "mg"
+      },
+      {
+        "nutrient_id": 1098,
+        "name": "Copper, Cu",
+        "rdi": 0.9,
+        "unit": "mg"
+      },
+      {
+        "nutrient_id": 1101,
+        "name": "Manganese, Mn",
+        "rdi": 2.3,
+        "unit": "mg"
+      },
+      {
+        "nutrient_id": 1103,
+        "name": "Selenium, Se",
+        "rdi": 55,
+        "unit": "ug"
+      },
+      {
+        "nutrient_id": 1106,
+        "name": "Vitamin A, RAE",
+        "rdi": 900,
+        "unit": "ug RAE"
+      },
+      {
+        "nutrient_id": 1109,
+        "name": "Vitamin E (alpha-tocopherol)",
+        "rdi": 15,
+        "unit": "mg"
+      },
+      {
+        "nutrient_id": 1114,
+        "name": "Vitamin D (D2 + D3)",
+        "rdi": 20,
+        "unit": "ug"
+      },
+      {
+        "nutrient_id": 1162,
+        "name": "Vitamin C, total ascorbic acid",
+        "rdi": 90,
+        "unit": "mg"
+      },
+      {
+        "nutrient_id": 1165,
+        "name": "Thiamin",
+        "rdi": 1.2,
+        "unit": "mg"
+      },
+      {
+        "nutrient_id": 1166,
+        "name": "Riboflavin",
+        "rdi": 1.3,
+        "unit": "mg"
+      },
+      {
+        "nutrient_id": 1167,
+        "name": "Niacin",
+        "rdi": 16,
+        "unit": "mg NE"
+      },
+      {
+        "nutrient_id": 1170,
+        "name": "Pantothenic acid",
+        "rdi": 5,
+        "unit": "mg"
+      },
+      {
+        "nutrient_id": 1175,
+        "name": "Vitamin B-6",
+        "rdi": 1.7,
+        "unit": "mg"
+      },
+      {
+        "nutrient_id": 1178,
+        "name": "Vitamin B-12",
+        "rdi": 2.4,
+        "unit": "ug"
+      },
+      {
+        "nutrient_id": 1180,
+        "name": "Choline, total",
+        "rdi": 550,
+        "unit": "mg"
+      },
+      {
+        "nutrient_id": 1185,
+        "name": "Vitamin K (phylloquinone)",
+        "rdi": 120,
+        "unit": "ug"
+      },
+      {
+        "nutrient_id": 1190,
+        "name": "Folate, DFE",
+        "rdi": 400,
+        "unit": "ug DFE"
+      },
+      {
+        "nutrient_id": 1253,
+        "name": "Cholesterol",
+        "rdi": 300,
+        "unit": "mg"
+      },
+      {
+        "nutrient_id": 1258,
+        "name": "Fatty acids, total saturated",
+        "rdi": 20,
+        "unit": "g"
+      },
+      {
+        "nutrient_id": 1292,
+        "name": "Fatty acids, total monounsaturated",
+        "rdi": 53,
+        "unit": "g"
+      },
+      {
+        "nutrient_id": 1293,
+        "name": "Fatty acids, total polyunsaturated",
+        "rdi": 15,
+        "unit": "g"
+      },
+      {
+        "nutrient_id": 2000,
+        "name": "Sugars, total including NLEA",
+        "rdi": 50,
+        "unit": "g"
+      }
+    ]
+  }
+]
