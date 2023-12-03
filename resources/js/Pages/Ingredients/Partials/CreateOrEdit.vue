@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useSortable } from '@vueuse/integrations/useSortable'
 import { useForm } from '@inertiajs/vue3'
-import { round, roundNonZero, prepareUnitsForDisplay } from '@/utils/GlobalFunctions.js'
+import { round, roundNonZero, gramAmountOfUnit, prepareUnitsForDisplay } from '@/utils/GlobalFunctions.js'
 import { PlusCircleIcon, TrashIcon, Bars3Icon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import SimpleCombobox from '@/Components/SimpleCombobox.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
@@ -318,7 +318,7 @@ export default {
       <!-- Ingredient nutrient amount and unit -->
       <div class="mt-2 flex items-baseline">
 
-        <p class="text-md text-gray-600">(Per</p>
+        <p class="text-md text-gray-600">Per</p>
 
         <!-- Ingredient nutrient amount -->
         <div class="ml-2 w-24">
@@ -348,7 +348,10 @@ export default {
           <InputError class="mt-1" :message="form.errors.ingredient_nutrient_amount_unit" />
         </div>
 
-        <p class="ml-8 pl-0.5 text-md text-gray-600"><span class="hidden sm:inline">of ingredient</span>)</p>
+        <p class="ml-8 pl-0.5 text-md text-gray-600">
+          <span v-show="form.ingredient_nutrient_amount_unit && form.ingredient_nutrient_amount_unit.name !== 'g'" class="mr-1">({{roundNonZero(gramAmountOfUnit(form.ingredient_nutrient_amount, form.ingredient_nutrient_amount_unit, densityGMl), 1)}} g)</span>
+          <span class="hidden sm:inline">of ingredient</span>
+        </p>
       </div>
 
       <InputError class="mt-1" :message="form.errors.ingredient_nutrients" />
