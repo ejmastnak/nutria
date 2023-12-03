@@ -46,7 +46,7 @@ function deleteBodyWeightRecord() {
           @click="logBodyWeightDialogRef.open(body_weight_record)"
         >
           <td scope="row" class="px-8 py-4 font-medium text-gray-900 text-right whitespace-nowrap">
-            {{body_weight_record.amount}}
+            {{(body_weight_record.amount).toFixed(1)}}
             {{body_weight_record.unit.name}}
           </td>
           <td class="px-8 py-4">
