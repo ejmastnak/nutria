@@ -1,0 +1,10 @@
+*
+!.gitignore
+!density-whitelist.csv
+!food_category.csv
+!food.csv
+!food_nutrient.csv
+!food_portion.csv
+!ingredient-whitelist.csv
+!mass_units.csv
+!volume_units.csv
