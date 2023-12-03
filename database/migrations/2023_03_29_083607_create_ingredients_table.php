@@ -15,8 +15,8 @@ return new class extends Migration {
             $table->unsignedBigInteger('fdc_id')->nullable();
             $table->string('name');
             $table->foreignId('ingredient_category_id')->nullable()->references('id')->on('ingredient_categories');
-            $table->decimal('ingredient_nutrient_amount', 10, 4);
-            $table->foreignId('ingredient_nutrient_amount_unit_id')->references('id')->on('units');
+            $table->decimal('nutrient_content_unit_amount', 10, 4);
+            $table->foreignId('nutrient_content_unit_id')->references('id')->on('units');
             $table->foreignId('density_mass_unit_id')->nullable()->references('id')->on('units');
             $table->index('density_mass_unit_id');
             $table->decimal('density_mass_amount', 10, 4)->nullable();

@@ -133,8 +133,8 @@ class MealService
             $ingredient = Ingredient::create([
                 'name' => $meal->name . ' (ingredient)',
                 'ingredient_category_id' => IngredientCategory::otherCategory()->id,
-                'ingredient_nutrient_amount' => 100,
-                'ingredient_nutrient_amount_unit_id' => Unit::gramId(),
+                'nutrient_content_unit_amount' => 100,
+                'nutrient_content_unit_id' => Unit::gramId(),
                 'meal_id' => $meal->id,
                 'user_id' => $userId,
             ]);

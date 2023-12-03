@@ -14,8 +14,8 @@ insert into ingredients (
   fdc_id,
   name,
   ingredient_category_id,
-  ingredient_nutrient_amount,
-  ingredient_nutrient_amount_unit_id,
+  nutrient_content_unit_amount,
+  nutrient_content_unit_id,
   created_at,
   updated_at
 )

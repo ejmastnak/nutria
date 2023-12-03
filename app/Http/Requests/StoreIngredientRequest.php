@@ -7,7 +7,7 @@ use App\Models\Nutrient;
 use App\Rules\IsMassUnit;
 use App\Rules\IsVolumeUnit;
 use App\Rules\IsIngredientUnit;
-use App\Rules\IngredientNutrientAmountUnitIsValid;
+use App\Rules\NutrientContentUnitIsValid;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreIngredientRequest extends FormRequest
@@ -32,8 +32,8 @@ class StoreIngredientRequest extends FormRequest
         return [
             'name' => ['required', 'min:1', config('validation.max_name_length')],
             'ingredient_category_id' => ['nullable', 'integer', 'exists:ingredient_categories,id'],
-            'ingredient_nutrient_amount' => ['required', 'numeric', 'gt:0', config('validation.max_ingredient_amount')],
-            'ingredient_nutrient_amount_unit' => ['required', 'array', new IngredientNutrientAmountUnitIsValid],
+            'nutrient_content_unit_amount' => ['required', 'numeric', 'gt:0', config('validation.max_ingredient_amount')],
+            'nutrient_content_unit' => ['required', 'array', new NutrientContentUnitIsValid],
 
             // Ingredient nutrients
             'ingredient_nutrients' => ['required', 'array', 'min:' . $numNutrients, 'max:' . $numNutrients],
@@ -64,8 +64,8 @@ class StoreIngredientRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'ingredient_nutrient_amount' => 'amount',
-            'ingredient_nutrient_amount_unit_id' => 'unit_id',
+            'nutrient_content_unit_amount' => 'amount',
+            'nutrient_content_unit_id' => 'unit_id',
             'ingredient_nutrients' => 'ingredient nutrients',
             'ingredient_nutrients.*.nutrient_id' => 'nutrient_id',
             'ingredient_nutrients.*.amount' => 'amount',

@@ -14,8 +14,8 @@ class Ingredient extends Model
         'fdc_id',
         'name',
         'ingredient_category_id',
-        'ingredient_nutrient_amount',
-        'ingredient_nutrient_amount_unit_id',
+        'nutrient_content_unit_amount',
+        'nutrient_content_unit_id',
         'density_mass_unit_id',
         'density_mass_amount',
         'density_volume_unit_id',
@@ -27,14 +27,14 @@ class Ingredient extends Model
 
     // Convert decimal values (represented by PHP as strings) to doubles
     protected $casts = [
-        'ingredient_nutrient_amount' => 'double',
+        'nutrient_content_unit_amount' => 'double',
         'density_mass_amount' => 'double',
         'density_volume_amount' => 'double',
         'density_g_ml' => 'double',
     ];
 
 
-    protected function ingredientNutrientAmount(): Attribute
+    protected function nutrientContentUnitAmount(): Attribute
     {
         return Attribute::make(
             get: fn (string $value) => $value + 0,
@@ -58,7 +58,7 @@ class Ingredient extends Model
     public function withCategoryUnitsAndMeal() {
         $this->load(
             'ingredient_category:id,name',
-            'ingredient_nutrient_amount_unit:id,name,seq_num,g,ml,ingredient_id,custom_grams',
+            'nutrient_content_unit:id,name,seq_num,g,ml,ingredient_id,custom_grams',
             'density_mass_unit:id,name',
             'density_volume_unit:id,name',
             'custom_units:id,name,seq_num,ingredient_id,custom_unit_amount,custom_mass_amount,custom_mass_unit_id,custom_grams',
@@ -70,8 +70,8 @@ class Ingredient extends Model
             'name',
             'ingredient_category_id',
             'ingredient_category',
-            'ingredient_nutrient_amount',
-            'ingredient_nutrient_amount_unit',
+            'nutrient_content_unit_amount',
+            'nutrient_content_unit',
             'density_mass_amount',
             'density_mass_unit_id',
             'density_mass_unit',
@@ -90,7 +90,7 @@ class Ingredient extends Model
         // ingredient_nutrients are ordered by nutrients.seq_num
         $this->load([
             'ingredient_category:id,name',
-            'ingredient_nutrient_amount_unit:id,name,g,ml,seq_num,custom_grams',
+            'nutrient_content_unit:id,name,g,ml,seq_num,custom_grams',
             'ingredient_nutrients' => function($query) {
                 $query->select([
                     'ingredient_nutrients.id',
@@ -115,9 +115,9 @@ class Ingredient extends Model
             'name',
             'ingredient_category_id',
             'ingredient_category',
-            'ingredient_nutrient_amount',
-            'ingredient_nutrient_amount_unit_id',
-            'ingredient_nutrient_amount_unit',
+            'nutrient_content_unit_amount',
+            'nutrient_content_unit_id',
+            'nutrient_content_unit',
             'ingredient_nutrients',
             'density_mass_unit_id',
             'density_mass_unit',
@@ -165,8 +165,8 @@ class Ingredient extends Model
         return $this->hasMany(IngredientNutrient::class, 'ingredient_id', 'id');
     }
 
-    public function ingredient_nutrient_amount_unit() {
-        return $this->belongsTo(Unit::class, 'ingredient_nutrient_amount_unit_id', 'id');
+    public function nutrient_content_unit() {
+        return $this->belongsTo(Unit::class, 'nutrient_content_unit_id', 'id');
     }
 
     public function density_mass_unit() {

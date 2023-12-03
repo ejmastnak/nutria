@@ -9,10 +9,10 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\DataAwareRule;
 
 /**
- *  Ensures an Ingredient's `ingredient_nutrient_amount_unit` is consistent
+ *  Ensures an Ingredient's `nutrient_content_unit` is consistent
  *  with the underlying Ingredient.
  */
-class IngredientNutrientAmountUnitIsValid implements DataAwareRule, ValidationRule
+class NutrientContentUnitIsValid implements DataAwareRule, ValidationRule
 {
     /**
      * All of the data under validation.

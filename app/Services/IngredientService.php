@@ -16,18 +16,18 @@ class IngredientService
         $ingredient = null;
         DB::transaction(function () use ($data, $userId, &$ingredient) {
 
-            $nutrientUnitIsNewCustomUnit = !isset($data['ingredient_nutrient_amount_unit']['id']);
+            $nutrientUnitIsNewCustomUnit = !isset($data['nutrient_content_unit']['id']);
 
             // Create ingredient
             $ingredient = Ingredient::create([
                 'fdc_id' => null,
                 'name' => $data['name'],
                 'ingredient_category_id' => $data['ingredient_category_id'],
-                'ingredient_nutrient_amount' => $data['ingredient_nutrient_amount'],
+                'nutrient_content_unit_amount' => $data['nutrient_content_unit_amount'],
                 // If set to a to-be-created custom unit, set to grams for now
                 // (we need to use a non-null value because of foreign key
                 // constraints) and update later after creating unit.
-                'ingredient_nutrient_amount_unit_id' => $nutrientUnitIsNewCustomUnit ? Unit::gramId() : $data['ingredient_nutrient_amount_unit']['id'],
+                'nutrient_content_unit_id' => $nutrientUnitIsNewCustomUnit ? Unit::gramId() : $data['nutrient_content_unit']['id'],
                 'density_mass_unit_id' => $data['density_mass_unit_id'],
                 'density_mass_amount' => $data['density_mass_amount'],
                 'density_volume_unit_id' => $data['density_volume_unit_id'],
@@ -62,13 +62,13 @@ class IngredientService
                 // the resulting error when accessing the nonexistent unit's id
                 // is appropriate and cancels the transaction.)
                 $unit = Unit::where([
-                    ['name', 'like', $data['ingredient_nutrient_amount_unit']['name']],
-                    ['custom_unit_amount', '=', $data['ingredient_nutrient_amount_unit']['custom_unit_amount']],
-                    ['custom_mass_amount', '=', $data['ingredient_nutrient_amount_unit']['custom_mass_amount']],
-                    ['custom_mass_unit_id', '=', $data['ingredient_nutrient_amount_unit']['custom_mass_unit_id']],
+                    ['name', 'like', $data['nutrient_content_unit']['name']],
+                    ['custom_unit_amount', '=', $data['nutrient_content_unit']['custom_unit_amount']],
+                    ['custom_mass_amount', '=', $data['nutrient_content_unit']['custom_mass_amount']],
+                    ['custom_mass_unit_id', '=', $data['nutrient_content_unit']['custom_mass_unit_id']],
                 ])->first();
                 $ingredient->update([
-                    'ingredient_nutrient_amount_unit_id' => $unit->id,
+                    'nutrient_content_unit_id' => $unit->id,
                 ]);
             }
 
@@ -80,8 +80,8 @@ class IngredientService
                     'amount' => is_null($ingredientNutrient['amount']) ? 0.0 : $ingredientNutrient['amount'],
                     'amount_per_100g' => AmountPer100gService::computeAmountPer100g(
                         is_null($ingredientNutrient['amount']) ? 0.0 : $ingredientNutrient['amount'],
-                        $data['ingredient_nutrient_amount'],
-                        $ingredient->ingredient_nutrient_amount_unit_id,
+                        $data['nutrient_content_unit_amount'],
+                        $ingredient->nutrient_content_unit_id,
                         $ingredient->density_g_ml,
                     ),
                 ]);
@@ -95,17 +95,17 @@ class IngredientService
     {
         DB::transaction(function () use ($data, $ingredient) {
 
-            $nutrientUnitIsNewCustomUnit = !isset($data['ingredient_nutrient_amount_unit']['id']);
+            $nutrientUnitIsNewCustomUnit = !isset($data['nutrient_content_unit']['id']);
 
             // Update ingredient
             $ingredient->update([
                 'name' => $data['name'],
                 'ingredient_category_id' => $data['ingredient_category_id'],
-                'ingredient_nutrient_amount' => $data['ingredient_nutrient_amount'],
+                'nutrient_content_unit_amount' => $data['nutrient_content_unit_amount'],
                 // If set to a to-be-created custom unit, set to grams for now
                 // (we need to use a non-null value because of foreign key
                 // constraints) and update later after creating unit.
-                'ingredient_nutrient_amount_unit_id' => $nutrientUnitIsNewCustomUnit ? Unit::gramId() : $data['ingredient_nutrient_amount_unit']['id'],
+                'nutrient_content_unit_id' => $nutrientUnitIsNewCustomUnit ? Unit::gramId() : $data['nutrient_content_unit']['id'],
                 'density_mass_unit_id' => $data['density_mass_unit_id'],
                 'density_mass_amount' => $data['density_mass_amount'],
                 'density_volume_unit_id' => $data['density_volume_unit_id'],
@@ -158,13 +158,13 @@ class IngredientService
                 // the resulting error when accessing the nonexistent unit's id
                 // is appropriate and cancels the transaction.)
                 $unit = Unit::where([
-                    ['name', 'like', $data['ingredient_nutrient_amount_unit']['name']],
-                    ['custom_unit_amount', '=', $data['ingredient_nutrient_amount_unit']['custom_unit_amount']],
-                    ['custom_mass_amount', '=', $data['ingredient_nutrient_amount_unit']['custom_mass_amount']],
-                    ['custom_mass_unit_id', '=', $data['ingredient_nutrient_amount_unit']['custom_mass_unit_id']],
+                    ['name', 'like', $data['nutrient_content_unit']['name']],
+                    ['custom_unit_amount', '=', $data['nutrient_content_unit']['custom_unit_amount']],
+                    ['custom_mass_amount', '=', $data['nutrient_content_unit']['custom_mass_amount']],
+                    ['custom_mass_unit_id', '=', $data['nutrient_content_unit']['custom_mass_unit_id']],
                 ])->first();
                 $ingredient->update([
-                    'ingredient_nutrient_amount_unit_id' => $unit->id,
+                    'nutrient_content_unit_id' => $unit->id,
                 ]);
             }
 
@@ -175,8 +175,8 @@ class IngredientService
                     'amount' => is_null($ingredientNutrient['amount']) ? 0.0 : $ingredientNutrient['amount'],
                     'amount_per_100g' => AmountPer100gService::computeAmountPer100g(
                         is_null($ingredientNutrient['amount']) ? 0.0 : $ingredientNutrient['amount'],
-                        $data['ingredient_nutrient_amount'],
-                        $ingredient->ingredient_nutrient_amount_unit_id,
+                        $data['nutrient_content_unit_amount'],
+                        $ingredient->nutrient_content_unit_id,
                         $ingredient->density_g_ml,
                     ),
                 ]);

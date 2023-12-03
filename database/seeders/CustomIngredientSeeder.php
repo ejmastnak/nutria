@@ -43,9 +43,9 @@ class CustomIngredientSeeder extends Seeder
                 $ingredientCategoryId = $ingredientCategory->id;
             }
 
-            $ingredientNutrientAmountUnit = Unit::where('name', $ingredient['ingredient_nutrient_amount_unit'])->first();
-            if (is_null($ingredientNutrientAmountUnit)) {
-                $this->command->info("Warning: did not find unit with name " . $ingredient['ingredient_nutrient_amount_unit'] . " when seeding custom Ingredients.");
+            $nutrientContentUnit = Unit::where('name', $ingredient['nutrient_content_unit'])->first();
+            if (is_null($nutrientContentUnit)) {
+                $this->command->info("Warning: did not find unit with name " . $ingredient['nutrient_content_unit'] . " when seeding custom Ingredients.");
                 DB::rollBack();
                 continue;
             }
@@ -89,8 +89,8 @@ class CustomIngredientSeeder extends Seeder
                 'ingredient_category_id' => $ingredientCategoryId,
                 'user_id' => $ingredient['user_id'],
             ], [
-                    'ingredient_nutrient_amount' => $ingredient['ingredient_nutrient_amount'],
-                    'ingredient_nutrient_amount_unit_id' => $ingredientNutrientAmountUnit->id,
+                    'nutrient_content_unit_amount' => $ingredient['nutrient_content_unit_amount'],
+                    'nutrient_content_unit_id' => $nutrientContentUnit->id,
                     'density_mass_unit_id' => $densityMassUnitId,
                     'density_mass_amount' => $ingredient['density_mass_amount'],
                     'density_volume_unit_id' => $densityVolumeUnitId,
@@ -130,8 +130,8 @@ class CustomIngredientSeeder extends Seeder
 
                     $amountPer100g = AmountPer100gService::computeAmountPer100g(
                         $ingredientNutrients[$nutrient->id]['amount'],
-                        $ingredient['ingredient_nutrient_amount'],
-                        $ingredientNutrientAmountUnit->id,
+                        $ingredient['nutrient_content_unit_amount'],
+                        $nutrientContentUnit->id,
                         $densityGMl,
                     );
                     IngredientNutrient::updateOrCreate([
