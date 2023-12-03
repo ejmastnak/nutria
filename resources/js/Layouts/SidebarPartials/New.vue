@@ -15,7 +15,7 @@ const props = defineProps({
     <SidebarIcon :enabled="enabled">
       <PlusCircleIcon />
     </SidebarIcon>
-    <p class="ml-1.5">New</p>
+    <p class="ml-1.5">Create new</p>
   </SidebarLink>
 </template>
 
