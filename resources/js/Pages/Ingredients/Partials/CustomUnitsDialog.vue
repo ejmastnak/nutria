@@ -57,9 +57,20 @@ function addCustomUnit() {
       custom_mass_unit: props.units.find(unit => unit.name === 'g'),
       custom_grams: null,
     }
-  }, {}, true);
+  }, {});
   nextId += 1
 }
+
+function editCustomUnit(customUnit, idx) {
+  customUnitDialogRef.value.open(customUnit, {
+    name: props.errors['custom_units.' + idx + '.name'],
+    custom_unit_amount: props.errors['custom_units.' + idx + '.custom_unit_amount'],
+    custom_mass_amount: props.errors['custom_units.' + idx + '.custom_mass_amount'],
+    custom_mass_unit_id: props.errors['custom_units.' + idx + '.custom_mass_unit_id'],
+  })
+  customUnitIdToUpdate = customUnit.id
+}
+
 function deleteCustomUnit(idx) {
   if (idx >= 0 && idx < customUnits.value.length) customUnits.value.splice(idx, 1)
 }
@@ -81,7 +92,6 @@ function addOrUpdateCustomUnit(updatedCustomUnit) {
   <Dialog
     :open="isOpen"
     @close="cancel"
-    :initialFocus="addCustomUnitButtonRef"
     class="relative z-50"
   >
     <div class="fixed inset-0 flex items-center justify-center p-4 bg-blue-50/80">
@@ -103,14 +113,12 @@ function addOrUpdateCustomUnit(updatedCustomUnit) {
 
               <div class="flex items-baseline">
                 <div>
+                  <!-- Avoiding @click because enter then propogates to autofocus input in CustomUnitDialog -->
                   <button
                     type="button"
-                    @click="customUnitDialogRef.open(customUnit, {
-                    name: errors['custom_units.' + idx + '.name'],
-                    custom_unit_amount: errors['custom_units.' + idx + '.custom_unit_amount'],
-                    custom_mass_amount: errors['custom_units.' + idx + '.custom_mass_amount'],
-                    custom_mass_unit_id: errors['custom_units.' + idx + '.custom_mass_unit_id'],
-                  }, false); customUnitIdToUpdate = customUnit.id"
+                    @mouseup="editCustomUnit(customUnit, idx)"
+                    @keyup.enter="editCustomUnit(customUnit, idx)"
+                    @click.prevent
                     class="hover:underline -translate-y-1"
                   >
                     {{roundNonZero(customUnit.custom_unit.custom_unit_amount, 2)}}
@@ -125,14 +133,12 @@ function addOrUpdateCustomUnit(updatedCustomUnit) {
                   </div>
                 </div>
 
+                <!-- Avoiding @click because enter then propogates to autofocus input in CustomUnitDialog -->
                 <button
                   type="button"
-                  @click="customUnitDialogRef.open(customUnit, {
-                    name: errors['custom_units.' + idx + '.name'],
-                    custom_unit_amount: errors['custom_units.' + idx + '.custom_unit_amount'],
-                    custom_mass_amount: errors['custom_units.' + idx + '.custom_mass_amount'],
-                    custom_mass_unit_id: errors['custom_units.' + idx + '.custom_mass_unit_id'],
-                  }, false); customUnitIdToUpdate = customUnit.id"
+                  @mouseup="editCustomUnit(customUnit, idx)"
+                  @keyup.enter="editCustomUnit(customUnit, idx)"
+                  @click.prevent
                   class="ml-auto p-1 text-gray-700 hover:text-red-700"
                 >
                   <PencilSquareIcon class="w-6 h-6" />
@@ -154,11 +160,15 @@ function addOrUpdateCustomUnit(updatedCustomUnit) {
           </p>
 
           <!-- Add custom unit -->
+          <!-- Avoiding @click because enter then propogates to autofocus input in CustomUnitDialog -->
           <button
             type="button"
-            @click="addCustomUnit"
+            id="add-custom-unit"
+            @mouseup="addCustomUnit"
+            @keyup.enter="addCustomUnit"
+            @click.prevent
             ref="addCustomUnitButtonRef"
-            class="mt-4 inline-flex foos-center w-fit pl-2 pr-4 py-1 bg-white border border-gray-300 rounded-lg text-gray-900 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"
+            class="mt-4 inline-flex items-center w-fit pl-2 pr-4 py-1 bg-white border border-gray-300 rounded-lg text-gray-900 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"
           >
             <PlusCircleIcon class="text-gray-600 w-6 h-6"/>
             <span class="ml-2 text-sm">Add a custom unit</span>

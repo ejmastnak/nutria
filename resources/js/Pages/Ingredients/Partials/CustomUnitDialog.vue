@@ -27,15 +27,13 @@ const emit = defineEmits(['confirm', 'cancel'])
 const customUnit = ref({})
 const errors = ref({})  // from backend validation
 const clientSideErrors = ref({})  // from client-side validation
-var isNew = false
 
 const isOpen = ref(false)
 const allOptionsShowing = ref(false)
-function open(custom_unit, passedErrors, passedIsNew) {
+function open(custom_unit, passedErrors) {
   customUnit.value = cloneDeep(custom_unit)
   errors.value = passedErrors
   if (customUnit.value.custom_unit.name && customUnit.value.custom_unit.name.length > 0) allOptionsShowing.value = true;
-  isNew = passedIsNew
   isOpen.value = true
 }
 const nameInputRef = ref(null)
@@ -98,12 +96,14 @@ function confirm() {
 function cancel() {
   isOpen.value = false
   allOptionsShowing.value = false
-  isNew = false
   emit('cancel')
   clientSideErrors.value = {}
 }
 
 function handleNameInputEnter() {
+  if (!customUnit.value.custom_unit.name) {
+    return;
+  }
   if (!allOptionsShowing.value) {
     allOptionsShowing.value = true
     setTimeout(() => {
@@ -119,11 +119,14 @@ function handleCustomAmountInputEnter() {
   } else confirm();
 }
 
+function handleCustomMassAmountInputEnter() {
+  confirm()
+}
+
 </script>
 
 <template>
   <Dialog
-    :initialFocus="nameInputRef"
     :open="isOpen"
     @close="cancel"
     class="relative z-50"
@@ -187,7 +190,7 @@ function handleCustomAmountInputEnter() {
                 type="number"
                 step="any"
                 placeholder="100"
-                @keyup.enter="confirm"
+                @keyup.enter="handleCustomMassAmountInputEnter"
                 v-model="customUnit.custom_unit.custom_mass_amount"
               />
               <InputError :message="errors.custom_mass_amount" />
