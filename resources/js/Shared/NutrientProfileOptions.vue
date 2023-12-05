@@ -4,6 +4,7 @@ import { round, gramAmountOfUnit } from '@/utils/GlobalFunctions.js'
 import { Popover, PopoverButton, PopoverPanel, PopoverOverlay } from '@headlessui/vue'
 import { EllipsisHorizontalCircleIcon, ArrowPathIcon } from '@heroicons/vue/24/outline'
 import PlainButton from '@/Components/PlainButton.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
 import SimpleCombobox from '@/Components/SimpleCombobox.vue'
 import TextInput from '@/Components/TextInput.vue'
 import InputLabel from '@/Components/InputLabel.vue'
@@ -81,7 +82,7 @@ function resetTo100G() {
       </PopoverButton>
       <PopoverOverlay class="fixed inset-0 bg-black opacity-20" />
 
-      <PopoverPanel class="absolute right-0 translate-y-1 z-10 px-6 py-5 bg-white rounded-lg border border-gray-300 shadow">
+      <PopoverPanel v-slot="{close}" class="absolute right-0 translate-y-1 z-10 px-6 py-5 bg-white rounded-lg border border-gray-300 shadow">
 
         <p class="font-medium text-sm text-gray-600">Amount of ingredient</p>
         <div class="flex items-baseline">
@@ -125,11 +126,17 @@ function resetTo100G() {
         <SimpleCombobox
           labelText="Intake Guideline for % DV"
           searchKey="name"
-          class="mt-2 w-64"
+          class="mt-3 w-64"
           :options="intakeGuidelines"
           :modelValue="localSelectedIntakeGuideline"
           @update:modelValue="newValue => updateSelectedIntakeGuideline(newValue)"
         />
+
+        <div class="flex">
+          <SecondaryButton @click="close" class="mt-4">
+            Close
+          </SecondaryButton>
+        </div>
 
       </PopoverPanel>
 
