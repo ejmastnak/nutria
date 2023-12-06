@@ -167,6 +167,7 @@ export default {
                   type="number"
                   placeholder="0"
                   class="w-24 text-right"
+                  step="any"
                   v-model="meal_ingredient.meal_ingredient.amount"
                   required
                 />

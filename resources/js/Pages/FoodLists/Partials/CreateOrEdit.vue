@@ -215,6 +215,7 @@ export default {
                 <TextInput
                   type="number"
                   placeholder="0"
+                  step="any"
                   class="block w-24 text-right"
                   v-model="food_list_ingredient.food_list_ingredient.amount"
                   required
@@ -304,6 +305,7 @@ export default {
                 <TextInput
                   type="number"
                   placeholder="0"
+                  step="any"
                   class="block w-24 text-right"
                   v-model="food_list_meal.food_list_meal.amount"
                   required
