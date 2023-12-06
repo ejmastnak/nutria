@@ -398,7 +398,7 @@ export default {
                     </MyLink>
                   </td>
                   <td class="px-6 py-4">
-                    {{ingredient.ingredient_category.name}}
+                    {{ingredient.ingredient_category ? ingredient.ingredient_category.name : ""}}
                   </td>
                   <td class="flex items-center px-2 py-4">
                     <MyLink
