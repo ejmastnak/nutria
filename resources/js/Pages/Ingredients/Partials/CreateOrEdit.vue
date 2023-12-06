@@ -356,7 +356,7 @@ export default {
 
       <InputError class="mt-1" :message="form.errors.ingredient_nutrients" />
 
-      <div class="mt-3 grid grid-cols-1 lg:flex md:gap-x-8">
+      <div class="mt-3 grid grid-cols-1 lg:flex md:gap-x-8 gap-y-3">
         <div
           v-for="nutrient_category in nutrient_categories"
           :key="nutrient_category.id"

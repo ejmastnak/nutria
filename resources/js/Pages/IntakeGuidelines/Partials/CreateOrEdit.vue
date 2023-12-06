@@ -88,7 +88,7 @@ export default {
 
       <InputError class="mt-1" :message="form.errors.intake_guideline_nutrients" />
 
-      <div class="mt-2 grid grid-cols-1 lg:flex md:gap-x-8">
+      <div class="mt-2 grid grid-cols-1 lg:flex md:gap-x-8 gap-y-3">
         <div
           v-for="nc in nutrient_categories"
           :key="nc.id"
