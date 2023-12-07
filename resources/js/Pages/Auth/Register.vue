@@ -41,6 +41,7 @@ function cancel() {
                     class="mt-1 block w-full"
                     v-model="form.username"
                     required
+                    autofocus
                     autocomplete="username"
                 />
 
@@ -85,7 +86,6 @@ function cancel() {
                     type="text"
                     class="mt-1 block w-full"
                     v-model="form.name"
-                    autofocus
                     autocomplete="name"
                 />
 
