@@ -31,11 +31,6 @@ function changeTab(index) {
   selectedTab.value = index
 }
 
-const logBodyWeightDialogRef = ref(null)
-const logIngredientIntakeDialogRef = ref(null)
-const logMealIntakeDialogRef = ref(null)
-const logFoodListIntakeDialogRef = ref(null)
-
 // Preserve selected tab page visits
 onBeforeUnmount(() => {
   sessionStorage.setItem('dataIndexSelectedTab', selectedTab.value);
@@ -114,19 +109,8 @@ export default {
 
         <!-- Food intake ingredients -->
         <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded w-fit">
-          <div class="flex gap-x-1.5">
-            <SecondaryButton @click="logIngredientIntakeDialogRef.open(null)" >
-              Log Ingredient
-            </SecondaryButton>
-            <SecondaryButton @click="logMealIntakeDialogRef.open(null)" >
-              Log Meal
-            </SecondaryButton>
-            <SecondaryButton @click="logFoodListIntakeDialogRef.open(null)" >
-              Log Food List
-            </SecondaryButton>
-          </div>
           <FoodIntakeRecords
-            class="mt-2 overflow-hidden rounded-md w-fit"
+            class="rounded-md w-fit"
             :ingredient_intake_records="ingredient_intake_records"
             :meal_intake_records="meal_intake_records"
             :food_list_intake_records="food_list_intake_records"
@@ -135,34 +119,15 @@ export default {
             :food_lists="food_lists"
             :units="units"
           />
-          <LogIngredientIntakeDialog
-            :ingredients="ingredients"
-            :units="units"
-            ref="logIngredientIntakeDialogRef"
-          />
-          <LogMealIntakeDialog
-            :meals="meals"
-            :units="units"
-            ref="logMealIntakeDialogRef"
-          />
-          <LogFoodListIntakeDialog
-            :food_lists="food_lists"
-            :units="units"
-            ref="logFoodListIntakeDialogRef"
-          />
         </TabPanel>
 
         <!-- Body weight data-->
         <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-md w-fit">
-          <SecondaryButton @click="logBodyWeightDialogRef.open(null)" >
-            Log body weight
-          </SecondaryButton>
           <BodyWeightRecords
-            class="mt-2 overflow-hidden rounded-md w-fit"
+            class="rounded-md w-fit"
             :body_weight_records="body_weight_records"
             :units="units"
           />
-          <LogBodyWeightDialog :units="units" ref="logBodyWeightDialogRef" />
         </TabPanel>
 
         <!-- Nutrient profile data -->

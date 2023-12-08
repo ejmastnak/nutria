@@ -5,6 +5,7 @@ import { getLocalYYYYMMDD, getLocalHHMM, getHumanReadableLocalDate } from '@/uti
 import { TrashIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import LogBodyWeightDialog from '@/Shared/LogBodyWeightDialog.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
+import SecondaryButton from '@/Components/SecondaryButton.vue'
 
 const props = defineProps({
   body_weight_records: Array,
@@ -22,12 +23,20 @@ function deleteBodyWeightRecord() {
   idToDelete.value = null
 }
 
-
 </script>
 
 <template>
   <div>
-    <table v-if="body_weight_records.length" class="text-sm sm:text-base text-left text-gray-500">
+
+    <p v-if="body_weight_records.length === 0" class="mt-1 mb-2">
+      You haven't created any body weight records yet!
+    </p>
+
+    <SecondaryButton @click="logBodyWeightDialogRef.open(null)" >
+      Log body weight
+    </SecondaryButton>
+
+    <table v-if="body_weight_records.length" class="mt-2 text-sm sm:text-base text-left text-gray-500">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
           <th scope="col" class="px-8 py-3 bg-blue-100 w-16">
@@ -73,9 +82,7 @@ function deleteBodyWeightRecord() {
         </tr>
       </tbody>
     </table>
-    <p v-else>
-      You haven't created any body weight records yet!
-    </p>
+
 
     <LogBodyWeightDialog :units="units" ref="logBodyWeightDialogRef" />
 

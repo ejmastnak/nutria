@@ -7,6 +7,7 @@ import LogMealIntakeDialog from '@/Shared/LogMealIntakeDialog.vue'
 import LogFoodListIntakeDialog from '@/Shared/LogFoodListIntakeDialog.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 import MyLink from '@/Components/MyLink.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
 import { roundNonZero, getHumanReadableLocalDate } from '@/utils/GlobalFunctions.js'
 const props = defineProps({
   ingredient_intake_records: Array,
@@ -79,11 +80,28 @@ function deleteBodyWeightRecord() {
 
 <template>
   <div>
-    <table v-if="foodItems.length" class="text-sm sm:text-base text-left text-gray-500">
+
+    <p v-if="foodItems.length === 0" class="mt-1 mb-2">
+      You haven't created any food intake records yet!
+    </p>
+
+
+    <div class="flex gap-x-1.5">
+      <SecondaryButton @click="logIngredientIntakeDialogRef.open(null)" >
+        Log Ingredient
+      </SecondaryButton>
+      <SecondaryButton @click="logMealIntakeDialogRef.open(null)" >
+        Log Meal
+      </SecondaryButton>
+      <SecondaryButton @click="logFoodListIntakeDialogRef.open(null)" >
+        Log Food List
+      </SecondaryButton>
+    </div>
+
+    <table v-if="foodItems.length" class="mt-2 text-sm sm:text-base text-left text-gray-500">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
           <th scope="col" class="px-8 py-3 bg-blue-100">Food</th>
-          <!-- Amount and unit food -->
           <th scope="col" class="px-8 py-3 bg-blue-200">Amount</th>
           <th scope="col" class="px-8 py-3 bg-blue-100">Date</th>
           <th scope="col" class="px-8 py-3 bg-blue-200">Type</th>
@@ -152,9 +170,6 @@ function deleteBodyWeightRecord() {
         </tr>
       </tbody>
     </table>
-    <p v-else>
-      You haven't created any food intake records yet!
-    </p>
 
     <LogIngredientIntakeDialog
       :ingredients="ingredients"
