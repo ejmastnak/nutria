@@ -74,7 +74,7 @@ function submit() {
         <form @submit.prevent="submit">
 
           <DialogTitle class="text-lg font-bold text-gray-600">
-            Log Ingredient Intake
+            Update Ingredient Intake
           </DialogTitle>
 
           <div class="mt-2">

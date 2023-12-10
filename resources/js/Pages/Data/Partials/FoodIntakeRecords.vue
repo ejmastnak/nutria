@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { TrashIcon, PencilSquareIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
-import LogIngredientIntakeDialog from '@/Shared/LogIngredientIntakeDialog.vue'
+import UpdateIngredientIntakeRecordDialog from '@/Shared/UpdateIngredientIntakeRecordDialog.vue'
 import LogMealIntakeDialog from '@/Shared/LogMealIntakeDialog.vue'
 import LogFoodListIntakeDialog from '@/Shared/LogFoodListIntakeDialog.vue'
 import StoreIngredientIntakeRecordsDialog from '@/Shared/StoreIngredientIntakeRecordsDialog.vue'
@@ -174,7 +174,7 @@ function deleteBodyWeightRecord() {
       </tbody>
     </table>
 
-    <LogIngredientIntakeDialog
+    <UpdateIngredientIntakeRecordDialog
       :ingredients="ingredients"
       :units="units"
       ref="logIngredientIntakeDialogRef"
@@ -191,9 +191,9 @@ function deleteBodyWeightRecord() {
     />
 
     <StoreIngredientIntakeRecordsDialog
+      ref="storeIngredientIntakeRecordsDialogRef"
       :ingredients="ingredients"
       :units="units"
-      ref="storeIngredientIntakeRecordsDialogRef"
     />
 
     <DeleteDialog
