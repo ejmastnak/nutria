@@ -5,10 +5,12 @@ import { TrashIcon, PencilSquareIcon, ArrowTopRightOnSquareIcon } from '@heroico
 import LogIngredientIntakeDialog from '@/Shared/LogIngredientIntakeDialog.vue'
 import LogMealIntakeDialog from '@/Shared/LogMealIntakeDialog.vue'
 import LogFoodListIntakeDialog from '@/Shared/LogFoodListIntakeDialog.vue'
+import StoreIngredientIntakeRecordsDialog from '@/Shared/StoreIngredientIntakeRecordsDialog.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 import MyLink from '@/Components/MyLink.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import { roundNonZero, getHumanReadableLocalDate } from '@/utils/GlobalFunctions.js'
+
 const props = defineProps({
   ingredient_intake_records: Array,
   meal_intake_records: Array,
@@ -30,6 +32,8 @@ const foodItems = computed(() => {
     return 0;
   })
 })
+
+const storeIngredientIntakeRecordsDialogRef = ref(null)
 
 const logIngredientIntakeDialogRef = ref(null)
 const logMealIntakeDialogRef = ref(null)
@@ -85,10 +89,9 @@ function deleteBodyWeightRecord() {
       You haven't created any food intake records yet!
     </p>
 
-
     <div class="flex gap-x-1.5">
-      <SecondaryButton @click="logIngredientIntakeDialogRef.open(null)" >
-        Log Ingredient
+      <SecondaryButton @click="storeIngredientIntakeRecordsDialogRef.open(null)" >
+        Log Ingredients
       </SecondaryButton>
       <SecondaryButton @click="logMealIntakeDialogRef.open(null)" >
         Log Meal
@@ -186,6 +189,13 @@ function deleteBodyWeightRecord() {
       :units="units"
       ref="logFoodListIntakeDialogRef"
     />
+
+    <StoreIngredientIntakeRecordsDialog
+      :ingredients="ingredients"
+      :units="units"
+      ref="storeIngredientIntakeRecordsDialogRef"
+    />
+
     <DeleteDialog
       ref="deleteDialogRef"
       :description="thingToDelete"

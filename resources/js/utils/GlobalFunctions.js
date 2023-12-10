@@ -148,6 +148,18 @@ export const getHumanReadableLocalDate = function (dateTimeUTC, longMonth=true) 
     return localDate.getDate() + " " + months[localDate.getMonth()] + " " + localDate.getFullYear()
 }
 
+export const getHumanReadableLocalTime = function (dateTimeUTC) {
+    const y = dateTimeUTC.substring(0, 4)
+    const mo = Number(dateTimeUTC.substring(5, 7)) - 1
+    const d = dateTimeUTC.substring(8, 10)
+    const h = dateTimeUTC.substring(11, 13)
+    const min = dateTimeUTC.substring(14, 16)
+    const s = dateTimeUTC.substring(17, 19)
+    const localDate = new Date(Date.UTC(y, mo, d, h, min, s))
+
+    return localDate.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
+}
+
 // Input a "YYYY-MM-DD HH:mm:ss" string representing a local date time.
 // Output a "YYYY-MM-DD HH:mm:ss" string representing the corresponding UTC
 // date time.

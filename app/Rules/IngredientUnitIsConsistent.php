@@ -8,9 +8,10 @@ use App\Models\Ingredient;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
- *  Ensures a MealIngredient or FoodListIngredient's amount is specified in a
- *  unit supported by the underlying Ingredient. Expects as input a PHP array
- *  with a `unit_id` and `ingredient_id` key.
+ *  Ensures a MealIngredient, FoodListIngredient, or IngredientIntakeRecord's
+ *  ingredient amount is specified in a unit supported by the underlying
+ *  Ingredient. Expects as input a PHP array with a `unit_id` and
+ *  `ingredient_id` key.
  */
 class IngredientUnitIsConsistent implements ValidationRule
 {
