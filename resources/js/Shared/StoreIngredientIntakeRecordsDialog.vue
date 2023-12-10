@@ -3,15 +3,11 @@
 import { ref, computed } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import cloneDeep from "lodash/cloneDeep"
-import { getHumanReadableLocalDate, getHumanReadableLocalTime, roundNonZero } from '@/utils/GlobalFunctions.js'
-import { PlusCircleIcon, TrashIcon, PencilSquareIcon, Bars3Icon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
+import { PlusCircleIcon, TrashIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
-import TextInput from '@/Components/TextInput.vue'
-import InputLabel from '@/Components/InputLabel.vue'
 import InputError from '@/Components/InputError.vue'
 import { TransitionRoot, Dialog, DialogPanel, DialogTitle, DialogDescription } from '@headlessui/vue'
-import MyLink from '@/Components/MyLink.vue'
 import IngredientIntakeRecordDialog from './IngredientIntakeRecordDialog.vue'
 
 const props = defineProps({
