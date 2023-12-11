@@ -3,7 +3,8 @@ import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { getLocalYYYYMMDD, getLocalHHMM, getHumanReadableLocalDate } from '@/utils/GlobalFunctions.js'
 import { TrashIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
-import LogBodyWeightDialog from '@/Shared/LogBodyWeightDialog.vue'
+import UpdateBodyWeightRecordDialog from '@/Shared/UpdateBodyWeightRecordDialog.vue'
+import StoreBodyWeightRecordsDialog from '@/Shared/StoreBodyWeightRecordsDialog.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 
@@ -12,7 +13,8 @@ const props = defineProps({
   units: Array,
 })
 
-const logBodyWeightDialogRef = ref(null)
+const storeBodyWeightRecordsDialogRef = ref(null)
+const updateBodyWeightRecordDialogRef = ref(null)
 
 let idToDelete = ref(null)
 const deleteDialog = ref(null)
@@ -32,7 +34,7 @@ function deleteBodyWeightRecord() {
       You haven't created any body weight records yet!
     </p>
 
-    <SecondaryButton @click="logBodyWeightDialogRef.open(null)" >
+    <SecondaryButton @click="storeBodyWeightRecordsDialogRef.open()" >
       Log body weight
     </SecondaryButton>
 
@@ -52,7 +54,7 @@ function deleteBodyWeightRecord() {
         <tr
           v-for="body_weight_record in body_weight_records" :key="body_weight_record.id"
           class="border-b hover:bg-gray-100 cursor-pointer"
-          @click="logBodyWeightDialogRef.open(body_weight_record)"
+          @click="updateBodyWeightRecordDialogRef.open(body_weight_record)"
         >
           <td scope="row" class="px-8 py-4 font-medium text-gray-900 text-right whitespace-nowrap">
             {{(body_weight_record.amount).toFixed(1)}}
@@ -65,7 +67,7 @@ function deleteBodyWeightRecord() {
             <div class="flex items-center px-8">
               <button
                 type="button"
-                @click.stop="logBodyWeightDialogRef.open(body_weight_record)"
+                @click.stop="updateBodyWeightRecordDialogRef.open(body_weight_record)"
                 class="mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
               >
                 <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
@@ -83,8 +85,8 @@ function deleteBodyWeightRecord() {
       </tbody>
     </table>
 
-
-    <LogBodyWeightDialog :units="units" ref="logBodyWeightDialogRef" />
+    <UpdateBodyWeightRecordDialog :units="units" ref="updateBodyWeightRecordDialogRef" />
+    <StoreBodyWeightRecordsDialog :units="units" ref="storeBodyWeightRecordsDialogRef" />
 
     <DeleteDialog
       ref="deleteDialog"

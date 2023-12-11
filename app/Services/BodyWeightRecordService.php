@@ -3,10 +3,21 @@ namespace App\Services;
 
 use App\Models\BodyWeightRecord;
 use App\Services\UnitConversionService;
+use Illuminate\Support\Facades\DB;
 
 class BodyWeightRecordService
 {
-    public function storeBodyWeightRecord(array $data, int $userId): ?BodyWeightRecord
+    public function storeBodyWeightRecords(array $data, int $userId): ?bool
+    {
+        DB::transaction(function () use ($data, $userId) {
+            foreach ($data['body_weight_records'] as $bodyWeightRecord) {
+                $this->storeBodyWeightRecord($bodyWeightRecord, $userId);
+            }
+        });
+        return true;
+    }
+
+    private function storeBodyWeightRecord(array $data, int $userId): ?BodyWeightRecord
     {
         return BodyWeightRecord::create([
             'amount' => $data['amount'],

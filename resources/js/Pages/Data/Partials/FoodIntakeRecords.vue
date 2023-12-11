@@ -94,13 +94,13 @@ function deleteBodyWeightRecord() {
     </p>
 
     <div class="flex gap-x-1.5">
-      <SecondaryButton @click="storeIngredientIntakeRecordsDialogRef.open(null)" >
+      <SecondaryButton @click="storeIngredientIntakeRecordsDialogRef.open()" >
         Log Ingredients
       </SecondaryButton>
-      <SecondaryButton @click="storeMealIntakeRecordsDialogRef.open(null)" >
+      <SecondaryButton @click="storeMealIntakeRecordsDialogRef.open()" >
         Log Meals
       </SecondaryButton>
-      <SecondaryButton @click="storeFoodListIntakeRecordsDialogRef.open(null)" >
+      <SecondaryButton @click="storeFoodListIntakeRecordsDialogRef.open()" >
         Log Food Lists
       </SecondaryButton>
     </div>
