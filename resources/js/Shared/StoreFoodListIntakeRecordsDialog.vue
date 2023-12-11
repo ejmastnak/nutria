@@ -166,7 +166,6 @@ function submit() {
             <!-- Avoiding @click because enter then propogates to autofocus input in FoodListIntakeRecordDialog -->
             <button
               type="button"
-              id="add-custom-unit"
               @mouseup="addFoodListIntakeRecord"
               @keyup.enter="addFoodListIntakeRecord"
               @click.prevent

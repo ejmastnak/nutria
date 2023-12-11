@@ -164,7 +164,6 @@ function submit() {
             <!-- Avoiding @click because enter then propogates to autofocus input in BodyWeightRecordDialog -->
             <button
               type="button"
-              id="add-custom-unit"
               @mouseup="addBodyWeightRecord"
               @keyup.enter="addBodyWeightRecord"
               @click.prevent
