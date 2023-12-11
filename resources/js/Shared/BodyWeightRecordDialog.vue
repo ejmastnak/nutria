@@ -53,6 +53,7 @@ function passesValidation() {
 
   // Check that amount is not empty
   if (bodyWeightRecord.value.amount === null || bodyWeightRecord.value.amount.length === 0) {
+    clientSideErrors.value['amount'] = "The amount must be a number greater than 0."
     amountInputRef.value.focus()
     return false
   }

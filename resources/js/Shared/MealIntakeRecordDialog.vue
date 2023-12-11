@@ -65,6 +65,7 @@ function passesValidation() {
 
   // Check that amount is not empty
   if (mealIntakeRecord.value.amount === null || mealIntakeRecord.value.amount.length === 0) {
+    clientSideErrors.value['amount'] = "The amount must be a number greater than 0."
     amountInputRef.value.focus()
     return false
   }
