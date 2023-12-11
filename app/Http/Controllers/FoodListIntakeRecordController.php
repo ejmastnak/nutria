@@ -15,8 +15,8 @@ class FoodListIntakeRecordController extends Controller
      */
     public function store(StoreFoodListIntakeRecordRequest $request, FoodListIntakeRecordService $foodListIntakeRecordService)
     {
-        $foodListIntakeRecordService->storeFoodListIntakeRecord($request->validated(), $request->user()->id);
-        return back()->with('message', 'Success! Food list intake record created successfully.');
+        $foodListIntakeRecordService->storeFoodListIntakeRecords($request->validated(), $request->user()->id);
+        return back()->with('message', 'Success! Food list intake record(s) created successfully.');
     }
 
     /**

@@ -4,9 +4,10 @@ import { router } from '@inertiajs/vue3'
 import { TrashIcon, PencilSquareIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
 import UpdateIngredientIntakeRecordDialog from '@/Shared/UpdateIngredientIntakeRecordDialog.vue'
 import UpdateMealIntakeRecordDialog from '@/Shared/UpdateMealIntakeRecordDialog.vue'
-import LogFoodListIntakeDialog from '@/Shared/LogFoodListIntakeDialog.vue'
+import UpdateFoodListIntakeRecordDialog from '@/Shared/UpdateFoodListIntakeRecordDialog.vue'
 import StoreIngredientIntakeRecordsDialog from '@/Shared/StoreIngredientIntakeRecordsDialog.vue'
 import StoreMealIntakeRecordsDialog from '@/Shared/StoreMealIntakeRecordsDialog.vue'
+import StoreFoodListIntakeRecordsDialog from '@/Shared/StoreFoodListIntakeRecordsDialog.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 import MyLink from '@/Components/MyLink.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -36,18 +37,19 @@ const foodItems = computed(() => {
 
 const storeIngredientIntakeRecordsDialogRef = ref(null)
 const storeMealIntakeRecordsDialogRef = ref(null)
+const storeFoodListIntakeRecordsDialogRef = ref(null)
 
-const logIngredientIntakeDialogRef = ref(null)
-const logMealIntakeDialogRef = ref(null)
-const logFoodListIntakeDialogRef = ref(null)
+const updateIngredientIntakeRecordDialogRef = ref(null)
+const updateMealIntakeRecordDialogRef = ref(null)
+const updateFoodListIntakeRecordDialogRef = ref(null)
 
 function openUpdateDialog(foodItem) {
   if (foodItem.type === INGREDIENT) {
-    logIngredientIntakeDialogRef.value.open(foodItem)
+    updateIngredientIntakeRecordDialogRef.value.open(foodItem)
   } else if (foodItem.type === MEAL) {
-    logMealIntakeDialogRef.value.open(foodItem)
+    updateMealIntakeRecordDialogRef.value.open(foodItem)
   } else if (foodItem.type === FOOD_LIST) {
-    logFoodListIntakeDialogRef.value.open(foodItem)
+    updateFoodListIntakeRecordDialogRef.value.open(foodItem)
   }
 }
 
@@ -98,8 +100,8 @@ function deleteBodyWeightRecord() {
       <SecondaryButton @click="storeMealIntakeRecordsDialogRef.open(null)" >
         Log Meals
       </SecondaryButton>
-      <SecondaryButton @click="logFoodListIntakeDialogRef.open(null)" >
-        Log Food List
+      <SecondaryButton @click="storeFoodListIntakeRecordsDialogRef.open(null)" >
+        Log Food Lists
       </SecondaryButton>
     </div>
 
@@ -140,7 +142,7 @@ function deleteBodyWeightRecord() {
             </p>
           </td>
           <td scope="row" class="pr-1 py-4 text-gray-900 text-right">
-            {{roundNonZero(Number(foodItem.amount))}}
+            {{roundNonZero(Number(foodItem.amount), 2)}}
             {{foodItem.unit.name}}
           </td>
           <td class="px-8 py-4 whitespace-nowrap">
@@ -179,17 +181,17 @@ function deleteBodyWeightRecord() {
     <UpdateIngredientIntakeRecordDialog
       :ingredients="ingredients"
       :units="units"
-      ref="logIngredientIntakeDialogRef"
+      ref="updateIngredientIntakeRecordDialogRef"
     />
     <UpdateMealIntakeRecordDialog
       :meals="meals"
       :units="units"
-      ref="logMealIntakeDialogRef"
+      ref="updateMealIntakeRecordDialogRef"
     />
-    <LogFoodListIntakeDialog
+    <UpdateFoodListIntakeRecordDialog
       :food_lists="food_lists"
       :units="units"
-      ref="logFoodListIntakeDialogRef"
+      ref="updateFoodListIntakeRecordDialogRef"
     />
 
     <StoreIngredientIntakeRecordsDialog
@@ -200,6 +202,11 @@ function deleteBodyWeightRecord() {
     <StoreMealIntakeRecordsDialog
       ref="storeMealIntakeRecordsDialogRef"
       :meals="meals"
+      :units="units"
+    />
+    <StoreFoodListIntakeRecordsDialog
+      ref="storeFoodListIntakeRecordsDialogRef"
+      :food_lists="food_lists"
       :units="units"
     />
 

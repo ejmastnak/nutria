@@ -1,4 +1,3 @@
-<!-- Provides an overview of an meal's custom units -->
 <script setup>
 import { ref, computed } from 'vue'
 import { useForm } from '@inertiajs/vue3'

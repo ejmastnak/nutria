@@ -3,10 +3,21 @@ namespace App\Services;
 
 use App\Models\FoodListIntakeRecord;
 use App\Services\UnitConversionService;
+use Illuminate\Support\Facades\DB;
 
 class FoodListIntakeRecordService
 {
-    public function storeFoodListIntakeRecord(array $data, int $userId): ?FoodListIntakeRecord
+    public function storeFoodListIntakeRecords(array $data, int $userId): ?bool
+    {
+        DB::transaction(function () use ($data, $userId) {
+            foreach ($data['food_list_intake_records'] as $foodListIntakeRecord) {
+                $this->storeFoodListIntakeRecord($foodListIntakeRecord, $userId);
+            }
+        });
+        return true;
+    }
+
+    private function storeFoodListIntakeRecord(array $data, int $userId): ?FoodListIntakeRecord
     {
         return FoodListIntakeRecord::create([
             'amount' => $data['amount'],
