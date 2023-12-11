@@ -3,9 +3,10 @@ import { computed, ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { TrashIcon, PencilSquareIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
 import UpdateIngredientIntakeRecordDialog from '@/Shared/UpdateIngredientIntakeRecordDialog.vue'
-import LogMealIntakeDialog from '@/Shared/LogMealIntakeDialog.vue'
+import UpdateMealIntakeRecordDialog from '@/Shared/UpdateMealIntakeRecordDialog.vue'
 import LogFoodListIntakeDialog from '@/Shared/LogFoodListIntakeDialog.vue'
 import StoreIngredientIntakeRecordsDialog from '@/Shared/StoreIngredientIntakeRecordsDialog.vue'
+import StoreMealIntakeRecordsDialog from '@/Shared/StoreMealIntakeRecordsDialog.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 import MyLink from '@/Components/MyLink.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -34,6 +35,7 @@ const foodItems = computed(() => {
 })
 
 const storeIngredientIntakeRecordsDialogRef = ref(null)
+const storeMealIntakeRecordsDialogRef = ref(null)
 
 const logIngredientIntakeDialogRef = ref(null)
 const logMealIntakeDialogRef = ref(null)
@@ -93,8 +95,8 @@ function deleteBodyWeightRecord() {
       <SecondaryButton @click="storeIngredientIntakeRecordsDialogRef.open(null)" >
         Log Ingredients
       </SecondaryButton>
-      <SecondaryButton @click="logMealIntakeDialogRef.open(null)" >
-        Log Meal
+      <SecondaryButton @click="storeMealIntakeRecordsDialogRef.open(null)" >
+        Log Meals
       </SecondaryButton>
       <SecondaryButton @click="logFoodListIntakeDialogRef.open(null)" >
         Log Food List
@@ -179,7 +181,7 @@ function deleteBodyWeightRecord() {
       :units="units"
       ref="logIngredientIntakeDialogRef"
     />
-    <LogMealIntakeDialog
+    <UpdateMealIntakeRecordDialog
       :meals="meals"
       :units="units"
       ref="logMealIntakeDialogRef"
@@ -193,6 +195,11 @@ function deleteBodyWeightRecord() {
     <StoreIngredientIntakeRecordsDialog
       ref="storeIngredientIntakeRecordsDialogRef"
       :ingredients="ingredients"
+      :units="units"
+    />
+    <StoreMealIntakeRecordsDialog
+      ref="storeMealIntakeRecordsDialogRef"
+      :meals="meals"
       :units="units"
     />
 

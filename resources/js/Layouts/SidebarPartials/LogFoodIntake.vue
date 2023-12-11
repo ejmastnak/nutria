@@ -3,7 +3,7 @@ import { Link, router } from '@inertiajs/vue3'
 import { ref } from 'vue'
 import { PencilSquareIcon } from '@heroicons/vue/24/outline'
 import StoreIngredientIntakeRecordsDialog from '@/Shared/StoreIngredientIntakeRecordsDialog.vue'
-import LogMealIntakeDialog from '@/Shared/LogMealIntakeDialog.vue'
+import StoreMealIntakeRecordsDialog from '@/Shared/StoreMealIntakeRecordsDialog.vue'
 import LogFoodListIntakeDialog from '@/Shared/LogFoodListIntakeDialog.vue'
 import SidebarButton from './SidebarButton.vue'
 import SidebarIcon from './SidebarIcon.vue'
@@ -23,7 +23,7 @@ function open() { isOpen.value = true }
 function close() { isOpen.value = false }
 
 const storeIngredientIntakeRecordsDialogRef = ref(null)
-const logMealIntakeDialogRef = ref(null)
+const storeMealIntakeRecordsDialogRef = ref(null)
 const logFoodListIntakeDialogRef = ref(null)
 
 </script>
@@ -61,7 +61,7 @@ const logFoodListIntakeDialogRef = ref(null)
             </SecondaryButton>
           </li>
           <li>
-            <SecondaryButton @click="logMealIntakeDialogRef.open(null); close()" >
+            <SecondaryButton @click="storeMealIntakeRecordsDialogRef.open(null); close()" >
               Log Meal
             </SecondaryButton>
           </li>
@@ -87,11 +87,10 @@ const logFoodListIntakeDialogRef = ref(null)
     :ingredients="ingredients"
     :units="units"
   />
-
-  <LogMealIntakeDialog
+  <StoreMealIntakeRecordsDialog
+    ref="storeMealIntakeRecordsDialogRef"
     :meals="meals"
     :units="units"
-    ref="logMealIntakeDialogRef"
   />
   <LogFoodListIntakeDialog
     :food_lists="food_lists"

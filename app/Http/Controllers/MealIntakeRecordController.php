@@ -15,8 +15,8 @@ class MealIntakeRecordController extends Controller
      */
     public function store(StoreMealIntakeRecordRequest $request, MealIntakeRecordService $mealIntakeRecordService)
     {
-        $mealIntakeRecordService->storeMealIntakeRecord($request->validated(), $request->user()->id);
-        return back()->with('message', 'Success! Meal intake record created successfully.');
+        $mealIntakeRecordService->storeMealIntakeRecords($request->validated(), $request->user()->id);
+        return back()->with('message', 'Success! Meal intake record(s) created successfully.');
     }
 
     /**

@@ -8,8 +8,9 @@ use App\Models\Meal;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
- *  Ensures a FoodListMeal's amount is specified in a unit supported by the
- *  underlying Meal.
+ *  Ensures a FoodListMeal or MealIntakeRecord's amount is specified in a unit
+ *  supported by the underlying Meal. Expects as input a PHP array with a
+ *  `unit_id` and `meal_id` key.
  */
 class MealUnitIsConsistent implements ValidationRule
 {

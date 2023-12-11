@@ -16,7 +16,7 @@ class IngredientIntakeRecordController extends Controller
     public function store(StoreIngredientIntakeRecordRequest $request, IngredientIntakeRecordService $ingredientIntakeRecordService)
     {
         $ingredientIntakeRecordService->storeIngredientIntakeRecords($request->validated(), $request->user()->id);
-        return back()->with('message', 'Success! Ingredient intake record created successfully.');
+        return back()->with('message', 'Success! Ingredient intake record(s) created successfully.');
     }
 
     /**
