@@ -17,6 +17,7 @@ const props = defineProps({
   custom_units: Array,
   units: Array,
   errors: Object,
+  id_idx_mapping: Object,
 })
 
 defineExpose({ open })
@@ -63,10 +64,10 @@ function addCustomUnit() {
 
 function editCustomUnit(customUnit, idx) {
   customUnitDialogRef.value.open(customUnit, {
-    name: props.errors['custom_units.' + idx + '.name'],
-    custom_unit_amount: props.errors['custom_units.' + idx + '.custom_unit_amount'],
-    custom_mass_amount: props.errors['custom_units.' + idx + '.custom_mass_amount'],
-    custom_mass_unit_id: props.errors['custom_units.' + idx + '.custom_mass_unit_id'],
+    name: props.errors['custom_units.' + props.id_idx_mapping[customUnit.id] + '.name'],
+    custom_unit_amount: props.errors['custom_units.' + props.id_idx_mapping[customUnit.id] + '.custom_unit_amount'],
+    custom_mass_amount: props.errors['custom_units.' + props.id_idx_mapping[customUnit.id] + '.custom_mass_amount'],
+    custom_mass_unit_id: props.errors['custom_units.' + props.id_idx_mapping[customUnit.id] + '.custom_mass_unit_id'],
   })
   customUnitIdToUpdate = customUnit.id
 }
@@ -126,10 +127,10 @@ function addOrUpdateCustomUnit(updatedCustomUnit) {
                     ({{roundNonZero(customUnit.custom_unit.custom_mass_amount, 2)}} {{customUnit.custom_unit.custom_mass_unit.name}})
                   </button>
                   <div>
-                    <InputError :message="errors['custom_units.' + idx + '.name']" />
-                    <InputError :message="errors['custom_units.' + idx + '.custom_unit_amount']" />
-                    <InputError :message="errors['custom_units.' + idx + '.custom_mass_amount']" />
-                    <InputError :message="errors['custom_units.' + idx + '.custom_mass_unit_id']" />
+                    <InputError :message="errors['custom_units.' + props.id_idx_mapping[customUnit.id] + '.name']" />
+                    <InputError :message="errors['custom_units.' + props.id_idx_mapping[customUnit.id] + '.custom_unit_amount']" />
+                    <InputError :message="errors['custom_units.' + props.id_idx_mapping[customUnit.id] + '.custom_mass_amount']" />
+                    <InputError :message="errors['custom_units.' + props.id_idx_mapping[customUnit.id] + '.custom_mass_unit_id']" />
                   </div>
                 </div>
 

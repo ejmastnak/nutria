@@ -39,6 +39,9 @@ const form = useForm({
     id: idx + 1,
     custom_unit: custom_unit,
   })) : [],
+  // Maps a custom unit's serial id to the unit's array index on last form
+  // submit. This is to preserve association with errors sent from backend.
+  custom_units_id_to_idx_mapping: {},
   nutrient_content_unit_amount: props.ingredient ? props.ingredient.nutrient_content_unit_amount : 100,
   nutrient_content_unit: props.ingredient ? props.ingredient.nutrient_content_unit : props.units.find(unit => unit.name === 'g'),
   // Reset zero amounts to null, to make it easier for user to fill values in.
@@ -168,7 +171,11 @@ function submit() {
     form.density_volume_unit_id = null
     form.density_volume_unit = null
   }
+
+  form.custom_units_id_to_idx_mapping = {}
+  customUnits.value.forEach((customUnit, idx) => form.custom_units_id_to_idx_mapping[customUnit.id] = idx)
   form.custom_units = customUnits.value.map(custom_unit => custom_unit.custom_unit)
+
   if (props.create) {
     form.post(route('ingredients.store'))
   } else {
@@ -301,6 +308,7 @@ export default {
             :custom_units="customUnits"
             :units="units"
             :errors="Object.fromEntries(Object.entries(form.errors).filter(([key, value]) => key.startsWith('custom_unit')))"
+            :id_idx_mapping="form.custom_units_id_to_idx_mapping"
           />
 
         </div>
