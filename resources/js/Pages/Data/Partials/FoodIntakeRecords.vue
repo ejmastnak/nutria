@@ -150,7 +150,7 @@ function deleteBodyWeightRecord() {
               {{getHumanReadableLocalDate(foodItem.date_time_utc)}}
             </span>
             <span class="md:hidden">
-              {{getHumanReadableLocalDate(foodItem.date_time_utc, longMonth=false)}}
+              {{getHumanReadableLocalDate(foodItem.date_time_utc, shortMonth=true)}}
             </span>
           </td>
           <td class="px-4 py-4">

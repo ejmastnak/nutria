@@ -128,7 +128,7 @@ function submit() {
                     class="hover:underline text-left"
                   >
                     <span class="font-medium mr-px">{{Number(bodyWeightRecord.body_weight_record.amount).toFixed(1)}} {{bodyWeightRecord.body_weight_record.unit.name}}</span>
-                    ({{getHumanReadableLocalDate(bodyWeightRecord.body_weight_record.date_time_utc, longMonth=false)}})
+                    ({{getHumanReadableLocalDate(bodyWeightRecord.body_weight_record.date_time_utc, shortMonth=true)}})
                   </button>
                   <div class="mt-1">
                     <InputError :message="form.errors['body_weight_records.' + form.id_idx_mapping[bodyWeightRecord.id]]" />

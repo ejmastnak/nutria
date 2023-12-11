@@ -132,7 +132,7 @@ export const getLocalHHMM = function (dateTimeUTC) {
 // Input a "YYYY-MM-DD HH:mm:ss" string representing a UTC date time.
 // Output a human-readable representation of the date (the date only, not also
 // the time) in a format similar to en-GB, e.g. "1 January 1970".
-export const getHumanReadableLocalDate = function (dateTimeUTC, longMonth=true) {
+export const getHumanReadableLocalDate = function (dateTimeUTC, shortMonth=false) {
     const y = dateTimeUTC.substring(0, 4)
     const mo = Number(dateTimeUTC.substring(5, 7)) - 1
     const d = dateTimeUTC.substring(8, 10)
@@ -141,9 +141,9 @@ export const getHumanReadableLocalDate = function (dateTimeUTC, longMonth=true) 
     const s = dateTimeUTC.substring(17, 19)
     const localDate = new Date(Date.UTC(y, mo, d, h, min, s))
 
-    const months = longMonth
-        ? ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-        : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const months = shortMonth
+        ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     return localDate.getDate() + " " + months[localDate.getMonth()] + " " + localDate.getFullYear()
 }
