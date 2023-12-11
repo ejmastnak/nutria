@@ -41,8 +41,8 @@ function open(passedFoodListIntakeRecord, passedErrors) {
   foodListIntakeRecord.value.food_list_id = passedFoodListIntakeRecord ? passedFoodListIntakeRecord.food_list_id : null
   foodListIntakeRecord.value.food_list = passedFoodListIntakeRecord ? cloneDeep(passedFoodListIntakeRecord.food_list) : {}
   foodListIntakeRecord.value.amount = passedFoodListIntakeRecord ? passedFoodListIntakeRecord.amount : null
-  foodListIntakeRecord.value.unit_id = passedFoodListIntakeRecord ? passedFoodListIntakeRecord.unit_id : props.units.find(unit => unit.name === 'g').id
-  foodListIntakeRecord.value.unit = passedFoodListIntakeRecord ? cloneDeep(passedFoodListIntakeRecord.unit) : props.units.find(unit => unit.name === 'g')
+  foodListIntakeRecord.value.unit_id = passedFoodListIntakeRecord ? passedFoodListIntakeRecord.unit_id : null
+  foodListIntakeRecord.value.unit = passedFoodListIntakeRecord ? cloneDeep(passedFoodListIntakeRecord.unit) : {}
   foodListIntakeRecord.value.date = passedFoodListIntakeRecord ? getLocalYYYYMMDD(passedFoodListIntakeRecord.date_time_utc) : getCurrentLocalYYYYMMDD()
   foodListIntakeRecord.value.time = passedFoodListIntakeRecord ? getLocalHHMM(passedFoodListIntakeRecord.date_time_utc) : getCurrentLocalHHmm()
   errors.value = passedErrors
