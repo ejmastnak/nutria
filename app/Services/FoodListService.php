@@ -53,7 +53,7 @@ class FoodListService
 
             // Create a food-list-specific unit
             Unit::create([
-                'name' => 'meal',
+                'name' => 'food list',
                 'seq_num' => -1,
                 'food_list_id' => $foodList->id,
                 'custom_unit_amount' => 1,
