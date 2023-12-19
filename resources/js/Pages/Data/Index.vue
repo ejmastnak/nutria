@@ -18,6 +18,8 @@ const props = defineProps({
   meals: Array,
   food_lists: Array,
   units: Array,
+  intake_guidelines: Array,
+  nutrient_categories: Array,
 })
 
 const ingredients = props.user_ingredients.concat(window.usdaIngredients ? window.usdaIngredients : [])
@@ -128,7 +130,11 @@ export default {
 
         <!-- Nutrient profile data -->
         <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded">
-          <NutrientProfileTrends class="overflow-hidden rounded-md" />
+          <NutrientProfileTrends
+            class="overflow-hidden rounded-md" 
+            :intake_guidelines="intake_guidelines"
+            :nutrient_categories="nutrient_categories"
+          />
         </TabPanel>
 
       </TabPanels>

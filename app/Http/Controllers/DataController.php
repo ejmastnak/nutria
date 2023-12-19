@@ -10,6 +10,8 @@ use App\Models\Ingredient;
 use App\Models\Meal;
 use App\Models\FoodList;
 use App\Models\Unit;
+use App\Models\IntakeGuideline;
+use App\Models\NutrientCategory;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -31,6 +33,8 @@ class DataController extends Controller
             'meals' => Meal::getForUserWithUnit($userId),
             'food_lists' => FoodList::getForUserWithUnit($userId),
             'units' => Unit::getMassAndVolume(),
+            'intake_guidelines' => IntakeGuideline::getForUser($userId),
+            'nutrient_categories' => NutrientCategory::getWithName(),
         ]);
     }
 }
