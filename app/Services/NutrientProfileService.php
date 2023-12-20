@@ -266,4 +266,144 @@ class NutrientProfileService
 
         return $result;
     }
+
+
+    /**
+     *  Returns an array of nutrient profiles for all food consumed by the user
+     *  over the inputted date range (including both start and end date), with
+     *  one nutrient profile for each of the user's intake guidelines.
+     */
+    public function getNutrientProfilesForDateRange(string $fromDate, string $toDate, int $userId) {
+        $intakeGuidelineIds = IntakeGuideline::getIdsForUser($userId);
+        $nutrientProfiles = array();
+        foreach ($intakeGuidelineIds as $intakeGuidelineId) {
+            $nutrientProfiles[] = [
+              'intake_guideline_id' => $intakeGuidelineId,
+              'nutrient_profile' => $this->getNutrientProfileForDateRange($fromDate, $toDate, $intakeGuidelineId)
+            ];
+        }
+
+        return $nutrientProfiles;
+    }
+
+    /**
+     *  Computes a NutrientProfile for 100g of the specified Ingredient using
+     *  the specified IntakeGuideline.
+     */
+    private function getNutrientProfileForDateRange(string $fromDate, string $toDate, int $intakeGuidelineId) {
+        $query = "
+        select
+          nutrients.id as nutrient_id,
+          nutrients.name as nutrient,
+          nutrients.nutrient_category_id as nutrient_category_id,
+          nutrients.precision as precision,
+          round(sum((ingredient_nutrients.amount_per_100g / 100) * unioned_ingredients.mass_in_grams), 3) as amount,
+          units.name as unit,
+          round(sum(ingredient_nutrients.amount_per_100g * unioned_ingredients.mass_in_grams / nullif(intake_guideline_nutrients.rdi, 0)), 2) as pdv
+        from (
+          select
+            ingredients.id as ingredient_id,
+            ingredient_intake_records.mass_in_grams
+          from ingredient_intake_records
+          inner join ingredients
+            on ingredients.id
+            = ingredient_intake_records.ingredient_id
+          where
+            ingredient_intake_records.date_time_utc >= :from_date
+            and
+            ingredient_intake_records.date_time_utc <= :to_date
+
+          union all
+
+          select
+            ingredients.id as ingredient_id,
+            round(meal_ingredients.mass_in_grams * (meal_intake_records.mass_in_grams / meals.mass_in_grams), 2) as mass_in_grams
+          from meal_intake_records
+          inner join meals
+            on meals.id
+            = meal_intake_records.meal_id
+          inner join meal_ingredients
+            on meal_ingredients.meal_id
+            = meals.id
+          inner join ingredients
+            on ingredients.id
+            = meal_ingredients.ingredient_id
+          where
+            meal_intake_records.date_time_utc >= :from_date
+            and
+            meal_intake_records.date_time_utc <= :to_date
+
+          union all 
+
+          select
+            ingredients.id as ingredient_id,
+            round(food_list_ingredients.mass_in_grams * (food_list_intake_records.mass_in_grams / food_lists.mass_in_grams), 2) as mass_in_grams
+          from food_list_intake_records
+          inner join food_lists
+            on food_lists.id
+            = food_list_intake_records.food_list_id
+          inner join food_list_ingredients
+            on food_list_ingredients.food_list_id
+            = food_lists.id
+          inner join ingredients
+            on ingredients.id
+            = food_list_ingredients.ingredient_id
+          where
+            food_list_intake_records.date_time_utc >= :from_date
+            and
+            food_list_intake_records.date_time_utc <= :to_date
+
+          union all
+
+          select
+            ingredients.id as ingredient_id,
+            round(meal_ingredients.mass_in_grams * (food_list_meals.mass_in_grams / meals.mass_in_grams) * (food_list_intake_records.mass_in_grams / food_lists.mass_in_grams), 2) as mass_in_grams
+          from food_list_intake_records
+          inner join food_lists
+            on food_lists.id
+            = food_list_intake_records.food_list_id
+          inner join food_list_meals
+            on food_list_meals.food_list_id
+            = food_lists.id
+          inner join meals
+            on meals.id
+            = food_list_meals.meal_id
+          inner join meal_ingredients
+            on meal_ingredients.meal_id
+            = meals.id
+          inner join ingredients
+            on ingredients.id
+            = meal_ingredients.ingredient_id
+          where
+            food_list_intake_records.date_time_utc >= :from_date
+            and
+            food_list_intake_records.date_time_utc <= :to_date
+        ) as unioned_ingredients
+        inner join ingredient_nutrients
+          on ingredient_nutrients.ingredient_id
+          = unioned_ingredients.ingredient_id
+        inner join nutrients
+          on nutrients.id
+          = ingredient_nutrients.nutrient_id  
+        inner join units
+          on units.id
+          = nutrients.unit_id
+        inner join intake_guideline_nutrients
+          on intake_guideline_nutrients.intake_guideline_id
+          = :intake_guideline_id
+          and intake_guideline_nutrients.nutrient_id
+          = ingredient_nutrients.nutrient_id
+        group by nutrients.id, units.name
+        order by nutrients.seq_num;
+        ";
+
+        $result = DB::select($query, [
+            'from_date' => $fromDate,
+            'to_date' => $toDate,
+            'intake_guideline_id' => $intakeGuidelineId,
+        ]);
+
+        return $result;
+    }
+
 }
