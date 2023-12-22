@@ -12,7 +12,10 @@ use App\Models\FoodList;
 use App\Models\Unit;
 use App\Models\IntakeGuideline;
 use App\Models\NutrientCategory;
+use App\Http\Requests\NutrientProfileForDateRangeRequest;
+use App\Services\NutrientProfileService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 use Inertia\Inertia;
 
 class DataController extends Controller
@@ -37,4 +40,11 @@ class DataController extends Controller
             'nutrient_categories' => NutrientCategory::getWithName(),
         ]);
     }
+
+    public function nutrientProfileForDateRange(NutrientProfileForDateRangeRequest $request, NutrientProfileService $nutrientProfileService) {
+        return Response::json([
+            'nutrient_profiles' => $nutrientProfileService->getNutrientProfilesForDateRange($request->validated(), $request->user()->id),
+        ]);
+    }
+
 }

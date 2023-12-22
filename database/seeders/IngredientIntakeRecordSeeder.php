@@ -9,6 +9,7 @@ use App\Models\Unit;
 use App\Models\Ingredient;
 use App\Services\UnitConversionService;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class IngredientIntakeRecordSeeder extends Seeder
 {
@@ -39,7 +40,7 @@ class IngredientIntakeRecordSeeder extends Seeder
                 'amount' => $ingredientIntakeRecord['amount'],
                 'unit_id' => $unit->id,
                 'mass_in_grams' => UnitConversionService::convertToGrams($ingredientIntakeRecord['amount'], $unit->id, $ingredient->id, null, null),
-                'date_time_utc' => $ingredientIntakeRecord['date'] . ' ' . $ingredientIntakeRecord['time'],
+                'date_time_utc' => Carbon::createFromFormat('Y-m-d', gmdate('Y-m-d', time()))->subDays($ingredientIntakeRecord['days_before_today'])->format('Y-m-d') . ' ' . $ingredientIntakeRecord['time'],
                 'user_id' => $ingredientIntakeRecord['user_id'],
             ]);
         }

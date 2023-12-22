@@ -9,6 +9,7 @@ use App\Models\Unit;
 use App\Models\Meal;
 use App\Services\UnitConversionService;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class MealIntakeRecordSeeder extends Seeder
 {
@@ -41,7 +42,7 @@ class MealIntakeRecordSeeder extends Seeder
                 'amount' => $mealIntakeRecord['amount'],
                 'unit_id' => $unit->id,
                 'mass_in_grams' => UnitConversionService::convertToGrams($mealIntakeRecord['amount'], $unit->id, null, $meal->id, null),
-                'date_time_utc' => $mealIntakeRecord['date'] . ' ' . $mealIntakeRecord['time'],
+                'date_time_utc' => Carbon::createFromFormat('Y-m-d', gmdate('Y-m-d', time()))->subDays($mealIntakeRecord['days_before_today'])->format('Y-m-d') . ' ' . $mealIntakeRecord['time'],
                 'user_id' => $mealIntakeRecord['user_id'],
             ]);
         }

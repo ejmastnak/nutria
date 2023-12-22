@@ -129,6 +129,20 @@ export const getLocalHHMM = function (dateTimeUTC) {
     return localHH + ":" + localMM
 }
 
+// Input a "YYYY-MM-DD HH:mm:ss" string. Output a human-readable representation
+// of the date in a format similar to en-GB, e.g. "1 January 1970".
+export const getHumanReadableDate = function (dateTimeString, shortMonth=false) {
+    const y = dateTimeString.substring(0, 4)
+    const mo = Number(dateTimeString.substring(5, 7)) - 1
+    const d = Number(dateTimeString.substring(8, 10))
+
+    const months = shortMonth
+        ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    return d + " " + months[mo] + " " + y
+}
+
 // Input a "YYYY-MM-DD HH:mm:ss" string representing a UTC date time.
 // Output a human-readable representation of the date (the date only, not also
 // the time) in a format similar to en-GB, e.g. "1 January 1970".

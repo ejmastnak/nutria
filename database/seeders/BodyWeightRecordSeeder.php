@@ -8,6 +8,7 @@ use App\Models\BodyWeightRecord;
 use App\Models\Unit;
 use App\Services\UnitConversionService;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class BodyWeightRecordSeeder extends Seeder
 {
@@ -30,7 +31,7 @@ class BodyWeightRecordSeeder extends Seeder
                 'unit_id' => $unit->id,
                 'kg' => UnitConversionService::convertToKilograms($bodyWeightRecord['amount'], $unit->id),
                 'lb' => UnitConversionService::convertToPounds($bodyWeightRecord['amount'], $unit->id),
-                'date_time_utc' => $bodyWeightRecord['date'] . ' ' . $bodyWeightRecord['time'],
+                'date_time_utc' => Carbon::createFromFormat('Y-m-d', gmdate('Y-m-d', time()))->subDays($bodyWeightRecord['days_before_today'])->format('Y-m-d') . ' ' . $bodyWeightRecord['time'],
                 'user_id' => $bodyWeightRecord['user_id'],
             ]);
         }

@@ -19,12 +19,6 @@ const selectedUnit = ref(props.defaultUnit)
 const selectedUnitAmount = ref(props.defaultUnitAmount)
 const selectedIntakeGuideline = ref(props.intakeGuidelines[0])
 
-// const selectedNutrientProfile = computed(() => {
-//   const idx = props.nutrientProfiles.map(profile => profile.intake_guideline_id).indexOf(selectedIntakeGuideline.value.id)
-//   return props.nutrientProfiles[0].nutrientProfile
-//   // return props.nutrientProfiles[idx > 0 ? idx : 0].nutrientProfile
-// })
-
 const selectedNutrientProfile = computed(() => {
   const idx = props.nutrientProfiles.map(profile => profile.intake_guideline_id).indexOf(selectedIntakeGuideline.value.id)
   return props.nutrientProfiles[idx > 0 ? idx : 0]['nutrient_profile']

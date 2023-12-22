@@ -272,8 +272,12 @@ class NutrientProfileService
      *  Returns an array of nutrient profiles for all food consumed by the user
      *  over the inputted date range (including both start and end date), with
      *  one nutrient profile for each of the user's intake guidelines.
+     *
+     * Input: an array containing keys from_date_time_utc and to_date_time_utc.
      */
-    public function getNutrientProfilesForDateRange(string $fromDate, string $toDate, int $userId) {
+    public function getNutrientProfilesForDateRange(array $data, int $userId) {
+        $fromDate = $data['from_date_time_utc'];
+        $toDate = $data['to_date_time_utc'];
         $intakeGuidelineIds = IntakeGuideline::getIdsForUser($userId);
         $nutrientProfiles = array();
         foreach ($intakeGuidelineIds as $intakeGuidelineId) {

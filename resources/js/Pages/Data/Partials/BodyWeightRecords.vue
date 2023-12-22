@@ -25,6 +25,8 @@ function deleteBodyWeightRecord() {
   idToDelete.value = null
 }
 
+const tab1 = ref("")
+
 </script>
 
 <template>

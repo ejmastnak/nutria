@@ -106,7 +106,7 @@ export default {
       <TabPanels class="mt-2">
 
         <!-- Food intake ingredients -->
-        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded w-fit">
+        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded w-fit p-1">
           <FoodIntakeRecords
             class="rounded-md w-fit"
             :ingredient_intake_records="ingredient_intake_records"
@@ -120,7 +120,7 @@ export default {
         </TabPanel>
 
         <!-- Body weight data-->
-        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-md w-fit">
+        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-md w-fit p-1">
           <BodyWeightRecords
             class="rounded-md w-fit"
             :body_weight_records="body_weight_records"
@@ -129,9 +129,8 @@ export default {
         </TabPanel>
 
         <!-- Nutrient profile data -->
-        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded">
+        <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded p-1 w-fit">
           <NutrientProfileTrends
-            class="overflow-hidden rounded-md" 
             :intake_guidelines="intake_guidelines"
             :nutrient_categories="nutrient_categories"
           />

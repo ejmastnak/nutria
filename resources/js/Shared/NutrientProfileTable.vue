@@ -72,6 +72,7 @@ function bg(pdv) {
         </tr>
       </tbody>
     </table>
+
   </div>
 
-  </template>
+</template>

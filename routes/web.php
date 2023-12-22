@@ -108,6 +108,9 @@ Route::middleware('auth')->group(function () {
 
     # Main page for logging data and viewing trends in data
     Route::get('/data', [DataController::class, 'index'])->name('data');
+
+    # To get nutrient profile for food consumed over a date range
+    Route::post('/nutrient-profile-for-date-range', [DataController::class, 'nutrientProfileForDateRange'])->name('nutrient-profile-for-date-range');
 });
 
 // These routes are available to unauthenticated users.
