@@ -84,6 +84,18 @@ function deleteBodyWeightRecord() {
   thingToDelete.value = null
 }
 
+// Used to color different days with different background colors to better
+// distinguish different days.
+const bgColors = ['bg-gray-50', 'bg-white']
+var bgColorCounter = 0
+function getBgColorForFoodItemRow(idx) {
+  if (idx === 0) return bgColors[0];
+  const prevItem = foodItems.value[idx - 1]
+  const thisItem = foodItems.value[idx]
+  if (thisItem.date_time_utc !== prevItem.date_time_utc) bgColorCounter += 1;
+  return bgColors[bgColorCounter % bgColors.length];
+}
+
 </script>
 
 <template>
@@ -117,8 +129,9 @@ function deleteBodyWeightRecord() {
       </thead>
       <tbody>
         <tr
-          v-for="foodItem in foodItems" :key="foodItem.id + '-' + foodItem.type"
+          v-for="(foodItem, idx) in foodItems" :key="foodItem.id + '-' + foodItem.type"
           class="border-b hover:bg-gray-100 cursor-pointer"
+          :class="getBgColorForFoodItemRow(idx)"
           @click="openUpdateDialog(foodItem)"
         >
           <td class="px-8 py-4">
