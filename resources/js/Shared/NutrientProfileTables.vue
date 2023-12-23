@@ -15,7 +15,7 @@ const props = defineProps({
     <div
       v-for="nc in nutrientCategories"
       :key="nc.id"
-      class="col-span-1 sm:w-3/4 md:2/3"
+      class="col-span-1"
     >
       <h2 class="text-md text-gray-900">{{nc.name}}s</h2>
       <NutrientProfileTable
