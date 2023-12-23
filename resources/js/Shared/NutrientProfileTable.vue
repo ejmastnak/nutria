@@ -36,9 +36,9 @@ function bg(pdv) {
 </script>
 
 <template>
-  <div class="border border-gray-300 rounded-xl w-fit overflow-hidden">
+  <div class="border border-gray-300 rounded-xl w-full overflow-hidden">
 
-    <table class="text-left">
+    <table class="text-left w-full">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
           <th scope="col" class="px-4 py-3 bg-blue-50">
