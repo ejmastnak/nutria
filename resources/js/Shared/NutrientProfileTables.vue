@@ -10,12 +10,12 @@ const props = defineProps({
 
 <template>
 
-  <div class="grid grid-cols-1 gap-4 lg:gap-0 lg:flex md:space-x-4">
+  <div class="lg:flex lg:gap-x-4 w-full space-y-4 lg:space-y-0">
 
     <div
       v-for="nc in nutrientCategories"
       :key="nc.id"
-      class="col-span-1"
+      class="w-full"
     >
       <h2 class="text-md text-gray-900">{{nc.name}}s</h2>
       <NutrientProfileTable
