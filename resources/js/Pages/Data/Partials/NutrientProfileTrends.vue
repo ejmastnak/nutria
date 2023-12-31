@@ -31,9 +31,17 @@ function dateAsYYYYMMDDString(date) {
   return [year, month, day].join('-');
 }
 
+const form = ref({
+  from_date: null,
+  to_date: null,
+})
+
+const clientSideErrors = ref({})
+const errors = ref({})
+
 function setDateRangeToToday() {
-  store.nutrientProfileTrends.form.from_date = getCurrentLocalYYYYMMDD()
-  store.nutrientProfileTrends.form.to_date = getCurrentLocalYYYYMMDD()
+  form.value.from_date = getCurrentLocalYYYYMMDD()
+  form.value.to_date = getCurrentLocalYYYYMMDD()
 }
 
 function setDateRangeToThisWeek() {
@@ -43,12 +51,11 @@ function setDateRangeToThisWeek() {
     weekEnd.getMonth(),
     weekEnd.getDate() - 6,
   );
-  store.nutrientProfileTrends.form.from_date = dateAsYYYYMMDDString(weekStart)
-  store.nutrientProfileTrends.form.to_date = dateAsYYYYMMDDString(weekEnd)
+  form.value.from_date = dateAsYYYYMMDDString(weekStart)
+  form.value.to_date = dateAsYYYYMMDDString(weekEnd)
 }
 
 function handleFromDateInputEnter() { submit() }
-
 function handleToDateInputEnter() { submit() }
 
 function isValidDate(d) {
@@ -56,20 +63,20 @@ function isValidDate(d) {
 }
 
 function passesValidation() {
-  if (store.nutrientProfileTrends.form.from_date === null || store.nutrientProfileTrends.form.from_date === "" || !isValidDate(new Date(store.nutrientProfileTrends.form.from_date))) {
-    store.nutrientProfileTrends.clientSideErrors['from_date'] = "The start date must be a valid date."
+  if (form.value.from_date === null || form.value.from_date === "" || !isValidDate(new Date(form.value.from_date))) {
+    clientSideErrors.value['from_date'] = "The start date must be a valid date."
     fromDateInputRef.value.focus()
     return false
   }
 
-  if (store.nutrientProfileTrends.form.to_date === null || store.nutrientProfileTrends.form.to_date === "" || !isValidDate(new Date(store.nutrientProfileTrends.form.to_date))) {
-    store.nutrientProfileTrends.clientSideErrors['to_date'] = "The end date must be a valid date."
+  if (form.value.to_date === null || form.value.to_date === "" || !isValidDate(new Date(form.value.to_date))) {
+    clientSideErrors.value['to_date'] = "The end date must be a valid date."
     toDateInputRef.value.focus()
     return false
   }
 
-  if (new Date(store.nutrientProfileTrends.form.to_date) < new Date(store.nutrientProfileTrends.form.from_date)) {
-    store.nutrientProfileTrends.clientSideErrors['to_date'] = "The end date must be greater than or equal to the start date."
+  if (new Date(form.value.to_date) < new Date(form.value.from_date)) {
+    clientSideErrors.value['to_date'] = "The end date must be greater than or equal to the start date."
     toDateInputRef.value.focus()
     return false
   }
@@ -77,35 +84,42 @@ function passesValidation() {
   return true
 }
 
+const nutrientProfiles = ref([])
+const showProfile = ref(false)
+const processing = ref(false)
+
+const fromDate = ref(null)
+const toDate = ref(null)
+
 function submit() {
   if (passesValidation()) {
 
-    store.nutrientProfileTrends.processing = true
+    processing.value = true
     axios.post(route('nutrient-profile-for-date-range'), {
-      from_date_time_utc: getUTCDateTime(store.nutrientProfileTrends.form.from_date + " 00:00:00"),
-      to_date_time_utc: getUTCDateTime(store.nutrientProfileTrends.form.to_date + " 23:59:59"),
+      from_date_time_utc: getUTCDateTime(form.value.from_date + " 00:00:00"),
+      to_date_time_utc: getUTCDateTime(form.value.to_date + " 23:59:59"),
     })
       .then((response) => {
-        store.nutrientProfileTrends.nutrientProfiles = response.data.nutrient_profiles ? response.data.nutrient_profiles : []
-        store.nutrientProfileTrends.clientSideErrors = {}
-        store.nutrientProfileTrends.errors = {}
-        store.nutrientProfileTrends.processing = false
-        store.nutrientProfileTrends.showProfile = true
-        store.nutrientProfileTrends.fromDate = store.nutrientProfileTrends.form.from_date
-        store.nutrientProfileTrends.toDate = store.nutrientProfileTrends.form.to_date
+        nutrientProfiles.value = response.data.nutrient_profiles ? response.data.nutrient_profiles : []
+        clientSideErrors.value = {}
+        errors.value = {}
+        processing.value = false
+        showProfile.value = true
+        fromDate.value = form.value.from_date
+        toDate.value = form.value.to_date
       })
       .catch((error) => {
         // Response beyond 2xx received from server
         if (error.response) {
-          if (error.response.data.errors) store.nutrientProfileTrends.errors = error.response.data.errors;
+          if (error.response.data.errors) errors.value = error.response.data.errors;
           else alert("Server error.");
         } else if (error.request) {
           alert("Error: no response received from server.");
         } else {
           alert("Error.");
         }
-        store.nutrientProfileTrends.processing = false
-        store.nutrientProfileTrends.showProfile = false
+        processing.value = false
+        showProfile.value = false
       });
   }
 
@@ -132,11 +146,11 @@ function submit() {
           @keyup.enter="handleFromDateInputEnter"
           class="w-full bg-white"
           type="date"
-          v-model="store.nutrientProfileTrends.form.from_date"
+          v-model="form.from_date"
           required
         />
-        <InputError :message="store.nutrientProfileTrends.clientSideErrors.from_date" />
-        <InputError v-for="error in store.nutrientProfileTrends.errors.from_date_time_utc" :message="error" />
+        <InputError :message="clientSideErrors.from_date" />
+        <InputError v-for="error in errors.from_date_time_utc" :message="error" />
       </div>
 
       <p class="self-start mt-8 mx-3 text-gray-600">to</p>
@@ -150,12 +164,12 @@ function submit() {
           @keyup.enter="handleToDateInputEnter"
           class="w-full bg-white"
           type="date"
-          :min="store.nutrientProfileTrends.form.from_date"
-          v-model="store.nutrientProfileTrends.form.to_date"
+          :min="form.from_date"
+          v-model="form.to_date"
           required
         />
-        <InputError :message="store.nutrientProfileTrends.clientSideErrors.to_date" />
-        <InputError v-for="error in store.nutrientProfileTrends.errors.to_date_time_utc" :message="error" />
+        <InputError :message="clientSideErrors.to_date" />
+        <InputError v-for="error in errors.to_date_time_utc" :message="error" />
       </div>
 
     </div>
@@ -176,21 +190,21 @@ function submit() {
       <PrimaryButton 
         type="submit"
         @click="submit"
-        :disabled="store.nutrientProfileTrends.processing"
-        :class="{ 'opacity-25': store.nutrientProfileTrends.processing }"
+        :disabled="processing"
+        :class="{ 'opacity-25': processing }"
       >
         Get nutrient profile
       </PrimaryButton>
     </div>
 
     <NutrientProfileForDateRange
-      v-if="store.nutrientProfileTrends.showProfile"
+      v-if="showProfile"
       class="mt-6"
       :intakeGuidelines="intake_guidelines"
       :nutrientCategories="nutrient_categories"
-      :nutrientProfiles="store.nutrientProfileTrends.nutrientProfiles"
-      :fromDate="store.nutrientProfileTrends.fromDate"
-      :toDate="store.nutrientProfileTrends.toDate"
+      :nutrientProfiles="nutrientProfiles"
+      :fromDate="fromDate"
+      :toDate="toDate"
     />
 
   </div>
