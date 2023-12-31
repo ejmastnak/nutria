@@ -9,9 +9,6 @@ import SecondaryButton from '@/Components/SecondaryButton.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import NutrientProfileForDateRange from './NutrientProfileForDateRange.vue'
 
-// To preserve variable values when switching between tabs
-import { store } from './store.js'
-
 const props = defineProps({
   intake_guidelines: Array,
   nutrient_categories: Array,
