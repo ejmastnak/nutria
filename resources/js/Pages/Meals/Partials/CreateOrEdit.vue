@@ -34,7 +34,7 @@ const mealIngredients = ref(props.meal
 
 const nameInput = ref(null)
 
-const mealIngredientTableCellsRef = ref([])
+const mealIngredientInputCellsRef = ref([])
 var nextId = 1
 function addMealIngredient() {
   mealIngredients.value.push({
@@ -53,7 +53,7 @@ function addMealIngredient() {
   // Focus text input for name of just-added empty meal ingredient
   // Use timeout to give time for new table row to be injected into DOM
   setTimeout(() => {
-    const input = mealIngredientTableCellsRef.value[mealIngredientTableCellsRef.value.length - 1].querySelectorAll('input')[0];
+    const input = mealIngredientInputCellsRef.value[mealIngredientTableCellsRef.value.length - 1].querySelectorAll('input')[0];
     if (input) input.focus();
   }, 0)
 
@@ -142,7 +142,7 @@ export default {
           :key="meal_ingredient.id"
         >
           <!-- Ingredient input -->
-          <div ref="mealIngredientTableCellsRef" class="col-span-9">
+          <div ref="mealIngredientInputCellsRef" class="col-span-9">
             <FuzzyCombobox
               :options="ingredients"
               :modelValue="meal_ingredient.meal_ingredient.ingredient"
@@ -174,7 +174,6 @@ export default {
               :options="units.filter(unit => unit.g || (unit.ml && (meal_ingredient.meal_ingredient.ingredient && meal_ingredient.meal_ingredient.ingredient.density_g_ml))).concat(meal_ingredient.meal_ingredient.ingredient.custom_units ? meal_ingredient.meal_ingredient.ingredient.custom_units : [])"
               :modelValue="meal_ingredient.meal_ingredient.unit"
               @update:modelValue="newValue => (meal_ingredient.meal_ingredient.unit_id = newValue.id, meal_ingredient.meal_ingredient.unit = newValue)"
-              optionsClasses=""
             />
             <div class="text-left">
               <InputError :message="form.errors['meal_ingredients.' + idx + '.unit_id']" />
