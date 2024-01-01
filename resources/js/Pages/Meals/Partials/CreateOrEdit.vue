@@ -107,13 +107,13 @@ export default {
 
     <section class="mt-4">
       <!-- Name -->
-      <div class="w-96">
+      <div>
         <InputLabel for="name" value="Name" />
         <TextInput
           id="name"
           ref="nameInput"
           type="text"
-          class="mt-1 block w-full"
+          class="min-w-[28rem] mr-2"
           v-model="form.name"
           required
         />
@@ -123,81 +123,75 @@ export default {
     </section>
 
     <!-- Meal ingredients table -->
-    <section class="mt-8 p-4 border border-gray-300 shadow-sm rounded-xl">
+    <section class="mt-6">
 
       <h2 class="text-lg">Meal ingredients</h2>
       <InputError :message="form.errors.meal_ingredients" />
 
-      <table v-if="mealIngredients.length" class="mt-2 text-sm sm:text-base text-left w-full">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-          <tr>
-            <th scope="col" class="px-4 py-3 bg-blue-50 w-3/4">
-              Ingredient
-            </th>
-            <th scope="col" class="px-4 py-3 bg-blue-100 text-right">
-              Amount
-            </th>
-            <th scope="col" class="px-4 py-3 bg-blue-50">
-              Unit
-            </th>
-            <th scope="col" class="px-4 py-3 bg-blue-100 w-12" />
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(meal_ingredient, idx) in mealIngredients"
-            :key="meal_ingredient.id"
-            class="border-t text-gray-600 align-top"
-          >
-            <td ref="mealIngredientTableCellsRef" scope="row" class="pr-2 py-2">
-              <FuzzyCombobox
-                :options="ingredients"
-                :modelValue="meal_ingredient.meal_ingredient.ingredient"
-                :showIcon="false"
-                @update:modelValue="newValue => updateMealIngredient(idx, newValue)"
+      <div v-if="mealIngredients.length" class="mt-1 grid grid-cols-16 min-w-[600px] gap-y-1.5 gap-x-1">
+
+        <!-- Header -->
+        <p class="col-span-9 px-3 py-3 -mx-1 bg-blue-50">Ingredient</p>
+        <p class="col-span-3 px-3 py-3 -mx-1 bg-blue-100 text-right">Amount</p>
+        <p class="col-span-3 px-3 py-3 -mx-1 bg-blue-50">Unit</p>
+        <p class="col-span-1 px-3 py-3 -mx-1 bg-blue-100" />
+
+        <!-- Meal ingredients -->
+        <template
+          v-for="(meal_ingredient, idx) in mealIngredients"
+          :key="meal_ingredient.id"
+        >
+          <!-- Ingredient input -->
+          <div ref="mealIngredientTableCellsRef" class="col-span-9">
+            <FuzzyCombobox
+              :options="ingredients"
+              :modelValue="meal_ingredient.meal_ingredient.ingredient"
+              :showIcon="false"
+              @update:modelValue="newValue => updateMealIngredient(idx, newValue)"
+            />
+            <div class="text-left">
+              <InputError :message="form.errors['meal_ingredients.' + idx + '.id']" />
+              <InputError :message="form.errors['meal_ingredients.' + idx + '.ingredient_id']" />
+            </div>
+          </div>
+          <!-- Amount input -->
+          <div class="col-span-3 text-right">
+            <div class="w-full ml-auto">
+              <TextInput
+                type="number"
+                placeholder="0"
+                class="w-full text-right"
+                step="any"
+                v-model="meal_ingredient.meal_ingredient.amount"
+                required
               />
-              <div class="mt-2 text-left">
-                <InputError :message="form.errors['meal_ingredients.' + idx + '.id']" />
-                <InputError :message="form.errors['meal_ingredients.' + idx + '.ingredient_id']" />
-              </div>
-            </td>
-            <td class="px-4 py-2 text-right">
-              <div class="w-fit ml-auto">
-                <TextInput
-                  type="number"
-                  placeholder="0"
-                  class="w-24 text-right"
-                  step="any"
-                  v-model="meal_ingredient.meal_ingredient.amount"
-                  required
-                />
-                <InputError class="mt-2 text-left" :message="form.errors['meal_ingredients.' + idx + '.amount']" />
-              </div>
-            </td>
-            <td class="px-4 py-2 text-right">
-              <SimpleCombobox
-                :options="units.filter(unit => unit.g || (unit.ml && (meal_ingredient.meal_ingredient.ingredient && meal_ingredient.meal_ingredient.ingredient.density_g_ml))).concat(meal_ingredient.meal_ingredient.ingredient.custom_units ? meal_ingredient.meal_ingredient.ingredient.custom_units : [])"
-                :modelValue="meal_ingredient.meal_ingredient.unit"
-                @update:modelValue="newValue => (meal_ingredient.meal_ingredient.unit_id = newValue.id, meal_ingredient.meal_ingredient.unit = newValue)"
-                inputClasses="w-28"
-              />
-              <div class="mt-2 text-left">
-                <InputError :message="form.errors['meal_ingredients.' + idx + '.unit_id']" />
-                <InputError :message="form.errors['meal_ingredients.' + idx]" />
-              </div>
-            </td>
-            <td class="px-4 py-2">
-              <button
-                type="button"
-                @click="deleteMealIngredient(idx)"
-                class="ml-1 p-1 text-gray-600 hover:text-red-700 mt-1"
-              >
-                <TrashIcon class="w-6 h-6" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              <InputError class="text-left" :message="form.errors['meal_ingredients.' + idx + '.amount']" />
+            </div>
+          </div>
+          <!-- Unit combobox -->
+          <div class="col-span-3 text-right">
+            <SimpleCombobox
+              :options="units.filter(unit => unit.g || (unit.ml && (meal_ingredient.meal_ingredient.ingredient && meal_ingredient.meal_ingredient.ingredient.density_g_ml))).concat(meal_ingredient.meal_ingredient.ingredient.custom_units ? meal_ingredient.meal_ingredient.ingredient.custom_units : [])"
+              :modelValue="meal_ingredient.meal_ingredient.unit"
+              @update:modelValue="newValue => (meal_ingredient.meal_ingredient.unit_id = newValue.id, meal_ingredient.meal_ingredient.unit = newValue)"
+              optionsClasses=""
+            />
+            <div class="text-left">
+              <InputError :message="form.errors['meal_ingredients.' + idx + '.unit_id']" />
+              <InputError :message="form.errors['meal_ingredients.' + idx]" />
+            </div>
+          </div>
+          <div class="col-span-1 place-self-center">
+            <button
+              type="button"
+              @click="deleteMealIngredient(idx)"
+              class="text-gray-600 hover:text-red-700"
+            >
+              <TrashIcon class="w-6 h-6" />
+            </button>
+          </div>
+        </template>
+      </div>
 
       <!-- New ingredient button -->
       <div class="mt-2">

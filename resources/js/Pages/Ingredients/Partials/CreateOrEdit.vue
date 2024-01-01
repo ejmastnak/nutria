@@ -224,7 +224,7 @@ export default {
           labelText="Ingredient category"
           :modelValue="form.ingredient_category"
           @update:modelValue="newValue => updateSelectedIngredientCategory(newValue)"
-          inputClasses="w-80"
+          inputClasses="max-w-lg"
         />
         <InputError class="mt-2" :message="form.errors.ingredient_category_id" />
       </div>
@@ -324,7 +324,7 @@ export default {
       <InputError :message="form.errors.ingredient_nutrients" />
 
       <!-- Ingredient nutrient amount and unit -->
-      <div class="mt-2 flex items-baseline">
+      <div class="mt-2 flex items-baseline min-w-[350px]">
 
         <p class="text-md text-gray-600">Per</p>
 
@@ -342,21 +342,20 @@ export default {
         </div>
 
         <!-- Ingredient nutrient amount unit -->
-        <div class="ml-2 w-24">
+        <div class="ml-2">
           <SimpleCombobox
             :options="allowedNutrientContentUnits"
             searchKey="name"
             displayKey="display_name"
             labelText="Unit"
             labelClasses="sr-only"
-            inputClasses="py-1 w-24"
-            optionsClasses="w-32"
+            inputClasses="py-1 max-w-[10rem]"
             v-model="form.nutrient_content_unit"
           />
           <InputError class="mt-1" :message="form.errors.nutrient_content_unit" />
         </div>
 
-        <p class="ml-8 pl-0.5 text-md text-gray-600">
+        <p class="ml-1 pl-0.5 text-md text-gray-600">
           <span v-show="form.nutrient_content_unit && form.nutrient_content_unit.name !== 'g'" class="mr-1">({{roundNonZero(gramAmountOfUnit(form.nutrient_content_unit_amount, form.nutrient_content_unit, densityGMl), 1)}} g)</span>
           <span class="hidden sm:inline">of ingredient</span>
         </p>

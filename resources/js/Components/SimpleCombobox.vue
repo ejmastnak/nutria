@@ -73,9 +73,9 @@ watch(computedOptions, () => { search() })
           {{labelText}}
         </ComboboxLabel>
 
-        <div class="flex w-fit">
+        <div class="flex">
           <ComboboxInput
-            class="border border-gray-300 rounded-bl-md rounded-tl-md shadow-sm focus:border focus:border-blue-500 text-ellipsis"
+            class="w-full border border-gray-300 rounded-bl-md rounded-tl-md shadow-sm focus:border focus:border-blue-500 text-ellipsis"
             :class="inputClasses"
             @change="query = $event.target.value"
             :displayValue="(option) => option ? option[searchKey] : ''"
