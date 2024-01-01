@@ -363,7 +363,7 @@ export default {
 
       <InputError class="mt-1" :message="form.errors.ingredient_nutrients" />
 
-      <div class="mt-3 grid grid-cols-1 lg:flex md:gap-x-8 gap-y-3">
+      <div class="mt-3 lg:flex lg:gap-x-4 space-y-4 lg:space-y-0">
         <div
           v-for="nutrient_category in nutrient_categories"
           :key="nutrient_category.id"
@@ -372,16 +372,12 @@ export default {
 
           <h3 class="text-md">{{nutrient_category.name}}s</h3>
 
-          <div class="border border-gray-300 rounded-xl overflow-hidden w-fit">
-            <table class="text-sm sm:text-base text-left">
+          <div class="border border-gray-300 rounded-xl overflow-hidden w-full">
+            <table class="text-sm sm:text-base text-left w-full">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
-                  <th scope="col" class="px-4 py-3 bg-blue-50">
-                    Nutrient
-                  </th>
-                  <th scope="col" class="px-4 py-3 bg-blue-100">
-                    Amount
-                  </th>
+                  <th scope="col" class="px-4 py-3 bg-blue-50">Nutrient</th>
+                  <th scope="col" class="px-4 py-3 bg-blue-100">Amount</th>
                 </tr>
               </thead>
               <tbody>
@@ -402,7 +398,7 @@ export default {
                         class="mt-1 inline-block w-24 py-1 text-right"
                         v-model="ingredient_nutrient.amount"
                       />
-                      <span class="ml-2">{{ingredient_nutrient.nutrient.unit.name}}</span>
+                      <span class="ml-2 whitespace-nowrap">{{ingredient_nutrient.nutrient.unit.name}}</span>
                     </div>
                     <InputError class="mt-2 text-left" :message="form.errors['ingredient_nutrients.' + ingredient_nutrient.nutrient.seq_num + '.id']" />
                     <InputError class="mt-2 text-left" :message="form.errors['ingredient_nutrients.' + ingredient_nutrient.nutrient.seq_num + '.nutrient_id']" />

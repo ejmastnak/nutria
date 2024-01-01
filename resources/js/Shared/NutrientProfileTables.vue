@@ -10,7 +10,7 @@ const props = defineProps({
 
 <template>
 
-  <div class="lg:flex lg:gap-x-4 w-full space-y-4 lg:space-y-0">
+  <div class="w-full lg:flex lg:gap-x-4 space-y-4 lg:space-y-0">
 
     <div
       v-for="nc in nutrientCategories"

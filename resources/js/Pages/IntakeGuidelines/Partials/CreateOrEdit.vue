@@ -88,7 +88,7 @@ export default {
 
       <InputError class="mt-1" :message="form.errors.intake_guideline_nutrients" />
 
-      <div class="mt-2 grid grid-cols-1 lg:flex md:gap-x-8 gap-y-3">
+      <div class="mt-2 lg:flex lg:gap-x-4 space-y-4 lg:space-y-0">
         <div
           v-for="nc in nutrient_categories"
           :key="nc.id"
@@ -97,17 +97,12 @@ export default {
 
           <h2 class="text-lg">{{nc.name}}s</h2>
 
-          <div class="border border-gray-300 rounded-xl overflow-hidden w-fit">
-            <table class="text-sm sm:text-base text-left">
+          <div class="border border-gray-300 rounded-xl overflow-hidden w-full">
+            <table class="text-sm sm:text-base text-left w-full">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
-                  <th scope="col" class="px-4 py-3 bg-blue-50">
-                    Nutrient
-                  </th>
-                  <th scope="col" class="px-4 py-3 bg-blue-100 text-right">
-                    RDI
-                  </th>
-                  <th scope="col" class="bg-blue-100"></th>
+                  <th scope="col" class="px-4 py-3 bg-blue-50">Nutrient</th>
+                  <th scope="col" class="px-4 py-3 bg-blue-100">RDI</th>
                 </tr>
               </thead>
               <tbody>
@@ -127,13 +122,11 @@ export default {
                         class="mt-1 block w-24 py-1 text-right"
                         v-model="intake_guideline_nutrient.rdi"
                       />
+                      <span class="ml-2 whitespace-nowrap">{{intake_guideline_nutrient.nutrient.unit.name}}</span>
                     </div>
                     <InputError class="mt-2 text-left" :message="form.errors['intake_guideline_nutrients.' + String(intake_guideline_nutrient.nutrient.seq_num - 1) + '.id']" />
                     <InputError class="mt-2 text-left" :message="form.errors['intake_guideline_nutrients.' + String(intake_guideline_nutrient.nutrient.seq_num - 1) + '.nutrient_id']" />
                     <InputError class="mt-2 text-left" :message="form.errors['intake_guideline_nutrients.' + String(intake_guideline_nutrient.nutrient.seq_num - 1) + '.rdi']" />
-                  </td>
-                  <td class="pl-0 pr-4 py-2 text-left whitespace-nowrap">
-                    {{intake_guideline_nutrient.nutrient.unit.name}}
                   </td>
                 </tr>
               </tbody>
