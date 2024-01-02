@@ -29,6 +29,7 @@ class IntakeGuidelineSeeder extends Seeder
 
             $IntakeGuideline = IntakeGuideline::updateOrCreate([
                 'name' => $intakeGuideline['name'],
+                'priority' => array_key_exists('priority', $intakeGuideline) ? $intakeGuideline['priority'] : null,
                 'user_id' => $intakeGuideline['user_id'],
             ]);
 

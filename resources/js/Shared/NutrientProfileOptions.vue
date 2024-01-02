@@ -72,7 +72,7 @@ function resetTo100G() {
   <div class="flex">
 
     <p class="w-80 text-gray-700 leading-snug">
-      Displayed for <span class="font-bold">{{localSelectedUnitAmount}} {{localSelectedUnit.name}}</span>, using {{localSelectedIntakeGuideline.name}} to compute percent daily value.
+      Displayed for <span class="font-semibold">{{localSelectedUnitAmount}} {{localSelectedUnit.name}}</span>, using <span class="font-semibold">{{localSelectedIntakeGuideline.name}}</span> to compute percent daily value.
     </p>
 
     <Popover class="relative z-50">

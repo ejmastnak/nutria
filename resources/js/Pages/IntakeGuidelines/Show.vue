@@ -50,9 +50,14 @@ export default {
 
     <div>
       <H1 :text="intake_guideline.name" />
-      <!-- Intake guideline pillbox label category -->
-      <div class="mt-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
-        Intake Guideline
+      <div class="flex items-center mt-2">
+        <!-- Intake guideline label and priority pillboxes -->
+        <div class="bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
+          Intake Guideline
+        </div>
+        <div v-if="intake_guideline.priority !== null" class="ml-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
+          Priority: {{intake_guideline.priority}}
+        </div>
       </div>
     </div>
 

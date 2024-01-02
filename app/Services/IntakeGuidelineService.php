@@ -15,6 +15,7 @@ class IntakeGuidelineService
             // Create intake guideline
             $intakeGuideline = IntakeGuideline::create([
                 'name' => $data['name'],
+                'priority' => array_key_exists('priority', $data) ? $data['priority'] : null,
                 'user_id' => $userId,
             ]);
 
@@ -36,7 +37,10 @@ class IntakeGuidelineService
         DB::transaction(function () use ($data, $intakeGuideline) {
 
             // Update intake guideline
-            $intakeGuideline->update([ 'name' => $data['name'] ]);
+            $intakeGuideline->update([
+                'name' => $data['name'],
+                'priority' => array_key_exists('priority', $data) ? $data['priority'] : null,
+            ]);
 
             // Update ingredient's nutrients
             foreach ($data['intake_guideline_nutrients'] as $ign) {

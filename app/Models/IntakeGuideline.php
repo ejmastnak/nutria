@@ -10,6 +10,7 @@ class IntakeGuideline extends Model
     use HasFactory;
     protected $fillable = [
         'name',
+        'priority',
         'user_id',
     ];
 
@@ -30,12 +31,13 @@ class IntakeGuideline extends Model
             'intake_guideline_nutrients.nutrient:id,display_name,unit_id,nutrient_category_id,precision,seq_num',
             'intake_guideline_nutrients.nutrient.unit:id,name'
         ]);
-        return $this->only(['id', 'name', 'intake_guideline_nutrients']);
+        return $this->only(['id', 'name', 'priority', 'intake_guideline_nutrients']);
     }
 
     public static function getForUser(?int $userId) {
         return self::where('user_id', null)
             ->orWhere('user_id', $userId)
+            ->orderByRaw('COALESCE(priority, 0) DESC')
             ->get(['id', 'name']);
     }
 
@@ -47,10 +49,12 @@ class IntakeGuideline extends Model
         $userId = $user ? $user->id : null;
         return self::where('user_id', null)
             ->orWhere('user_id', $userId)
-            ->get(['id', 'name'])
+            ->orderByRaw('COALESCE(priority, 0) DESC')
+            ->get(['id', 'name', 'priority'])
             ->map(fn($intakeGuideline) => [
                 'id' => $intakeGuideline->id,
                 'name' => $intakeGuideline->name,
+                'priority' => $intakeGuideline->priority,
                 'can_update' => $user ? $user->can('update', $intakeGuideline) : false,
                 'can_delete' => $user ? $user->can('delete', $intakeGuideline) : false,
             ]);
@@ -62,7 +66,7 @@ class IntakeGuideline extends Model
     public static function getIdsForUser(?int $userId) {
         return self::where('user_id', null)
         ->orWhere('user_id', $userId)
-        ->orderBy('id', 'asc')
+        ->orderByRaw('COALESCE(priority, 0) DESC')
         ->pluck('id');
     }
 

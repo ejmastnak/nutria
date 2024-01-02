@@ -30,7 +30,7 @@ function updateSelectedIntakeGuideline(newValue) {
   <div class="flex">
 
     <p class="max-w-sm md:max-w-md text-gray-700 leading-snug">
-      Average daily nutrient profile for food consumed from <span class="font-medium">{{getHumanReadableDate(fromDate)}}</span> to <span class="font-medium">{{getHumanReadableDate(toDate)}}</span>, using <span class="font-medium">{{localSelectedIntakeGuideline.name}}</span> to compute percent daily value.
+      Average daily nutrient profile for food consumed from <span class="font-semibold">{{getHumanReadableDate(fromDate)}}</span> to <span class="font-semibold">{{getHumanReadableDate(toDate)}}</span>, using <span class="font-semibold">{{localSelectedIntakeGuideline.name}}</span> to compute percent daily value.
     </p>
 
     <Popover class="relative z-50">

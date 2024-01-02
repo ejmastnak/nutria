@@ -20,6 +20,7 @@ const props = defineProps({
 const form = useForm({
   id: props.intake_guideline ? props.intake_guideline.id : null,
   name: props.intake_guideline ? props.intake_guideline.name : "",
+  priority: props.intake_guideline ? props.intake_guideline.priority : null,
   // Reset zero amounts to null, to make it easier for user to fill values in.
   intake_guideline_nutrients: props.intake_guideline
         ? props.intake_guideline.intake_guideline_nutrients.map((intake_guideline_nutrient) => {
@@ -72,7 +73,20 @@ export default {
           v-model="form.name"
           required
         />
-        <InputError class="mt-2" :message="form.errors.name" />
+        <InputError class="mt-1" :message="form.errors.name" />
+      </div>
+
+      <!-- Priority -->
+      <div class="mt-4">
+        <InputLabel for="priority" value="Priority (optional)" />
+        <TextInput
+          id="priority"
+          ref="priorityInput"
+          type="number"
+          class="mt-1 block w-16"
+          v-model="form.priority"
+        />
+        <InputError class="mt-1" :message="form.errors.priority" />
       </div>
 
     </section>
