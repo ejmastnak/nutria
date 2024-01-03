@@ -13,10 +13,8 @@ const props = defineProps({
   body_weight_records: Array,
   ingredient_intake_records: Array,
   meal_intake_records: Array,
-  food_list_intake_records: Array,
   user_ingredients: Array,
   meals: Array,
-  food_lists: Array,
   units: Array,
   intake_guidelines: Array,
   nutrient_categories: Array,
@@ -52,7 +50,6 @@ export default {
     :units="units"
     :ingredients="ingredients"
     :meals="meals"
-    :food_lists="food_lists"
   >
     <Head title="Data" />
 
@@ -111,10 +108,8 @@ export default {
             class="rounded-md w-fit"
             :ingredient_intake_records="ingredient_intake_records"
             :meal_intake_records="meal_intake_records"
-            :food_list_intake_records="food_list_intake_records"
             :ingredients="ingredients"
             :meals="meals"
-            :food_lists="food_lists"
             :units="units"
           />
         </TabPanel>

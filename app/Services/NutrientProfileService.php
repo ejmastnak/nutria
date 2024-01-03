@@ -336,53 +336,8 @@ class NutrientProfileService
             meal_intake_records.date_time_utc >= :from_date
             and
             meal_intake_records.date_time_utc <= :to_date
-
-          union all 
-
-          select
-            ingredients.id as ingredient_id,
-            round(food_list_ingredients.mass_in_grams * (food_list_intake_records.mass_in_grams / food_lists.mass_in_grams), 2) as mass_in_grams
-          from food_list_intake_records
-          inner join food_lists
-            on food_lists.id
-            = food_list_intake_records.food_list_id
-          inner join food_list_ingredients
-            on food_list_ingredients.food_list_id
-            = food_lists.id
-          inner join ingredients
-            on ingredients.id
-            = food_list_ingredients.ingredient_id
-          where
-            food_list_intake_records.date_time_utc >= :from_date
-            and
-            food_list_intake_records.date_time_utc <= :to_date
-
-          union all
-
-          select
-            ingredients.id as ingredient_id,
-            round(meal_ingredients.mass_in_grams * (food_list_meals.mass_in_grams / meals.mass_in_grams) * (food_list_intake_records.mass_in_grams / food_lists.mass_in_grams), 2) as mass_in_grams
-          from food_list_intake_records
-          inner join food_lists
-            on food_lists.id
-            = food_list_intake_records.food_list_id
-          inner join food_list_meals
-            on food_list_meals.food_list_id
-            = food_lists.id
-          inner join meals
-            on meals.id
-            = food_list_meals.meal_id
-          inner join meal_ingredients
-            on meal_ingredients.meal_id
-            = meals.id
-          inner join ingredients
-            on ingredients.id
-            = meal_ingredients.ingredient_id
-          where
-            food_list_intake_records.date_time_utc >= :from_date
-            and
-            food_list_intake_records.date_time_utc <= :to_date
-        ) as unioned_ingredients
+        )
+        as unioned_ingredients
         inner join ingredient_nutrients
           on ingredient_nutrients.ingredient_id
           = unioned_ingredients.ingredient_id

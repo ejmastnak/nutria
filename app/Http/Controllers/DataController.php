@@ -5,10 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\BodyWeightRecord;
 use App\Models\IngredientIntakeRecord;
 use App\Models\MealIntakeRecord;
-use App\Models\FoodListIntakeRecord;
 use App\Models\Ingredient;
 use App\Models\Meal;
-use App\Models\FoodList;
 use App\Models\Unit;
 use App\Models\IntakeGuideline;
 use App\Models\NutrientCategory;
@@ -31,10 +29,8 @@ class DataController extends Controller
             'body_weight_records' => BodyWeightRecord::getForUser($userId),
             'ingredient_intake_records' => IngredientIntakeRecord::getForUser($userId),
             'meal_intake_records' => MealIntakeRecord::getForUser($userId),
-            'food_list_intake_records' => FoodListIntakeRecord::getForUser($userId),
             'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
             'meals' => Meal::getForUserWithUnit($userId),
-            'food_lists' => FoodList::getForUserWithUnit($userId),
             'units' => Unit::getMassAndVolume(),
             'intake_guidelines' => IntakeGuideline::getForUser($userId),
             'nutrient_categories' => NutrientCategory::getWithName(),

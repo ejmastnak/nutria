@@ -14,7 +14,7 @@ import LogFoodIntake from './SidebarPartials/LogFoodIntake.vue'
 
 const props = defineProps({
   page: String,  // "index", "show", "create", "clone", "edit", or "data"
-  route_basename: {type: String, default: ""},  // "ingredients", "meals", "food-lists", or "intake-guidelines"
+  route_basename: {type: String, default: ""},  // "ingredients", "meals", or "intake-guidelines"
   id: {type: Number, default: null},  // id of this thing
   things: {type: Array, default: []},  // list of all things
   thing: {type: String, default: ""},  // e.g. "ingredient", "meal", etc.
@@ -27,7 +27,6 @@ const props = defineProps({
   units: {type: Array, default: []},
   ingredients: {type: Array, default: []},
   meals: {type: Array, default: []},
-  food_lists: {type: Array, default: []},
 })
 
 const showingNavigationDropdown = ref(false);
@@ -82,7 +81,6 @@ const showingNavigationDropdown = ref(false);
             :units="units"
             :ingredients="ingredients"
             :meals="meals"
-            :food_lists="food_lists"
           />
           <LogBodyWeight :units="units" />
         </div>
@@ -146,7 +144,6 @@ const showingNavigationDropdown = ref(false);
             :units="units"
             :ingredients="ingredients"
             :meals="meals"
-            :food_lists="food_lists"
           />
           <LogBodyWeight :units="units" />
         </div>

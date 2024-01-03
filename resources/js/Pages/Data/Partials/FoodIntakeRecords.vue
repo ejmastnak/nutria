@@ -4,10 +4,8 @@ import { router } from '@inertiajs/vue3'
 import { TrashIcon, PencilSquareIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
 import UpdateIngredientIntakeRecordDialog from '@/Shared/UpdateIngredientIntakeRecordDialog.vue'
 import UpdateMealIntakeRecordDialog from '@/Shared/UpdateMealIntakeRecordDialog.vue'
-import UpdateFoodListIntakeRecordDialog from '@/Shared/UpdateFoodListIntakeRecordDialog.vue'
 import StoreIngredientIntakeRecordsDialog from '@/Shared/StoreIngredientIntakeRecordsDialog.vue'
 import StoreMealIntakeRecordsDialog from '@/Shared/StoreMealIntakeRecordsDialog.vue'
-import StoreFoodListIntakeRecordsDialog from '@/Shared/StoreFoodListIntakeRecordsDialog.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 import MyLink from '@/Components/MyLink.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -16,19 +14,16 @@ import { roundNonZero, getHumanReadableLocalDate } from '@/utils/GlobalFunctions
 const props = defineProps({
   ingredient_intake_records: Array,
   meal_intake_records: Array,
-  food_list_intake_records: Array,
   ingredients: Array,
   meals: Array,
-  food_lists: Array,
   units: Array,
 })
 
 const INGREDIENT=0
 const MEAL=1
-const FOOD_LIST=2
 
 const foodItems = computed(() => {
-  return props.ingredient_intake_records.map((record) => {record['type'] = INGREDIENT; return record}).concat(props.meal_intake_records.map((record) => {record['type'] = MEAL; return record}), props.food_list_intake_records.map((record) => {record['type'] = FOOD_LIST; return record})).sort((a, b) => {
+  return props.ingredient_intake_records.map((record) => {record['type'] = INGREDIENT; return record}).concat(props.meal_intake_records.map((record) => {record['type'] = MEAL; return record})).sort((a, b) => {
     if (a.date_time_utc > b.date_time_utc) return -1;
     if (a.date_time_utc < b.date_time_utc) return 1;
     return 0;
@@ -37,19 +32,15 @@ const foodItems = computed(() => {
 
 const storeIngredientIntakeRecordsDialogRef = ref(null)
 const storeMealIntakeRecordsDialogRef = ref(null)
-const storeFoodListIntakeRecordsDialogRef = ref(null)
 
 const updateIngredientIntakeRecordDialogRef = ref(null)
 const updateMealIntakeRecordDialogRef = ref(null)
-const updateFoodListIntakeRecordDialogRef = ref(null)
 
 function openUpdateDialog(foodItem) {
   if (foodItem.type === INGREDIENT) {
     updateIngredientIntakeRecordDialogRef.value.open(foodItem)
   } else if (foodItem.type === MEAL) {
     updateMealIntakeRecordDialogRef.value.open(foodItem)
-  } else if (foodItem.type === FOOD_LIST) {
-    updateFoodListIntakeRecordDialogRef.value.open(foodItem)
   }
 }
 
@@ -67,10 +58,6 @@ function openDeleteDialog(foodItem) {
   } else if (foodItem.type === MEAL) {
     deleteRouteName.value = "meal-intake-records.destroy"
     thingToDelete.value = "meal intake record"
-    deleteDialogRef.value.open(foodItem)
-  } else if (foodItem.type === FOOD_LIST) {
-    deleteRouteName.value = "food-list-intake-records.destroy"
-    thingToDelete.value = "food list intake record"
     deleteDialogRef.value.open(foodItem)
   }
 }
@@ -112,9 +99,6 @@ function getBgColorForFoodItemRow(idx) {
       <SecondaryButton @click="storeMealIntakeRecordsDialogRef.open()" >
         Log Meals
       </SecondaryButton>
-      <SecondaryButton @click="storeFoodListIntakeRecordsDialogRef.open()" >
-        Log Food Lists
-      </SecondaryButton>
     </div>
 
     <table v-if="foodItems.length" class="mt-2 text-sm sm:text-base text-left text-gray-500">
@@ -147,12 +131,6 @@ function getBgColorForFoodItemRow(idx) {
                 <ArrowTopRightOnSquareIcon class="ml-0.5 w-5 h-5 text-gray-500" />
               </MyLink>
             </p>
-            <p v-if="foodItem.type === FOOD_LIST" class="flex items-center whitespace-nowrap">
-              {{foodItem.food_list.name}}
-              <MyLink @click.stop :href="route('food-lists.show', foodItem.food_list.id)">
-                <ArrowTopRightOnSquareIcon class="ml-0.5 w-5 h-5 text-gray-500" />
-              </MyLink>
-            </p>
           </td>
           <td scope="row" class="pr-1 py-4 text-gray-900 text-right">
             {{roundNonZero(Number(foodItem.amount), 2)}}
@@ -169,7 +147,6 @@ function getBgColorForFoodItemRow(idx) {
           <td class="px-4 py-4">
             <p v-if="foodItem.type === INGREDIENT">Ingredient</p>
             <p v-if="foodItem.type === MEAL">Meal</p>
-            <p v-if="foodItem.type === FOOD_LIST">Food List</p>
           </td>
           <td class="flex items-center px-8 py-4 h-full">
             <button
@@ -201,11 +178,6 @@ function getBgColorForFoodItemRow(idx) {
       :units="units"
       ref="updateMealIntakeRecordDialogRef"
     />
-    <UpdateFoodListIntakeRecordDialog
-      :food_lists="food_lists"
-      :units="units"
-      ref="updateFoodListIntakeRecordDialogRef"
-    />
 
     <StoreIngredientIntakeRecordsDialog
       ref="storeIngredientIntakeRecordsDialogRef"
@@ -215,11 +187,6 @@ function getBgColorForFoodItemRow(idx) {
     <StoreMealIntakeRecordsDialog
       ref="storeMealIntakeRecordsDialogRef"
       :meals="meals"
-      :units="units"
-    />
-    <StoreFoodListIntakeRecordsDialog
-      ref="storeFoodListIntakeRecordsDialogRef"
-      :food_lists="food_lists"
       :units="units"
     />
 

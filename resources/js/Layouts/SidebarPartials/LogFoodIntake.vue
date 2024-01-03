@@ -4,7 +4,6 @@ import { ref } from 'vue'
 import { PencilSquareIcon } from '@heroicons/vue/24/outline'
 import StoreIngredientIntakeRecordsDialog from '@/Shared/StoreIngredientIntakeRecordsDialog.vue'
 import StoreMealIntakeRecordsDialog from '@/Shared/StoreMealIntakeRecordsDialog.vue'
-import StoreFoodListIntakeRecordsDialog from '@/Shared/StoreFoodListIntakeRecordsDialog.vue'
 import SidebarButton from './SidebarButton.vue'
 import SidebarIcon from './SidebarIcon.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
@@ -15,7 +14,6 @@ const props = defineProps({
   units: Array,
   ingredients: Array,
   meals: Array,
-  food_lists: Array,
 })
 
 const isOpen = ref(false)
@@ -24,7 +22,6 @@ function close() { isOpen.value = false }
 
 const storeIngredientIntakeRecordsDialogRef = ref(null)
 const storeMealIntakeRecordsDialogRef = ref(null)
-const storeFoodListIntakeRecordsDialogRef = ref(null)
 
 </script>
 
@@ -37,7 +34,7 @@ const storeFoodListIntakeRecordsDialogRef = ref(null)
     <p class="ml-1.5">Log food intake</p>
   </SidebarButton>
 
-  <!-- For choosing between ingredients, meals, and food lists -->
+  <!-- For choosing between ingredients and meals -->
   <Dialog
     :open="isOpen"
     @close="close"
@@ -51,7 +48,7 @@ const storeFoodListIntakeRecordsDialogRef = ref(null)
         </DialogTitle>
 
         <DialogDescription class="text-gray-600">
-          Which food type are you logging?
+          What are you logging?
         </DialogDescription>
 
         <ul class="mt-2 space-y-1.5">
@@ -63,11 +60,6 @@ const storeFoodListIntakeRecordsDialogRef = ref(null)
           <li>
             <SecondaryButton @click="storeMealIntakeRecordsDialogRef.open(null); close()" >
               Log Meals
-            </SecondaryButton>
-          </li>
-          <li>
-            <SecondaryButton @click="storeFoodListIntakeRecordsDialogRef.open(null); close()" >
-              Log Food Lists
             </SecondaryButton>
           </li>
         </ul>
@@ -90,11 +82,6 @@ const storeFoodListIntakeRecordsDialogRef = ref(null)
   <StoreMealIntakeRecordsDialog
     ref="storeMealIntakeRecordsDialogRef"
     :meals="meals"
-    :units="units"
-  />
-  <StoreFoodListIntakeRecordsDialog
-    ref="storeFoodListIntakeRecordsDialogRef"
-    :food_lists="food_lists"
     :units="units"
   />
 </template>

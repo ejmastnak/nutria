@@ -8,7 +8,6 @@ use App\Http\Controllers\IntakeGuidelineController;
 use App\Http\Controllers\BodyWeightRecordController;
 use App\Http\Controllers\IngredientIntakeRecordController;
 use App\Http\Controllers\MealIntakeRecordController;
-use App\Http\Controllers\FoodListIntakeRecordController;
 use App\Http\Controllers\DataController;
 use App\Models\Ingredient;
 use App\Models\Meal;
@@ -17,7 +16,6 @@ use App\Models\IntakeGuideline;
 use App\Models\BodyWeightRecord;
 use App\Models\IngredientIntakeRecord;
 use App\Models\MealIntakeRecord;
-use App\Models\FoodListIntakeRecord;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -100,11 +98,6 @@ Route::middleware('auth')->group(function () {
     Route::post('meal-intake-records', [MealIntakeRecordController::class, 'store'])->name('meal-intake-records.store')->can('create', MealIntakeRecord::class);
     Route::put('meal-intake-records/{meal_intake_record}', [MealIntakeRecordController::class, 'update'])->name('meal-intake-records.update')->can('update', 'meal_intake_record');
     Route::delete('meal-intake-records/{meal_intake_record}', [MealIntakeRecordController::class, 'destroy'])->name('meal-intake-records.destroy')->can('delete', 'meal_intake_record');
-
-    # FoodListIntakeRecords
-    Route::post('food-list-intake-records', [FoodListIntakeRecordController::class, 'store'])->name('food-list-intake-records.store')->can('create', FoodListIntakeRecord::class);
-    Route::put('food-list-intake-records/{food_list_intake_record}', [FoodListIntakeRecordController::class, 'update'])->name('food-list-intake-records.update')->can('update', 'food_list_intake_record');
-    Route::delete('food-list-intake-records/{food_list_intake_record}', [FoodListIntakeRecordController::class, 'destroy'])->name('food-list-intake-records.destroy')->can('delete', 'food_list_intake_record');
 
     # Main page for logging data and viewing trends in data
     Route::get('/data', [DataController::class, 'index'])->name('data');
