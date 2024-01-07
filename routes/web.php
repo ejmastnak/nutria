@@ -86,6 +86,7 @@ Route::middleware('auth')->group(function () {
 
     # BodyWeightRecords
     Route::post('body-weight-records', [BodyWeightRecordController::class, 'store'])->name('body-weight-records.store')->can('create', BodyWeightRecord::class);
+    Route::post('body-weight-records-many', [BodyWeightRecordController::class, 'storeMany'])->name('body-weight-records.store-many')->can('createMany', BodyWeightRecord::class);
     Route::put('body-weight-records/{body_weight_record}', [BodyWeightRecordController::class, 'update'])->name('body-weight-records.update')->can('update', 'body_weight_record');
     Route::delete('body-weight-records/{body_weight_record}', [BodyWeightRecordController::class, 'destroy'])->name('body-weight-records.destroy')->can('delete', 'body_weight_record');
 
