@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\IngredientIntakeRecord;
 use App\Http\Requests\StoreIngredientIntakeRecordRequest;
+use App\Http\Requests\StoreManyIngredientIntakeRecordsRequest;
 use App\Http\Requests\UpdateIngredientIntakeRecordRequest;
 use App\Services\IngredientIntakeRecordService;
 use Illuminate\Http\Request;
@@ -15,8 +16,17 @@ class IngredientIntakeRecordController extends Controller
      */
     public function store(StoreIngredientIntakeRecordRequest $request, IngredientIntakeRecordService $ingredientIntakeRecordService)
     {
-        $ingredientIntakeRecordService->storeIngredientIntakeRecords($request->validated(), $request->user()->id);
-        return back()->with('message', 'Success! Ingredient intake record(s) created successfully.');
+        $ingredientIntakeRecordService->storeIngredientIntakeRecord($request->validated(), $request->user()->id);
+        return back()->with('message', 'Success! Ingredient intake record created successfully.');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function storeMany(StoreManyIngredientIntakeRecordsRequest $request, IngredientIntakeRecordService $ingredientIntakeRecordService)
+    {
+        $ingredientIntakeRecordService->storeManyIngredientIntakeRecords($request->validated(), $request->user()->id);
+        return back()->with('message', 'Success! Ingredient intake records created successfully.');
     }
 
     /**

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class IngredientIntakeRecordService
 {
-    public function storeIngredientIntakeRecords(array $data, int $userId): ?bool
+    public function storeManyIngredientIntakeRecords(array $data, int $userId): ?bool
     {
         DB::transaction(function () use ($data, $userId) {
             foreach ($data['ingredient_intake_records'] as $ingredientIntakeRecord) {
@@ -17,7 +17,7 @@ class IngredientIntakeRecordService
         return true;
     }
 
-    private function storeIngredientIntakeRecord(array $ingredientIntakeRecord, int $userId): ?IngredientIntakeRecord
+    public function storeIngredientIntakeRecord(array $ingredientIntakeRecord, int $userId): ?IngredientIntakeRecord
     {
         return IngredientIntakeRecord::create([
             'amount' => $ingredientIntakeRecord['amount'],

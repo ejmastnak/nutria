@@ -92,6 +92,7 @@ Route::middleware('auth')->group(function () {
 
     # IngredientIntakeRecords
     Route::post('ingredient-intake-records', [IngredientIntakeRecordController::class, 'store'])->name('ingredient-intake-records.store')->can('create', IngredientIntakeRecord::class);
+    Route::post('ingredient-intake-records-many', [IngredientIntakeRecordController::class, 'storeMany'])->name('ingredient-intake-records.store-many')->can('createMany', IngredientIntakeRecord::class);
     Route::put('ingredient-intake-records/{ingredient_intake_record}', [IngredientIntakeRecordController::class, 'update'])->name('ingredient-intake-records.update')->can('update', 'ingredient_intake_record');
     Route::delete('ingredient-intake-records/{ingredient_intake_record}', [IngredientIntakeRecordController::class, 'destroy'])->name('ingredient-intake-records.destroy')->can('delete', 'ingredient_intake_record');
 

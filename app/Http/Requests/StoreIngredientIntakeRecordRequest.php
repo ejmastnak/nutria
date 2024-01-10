@@ -26,14 +26,12 @@ class StoreIngredientIntakeRecordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ingredient_intake_records' => ['required', 'array', 'min:1', config('validation.max_bulk_record_log_items')],
-            'ingredient_intake_records.*' => ['required', 'array', 'required_array_keys:ingredient_id,amount,unit_id,date,time,date_time_utc', new IngredientUnitIsConsistent],
-            'ingredient_intake_records.*.ingredient_id' => ['required', 'integer', 'exists:ingredients,id', new IngredientOwnedByUser],
-            'ingredient_intake_records.*.amount' => ['required', 'numeric', 'gt:0', config('validation.max_ingredient_amount')],
-            'ingredient_intake_records.*.unit_id' => ['required', 'integer', 'exists:units,id'],
-            'ingredient_intake_records.*.date' => ['required', 'string', 'date_format:Y-m-d'],
-            'ingredient_intake_records.*.time' => ['required', 'string', 'date_format:H:i,H:i:s'],
-            'ingredient_intake_records.*.date_time_utc' => ['required', 'string', 'date_format:Y-m-d H:i,Y-m-d H:i:s'],
+            'ingredient_id' => ['required', 'integer', 'exists:ingredients,id', new IngredientOwnedByUser],
+            'amount' => ['required', 'numeric', 'gt:0', config('validation.max_ingredient_amount')],
+            'unit_id' => ['required', 'integer', 'exists:units,id'],
+            'date' => ['required', 'string', 'date_format:Y-m-d'],
+            'time' => ['required', 'string', 'date_format:H:i,H:i:s'],
+            'date_time_utc' => ['required', 'string', 'date_format:Y-m-d H:i,Y-m-d H:i:s'],
         ];
     }
 
@@ -45,14 +43,12 @@ class StoreIngredientIntakeRecordRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'ingredient_intake_records' => 'ingredient intake records',
-            'ingredient_intake_records.*' => 'ingredient intake record',
-            'ingredient_intake_records.*.ingredient_id' => 'ingredient id',
-            'ingredient_intake_records.*.amount' => 'amount',
-            'ingredient_intake_records.*.unit_id' => 'unit id',
-            'ingredient_intake_records.*.date' => 'date',
-            'ingredient_intake_records.*.time' => 'time',
-            'ingredient_intake_records.*.date_time_utc' => 'combined date and time',
+            'ingredient_id' => 'ingredient id',
+            'amount' => 'amount',
+            'unit_id' => 'unit id',
+            'date' => 'date',
+            'time' => 'time',
+            'date_time_utc' => 'combined date and time',
         ];
     }
 
