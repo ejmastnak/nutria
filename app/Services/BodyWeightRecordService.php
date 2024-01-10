@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class BodyWeightRecordService
 {
-    public function storeBodyWeightRecords(array $data, int $userId): ?bool
+    public function storeManyBodyWeightRecords(array $data, int $userId): ?bool
     {
         DB::transaction(function () use ($data, $userId) {
             foreach ($data['body_weight_records'] as $bodyWeightRecord) {

@@ -25,7 +25,7 @@ class BodyWeightRecordController extends Controller
      */
     public function storeMany(StoreManyBodyWeightRecordsRequest $request, BodyWeightRecordService $bodyWeightRecordService)
     {
-        $bodyWeightRecordService->storeBodyWeightRecords($request->validated(), $request->user()->id);
+        $bodyWeightRecordService->storeManyBodyWeightRecords($request->validated(), $request->user()->id);
         return back()->with('message', 'Success! Body weight records created successfully.');
     }
 
