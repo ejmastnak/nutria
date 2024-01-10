@@ -58,6 +58,8 @@ function cancel() {
           v-model="form.username"
           required
           autofocus
+          autocorrect="off"
+          autocapitalize="none"
           autocomplete="username"
         />
 
