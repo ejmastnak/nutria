@@ -281,6 +281,7 @@ function addMore() {
           <div class="flex mt-5 -mx-6 px-4 py-3 bg-gray-50">
 
             <PlainButton
+              v-if="bodyWeightRecordForm.id === null"
               @click="addMore"
               class="text-sm font-medium"
               :class="{ 'opacity-25': !allInputsValid }"
@@ -301,7 +302,7 @@ function addMore() {
               :disabled="bodyWeightRecordForm.processing"
               class="ml-2"
             >
-              Save
+              {{bodyWeightRecordForm.id === null ? 'Save' : 'Update'}}
             </PrimaryButton>
 
           </div>

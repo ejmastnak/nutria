@@ -64,6 +64,7 @@ function logBodyWeight() {
         <tr
           v-for="body_weight_record in body_weight_records" :key="body_weight_record.id"
           class="border-b hover:bg-gray-100 cursor-pointer"
+          @click.stop="logBodyWeightRecordDialogRef.open(body_weight_record)"
         >
           <td scope="row" class="px-8 py-4 font-medium text-gray-900 text-right whitespace-nowrap">
             {{(body_weight_record.amount).toFixed(1)}}
@@ -77,6 +78,7 @@ function logBodyWeight() {
               <button
                 type="button"
                 class="mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
+                @click.stop="logBodyWeightRecordDialogRef.open(body_weight_record)"
               >
                 <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
               </button>
