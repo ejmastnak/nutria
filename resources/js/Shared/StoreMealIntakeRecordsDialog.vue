@@ -67,9 +67,9 @@ function deleteMealIntakeRecord(idx) {
 function addOrUpdateMealIntakeRecord(updatedMealIntakeRecord) {
   const idx = mealIntakeRecords.value.findIndex(mealIntakeRecord => mealIntakeRecord.id === mealIntakeRecordIdToUpdate)
 
-  if (idx >= 0) {  // update existing custom unit
+  if (idx >= 0) {  // update existing record
     mealIntakeRecords.value[idx].meal_intake_record = cloneDeep(updatedMealIntakeRecord)
-  } else {  // add a new custom unit
+  } else {  // add a new record
     mealIntakeRecords.value.push({
       id: nextId,
       meal_intake_record: cloneDeep(updatedMealIntakeRecord),

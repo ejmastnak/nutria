@@ -169,7 +169,6 @@ function addMore() {
     // Clear `bodyWeightRecordForm` data and errors; close dialog
     close()
 
-    // Open LBWRsD
     logBodyWeightRecordsDialogRef.value.open()
   }
 }
@@ -188,7 +187,7 @@ function addMore() {
         <DialogPanel class="px-6 pt-6 w-full max-w-sm rounded-lg bg-white shadow max-h-[600px] overflow-auto">
 
           <DialogTitle class="text-lg font-bold text-gray-600">
-            Log body weight
+            {{bodyWeightRecordForm.id === null ? 'Log' : 'Update'}} body weight {{bodyWeightRecordForm.id === null ? '' : 'record'}}
           </DialogTitle>
 
           <!-- Amount and Unit -->

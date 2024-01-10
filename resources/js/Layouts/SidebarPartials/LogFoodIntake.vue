@@ -2,13 +2,16 @@
 import { Link, router } from '@inertiajs/vue3'
 import { ref } from 'vue'
 import { PencilSquareIcon } from '@heroicons/vue/24/outline'
-import StoreIngredientIntakeRecordsDialog from '@/Shared/StoreIngredientIntakeRecordsDialog.vue'
+import LogIngredientIntakeRecordDialog from '@/Shared/LogIngredientIntakeRecordDialog.vue'
+import LogIngredientIntakeRecordsDialog from '@/Shared/LogIngredientIntakeRecordsDialog.vue'
 import StoreMealIntakeRecordsDialog from '@/Shared/StoreMealIntakeRecordsDialog.vue'
 import SidebarButton from './SidebarButton.vue'
 import SidebarIcon from './SidebarIcon.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import { TransitionRoot, Dialog, DialogPanel, DialogTitle, DialogDescription } from '@headlessui/vue'
+
+import { ingredientIntakeRecordsForm } from '@/Shared/store.js'
 
 const props = defineProps({
   units: Array,
@@ -20,8 +23,18 @@ const isOpen = ref(false)
 function open() { isOpen.value = true }
 function close() { isOpen.value = false }
 
-const storeIngredientIntakeRecordsDialogRef = ref(null)
+const logIngredientIntakeRecordDialogRef = ref(null)
+const logIngredientIntakeRecordsDialogRef = ref(null)
 const storeMealIntakeRecordsDialogRef = ref(null)
+
+function logIngredientIntake() {
+  if (ingredientIntakeRecordsForm.ingredientIntakeRecords.length >= 1) {
+    logIngredientIntakeRecordsDialogRef.value.open()
+  } else {
+    logIngredientIntakeRecordDialogRef.value.open(null)
+  }
+  close()
+}
 
 </script>
 
@@ -53,7 +66,7 @@ const storeMealIntakeRecordsDialogRef = ref(null)
 
         <ul class="mt-2 space-y-1.5">
           <li>
-            <SecondaryButton @click="storeIngredientIntakeRecordsDialogRef.open(null); close()" >
+            <SecondaryButton @click="logIngredientIntake" >
               Log Ingredients
             </SecondaryButton>
           </li>
@@ -74,11 +87,17 @@ const storeMealIntakeRecordsDialogRef = ref(null)
     </div>
   </Dialog>
 
-  <StoreIngredientIntakeRecordsDialog
-    ref="storeIngredientIntakeRecordsDialogRef"
+  <LogIngredientIntakeRecordDialog
     :ingredients="ingredients"
     :units="units"
+    ref="logIngredientIntakeRecordDialogRef"
   />
+  <LogIngredientIntakeRecordsDialog
+    :ingredients="ingredients"
+    :units="units"
+    ref="logIngredientIntakeRecordsDialogRef"
+  />
+
   <StoreMealIntakeRecordsDialog
     ref="storeMealIntakeRecordsDialogRef"
     :meals="meals"

@@ -2,14 +2,16 @@
 import { computed, ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { TrashIcon, PencilSquareIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
-import UpdateIngredientIntakeRecordDialog from '@/Shared/UpdateIngredientIntakeRecordDialog.vue'
+import LogIngredientIntakeRecordDialog from '@/Shared/LogIngredientIntakeRecordDialog.vue'
+import LogIngredientIntakeRecordsDialog from '@/Shared/LogIngredientIntakeRecordsDialog.vue'
 import UpdateMealIntakeRecordDialog from '@/Shared/UpdateMealIntakeRecordDialog.vue'
-import StoreIngredientIntakeRecordsDialog from '@/Shared/StoreIngredientIntakeRecordsDialog.vue'
 import StoreMealIntakeRecordsDialog from '@/Shared/StoreMealIntakeRecordsDialog.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 import MyLink from '@/Components/MyLink.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import { roundNonZero, getHumanReadableLocalDate } from '@/utils/GlobalFunctions.js'
+
+import { ingredientIntakeRecordsForm } from '@/Shared/store.js'
 
 const props = defineProps({
   ingredient_intake_records: Array,
@@ -30,15 +32,15 @@ const foodItems = computed(() => {
   })
 })
 
-const storeIngredientIntakeRecordsDialogRef = ref(null)
-const storeMealIntakeRecordsDialogRef = ref(null)
+const logIngredientIntakeRecordDialogRef = ref(null)
+const logIngredientIntakeRecordsDialogRef = ref(null)
 
-const updateIngredientIntakeRecordDialogRef = ref(null)
+const storeMealIntakeRecordsDialogRef = ref(null)
 const updateMealIntakeRecordDialogRef = ref(null)
 
 function openUpdateDialog(foodItem) {
   if (foodItem.type === INGREDIENT) {
-    updateIngredientIntakeRecordDialogRef.value.open(foodItem)
+    logIngredientIntakeRecordDialogRef.value.open(foodItem)
   } else if (foodItem.type === MEAL) {
     updateMealIntakeRecordDialogRef.value.open(foodItem)
   }
@@ -48,6 +50,14 @@ const idToDelete = ref(null)
 const deleteRouteName = ref(null)
 const thingToDelete = ref(null)
 const deleteDialogRef = ref(null)
+
+function logIngredientIntake() {
+  if (ingredientIntakeRecordsForm.ingredientIntakeRecords.length >= 1) {
+    logIngredientIntakeRecordsDialogRef.value.open()
+  } else {
+    logIngredientIntakeRecordDialogRef.value.open(null)
+  }
+}
 
 function openDeleteDialog(foodItem) {
   idToDelete.value = foodItem.id
@@ -93,7 +103,7 @@ function getBgColorForFoodItemRow(idx) {
     </p>
 
     <div class="flex gap-x-1.5">
-      <SecondaryButton @click="storeIngredientIntakeRecordsDialogRef.open()" >
+      <SecondaryButton @click="logIngredientIntake" >
         Log Ingredients
       </SecondaryButton>
       <SecondaryButton @click="storeMealIntakeRecordsDialogRef.open()" >
@@ -168,21 +178,21 @@ function getBgColorForFoodItemRow(idx) {
       </tbody>
     </table>
 
-    <UpdateIngredientIntakeRecordDialog
+    <LogIngredientIntakeRecordDialog
       :ingredients="ingredients"
       :units="units"
-      ref="updateIngredientIntakeRecordDialogRef"
+      ref="logIngredientIntakeRecordDialogRef"
     />
+    <LogIngredientIntakeRecordsDialog
+      :ingredients="ingredients"
+      :units="units"
+      ref="logIngredientIntakeRecordsDialogRef"
+    />
+
     <UpdateMealIntakeRecordDialog
       :meals="meals"
       :units="units"
       ref="updateMealIntakeRecordDialogRef"
-    />
-
-    <StoreIngredientIntakeRecordsDialog
-      ref="storeIngredientIntakeRecordsDialogRef"
-      :ingredients="ingredients"
-      :units="units"
     />
     <StoreMealIntakeRecordsDialog
       ref="storeMealIntakeRecordsDialogRef"

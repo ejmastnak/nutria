@@ -53,9 +53,9 @@ function deleteBodyWeightRecord(idx) {
 function addOrUpdateBodyWeightRecord(updatedBodyWeightRecord) {
   const idx = bodyWeightRecordsForm.bodyWeightRecords.findIndex(bodyWeightRecord => bodyWeightRecord.id === bodyWeightRecordIdToUpdate)
 
-  if (idx >= 0) {  // update existing custom unit
+  if (idx >= 0) {  // update an existing record
     bodyWeightRecordsForm.bodyWeightRecords[idx].body_weight_record = cloneDeep(updatedBodyWeightRecord)
-  } else {  // add a new custom unit
+  } else {  // add a new record
     bodyWeightRecordsForm.bodyWeightRecords.push({
       id: bodyWeightRecordsForm.nextId,
       body_weight_record: cloneDeep(updatedBodyWeightRecord),
@@ -67,6 +67,7 @@ function addOrUpdateBodyWeightRecord(updatedBodyWeightRecord) {
 }
 
 function submit() {
+  bodyWeightRecordsForm.errors = {}
   bodyWeightRecordsForm.id_idx_mapping = {}
   bodyWeightRecordsForm.bodyWeightRecords.forEach((record, idx) => bodyWeightRecordsForm.id_idx_mapping[record.id] = idx)
   bodyWeightRecordsForm.body_weight_records = bodyWeightRecordsForm.bodyWeightRecords.map(record => record.body_weight_record)

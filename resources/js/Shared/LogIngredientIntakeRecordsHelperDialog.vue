@@ -99,9 +99,6 @@ function passesValidation() {
   return true
 }
 
-function handleIngredientInputEnter() {
-  checkAndConfirm()
-}
 function handleAmountInputEnter() {
   checkAndConfirm()
 }
@@ -146,7 +143,7 @@ function confirm() {
       <DialogPanel class="px-6 pt-6 w-full max-w-md rounded-lg bg-white shadow max-h-[600px] overflow-auto">
 
         <DialogTitle class="text-lg font-bold text-gray-600">
-          Log Ingredient
+          Log body weight
         </DialogTitle>
 
         <div class="mt-2">

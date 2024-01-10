@@ -21,3 +21,26 @@ export const bodyWeightRecordsForm = reactive(
     id_idx_mapping: {},
   }),
 )
+
+export const ingredientIntakeRecordForm = reactive(
+  useForm({
+    id: null,
+    ingredient_id: null,
+    ingredient: null,
+    amount: null,
+    unit_id: null,
+    unit: null,
+    date: null,
+    time: null,
+    date_time_utc: null,
+  }),
+)
+
+export const ingredientIntakeRecordsForm = reactive(
+  useForm({
+    ingredient_intake_records: [],
+    ingredientIntakeRecords: [],
+    nextId: 1,
+    id_idx_mapping: {},
+  }),
+)
