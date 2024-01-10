@@ -8,7 +8,9 @@ import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import InputError from '@/Components/InputError.vue'
 import { TransitionRoot, Dialog, DialogPanel, DialogTitle, DialogDescription } from '@headlessui/vue'
-import BodyWeightRecordDialog from './BodyWeightRecordDialog.vue'
+import LogBodyWeightRecordsHelperDialog from './LogBodyWeightRecordsHelperDialog.vue'
+
+import { bodyWeightRecordsForm } from '@/Shared/store.js'
 
 const props = defineProps({
   units: Array,
@@ -16,24 +18,9 @@ const props = defineProps({
 
 defineExpose({ open })
 
-const form = useForm({
-  body_weight_records: [],
-  // Maps a record's serial id to the record's array index on last form submit.
-  // This is to preserve association with errors sent from backend.
-  id_idx_mapping: {},
-})
-
-const bodyWeightRecords = ref([])
-var nextId = 1
-
 const isOpen = ref(false)
 function open() {
   isOpen.value = true
-  if (bodyWeightRecords.value.length === 0) {
-    setTimeout(() => {
-      addBodyWeightRecord()
-    }, 0);
-  }
 }
 function close() {
   isOpen.value = false
@@ -50,44 +37,43 @@ function addBodyWeightRecord() {
 function editBodyWeightRecord(bodyWeightRecord, idx) {
   bodyWeightRecordIdToUpdate = bodyWeightRecord.id
   bodyWeightRecordDialogRef.value.open(bodyWeightRecord.body_weight_record, {
-    body_weight_record: form.errors['body_weight_records.' + form.id_idx_mapping[bodyWeightRecord.id]],
-    amount: form.errors['body_weight_records.' + form.id_idx_mapping[bodyWeightRecord.id] + '.amount'],
-    unit_id: form.errors['body_weight_records.' + form.id_idx_mapping[bodyWeightRecord.id] + '.unit_id'],
-    date: form.errors['body_weight_records.' + form.id_idx_mapping[bodyWeightRecord.id] + '.date'],
-    time: form.errors['body_weight_records.' + form.id_idx_mapping[bodyWeightRecord.id] + '.time'],
-    date_time_utc: form.errors['body_weight_records.' + form.id_idx_mapping[bodyWeightRecord.id] + '.date_time_utc'],
+    body_weight_record: bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id]],
+    amount: bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id] + '.amount'],
+    unit_id: bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id] + '.unit_id'],
+    date: bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id] + '.date'],
+    time: bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id] + '.time'],
+    date_time_utc: bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id] + '.date_time_utc'],
   })
 }
 
 function deleteBodyWeightRecord(idx) {
-  if (idx >= 0 && idx < bodyWeightRecords.value.length) bodyWeightRecords.value.splice(idx, 1)
+  if (idx >= 0 && idx < bodyWeightRecordsForm.bodyWeightRecords.length) bodyWeightRecordsForm.bodyWeightRecords.splice(idx, 1)
 }
 
 function addOrUpdateBodyWeightRecord(updatedBodyWeightRecord) {
-  const idx = bodyWeightRecords.value.findIndex(bodyWeightRecord => bodyWeightRecord.id === bodyWeightRecordIdToUpdate)
+  const idx = bodyWeightRecordsForm.bodyWeightRecords.findIndex(bodyWeightRecord => bodyWeightRecord.id === bodyWeightRecordIdToUpdate)
 
   if (idx >= 0) {  // update existing custom unit
-    bodyWeightRecords.value[idx].body_weight_record = cloneDeep(updatedBodyWeightRecord)
+    bodyWeightRecordsForm.bodyWeightRecords[idx].body_weight_record = cloneDeep(updatedBodyWeightRecord)
   } else {  // add a new custom unit
-    bodyWeightRecords.value.push({
-      id: nextId,
+    bodyWeightRecordsForm.bodyWeightRecords.push({
+      id: bodyWeightRecordsForm.nextId,
       body_weight_record: cloneDeep(updatedBodyWeightRecord),
     })
-    nextId += 1
+    bodyWeightRecordsForm.nextId += 1
   }
 
   bodyWeightRecordIdToUpdate = null
 }
 
 function submit() {
-  form.id_idx_mapping = {}
-  bodyWeightRecords.value.forEach((record, idx) => form.id_idx_mapping[record.id] = idx)
-  form.body_weight_records = bodyWeightRecords.value.map(record => record.body_weight_record)
-  form.post(route('body-weight-records.store'), {
+  bodyWeightRecordsForm.id_idx_mapping = {}
+  bodyWeightRecordsForm.bodyWeightRecords.forEach((record, idx) => bodyWeightRecordsForm.id_idx_mapping[record.id] = idx)
+  bodyWeightRecordsForm.body_weight_records = bodyWeightRecordsForm.bodyWeightRecords.map(record => record.body_weight_record)
+  bodyWeightRecordsForm.post(route('body-weight-records.store-many'), {
     onSuccess: () => {
-      form.reset()
-      form.clearErrors()
-      bodyWeightRecords.value = []
+      bodyWeightRecordsForm.reset()
+      bodyWeightRecordsForm.clearErrors()
       close()
     }
   })
@@ -109,14 +95,14 @@ function submit() {
             <DialogTitle class="text-lg font-bold text-gray-600">
               Add body weight records
             </DialogTitle>
-            <InputError :message="form.errors.body_weight_records" />
+            <InputError :message="bodyWeightRecordsForm.errors.body_weight_records" />
           </div>
 
           <div>
 
             <ol class="mt-2 space-y-1" >
               <li
-                v-for="(bodyWeightRecord, idx) in bodyWeightRecords" :key="bodyWeightRecord.id"
+                v-for="(bodyWeightRecord, idx) in bodyWeightRecordsForm.bodyWeightRecords" :key="bodyWeightRecord.id"
                 class="flex items-start"
               >
                 <div>
@@ -131,12 +117,12 @@ function submit() {
                     ({{getHumanReadableLocalDate(bodyWeightRecord.body_weight_record.date_time_utc, shortMonth=true)}})
                   </button>
                   <div class="mt-1">
-                    <InputError :message="form.errors['body_weight_records.' + form.id_idx_mapping[bodyWeightRecord.id]]" />
-                    <InputError :message="form.errors['body_weight_records.' + form.id_idx_mapping[bodyWeightRecord.id] + '.amount']" />
-                    <InputError :message="form.errors['body_weight_records.' + form.id_idx_mapping[bodyWeightRecord.id] + '.unit_id']" />
-                    <InputError :message="form.errors['body_weight_records.' + form.id_idx_mapping[bodyWeightRecord.id] + '.date']" />
-                    <InputError :message="form.errors['body_weight_records.' + form.id_idx_mapping[bodyWeightRecord.id] + '.time']" />
-                    <InputError :message="form.errors['body_weight_records.' + form.id_idx_mapping[bodyWeightRecord.id] + '.date_time_utc']" />
+                    <InputError :message="bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id]]" />
+                    <InputError :message="bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id] + '.amount']" />
+                    <InputError :message="bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id] + '.unit_id']" />
+                    <InputError :message="bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id] + '.date']" />
+                    <InputError :message="bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id] + '.time']" />
+                    <InputError :message="bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id] + '.date_time_utc']" />
                   </div>
                 </div>
 
@@ -157,7 +143,7 @@ function submit() {
               </li>
             </ol>
 
-            <p v-if="bodyWeightRecords.length === 0" class="mt-3 text-gray-500 text-sm" >
+            <p v-if="bodyWeightRecordsForm.bodyWeightRecords.length === 0" class="mt-3 text-gray-500 text-sm" >
               You haven't added any food list intake records.
             </p>
 
@@ -186,7 +172,7 @@ function submit() {
             </PrimaryButton>
           </div>
 
-          <BodyWeightRecordDialog
+          <LogBodyWeightRecordsHelperDialog
             ref="bodyWeightRecordDialogRef"
             @confirm="addOrUpdateBodyWeightRecord"
             @close="bodyWeightRecordIdToUpdate = null"

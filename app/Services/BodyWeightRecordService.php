@@ -17,7 +17,7 @@ class BodyWeightRecordService
         return true;
     }
 
-    private function storeBodyWeightRecord(array $data, int $userId): ?BodyWeightRecord
+    public function storeBodyWeightRecord(array $data, int $userId): ?BodyWeightRecord
     {
         return BodyWeightRecord::create([
             'amount' => $data['amount'],

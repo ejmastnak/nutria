@@ -3,18 +3,20 @@ import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { getLocalYYYYMMDD, getLocalHHMM, getHumanReadableLocalDate } from '@/utils/GlobalFunctions.js'
 import { TrashIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
-import UpdateBodyWeightRecordDialog from '@/Shared/UpdateBodyWeightRecordDialog.vue'
-import StoreBodyWeightRecordsDialog from '@/Shared/StoreBodyWeightRecordsDialog.vue'
+import LogBodyWeightRecordDialog from '@/Shared/LogBodyWeightRecordDialog.vue'
+import LogBodyWeightRecordsDialog from '@/Shared/LogBodyWeightRecordsDialog.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 import SecondaryButton from '@/Components/SecondaryButton.vue'
+
+import { bodyWeightRecordsForm } from '@/Shared/store.js'
 
 const props = defineProps({
   body_weight_records: Array,
   units: Array,
 })
 
-const storeBodyWeightRecordsDialogRef = ref(null)
-const updateBodyWeightRecordDialogRef = ref(null)
+const logBodyWeightRecordDialogRef = ref(null)
+const logBodyWeightRecordsDialogRef = ref(null)
 
 let idToDelete = ref(null)
 const deleteDialog = ref(null)
@@ -25,7 +27,13 @@ function deleteBodyWeightRecord() {
   idToDelete.value = null
 }
 
-const tab1 = ref("")
+function logBodyWeight() {
+  if (bodyWeightRecordsForm.bodyWeightRecords.length >= 1) {
+    logBodyWeightRecordsDialogRef.value.open()
+  } else {
+    logBodyWeightRecordDialogRef.value.open(null)
+  }
+}
 
 </script>
 
@@ -36,7 +44,7 @@ const tab1 = ref("")
       You haven't created any body weight records yet!
     </p>
 
-    <SecondaryButton @click="storeBodyWeightRecordsDialogRef.open()" >
+    <SecondaryButton @click="logBodyWeight" >
       Log body weight
     </SecondaryButton>
 
@@ -56,7 +64,6 @@ const tab1 = ref("")
         <tr
           v-for="body_weight_record in body_weight_records" :key="body_weight_record.id"
           class="border-b hover:bg-gray-100 cursor-pointer"
-          @click="updateBodyWeightRecordDialogRef.open(body_weight_record)"
         >
           <td scope="row" class="px-8 py-4 font-medium text-gray-900 text-right whitespace-nowrap">
             {{(body_weight_record.amount).toFixed(1)}}
@@ -69,7 +76,6 @@ const tab1 = ref("")
             <div class="flex items-center px-8">
               <button
                 type="button"
-                @click.stop="updateBodyWeightRecordDialogRef.open(body_weight_record)"
                 class="mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
               >
                 <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
@@ -87,8 +93,8 @@ const tab1 = ref("")
       </tbody>
     </table>
 
-    <UpdateBodyWeightRecordDialog :units="units" ref="updateBodyWeightRecordDialogRef" />
-    <StoreBodyWeightRecordsDialog :units="units" ref="storeBodyWeightRecordsDialogRef" />
+    <LogBodyWeightRecordDialog :units="units" ref="logBodyWeightRecordDialogRef" />
+    <LogBodyWeightRecordsDialog :units="units" ref="logBodyWeightRecordsDialogRef" />
 
     <DeleteDialog
       ref="deleteDialog"
