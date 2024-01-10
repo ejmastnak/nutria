@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BodyWeightRecord;
 use App\Http\Requests\StoreBodyWeightRecordRequest;
-use App\Http\Requests\StoreManyBodyWeightRecordRequest;
+use App\Http\Requests\StoreManyBodyWeightRecordsRequest;
 use App\Http\Requests\UpdateBodyWeightRecordRequest;
 use App\Services\BodyWeightRecordService;
 use Illuminate\Http\Request;
@@ -23,7 +23,7 @@ class BodyWeightRecordController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function storeMany(StoreManyBodyWeightRecordRequest $request, BodyWeightRecordService $bodyWeightRecordService)
+    public function storeMany(StoreManyBodyWeightRecordsRequest $request, BodyWeightRecordService $bodyWeightRecordService)
     {
         $bodyWeightRecordService->storeBodyWeightRecords($request->validated(), $request->user()->id);
         return back()->with('message', 'Success! Body weight records created successfully.');

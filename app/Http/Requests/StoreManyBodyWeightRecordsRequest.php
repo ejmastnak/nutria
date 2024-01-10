@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Models\BodyWeightRecord;
 use App\Rules\IsMassUnit;
 
-class StoreManyBodyWeightRecordRequest extends FormRequest
+class StoreManyBodyWeightRecordsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
