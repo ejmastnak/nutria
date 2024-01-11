@@ -25,6 +25,11 @@ function open() {
 function close() {
   isOpen.value = false
 }
+function cancel() {
+  bodyWeightRecordsForm.reset()
+  bodyWeightRecordsForm.clearErrors()
+  close()
+}
 
 const bodyWeightRecordDialogRef = ref(null)
 const addBodyWeightRecordButtonRef = ref(null)
@@ -164,7 +169,7 @@ function submit() {
 
           <!-- Cancel/Confirm buttons -->
           <div class="flex mt-5 -mx-6 px-4 py-3 bg-gray-50">
-            <SecondaryButton @click="close" class="ml-auto" >
+            <SecondaryButton @click="cancel" class="ml-auto" >
               Cancel
             </SecondaryButton>
 
