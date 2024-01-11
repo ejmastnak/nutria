@@ -33,7 +33,8 @@ class IngredientIntakeRecord extends Model
                 'ingredient:id,name,density_g_ml',
                 'ingredient.custom_units:id,name,g,ml,seq_num,ingredient_id,custom_grams',
             ])
-            ->orderBy('date_time_utc')
+            ->orderBy('date_time_utc', 'desc')
+            ->take(15)
             ->get(['id', 'ingredient_id', 'amount', 'unit_id', 'date_time_utc']);
     }
 
