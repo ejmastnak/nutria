@@ -4,7 +4,8 @@ import { ref } from 'vue'
 import { PencilSquareIcon } from '@heroicons/vue/24/outline'
 import LogIngredientIntakeRecordDialog from '@/Shared/LogIngredientIntakeRecordDialog.vue'
 import LogIngredientIntakeRecordsDialog from '@/Shared/LogIngredientIntakeRecordsDialog.vue'
-import StoreMealIntakeRecordsDialog from '@/Shared/StoreMealIntakeRecordsDialog.vue'
+import LogMealIntakeRecordDialog from '@/Shared/LogMealIntakeRecordDialog.vue'
+import LogMealIntakeRecordsDialog from '@/Shared/LogMealIntakeRecordsDialog.vue'
 import SidebarButton from './SidebarButton.vue'
 import SidebarIcon from './SidebarIcon.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
@@ -12,6 +13,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue'
 import { TransitionRoot, Dialog, DialogPanel, DialogTitle, DialogDescription } from '@headlessui/vue'
 
 import { ingredientIntakeRecordsForm } from '@/Shared/store.js'
+import { mealIntakeRecordsForm } from '@/Shared/store.js'
 
 const props = defineProps({
   units: Array,
@@ -25,7 +27,8 @@ function close() { isOpen.value = false }
 
 const logIngredientIntakeRecordDialogRef = ref(null)
 const logIngredientIntakeRecordsDialogRef = ref(null)
-const storeMealIntakeRecordsDialogRef = ref(null)
+const logMealIntakeRecordDialogRef = ref(null)
+const logMealIntakeRecordsDialogRef = ref(null)
 
 function logIngredientIntake() {
   if (ingredientIntakeRecordsForm.ingredientIntakeRecords.length >= 1) {
@@ -33,7 +36,14 @@ function logIngredientIntake() {
   } else {
     logIngredientIntakeRecordDialogRef.value.open(null)
   }
-  close()
+}
+
+function logMealIntake() {
+  if (mealIntakeRecordsForm.mealIntakeRecords.length >= 1) {
+    logMealIntakeRecordsDialogRef.value.open()
+  } else {
+    logMealIntakeRecordDialogRef.value.open(null)
+  }
 }
 
 </script>
@@ -71,7 +81,7 @@ function logIngredientIntake() {
             </SecondaryButton>
           </li>
           <li>
-            <SecondaryButton @click="storeMealIntakeRecordsDialogRef.open(null); close()" >
+            <SecondaryButton @click="logMealIntake" >
               Log Meals
             </SecondaryButton>
           </li>
@@ -98,10 +108,16 @@ function logIngredientIntake() {
     ref="logIngredientIntakeRecordsDialogRef"
   />
 
-  <StoreMealIntakeRecordsDialog
-    ref="storeMealIntakeRecordsDialogRef"
+  <LogMealIntakeRecordDialog
     :meals="meals"
     :units="units"
+    ref="logMealIntakeRecordDialogRef"
   />
+  <LogMealIntakeRecordsDialog
+    :meals="meals"
+    :units="units"
+    ref="logMealIntakeRecordsDialogRef"
+  />
+
 </template>
 

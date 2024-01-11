@@ -42,7 +42,7 @@ function open(passedMealIntakeRecord, passedErrors) {
   mealIntakeRecord.value.meal = passedMealIntakeRecord ? cloneDeep(passedMealIntakeRecord.meal) : {}
   mealIntakeRecord.value.amount = passedMealIntakeRecord ? passedMealIntakeRecord.amount : null
   mealIntakeRecord.value.unit_id = passedMealIntakeRecord ? passedMealIntakeRecord.unit_id : null
-  mealIntakeRecord.value.unit = passedMealIntakeRecord ? cloneDeep(passedMealIntakeRecord.unit) : {}
+  mealIntakeRecord.value.unit = passedMealIntakeRecord ? cloneDeep(passedMealIntakeRecord.unit) : props.units.find(unit => unit.name = 'g')
   mealIntakeRecord.value.date = passedMealIntakeRecord ? getLocalYYYYMMDD(passedMealIntakeRecord.date_time_utc) : getCurrentLocalYYYYMMDD()
   mealIntakeRecord.value.time = passedMealIntakeRecord ? getLocalHHMM(passedMealIntakeRecord.date_time_utc) : getCurrentLocalHHmm()
   errors.value = passedErrors
@@ -99,9 +99,6 @@ function passesValidation() {
   return true
 }
 
-function handleMealInputEnter() {
-  checkAndConfirm()
-}
 function handleAmountInputEnter() {
   checkAndConfirm()
 }
@@ -146,7 +143,7 @@ function confirm() {
       <DialogPanel class="px-6 pt-6 w-full max-w-md rounded-lg bg-white shadow max-h-[600px] overflow-auto">
 
         <DialogTitle class="text-lg font-bold text-gray-600">
-          Log Meal
+          Log meal intake
         </DialogTitle>
 
         <div class="mt-2">

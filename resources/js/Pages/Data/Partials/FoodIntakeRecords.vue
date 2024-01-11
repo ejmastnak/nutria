@@ -4,14 +4,15 @@ import { router } from '@inertiajs/vue3'
 import { TrashIcon, PencilSquareIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
 import LogIngredientIntakeRecordDialog from '@/Shared/LogIngredientIntakeRecordDialog.vue'
 import LogIngredientIntakeRecordsDialog from '@/Shared/LogIngredientIntakeRecordsDialog.vue'
-import UpdateMealIntakeRecordDialog from '@/Shared/UpdateMealIntakeRecordDialog.vue'
-import StoreMealIntakeRecordsDialog from '@/Shared/StoreMealIntakeRecordsDialog.vue'
+import LogMealIntakeRecordDialog from '@/Shared/LogMealIntakeRecordDialog.vue'
+import LogMealIntakeRecordsDialog from '@/Shared/LogMealIntakeRecordsDialog.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 import MyLink from '@/Components/MyLink.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import { roundNonZero, getHumanReadableLocalDate } from '@/utils/GlobalFunctions.js'
 
 import { ingredientIntakeRecordsForm } from '@/Shared/store.js'
+import { mealIntakeRecordsForm } from '@/Shared/store.js'
 
 const props = defineProps({
   ingredient_intake_records: Array,
@@ -34,15 +35,14 @@ const foodItems = computed(() => {
 
 const logIngredientIntakeRecordDialogRef = ref(null)
 const logIngredientIntakeRecordsDialogRef = ref(null)
-
-const storeMealIntakeRecordsDialogRef = ref(null)
-const updateMealIntakeRecordDialogRef = ref(null)
+const logMealIntakeRecordDialogRef = ref(null)
+const logMealIntakeRecordsDialogRef = ref(null)
 
 function openUpdateDialog(foodItem) {
   if (foodItem.type === INGREDIENT) {
     logIngredientIntakeRecordDialogRef.value.open(foodItem)
   } else if (foodItem.type === MEAL) {
-    updateMealIntakeRecordDialogRef.value.open(foodItem)
+    logMealIntakeRecordDialogRef.value.open(foodItem)
   }
 }
 
@@ -56,6 +56,14 @@ function logIngredientIntake() {
     logIngredientIntakeRecordsDialogRef.value.open()
   } else {
     logIngredientIntakeRecordDialogRef.value.open(null)
+  }
+}
+
+function logMealIntake() {
+  if (mealIntakeRecordsForm.mealIntakeRecords.length >= 1) {
+    logMealIntakeRecordsDialogRef.value.open()
+  } else {
+    logMealIntakeRecordDialogRef.value.open(null)
   }
 }
 
@@ -106,7 +114,7 @@ function getBgColorForFoodItemRow(idx) {
       <SecondaryButton @click="logIngredientIntake" >
         Log Ingredients
       </SecondaryButton>
-      <SecondaryButton @click="storeMealIntakeRecordsDialogRef.open()" >
+      <SecondaryButton @click="logMealIntake" >
         Log Meals
       </SecondaryButton>
     </div>
@@ -189,15 +197,15 @@ function getBgColorForFoodItemRow(idx) {
       ref="logIngredientIntakeRecordsDialogRef"
     />
 
-    <UpdateMealIntakeRecordDialog
+    <LogMealIntakeRecordDialog
       :meals="meals"
       :units="units"
-      ref="updateMealIntakeRecordDialogRef"
+      ref="logMealIntakeRecordDialogRef"
     />
-    <StoreMealIntakeRecordsDialog
-      ref="storeMealIntakeRecordsDialogRef"
+    <LogMealIntakeRecordsDialog
       :meals="meals"
       :units="units"
+      ref="logMealIntakeRecordsDialogRef"
     />
 
     <DeleteDialog
