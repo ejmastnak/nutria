@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MealIntakeRecord;
 use App\Http\Requests\StoreMealIntakeRecordRequest;
+use App\Http\Requests\StoreManyMealIntakeRecordsRequest;
 use App\Http\Requests\UpdateMealIntakeRecordRequest;
 use App\Services\MealIntakeRecordService;
 use Illuminate\Http\Request;
@@ -15,8 +16,17 @@ class MealIntakeRecordController extends Controller
      */
     public function store(StoreMealIntakeRecordRequest $request, MealIntakeRecordService $mealIntakeRecordService)
     {
-        $mealIntakeRecordService->storeMealIntakeRecords($request->validated(), $request->user()->id);
-        return back()->with('message', 'Success! Meal intake record(s) created successfully.');
+        $mealIntakeRecordService->storeMealIntakeRecord($request->validated(), $request->user()->id);
+        return back()->with('message', 'Success! Meal intake record created successfully.');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function storeMany(StoreManyMealIntakeRecordsRequest $request, MealIntakeRecordService $mealIntakeRecordService)
+    {
+        $mealIntakeRecordService->storeManyMealIntakeRecords($request->validated(), $request->user()->id);
+        return back()->with('message', 'Success! Meal intake records created successfully.');
     }
 
     /**

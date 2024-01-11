@@ -26,6 +26,14 @@ class MealIntakeRecordPolicy
     }
 
     /**
+     * Determine whether the user can create models in bulk.
+     */
+    public function createMany(User $user): bool
+    {
+        return $user->is_paying;
+    }
+
+    /**
      * Determine whether the user can update the model.
      */
     public function update(User $user, MealIntakeRecord $mealIntakeRecord): bool

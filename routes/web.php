@@ -98,6 +98,7 @@ Route::middleware('auth')->group(function () {
 
     # MealIntakeRecords
     Route::post('meal-intake-records', [MealIntakeRecordController::class, 'store'])->name('meal-intake-records.store')->can('create', MealIntakeRecord::class);
+    Route::post('meal-intake-records-many', [MealIntakeRecordController::class, 'storeMany'])->name('meal-intake-records.store-many')->can('createMany', MealIntakeRecord::class);
     Route::put('meal-intake-records/{meal_intake_record}', [MealIntakeRecordController::class, 'update'])->name('meal-intake-records.update')->can('update', 'meal_intake_record');
     Route::delete('meal-intake-records/{meal_intake_record}', [MealIntakeRecordController::class, 'destroy'])->name('meal-intake-records.destroy')->can('delete', 'meal_intake_record');
 

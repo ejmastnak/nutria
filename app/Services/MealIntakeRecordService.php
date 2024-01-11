@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class MealIntakeRecordService
 {
-    public function storeMealIntakeRecords(array $data, int $userId): ?bool
+    public function storeManyMealIntakeRecords(array $data, int $userId): ?bool
     {
         DB::transaction(function () use ($data, $userId) {
             foreach ($data['meal_intake_records'] as $mealIntakeRecord) {
@@ -17,7 +17,7 @@ class MealIntakeRecordService
         return true;
     }
 
-    private function storeMealIntakeRecord(array $data, int $userId): ?MealIntakeRecord
+    public function storeMealIntakeRecord(array $data, int $userId): ?MealIntakeRecord
     {
         return MealIntakeRecord::create([
             'amount' => $data['amount'],
