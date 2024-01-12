@@ -1,8 +1,8 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import cloneDeep from "lodash/cloneDeep"
 import { getCurrentLocalYYYYMMDD, getCurrentLocalHHmm, getLocalYYYYMMDD, getLocalHHMM, getUTCDateTime } from '@/utils/GlobalFunctions.js'
-import { ClockIcon, CalendarIcon } from '@heroicons/vue/24/outline'
+import { ClockIcon, CalendarIcon, PlusCircleIcon } from '@heroicons/vue/24/outline'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import PlainButton from '@/Components/PlainButton.vue'
@@ -13,6 +13,7 @@ import FuzzyCombobox from '@/Components/FuzzyCombobox.vue'
 import SimpleCombobox from '@/Components/SimpleCombobox.vue'
 import { TransitionRoot, Dialog, DialogPanel, DialogTitle, DialogDescription } from '@headlessui/vue'
 import LogMealIntakeRecordsDialog from '@/Shared/LogMealIntakeRecordsDialog.vue'
+import MealCreateAndLogChooserDialog from '@/Shared/MealCreateAndLogChooserDialog.vue'
 
 import { mealIntakeRecordForm } from '@/Shared/store.js'
 import { mealIntakeRecordsForm } from '@/Shared/store.js'
@@ -47,6 +48,7 @@ const unitInputWrapperRef = ref(null)
 const dateInputRef = ref(null)
 const timeInputRef = ref(null)
 const logMealIntakeRecordsDialogRef = ref(null)
+const mealCreateAndLogChooserDialogRef = ref(null)
 
 function passesValidation() {
 
@@ -202,9 +204,17 @@ function addMore() {
 
         <DialogPanel class="px-6 pt-6 w-full max-w-sm rounded-lg bg-white shadow max-h-[600px] overflow-auto">
 
-          <DialogTitle class="text-lg font-bold text-gray-600">
-            {{mealIntakeRecordForm.id === null ? 'Log' : 'Update'}} meal intake {{mealIntakeRecordForm.id === null ? '' : 'record'}}
-          </DialogTitle>
+          <div class="flex items-center">
+            <DialogTitle class="text-lg font-bold text-gray-600">
+              {{mealIntakeRecordForm.id === null ? 'Log' : 'Update'}} meal intake {{mealIntakeRecordForm.id === null ? '' : 'record'}}
+            </DialogTitle>
+
+            <SecondaryButton @click="mealCreateAndLogChooserDialogRef.open()" class="flex ml-auto !py-1">
+              <PlusCircleIcon class="-ml-1 w-6 h-6 text-gray-600 shrink-0" />
+              <p class="ml-1">New meal</p>
+            </SecondaryButton>
+
+          </div>
 
           <div class="mt-2">
             <div ref="mealInputWrapperRef">
@@ -340,6 +350,8 @@ function addMore() {
             </PrimaryButton>
 
           </div>
+
+          <MealCreateAndLogChooserDialog ref="mealCreateAndLogChooserDialogRef" :meals="meals" />
 
         </DialogPanel>
       </div>

@@ -12,6 +12,12 @@ import {
   ComboboxOption,
 } from '@headlessui/vue'
 
+defineExpose({ focus })
+const inputWrapperRef = ref(null)
+function focus() {
+  inputWrapperRef.value.querySelectorAll('input')[0].focus()
+}
+
 const props = defineProps({
   options: Array,
   labelText: String,
@@ -75,7 +81,7 @@ watch(query, throttle(function (value) {
           {{labelText}}
         </ComboboxLabel>
 
-        <div class="relative">
+        <div class="relative" ref="inputWrapperRef">
           <ComboboxInput
             class="w-full border border-gray-300 rounded-md shadow-sm focus:border focus:border-blue-500 text-ellipsis"
             @change="query = $event.target.value"
