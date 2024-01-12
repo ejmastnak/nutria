@@ -65,6 +65,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('meals/{meal}', [MealController::class, 'destroy'])->name('meals.destroy')->can('delete', 'meal');
     Route::get('meals/{meal}', [MealController::class, 'show'])->name('meals.show')->can('view', 'meal');
     Route::put('meals/{meal}/save-as-ingredient', [MealController::class, 'saveAsIngredient'])->name('meals.save-as-ingredient')->can('saveAsIngredient', 'meal');
+    Route::get('meals/create-and-log', [MealController::class, 'createAndLog'])->name('meals.create-and-log')->can('createAndLog', Meal::class);
+    Route::get('meals/{meal}/clone-and-log', [MealController::class, 'clone-and-log'])->name('meals.cloneAndLog')->can('cloneAndLog', 'meal');
+    Route::post('meals/store-and-log', [MealController::class, 'storeAndLog'])->name('meals.store-and-log')->can('createAndLog', Meal::class);
 
     // Food Lists
     Route::get('food-lists', [FoodListController::class, 'index'])->name('food-lists.index')->can('viewAny', FoodList::class);

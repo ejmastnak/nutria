@@ -63,6 +63,22 @@ class MealPolicy
     }
 
     /**
+     * Determine whether the user can create models.
+     */
+    public function createAndLog(User $user): bool
+    {
+        return $user->is_paying;
+    }
+
+    /**
+     * Determine whether the user can clone models.
+     */
+    public function cloneAndLog(User $user, Meal $meal): bool
+    {
+        return $user->is_paying && ($meal->user_id === $user->id);
+    }
+
+    /**
      * Determine whether the user can update the model.
      */
     public function update(User $user, Meal $meal): bool

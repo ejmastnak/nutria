@@ -8,6 +8,7 @@ use App\Models\Ingredient;
 use App\Models\IngredientNutrient;
 use App\Models\Unit;
 use App\Models\Nutrient;
+use App\Models\MealIntakeRecord;
 use App\Services\UnitConversionService;
 use Illuminate\Support\Facades\DB;
 
@@ -169,6 +170,62 @@ class MealService
             }
         });
         return $ingredient;
+    }
+
+    public function storeAndLogMeal(array $data, int $userId): ?Meal
+    {
+        $mealData = $data['meal'];
+        $mealIntakeRecordData = $data['meal_intake_record'];
+        $meal = null;
+        DB::transaction(function () use ($mealData, $mealIntakeRecordData, $userId, &$meal) {
+
+            $mealMassInGrams = 0;
+            $meal = Meal::create([
+                'name' => $mealData['name'],
+                'mass_in_grams' => $mealMassInGrams,
+                'user_id' => $userId,
+            ]);
+
+            // Create the meal's ingredients
+            foreach ($mealData['meal_ingredients'] as $idx=>$mealIngredient) {
+                $MealIngredient = MealIngredient::create([
+                    'meal_id' => $meal->id,
+                    'ingredient_id' => $mealIngredient['ingredient_id'],
+                    'amount' => $mealIngredient['amount'],
+                    'unit_id' => $mealIngredient['unit_id'],
+                    'mass_in_grams' => UnitConversionService::convertToGrams($mealIngredient['amount'], $mealIngredient['unit_id'], $mealIngredient['ingredient_id'], null, null),
+                    'seq_num' => $idx,
+                ]);
+                $mealMassInGrams += $MealIngredient->mass_in_grams;
+            }
+
+            // Add meal's mass in grams
+            $meal->update([ 'mass_in_grams' => $mealMassInGrams ]);
+
+            // Create a meal-specific unit
+            $mealUnit = Unit::create([
+                'name' => 'meal',
+                'seq_num' => -1,
+                'meal_id' => $meal->id,
+                'custom_unit_amount' => 1,
+                'custom_mass_amount' => $mealMassInGrams,
+                'custom_mass_unit_id' => Unit::gramId(),
+                'custom_grams' => $mealMassInGrams,
+            ]);
+
+            // Create a MealIntakeRecord to log meal intake
+            $mealIntakeRecordUnitId = isset($mealIntakeRecordData['unit']['id']) ? $mealIntakeRecordData['unit']['id'] : $mealUnit->id;
+            MealIntakeRecord::create([
+                'amount' => $mealIntakeRecordData['amount'],
+                'meal_id' => $mealIntakeRecordData['meal_id'],
+                'unit_id' => $mealIntakeRecordUnitId,
+                'mass_in_grams' => UnitConversionService::convertToGrams($mealIntakeRecordData['amount'], $mealIntakeRecordUnitId, null, $data['meal_id'], null),
+                'date_time_utc' => $mealIntakeRecordData['date_time_utc'],
+                'user_id' => $userId,
+            ]);
+
+        });
+        return $meal;
     }
 
     public function deleteMeal(Meal $meal) {

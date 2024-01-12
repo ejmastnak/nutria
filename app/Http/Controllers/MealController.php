@@ -10,6 +10,7 @@ use App\Models\IntakeGuideline;
 use App\Models\Unit;
 use App\Http\Requests\StoreMealRequest;
 use App\Http\Requests\UpdateMealRequest;
+use App\Http\Requests\StoreAndLogMealRequest;
 use App\Services\MealService;
 use App\Services\NutrientProfileService;
 use Illuminate\Support\Facades\Redirect;
@@ -44,7 +45,7 @@ class MealController extends Controller
             'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
             'units' => Unit::getMassAndVolume(),
             'meals' => Meal::getForUser($userId),
-            'can_create' => $user ? $user->can('create', Meal::class) : false
+            'can_create' => $user ? $user->can('create', Meal::class) : false,
         ]);
     }
 
@@ -69,12 +70,51 @@ class MealController extends Controller
     }
 
     /**
+     * Show the form for creating and logging a new meal.
+     */
+    public function createAndLog()
+    {
+        $user = Auth::user();
+        $userId = $user ? $user->id : null;
+
+        return Inertia::render('Meals/Create', [
+            'meal' => null,
+            'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
+            'units' => Unit::getMassAndVolume(),
+            'meals' => Meal::getForUser($userId),
+            'can_create' => $user ? $user->can('create', Meal::class) : false,
+            'log' => true,
+        ]);
+    }
+
+    /**
+     * Like createAndLog, but form prefilled with an existing resource's values
+     */
+    public function cloneAndLog(Meal $meal)
+    {
+        $user = Auth::user();
+        $userId = $user ? $user->id : null;
+        return Inertia::render('Meals/Create', [
+            'meal' => $meal->withIngredientsAndChildIngredient(),
+            'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
+            'units' => Unit::getMassAndVolume(),
+            'meals' => Meal::getForUser($userId),
+            'can_view' => $user ? $user->can('view', $meal) : false,
+            'can_create' => $user ? $user->can('create', Meal::class) : false,
+            'can_clone' => $user ? $user->can('clone', $meal) : false,
+            'can_update' => $user ? $user->can('update', $meal) : false,
+            'can_delete' => $user ? $user->can('delete', $meal) : false,
+            'log' => true,
+        ]);
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreMealRequest $request, MealService $mealService)
+    public function storeAndLog(StoreAndLogMealRequest $request, MealService $mealService)
     {
-        $meal = $mealService->storeMeal($request->validated(), $request->user()->id);
-        return Redirect::route('meals.show', $meal->id)->with('message', 'Success! Meal created successfully.');
+        $mealService->storeAndLogMeal($request->validated(), $request->user()->id);
+        return back()->with('message', 'Success! Meal created and logged successfully.');
     }
 
     /**
