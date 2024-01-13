@@ -71,14 +71,14 @@ function updateMealIngredient(idx, newIngredient) {
   mealIngredients.value[idx].meal_ingredient.ingredient_id = newIngredient.id
   mealIngredients.value[idx].meal_ingredient.ingredient = newIngredient
 
-  // Reset ingredient's unit (to avoid a lingering unit not supported by the
-  // new ingredient) and amount (since we're already reseting unit, let's also
-  // reset amount for consistent user experience).
-  if (mealIngredients.value[idx].meal_ingredient.unit.g === null) {
+  // Reset ingredient's unit if old unit is not supported by new ingredient.
+  const newUnits = props.units.filter(unit => unit.g || (unit.ml && newIngredient.density_g_ml)).concat(newIngredient.custom_units ? newIngredient.custom_units : [])
+  if (!newUnits.map(unit => unit.id).includes(mealIngredients.value[idx].meal_ingredient.unit_id)) {
     mealIngredients.value[idx].meal_ingredient.unit_id = props.units.find(unit => unit.name === 'g').id
     mealIngredients.value[idx].meal_ingredient.unit = props.units.find(unit => unit.name === 'g')
     mealIngredients.value[idx].meal_ingredient.amount = null
   }
+
 }
 
 function deleteMealIngredient(idx) {

@@ -112,6 +112,19 @@ function handleTimeInputEnter() {
   checkAndConfirm()
 }
 
+function updateIngredient(newIngredient) {
+  ingredientIntakeRecord.value.ingredient = newIngredient
+  ingredientIntakeRecord.value.ingredient_id = newIngredient.id
+
+  // Reset ingredient's unit if old unit is not supported by new ingredient.
+  const newUnits = props.units.filter(unit => unit.g || (unit.ml && newIngredient.density_g_ml)).concat(newIngredient.custom_units ? newIngredient.custom_units : [])
+  if (!newUnits.map(unit => unit.id).includes(ingredientIntakeRecord.value.unit_id)) {
+    ingredientIntakeRecord.value.unit_id = props.units.find(unit => unit.name === 'g').id
+    ingredientIntakeRecord.value.unit = props.units.find(unit => unit.name === 'g')
+    ingredientIntakeRecord.value.amount = null
+  }
+}
+
 function cancel() {
   emit('cancel')
   isOpen.value = false
@@ -153,10 +166,7 @@ function confirm() {
               :options="ingredients"
               :modelValue="ingredientIntakeRecord.ingredient"
               :showIcon="false"
-              @update:modelValue="newValue => {
-                ingredientIntakeRecord.ingredient = newValue
-                ingredientIntakeRecord.ingredient_id = newValue.id
-              }"
+              @update:modelValue="newValue => updateIngredient(newValue)"
             />
           </div>
           <InputError :message="errors.ingredient_id" />

@@ -101,24 +101,27 @@ function updateFoodListIngredient(idx, newIngredient) {
   foodListIngredients.value[idx].food_list_ingredient.ingredient_id = newIngredient.id
   foodListIngredients.value[idx].food_list_ingredient.ingredient = newIngredient
 
-  // Reset ingredient's unit (to avoid a lingering unit not supported by the
-  // new ingredient) and amount (since we're already reseting unit, let's also
-  // reset amount for consisten user experience).
-  foodListIngredients.value[idx].food_list_ingredient.unit_id = props.units.find(unit => unit.name === 'g').id
-  foodListIngredients.value[idx].food_list_ingredient.unit = props.units.find(unit => unit.name === 'g')
-  foodListIngredients.value[idx].food_list_ingredient.amount = null
+  // Reset ingredient's unit if old unit is not supported by new ingredient.
+  const newUnits = props.units.filter(unit => unit.g || (unit.ml && newIngredient.density_g_ml)).concat(newIngredient.custom_units ? newIngredient.custom_units : [])
+  if (!newUnits.map(unit => unit.id).includes(foodListIngredients.value[idx].food_list_ingredient.unit_id)) {
+    foodListIngredients.value[idx].food_list_ingredient.unit_id = props.units.find(unit => unit.name === 'g').id
+    foodListIngredients.value[idx].food_list_ingredient.unit = props.units.find(unit => unit.name === 'g')
+    foodListIngredients.value[idx].food_list_ingredient.amount = null
+  }
+
 }
 
 function updateFoodListMeal(idx, newMeal) {
   foodListMeals.value[idx].food_list_meal.meal_id = newMeal.id
   foodListMeals.value[idx].food_list_meal.meal = newMeal
 
-  // Reset meals's unit (to avoid a lingering unit not supported by the
-  // new meal) and amount (since we're already reseting unit, let's also
-  // reset amount for consisten user experience).
-  foodListMeals.value[idx].food_list_meal.unit_id = newMeal.meal_unit.id
-  foodListMeals.value[idx].food_list_meal.unit = newMeal.meal_unit
-  foodListMeals.value[idx].food_list_meal.amount = 1
+  // Reset meal's unit if old unit is not supported by new meal (mass units
+  // will always be supported, but each meal's natural unit is different).
+  if (foodListMeals.value[idx].food_list_meal.unit.g === null) {
+    foodListMeals.value[idx].food_list_meal.unit_id = newMeal.meal_unit.id
+    foodListMeals.value[idx].food_list_meal.unit = newMeal.meal_unit
+    foodListMeals.value[idx].food_list_meal.amount = 1
+  }
 }
 
 function deleteFoodListIngredient(idx) {

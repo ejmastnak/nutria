@@ -112,6 +112,19 @@ function handleTimeInputEnter() {
   checkAndConfirm()
 }
 
+function updateMeal(newMeal) {
+  mealIntakeRecord.value.meal = newMeal
+  mealIntakeRecord.value.meal_id = newMeal.id
+
+  // Reset meal's unit if old unit is not supported by new meal (mass units
+  // will always be supported, but each meal's natural unit is different).
+  if (mealIntakeRecord.value.unit.g === null) {
+    mealIntakeRecord.value.amount = 1
+    mealIntakeRecord.value.unit = newMeal.meal_unit
+    mealIntakeRecord.value.unit_id = newMeal.meal_unit.id
+  }
+}
+
 function cancel() {
   emit('cancel')
   isOpen.value = false
@@ -153,13 +166,7 @@ function confirm() {
               :options="meals"
               :modelValue="mealIntakeRecord.meal"
               :showIcon="false"
-              @update:modelValue="newValue => {
-                mealIntakeRecord.meal = newValue
-                mealIntakeRecord.meal_id = newValue.id
-                mealIntakeRecord.amount = 1
-                mealIntakeRecord.unit = newValue.meal_unit
-                mealIntakeRecord.unit_id = newValue.meal_unit.id
-              }"
+              @update:modelValue="newValue => updateMeal(newValue)"
             />
           </div>
           <InputError :message="errors.meal_id" />
