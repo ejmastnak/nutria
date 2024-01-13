@@ -174,20 +174,18 @@ class MealService
 
     public function storeAndLogMeal(array $data, int $userId): ?Meal
     {
-        $mealData = $data['meal'];
-        $mealIntakeRecordData = $data['meal_intake_record'];
         $meal = null;
-        DB::transaction(function () use ($mealData, $mealIntakeRecordData, $userId, &$meal) {
+        DB::transaction(function () use ($data, $userId, &$meal) {
 
             $mealMassInGrams = 0;
             $meal = Meal::create([
-                'name' => $mealData['name'],
+                'name' => $data['name'],
                 'mass_in_grams' => $mealMassInGrams,
                 'user_id' => $userId,
             ]);
 
             // Create the meal's ingredients
-            foreach ($mealData['meal_ingredients'] as $idx=>$mealIngredient) {
+            foreach ($data['meal_ingredients'] as $idx=>$mealIngredient) {
                 $MealIngredient = MealIngredient::create([
                     'meal_id' => $meal->id,
                     'ingredient_id' => $mealIngredient['ingredient_id'],
@@ -214,13 +212,12 @@ class MealService
             ]);
 
             // Create a MealIntakeRecord to log meal intake
-            $mealIntakeRecordUnitId = isset($mealIntakeRecordData['unit']['id']) ? $mealIntakeRecordData['unit']['id'] : $mealUnit->id;
             MealIntakeRecord::create([
-                'amount' => $mealIntakeRecordData['amount'],
-                'meal_id' => $mealIntakeRecordData['meal_id'],
-                'unit_id' => $mealIntakeRecordUnitId,
-                'mass_in_grams' => UnitConversionService::convertToGrams($mealIntakeRecordData['amount'], $mealIntakeRecordUnitId, null, $data['meal_id'], null),
-                'date_time_utc' => $mealIntakeRecordData['date_time_utc'],
+                'amount' => 1,
+                'meal_id' => $data['meal_id'],
+                'unit_id' => $mealUnit->id,
+                'mass_in_grams' => UnitConversionService::convertToGrams($data['amount'], $mealUnit->id, null, $data['meal_id'], null),
+                'date_time_utc' => $data['date_time_utc'],
                 'user_id' => $userId,
             ]);
 

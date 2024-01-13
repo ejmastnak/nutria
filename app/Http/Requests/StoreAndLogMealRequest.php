@@ -5,7 +5,6 @@ namespace App\Http\Requests;
 use App\Models\Meal;
 use App\Rules\IngredientUnitIsConsistent;
 use App\Rules\IngredientOwnedByUser;
-use App\Rules\ValidStoreAndLogMealIntakeRecordUnit;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreAndLogMealRequest extends FormRequest
@@ -28,20 +27,18 @@ class StoreAndLogMealRequest extends FormRequest
     {
         return [
             // Meal
-            'meal.name' => ['required', 'min:1', config('validation.max_name_length')],
-            'meal.meal_ingredients' => ['required', 'array', 'min:1', config('validation.max_meal_ingredients')],
-            'meal.meal_ingredients.*.id' => ['nullable', 'integer', 'exists:meal_ingredients,id'],
-            'meal.meal_ingredients.*.ingredient_id' => ['required', 'integer', 'exists:ingredients,id', new IngredientOwnedByUser],
-            'meal.meal_ingredients.*.amount' => ['required', 'numeric', 'gt:0', config('validation.max_ingredient_amount')],
-            'meal.meal_ingredients.*.unit_id' => ['required', 'integer', 'exists:units,id'],
-            'meal.meal_ingredients.*' => [new IngredientUnitIsConsistent],
+            'name' => ['required', 'min:1', config('validation.max_name_length')],
+            'meal_ingredients' => ['required', 'array', 'min:1', config('validation.max_meal_ingredients')],
+            'meal_ingredients.*.id' => ['nullable', 'integer', 'exists:meal_ingredients,id'],
+            'meal_ingredients.*.ingredient_id' => ['required', 'integer', 'exists:ingredients,id', new IngredientOwnedByUser],
+            'meal_ingredients.*.amount' => ['required', 'numeric', 'gt:0', config('validation.max_ingredient_amount')],
+            'meal_ingredients.*.unit_id' => ['required', 'integer', 'exists:units,id'],
+            'meal_ingredients.*' => [new IngredientUnitIsConsistent],
 
             // Meal intake record
-            'meal_intake_record.amount' => ['required', 'numeric', 'gt:0', config('validation.generic_max_amount')],
-            'meal_intake_record.unit' => ['required', 'array', 'required_array_keys:id,name', new ValidStoreAndLogMealIntakeRecordUnit],
-            'meal_intake_record.date' => ['required', 'string', 'date_format:Y-m-d'],
-            'meal_intake_record.time' => ['required', 'string', 'date_format:H:i,H:i:s'],
-            'meal_intake_record.date_time_utc' => ['required', 'string', 'date_format:Y-m-d H:i,Y-m-d H:i:s'],
+            'date' => ['required', 'string', 'date_format:Y-m-d'],
+            'time' => ['required', 'string', 'date_format:H:i,H:i:s'],
+            'date_time_utc' => ['required', 'string', 'date_format:Y-m-d H:i,Y-m-d H:i:s'],
         ];
     }
 
@@ -53,17 +50,17 @@ class StoreAndLogMealRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'meal.name' => 'meal name',
-            'meal.meal_ingredients.*.ingredient_id' => 'ingredient_id',
-            'meal.meal_ingredients.*.amount' => 'amount',
-            'meal.meal_ingredients.*.unit_id' => 'unit_id',
-            'meal.meal_ingredients.*' => 'meal ingredient',
+            // Meal
+            'name' => 'meal name',
+            'meal_ingredients.*.ingredient_id' => 'ingredient_id',
+            'meal_ingredients.*.amount' => 'amount',
+            'meal_ingredients.*.unit_id' => 'unit_id',
+            'meal_ingredients.*' => 'meal ingredient',
 
-            'meal_intake_record.amount' => 'amount',
-            'meal_intake_record.unit' => 'unit',
-            'meal_intake_record.date' => 'date',
-            'meal_intake_record.time' => 'time',
-            'meal_intake_record.date_time_utc' => 'combined date and time',
+            // Meal intake record
+            'date' => 'date',
+            'time' => 'time',
+            'date_time_utc' => 'combined date and time',
         ];
     }
 
