@@ -45,11 +45,10 @@ const foodListMeals = ref(
 
 const nameInput = ref(null)
 
-const foodListIngredientInputCellsRef = ref([])
-var nextIngredientID = 1
+var nextIngredientId = props.food_list ? props.food_list.food_list_ingredients.length + 1 : 1
 function addFoodListIngredient() {
   foodListIngredients.value.push({
-    "id": nextIngredientID,
+    "id": nextIngredientId,
     food_list_ingredient: {
       "id": null,
       "food_list_id": null,
@@ -62,20 +61,22 @@ function addFoodListIngredient() {
   });
 
   // Focus text input for name of just-added empty food list ingredient
-  // Use timeout to give time for new table row to be injected into DOM
+  // Use timeout to give time for new element to be injected into DOM
   setTimeout(() => {
-    const input = foodListIngredientInputCellsRef.value[foodListIngredientTableCellsRef.value.length - 1].querySelectorAll('input')[0];
-    if (input) input.focus();
+    const wrapper = document.getElementById('food-list-ingredient-input-wrapper-' + nextIngredientId)
+    if (wrapper) {
+      const input = wrapper.querySelectorAll('input')[0];
+      if (input) input.focus();
+    }
+    nextIngredientId += 1;
   }, 0)
 
-  nextIngredientID += 1;
 }
 
-const foodListMealInputCellsRef = ref([])
-var nextMealID = 1
+var nextMealId = props.food_list ? props.food_list.food_list_meals.length + 1 : 1
 function addFoodListMeal() {
   foodListMeals.value.push({
-    "id": nextMealID,
+    "id": nextMealId,
     food_list_meal: {
       "id": null,
       "food_list_id": null,
@@ -87,14 +88,17 @@ function addFoodListMeal() {
     }
   });
 
-  // Focus text input for name of just-added empty food list ingredient
-  // Use timeout to give time for new table row to be injected into DOM
+  // Focus text input for name of just-added empty food list meal
+  // Use timeout to give time for new element to be injected into DOM
   setTimeout(() => {
-    const input = foodListMealInputCellsRef.value[foodListMealTableCellsRef.value.length - 1].querySelectorAll('input')[0];
-    if (input) input.focus();
+    const wrapper = document.getElementById('food-list-meal-input-wrapper-' + nextMealId)
+    if (wrapper) {
+      const input = wrapper.querySelectorAll('input')[0];
+      if (input) input.focus();
+    }
+    nextMealId += 1;
   }, 0)
 
-  nextMealID += 1;
 }
 
 function updateFoodListIngredient(idx, newIngredient) {
@@ -195,7 +199,7 @@ export default {
           class="border-t text-gray-600 align-top"
         >
           <!-- Ingredient input -->
-          <div ref="foodListIngredientInputCellsRef" class="col-span-9">
+          <div :id="'food-list-ingredient-input-wrapper-' + food_list_ingredient.id" class="col-span-9">
             <FuzzyCombobox
               :options="ingredients"
                 :modelValue="food_list_ingredient.food_list_ingredient.ingredient"
@@ -279,7 +283,7 @@ export default {
           class="border-t text-gray-600 align-top"
         >
           <!-- Meal input -->
-          <div ref="foodListMealInputCellsRef" class="col-span-9">
+          <div :id="'food-list-meal-input-wrapper-' + food_list_meal.id" class="col-span-9">
             <FuzzyCombobox
               :options="meals"
               :modelValue="food_list_meal.food_list_meal.meal"

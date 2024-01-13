@@ -34,15 +34,14 @@ const form = useForm({
 
 const mealIngredients = ref(props.meal
   ? props.meal.meal_ingredients.map((meal_ingredient, idx) => ({
-    id: idx,
+    id: idx + 1,
     meal_ingredient: meal_ingredient,
   }))
   : [])
 
 const nameInputRef = ref(null)
 
-const mealIngredientInputCellsRef = ref([])
-var nextId = 1
+var nextId = props.meal ? props.meal.meal_ingredients.length + 1 : 1
 function addMealIngredient() {
   mealIngredients.value.push({
     id: nextId,
@@ -58,13 +57,16 @@ function addMealIngredient() {
   });
 
   // Focus text input for name of just-added empty meal ingredient
-  // Use timeout to give time for new table row to be injected into DOM
+  // Use timeout to give time for new element to be injected into DOM
   setTimeout(() => {
-    const input = mealIngredientInputCellsRef.value[mealIngredientTableCellsRef.value.length - 1].querySelectorAll('input')[0];
-    if (input) input.focus();
+    const wrapper = document.getElementById('meal-ingredient-input-wrapper-' + nextId)
+    if (wrapper) {
+      const input = wrapper.querySelectorAll('input')[0];
+      if (input) input.focus();
+    }
+    nextId += 1;
   }, 0)
 
-  nextId += 1;
 }
 
 function updateMealIngredient(idx, newIngredient) {
@@ -223,7 +225,7 @@ export default {
           :key="meal_ingredient.id"
         >
           <!-- Ingredient input -->
-          <div ref="mealIngredientInputCellsRef" class="col-span-9">
+          <div :id="'meal-ingredient-input-wrapper-' + meal_ingredient.id" class="col-span-9">
             <FuzzyCombobox
               :options="ingredients"
               :modelValue="meal_ingredient.meal_ingredient.ingredient"
