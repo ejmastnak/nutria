@@ -2,9 +2,10 @@
 import { ref, computed, onMounted } from 'vue'
 import cloneDeep from "lodash/cloneDeep"
 import { getCurrentLocalYYYYMMDD, getCurrentLocalHHmm, getLocalYYYYMMDD, getLocalHHMM, getUTCDateTime } from '@/utils/GlobalFunctions.js'
-import { ClockIcon, CalendarIcon, PlusCircleIcon } from '@heroicons/vue/24/outline'
+import { ClockIcon, CalendarIcon, PlusCircleIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
+import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
 import PlainButton from '@/Components/PlainButton.vue'
 import TextInput from '@/Components/TextInput.vue'
 import InputLabel from '@/Components/InputLabel.vue'
@@ -202,17 +203,22 @@ function addMore() {
     >
       <div class="fixed inset-0 flex items-center justify-center p-4 bg-blue-50/80">
 
-        <DialogPanel class="px-6 pt-6 w-full max-w-sm rounded-lg bg-white shadow max-h-[600px] overflow-auto">
+        <!-- Update max-width is larger to accomodate larget title and button -->
+        <DialogPanel class="px-6 pt-6 w-full rounded-lg bg-white shadow max-h-[600px] overflow-auto" :class="mealIntakeRecordForm.id === null ? 'max-w-sm' : 'max-w-md'">
 
           <div class="flex items-center">
             <DialogTitle class="text-lg font-bold text-gray-600">
               {{mealIntakeRecordForm.id === null ? 'Log' : 'Update'}} meal intake {{mealIntakeRecordForm.id === null ? '' : 'record'}}
             </DialogTitle>
 
-            <SecondaryButton @click="mealCreateAndLogChooserDialogRef.open()" class="flex ml-auto !py-1">
+            <SecondaryButton v-if="mealIntakeRecordForm.id === null" @click="mealCreateAndLogChooserDialogRef.open()" class="flex ml-auto !py-1">
               <PlusCircleIcon class="-ml-1 w-6 h-6 text-gray-600 shrink-0" />
               <p class="ml-1">New meal</p>
             </SecondaryButton>
+            <SecondaryLinkButton v-else :href="route('meals.edit-logged', mealIntakeRecordForm.meal_id)" class="flex ml-auto !py-1">
+              <PencilSquareIcon class="-ml-1 w-6 h-6 text-gray-600 shrink-0" />
+              <p class="ml-1">Update meal</p>
+            </SecondaryLinkButton>
 
           </div>
 

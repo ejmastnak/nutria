@@ -57,6 +57,11 @@ Route::middleware('auth')->group(function () {
 
     // Meals
     Route::get('meals', [MealController::class, 'index'])->name('meals.index')->can('viewAny', Meal::class);
+    Route::get('meals/create-and-log', [MealController::class, 'createAndLog'])->name('meals.create-and-log')->can('createAndLog', Meal::class);
+    Route::get('meals/{meal}/clone-and-log', [MealController::class, 'cloneAndLog'])->name('meals.clone-and-log')->can('cloneAndLog', 'meal');
+    Route::get('meals/{meal}/edit-logged', [MealController::class, 'editLogged'])->name('meals.edit-logged')->can('update', 'meal');
+    Route::post('meals/store-and-log', [MealController::class, 'storeAndLog'])->name('meals.store-and-log')->can('createAndLog', Meal::class);
+    Route::put('meals/{meal}/update-logged', [MealController::class, 'updateLogged'])->name('meals.update-logged')->can('update', 'meal');
     Route::get('meals/create', [MealController::class, 'create'])->name('meals.create')->can('create', Meal::class);
     Route::get('meals/{meal}/clone', [MealController::class, 'clone'])->name('meals.clone')->can('clone', 'meal');
     Route::post('meals', [MealController::class, 'store'])->name('meals.store')->can('create', Meal::class);
@@ -65,9 +70,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('meals/{meal}', [MealController::class, 'destroy'])->name('meals.destroy')->can('delete', 'meal');
     Route::get('meals/{meal}', [MealController::class, 'show'])->name('meals.show')->can('view', 'meal');
     Route::put('meals/{meal}/save-as-ingredient', [MealController::class, 'saveAsIngredient'])->name('meals.save-as-ingredient')->can('saveAsIngredient', 'meal');
-    Route::get('meals/create-and-log', [MealController::class, 'createAndLog'])->name('meals.create-and-log')->can('createAndLog', Meal::class);
-    Route::get('meals/{meal}/clone-and-log', [MealController::class, 'clone-and-log'])->name('meals.cloneAndLog')->can('cloneAndLog', 'meal');
-    Route::post('meals/store-and-log', [MealController::class, 'storeAndLog'])->name('meals.store-and-log')->can('createAndLog', Meal::class);
 
     // Food Lists
     Route::get('food-lists', [FoodListController::class, 'index'])->name('food-lists.index')->can('viewAny', FoodList::class);

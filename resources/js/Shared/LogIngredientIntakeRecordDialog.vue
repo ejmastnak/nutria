@@ -132,7 +132,7 @@ function handleTimeInputEnter() {
 }
 
 function checkAndConfirm() {
-  if (passesValidation()) addMore();
+  if (passesValidation()) save();
 }
 
 function close() {

@@ -212,11 +212,12 @@ class MealService
             ]);
 
             // Create a MealIntakeRecord to log meal intake
+            $amount = 1.0;
             MealIntakeRecord::create([
-                'amount' => 1,
-                'meal_id' => $data['meal_id'],
+                'amount' => $amount,
+                'meal_id' => $meal->id,
                 'unit_id' => $mealUnit->id,
-                'mass_in_grams' => UnitConversionService::convertToGrams($data['amount'], $mealUnit->id, null, $data['meal_id'], null),
+                'mass_in_grams' => UnitConversionService::convertToGrams($amount, $mealUnit->id, null, $meal->id, null),
                 'date_time_utc' => $data['date_time_utc'],
                 'user_id' => $userId,
             ]);

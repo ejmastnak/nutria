@@ -21,7 +21,7 @@ function open() { isOpen.value = true }
 function close() { isOpen.value = false }
 
 function create() {
-  // router.get(route('meals.create-and-log'));
+  router.get(route('meals.create-and-log'));
 }
 
 function clone() {
@@ -31,7 +31,7 @@ function clone() {
 const searchDialog = ref(null)
 function cloneAndLog(meal) {
   if (meal && meal.id) {
-    // router.get(route('meals.clone-and-log', meal.id)); 
+    router.get(route('meals.clone-and-log', meal.id)); 
   }
 }
 

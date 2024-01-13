@@ -111,11 +111,11 @@ function getBgColorForFoodItemRow(idx) {
     </p>
 
     <div class="flex gap-x-1.5">
-      <SecondaryButton @click="logIngredientIntake" >
-        Log Ingredients
-      </SecondaryButton>
       <SecondaryButton @click="logMealIntake" >
         Log Meals
+      </SecondaryButton>
+      <SecondaryButton @click="logIngredientIntake" >
+        Log Ingredients
       </SecondaryButton>
     </div>
 

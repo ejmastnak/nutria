@@ -77,13 +77,12 @@ class MealController extends Controller
         $user = Auth::user();
         $userId = $user ? $user->id : null;
 
-        return Inertia::render('Meals/Create', [
+        return Inertia::render('Meals/CreateAndLog', [
             'meal' => null,
             'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
             'units' => Unit::getMassAndVolume(),
             'meals' => Meal::getForUser($userId),
             'can_create' => $user ? $user->can('create', Meal::class) : false,
-            'log' => true,
         ]);
     }
 
@@ -94,7 +93,7 @@ class MealController extends Controller
     {
         $user = Auth::user();
         $userId = $user ? $user->id : null;
-        return Inertia::render('Meals/Create', [
+        return Inertia::render('Meals/CreateAndLog', [
             'meal' => $meal->withIngredientsAndChildIngredient(),
             'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
             'units' => Unit::getMassAndVolume(),
@@ -104,8 +103,16 @@ class MealController extends Controller
             'can_clone' => $user ? $user->can('clone', $meal) : false,
             'can_update' => $user ? $user->can('update', $meal) : false,
             'can_delete' => $user ? $user->can('delete', $meal) : false,
-            'log' => true,
         ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreAndLogMealRequest $request, MealService $mealService)
+    {
+        $meal = $mealService->storeMeal($request->validated(), $request->user()->id);
+        return Redirect::route('meals.show', $meal->id)->with('message', 'Success! Meal created successfully.');
     }
 
     /**
@@ -114,7 +121,7 @@ class MealController extends Controller
     public function storeAndLog(StoreAndLogMealRequest $request, MealService $mealService)
     {
         $mealService->storeAndLogMeal($request->validated(), $request->user()->id);
-        return back()->with('message', 'Success! Meal created and logged successfully.');
+        return Redirect::route('data')->with('message', 'Success! Meal created and logged successfully.');
     }
 
     /**
@@ -164,12 +171,43 @@ class MealController extends Controller
     }
 
     /**
+     * For editing a logged meal
+     */
+    public function editLogged(Meal $meal)
+    {
+        $user = Auth::user();
+        $userId = $user ? $user->id : null;
+
+        return Inertia::render('Meals/EditLogged', [
+            'meal' => $meal->withIngredientsAndChildIngredient(),
+            'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
+            'units' => Unit::getMassAndVolume(),
+            'meals' => Meal::getForUser($userId),
+            'can_view' => $user ? $user->can('view', $meal) : false,
+            'can_create' => $user ? $user->can('create', Meal::class) : false,
+            'can_clone' => $user ? $user->can('clone', $meal) : false,
+            'can_update' => $user ? $user->can('update', $meal) : false,
+            'can_delete' => $user ? $user->can('delete', $meal) : false,
+            'can_create' => $user ? $user->can('create', Meal::class) : false,
+        ]);
+    }
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(UpdateMealRequest $request, Meal $meal, MealService $mealService, NutrientProfileService $nutrientProfileService)
     {
         $mealService->updateMeal($request->validated(), $meal, $nutrientProfileService);
         return Redirect::route('meals.show', $meal->id)->with('message', 'Success! Meal updated successfully.');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function updateLogged(UpdateMealRequest $request, Meal $meal, MealService $mealService, NutrientProfileService $nutrientProfileService)
+    {
+        $mealService->updateMeal($request->validated(), $meal, $nutrientProfileService);
+        return Redirect::route('data')->with('message', 'Success! Meal updated successfully.');
     }
 
     /**

@@ -1,10 +1,11 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import { round } from '@/utils/GlobalFunctions.js'
+import { getCurrentLocalYYYYMMDD, getCurrentLocalHHmm, getUTCDateTime } from '@/utils/GlobalFunctions.js'
 import SimpleCombobox from '@/Components/SimpleCombobox.vue'
 import FuzzyCombobox from '@/Components/FuzzyCombobox.vue'
-import { PlusCircleIcon, TrashIcon } from '@heroicons/vue/24/outline'
+import { PlusCircleIcon, TrashIcon, CalendarIcon, ClockIcon } from '@heroicons/vue/24/outline'
 import TextInput from '@/Components/TextInput.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -16,13 +17,19 @@ const props = defineProps({
   meal: Object,
   ingredients: Array,
   units: Array,
-  create: Boolean
+  create: Boolean,
+  log: Boolean,
+  editing_logged: Boolean,
 })
 
 const form = useForm({
   id: props.meal ? props.meal.id : null,
   name: props.meal ? props.meal.name : "",
   meal_ingredients: [],  // filled in on submit
+  // For createAndLog
+  date: getCurrentLocalYYYYMMDD(),
+  time: getCurrentLocalHHmm(),
+  date_time_utc: null,  // filled in on submit
 })
 
 const mealIngredients = ref(props.meal
@@ -32,7 +39,7 @@ const mealIngredients = ref(props.meal
   }))
   : [])
 
-const nameInput = ref(null)
+const nameInputRef = ref(null)
 
 const mealIngredientInputCellsRef = ref([])
 var nextId = 1
@@ -66,29 +73,52 @@ function updateMealIngredient(idx, newIngredient) {
 
   // Reset ingredient's unit (to avoid a lingering unit not supported by the
   // new ingredient) and amount (since we're already reseting unit, let's also
-  // reset amount for consisten user experience).
-  mealIngredients.value[idx].meal_ingredient.unit_id = props.units.find(unit => unit.name === 'g').id
-  mealIngredients.value[idx].meal_ingredient.unit = props.units.find(unit => unit.name === 'g')
-  mealIngredients.value[idx].meal_ingredient.amount = null
+  // reset amount for consistent user experience).
+  if (mealIngredients.value[idx].meal_ingredient.unit.g === null) {
+    mealIngredients.value[idx].meal_ingredient.unit_id = props.units.find(unit => unit.name === 'g').id
+    mealIngredients.value[idx].meal_ingredient.unit = props.units.find(unit => unit.name === 'g')
+    mealIngredients.value[idx].meal_ingredient.amount = null
+  }
 }
 
 function deleteMealIngredient(idx) {
   if (idx >= 0 && idx < mealIngredients.value.length) mealIngredients.value.splice(idx, 1)
 }
 
+const mealNameBeginsWithDate = computed(() => {
+  const regexp = new RegExp("^[0-9]{4}-[0-9]{2}-[0-9]{2}");
+  return regexp.test(form.name.trim())
+})
+
+function prependDateToMealName() {
+  // Do nothing if meal name begin with yyyy-mm-dd, skip
+  if (mealNameBeginsWithDate.value) {
+    const regexp = new RegExp("^[0-9]{4}-[0-9]{2}-[0-9]{2}");
+    form.name = form.name.trim().replace(regexp, "").trim()
+  } else {
+    form.name = getCurrentLocalYYYYMMDD() + " " + form.name.trim()
+    nameInputRef.value.focus()
+  }
+}
+
 function submit() {
   // Drop empty ingredients and unpack nested meal_ingredient object
   form.meal_ingredients = mealIngredients.value.filter(mi => mi.meal_ingredient.ingredient).map(mi => mi.meal_ingredient)
+  form.date_time_utc = getUTCDateTime(form.date + " " + form.time + ":00")
+
   if (props.create) {
-    form.post(route('meals.store'))
+    if (props.log) form.post(route('meals.store-and-log'));
+    else form.post(route('meals.store'));
   } else {
-    form.put(route('meals.update', props.meal.id))
+    if (props.editing_logged) form.put(route('meals.update-logged', props.meal.id));
+    else form.put(route('meals.update', props.meal.id));
   }
+
 }
 
 onMounted(() => {
   if (props.meal === null) {
-    nameInput.value.focus()
+    nameInputRef.value.focus()
   }
 })
 
@@ -109,15 +139,66 @@ export default {
       <!-- Name -->
       <div>
         <InputLabel for="name" value="Name" />
-        <TextInput
-          id="name"
-          ref="nameInput"
-          type="text"
-          class="min-w-[28rem] mr-2"
-          v-model="form.name"
-          required
-        />
+        <div class="flex flex-wrap gap-1">
+          <TextInput
+            id="name"
+            ref="nameInputRef"
+            type="text"
+            class="min-w-[28rem] mr-2"
+            v-model="form.name"
+            required
+          />
+          <SecondaryButton v-if="log" @click="prependDateToMealName">
+            <p v-if="!mealNameBeginsWithDate">Prepend today's date</p>
+            <p v-else>Strip leading date</p>
+          </SecondaryButton>
+        </div>
         <InputError class="mt-2" :message="form.errors.name" />
+      </div>
+
+      <div v-if="log" class="">
+
+        <!-- Date -->
+        <div class="mt-4 flex items-end">
+          <div class="w-40">
+            <InputLabel for="date" value="Date" />
+            <TextInput
+              id="date"
+              class="w-full bg-white"
+              type="date"
+              v-model="form.date"
+              required
+            />
+            <InputError :message="form.errors.date" />
+          </div>
+          <SecondaryButton @click="form.date = getCurrentLocalYYYYMMDD()" class="ml-2 h-fit">
+            <CalendarIcon class="w-5 h-5 -ml-1 w-6 h-6 text-gray-600 shrink-0"/>
+            <p class="ml-1">Today</p>
+          </SecondaryButton>
+        </div>
+
+        <!-- Time -->
+        <div class="mt-3 flex items-end">
+          <div class="w-40">
+            <InputLabel for="time" value="Time" />
+            <TextInput
+              id="time"
+              class="w-full bg-white"
+              type="time"
+              step="60"
+              v-model="form.time"
+            />
+            <InputError :message="form.errors.time" />
+          </div>
+          <SecondaryButton @click="form.time = getCurrentLocalHHmm()" class="ml-2 h-fit">
+            <ClockIcon class="w-5 h-5 -ml-1 w-6 h-6 text-gray-600 shrink-0"/>
+            <p class="ml-1">Now</p>
+          </SecondaryButton>
+        </div>
+
+        <div class="mt-1">
+          <InputError :message="form.errors.date_time_utc" />
+        </div>
       </div>
 
     </section>
@@ -212,7 +293,7 @@ export default {
         :class="{ 'opacity-25': form.processing }"
         :disabled="form.processing"
       >
-        <span v-if="create">Create</span>
+        <span v-if="create">Create <span v-if="log">and log</span></span>
         <span v-else>Update</span>
       </PrimaryButton>
 
