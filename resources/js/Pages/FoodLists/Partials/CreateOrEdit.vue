@@ -83,7 +83,7 @@ function addFoodListMeal() {
       "meal_id": null,
       "meal": {},
       "amount": null,
-      "unit_id": props.units.find(unit => unit.name === 'g').id,
+      "unit_id": null,
       "unit": {}
     }
   });
@@ -119,12 +119,13 @@ function updateFoodListMeal(idx, newMeal) {
   foodListMeals.value[idx].food_list_meal.meal_id = newMeal.id
   foodListMeals.value[idx].food_list_meal.meal = newMeal
 
-  // Reset meal's unit if old unit is not supported by new meal (mass units
-  // will always be supported, but each meal's natural unit is different).
-  if (foodListMeals.value[idx].food_list_meal.unit.g === null) {
+  // Reset meal's unit to 1 meal if a unit has not yet been selected or if old
+  // unit is not supported by new meal (mass units will always be supported,
+  // but each meal's natural unit is different).
+  if (foodListMeals.value[idx].food_list_meal.unit_id === null || foodListMeals.value[idx].food_list_meal.unit.g === null) {
     foodListMeals.value[idx].food_list_meal.unit_id = newMeal.meal_unit.id
     foodListMeals.value[idx].food_list_meal.unit = newMeal.meal_unit
-    foodListMeals.value[idx].food_list_meal.amount = 1
+    if (foodListMeals.value[idx].food_list_meal.amount === null) foodListMeals.value[idx].food_list_meal.amount = 1;
   }
 }
 
@@ -312,7 +313,7 @@ export default {
           <!-- Unit combobox -->
           <div class="col-span-3 text-right">
             <SimpleCombobox
-              :options="Array(food_list_meal.food_list_meal.meal.meal_unit).concat(units.filter(unit => unit.g))"
+              :options="food_list_meal.food_list_meal.meal_id ? Array(food_list_meal.food_list_meal.meal.meal_unit).concat(units.filter(unit => unit.g)) : []"
               :modelValue="food_list_meal.food_list_meal.unit"
               @update:modelValue="newValue => (food_list_meal.food_list_meal.unit_id = newValue.id, food_list_meal.food_list_meal.unit = newValue)"
             />

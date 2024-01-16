@@ -36,8 +36,8 @@ function open(record) {
   mealIntakeRecordForm.meal_id = record ? record.meal_id : null
   mealIntakeRecordForm.meal = record ? cloneDeep(record.meal) : {}
   mealIntakeRecordForm.amount = record ? record.amount : null
-  mealIntakeRecordForm.unit_id = record ? record.unit_id : props.units.find(unit => unit.name === 'g').id
-  mealIntakeRecordForm.unit = record ? cloneDeep(record.unit) : props.units.find(unit => unit.name === 'g')
+  mealIntakeRecordForm.unit_id = record ? record.unit_id : null
+  mealIntakeRecordForm.unit = record ? cloneDeep(record.unit) : null
   mealIntakeRecordForm.date = record ? getLocalYYYYMMDD(record.date_time_utc) : getCurrentLocalYYYYMMDD()
   mealIntakeRecordForm.time = record ? getLocalHHMM(record.date_time_utc) : getCurrentLocalHHmm()
   isOpen.value = true
@@ -142,12 +142,13 @@ function updateMeal(newMeal) {
   mealIntakeRecordForm.meal = newMeal
   mealIntakeRecordForm.meal_id = newMeal.id
 
-  // Reset meal's unit if old unit is not supported by new meal (mass units
-  // will always be supported, but each meal's natural unit is different).
-  if (mealIntakeRecordForm.unit.g === null) {
-    mealIntakeRecordForm.amount = 1
+  // Reset meal's unit to 1 meal if a unit has not yet been selected or if old
+  // unit is not supported by new meal (mass units will always be supported,
+  // but each meal's natural unit is different).
+  if (mealIntakeRecordForm.unit_id === null || mealIntakeRecordForm.unit.g === null) {
     mealIntakeRecordForm.unit = newMeal.meal_unit
     mealIntakeRecordForm.unit_id = newMeal.meal_unit.id
+    if (mealIntakeRecordForm.amount === null) mealIntakeRecordForm.amount = 1;
   }
 }
 
@@ -274,7 +275,7 @@ function addMore() {
             <div class="ml-4 w-40">
               <div ref="unitInputWrapperRef">
                 <SimpleCombobox
-                  :options="units.filter(unit => unit.g).concat(mealIntakeRecordForm.meal.meal_unit ? Array(mealIntakeRecordForm.meal.meal_unit) : [])"
+                  :options="mealIntakeRecordForm.meal_id ? Array(mealIntakeRecordForm.meal.meal_unit).concat(units.filter(unit => unit.g)) : []"
                   labelText="Unit"
                   inputClasses="w-40"
                   @keyup.enter="handleUnitInputEnter"
