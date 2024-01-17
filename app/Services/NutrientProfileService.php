@@ -283,7 +283,7 @@ class NutrientProfileService
         foreach ($intakeGuidelineIds as $intakeGuidelineId) {
             $nutrientProfiles[] = [
               'intake_guideline_id' => $intakeGuidelineId,
-              'nutrient_profile' => $this->getNutrientProfileForDateRange($fromDate, $toDate, $intakeGuidelineId)
+              'nutrient_profile' => $this->getNutrientProfileForDateRange($fromDate, $toDate, $intakeGuidelineId, $userId)
             ];
         }
 
@@ -294,7 +294,7 @@ class NutrientProfileService
      *  Computes a NutrientProfile for 100g of the specified Ingredient using
      *  the specified IntakeGuideline.
      */
-    private function getNutrientProfileForDateRange(string $fromDate, string $toDate, int $intakeGuidelineId) {
+    private function getNutrientProfileForDateRange(string $fromDate, string $toDate, int $intakeGuidelineId, int $userId) {
         $query = "
         select
           nutrients.id as nutrient_id,
@@ -316,6 +316,8 @@ class NutrientProfileService
             ingredient_intake_records.date_time_utc >= :from_date
             and
             ingredient_intake_records.date_time_utc <= :to_date
+            and
+            ingredient_intake_records.user_id = :user_id
 
           union all
 
@@ -336,6 +338,8 @@ class NutrientProfileService
             meal_intake_records.date_time_utc >= :from_date
             and
             meal_intake_records.date_time_utc <= :to_date
+            and
+            meal_intake_records.user_id = :user_id
         )
         as unioned_ingredients
         inner join ingredient_nutrients
@@ -360,6 +364,7 @@ class NutrientProfileService
             'from_date' => $fromDate,
             'to_date' => $toDate,
             'intake_guideline_id' => $intakeGuidelineId,
+            'user_id' => $userId,
         ]);
 
         return $result;
