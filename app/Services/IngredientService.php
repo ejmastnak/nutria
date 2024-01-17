@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class IngredientService
 {
-    public function storeIngredient(array $data, int $userId): ?Ingredient
+    public function storeIngredient(array $data, int $userId): ?int
     {
         $ingredient = null;
         DB::transaction(function () use ($data, $userId, &$ingredient) {
@@ -88,10 +88,10 @@ class IngredientService
             }
 
         });
-        return $ingredient;
+        return $ingredient->id;
     }
 
-    public function updateIngredient(array $data, Ingredient $ingredient): ?Ingredient
+    public function updateIngredient(array $data, Ingredient $ingredient): void
     {
         DB::transaction(function () use ($data, $ingredient) {
 
@@ -183,10 +183,10 @@ class IngredientService
             }
 
         });
-        return $ingredient;
     }
 
-    public function deleteIngredient(Ingredient $ingredient) {
+    public function deleteIngredient(Ingredient $ingredient): void
+    {
         $restricted = false;
         $success = false;
         $errors = [];

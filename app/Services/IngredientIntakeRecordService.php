@@ -7,29 +7,29 @@ use Illuminate\Support\Facades\DB;
 
 class IngredientIntakeRecordService
 {
-    public function storeManyIngredientIntakeRecords(array $data, int $userId): ?bool
+    public function storeManyIngredientIntakeRecords(array $data, int $userId): void
     {
         DB::transaction(function () use ($data, $userId) {
             foreach ($data['ingredient_intake_records'] as $ingredientIntakeRecord) {
                 $this->storeIngredientIntakeRecord($ingredientIntakeRecord, $userId);
             }
         });
-        return true;
     }
 
-    public function storeIngredientIntakeRecord(array $ingredientIntakeRecord, int $userId): ?IngredientIntakeRecord
+    public function storeIngredientIntakeRecord(array $data, int $userId): ?int
     {
-        return IngredientIntakeRecord::create([
-            'amount' => $ingredientIntakeRecord['amount'],
-            'ingredient_id' => $ingredientIntakeRecord['ingredient_id'],
-            'unit_id' => $ingredientIntakeRecord['unit_id'],
-            'mass_in_grams' => UnitConversionService::convertToGrams($ingredientIntakeRecord['amount'], $ingredientIntakeRecord['unit_id'], $ingredientIntakeRecord['ingredient_id'], null, null),
-            'date_time_utc' => $ingredientIntakeRecord['date_time_utc'],
+        $ingredientIntakeRecord = IngredientIntakeRecord::create([
+            'amount' => $data['amount'],
+            'ingredient_id' => $data['ingredient_id'],
+            'unit_id' => $data['unit_id'],
+            'mass_in_grams' => UnitConversionService::convertToGrams($data['amount'], $data['unit_id'], $data['ingredient_id'], null, null),
+            'date_time_utc' => $data['date_time_utc'],
             'user_id' => $userId,
         ]);
+        return $ingredientIntakeRecord->id;
     }
 
-    public function updateIngredientIntakeRecord(array $data, IngredientIntakeRecord $ingredientIntakeRecord): ?IngredientIntakeRecord
+    public function updateIngredientIntakeRecord(array $data, IngredientIntakeRecord $ingredientIntakeRecord): void
     {
         $ingredientIntakeRecord->update([
             'amount' => $data['amount'],
@@ -38,10 +38,10 @@ class IngredientIntakeRecordService
             'mass_in_grams' => UnitConversionService::convertToGrams($data['amount'], $data['unit_id'], $data['ingredient_id'], null, null),
             'date_time_utc' => $data['date_time_utc'],
         ]);
-        return $ingredientIntakeRecord;
     }
 
-    public function deleteIngredientIntakeRecord(IngredientIntakeRecord $ingredientIntakeRecord) {
+    public function deleteIngredientIntakeRecord(IngredientIntakeRecord $ingredientIntakeRecord): void
+    {
         $success = $ingredientIntakeRecord->delete();
         if ($success) $message = 'Success! Record deleted successfully.';
         else $message = 'Error. Failed to delete record.';

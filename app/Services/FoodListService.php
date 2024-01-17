@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class FoodListService
 {
-    public function storeFoodList(array $data, int $userId): ?FoodList
+    public function storeFoodList(array $data, int $userId): ?int
     {
         $foodList = null;
         DB::transaction(function () use ($data, $userId, &$foodList) {
@@ -63,10 +63,10 @@ class FoodListService
             ]);
 
         });
-        return $foodList;
+        return $foodList->id;
     }
 
-    public function updateFoodList(array $data, FoodList $foodList): ?FoodList
+    public function updateFoodList(array $data, FoodList $foodList): void
     {
         DB::transaction(function () use ($data, $foodList) {
 
@@ -163,10 +163,10 @@ class FoodListService
             ]);
 
         });
-        return $foodList;
     }
 
-    public function deleteFoodList(FoodList $foodList) {
+    public function deleteFoodList(FoodList $foodList): void
+    {
         $success = $foodList->delete();
         if ($success) $message = 'Success! Food list deleted successfully.';
         else $message = 'Failed to delete food list.';

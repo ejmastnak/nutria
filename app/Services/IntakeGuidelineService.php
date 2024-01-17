@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class IntakeGuidelineService
 {
-    public function storeIntakeGuideline(array $data, int $userId): ?IntakeGuideline
+    public function storeIntakeGuideline(array $data, int $userId): ?int
     {
         $intakeGuideline = null;
         DB::transaction(function () use ($data, $userId, &$intakeGuideline) {
@@ -29,10 +29,10 @@ class IntakeGuidelineService
             }
 
         });
-        return $intakeGuideline;
+        return $intakeGuideline->id;
     }
 
-    public function updateIntakeGuideline(array $data, IntakeGuideline $intakeGuideline): ?IntakeGuideline
+    public function updateIntakeGuideline(array $data, IntakeGuideline $intakeGuideline): void
     {
         DB::transaction(function () use ($data, $intakeGuideline) {
 
@@ -50,10 +50,10 @@ class IntakeGuidelineService
                 ]);
             }
         });
-        return $intakeGuideline;
     }
 
-    public function deleteIntakeGuideline(IntakeGuideline $intakeGuideline) {
+    public function deleteIntakeGuideline(IntakeGuideline $intakeGuideline): void
+    {
         $success = $intakeGuideline->delete();
         if ($success) $message = 'Success! Intake Guideline deleted successfully.';
         else $message = 'Failed to delete intake guideline.';

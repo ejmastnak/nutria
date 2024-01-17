@@ -82,8 +82,8 @@ class IngredientController extends Controller
      */
     public function store(StoreIngredientRequest $request, IngredientService $ingredientService)
     {
-        $ingredient = $ingredientService->storeIngredient($request->validated(), $request->user()->id);
-        return Redirect::route('ingredients.show', $ingredient->id)->with('message', 'Success! Ingredient created successfully.');
+        $id = $ingredientService->storeIngredient($request->validated(), $request->user()->id);
+        return Redirect::route('ingredients.show', $id)->with('message', 'Success! Ingredient created successfully.');
     }
 
     /**

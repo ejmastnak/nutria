@@ -68,8 +68,8 @@ class IntakeGuidelineController extends Controller
      */
     public function store(StoreIntakeGuidelineRequest $request, IntakeGuidelineService $intakeGuidelineService)
     {
-        $intakeGuideline = $intakeGuidelineService->storeIntakeGuideline($request->validated(), $request->user()->id);
-        return Redirect::route('intake-guidelines.show', $intakeGuideline->id)->with('message', 'Success! Intake Guideline created successfully.');
+        $id = $intakeGuidelineService->storeIntakeGuideline($request->validated(), $request->user()->id);
+        return Redirect::route('intake-guidelines.show', $id)->with('message', 'Success! Intake Guideline created successfully.');
     }
 
     /**

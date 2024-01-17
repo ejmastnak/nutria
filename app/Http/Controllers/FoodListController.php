@@ -78,8 +78,8 @@ class FoodListController extends Controller
      */
     public function store(StoreFoodListRequest $request, FoodListService $foodListService)
     {
-        $foodList = $foodListService->storeFoodList($request->validated(), $request->user()->id);
-        return Redirect::route('food-lists.show', $foodList->id)->with('message', 'Success! Food List created successfully.');
+        $id = $foodListService->storeFoodList($request->validated(), $request->user()->id);
+        return Redirect::route('food-lists.show', $id)->with('message', 'Success! Food List created successfully.');
     }
 
     /**

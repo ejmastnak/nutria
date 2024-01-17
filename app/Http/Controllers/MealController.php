@@ -111,8 +111,8 @@ class MealController extends Controller
      */
     public function store(StoreAndLogMealRequest $request, MealService $mealService)
     {
-        $meal = $mealService->storeMeal($request->validated(), $request->user()->id);
-        return Redirect::route('meals.show', $meal->id)->with('message', 'Success! Meal created successfully.');
+        $id = $mealService->storeMeal($request->validated(), $request->user()->id);
+        return Redirect::route('meals.show', $id)->with('message', 'Success! Meal created successfully.');
     }
 
     /**
@@ -216,8 +216,8 @@ class MealController extends Controller
     public function saveAsIngredient(Meal $meal, MealService $mealService, NutrientProfileService $nutrientProfileService) {
         if (is_null($meal)) return back()->with('message', 'Error. Failed to create ingredient—the parent meal could not be resolved.');  // basic validation
         $user = Auth::user();
-        $ingredient = $mealService->saveAsIngredient($meal, $user->id, $nutrientProfileService);
-        return Redirect::route('ingredients.show', $ingredient->id)->with('message', 'Success! Ingredient successfully created.');
+        $id = $mealService->saveAsIngredient($meal, $user->id, $nutrientProfileService);
+        return Redirect::route('ingredients.show', $id)->with('message', 'Success! Ingredient successfully created.');
     }
 
     /**

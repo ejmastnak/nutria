@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class MealService
 {
-    public function storeMeal(array $data, int $userId): ?Meal
+    public function storeMeal(array $data, int $userId): ?int
     {
         $meal = null;
         DB::transaction(function () use ($data, $userId, &$meal) {
@@ -54,10 +54,10 @@ class MealService
             ]);
 
         });
-        return $meal;
+        return $meal->id;
     }
 
-    public function updateMeal(array $data, Meal $meal, NutrientProfileService $nutrientProfileService): ?Meal
+    public function updateMeal(array $data, Meal $meal, NutrientProfileService $nutrientProfileService): void
     {
         DB::transaction(function () use ($data, $meal, $nutrientProfileService) {
 
@@ -118,10 +118,10 @@ class MealService
             if (!is_null($childIngredient)) $this->updateChildIngredient($meal, $childIngredient, $nutrientProfileService);
 
         });
-        return $meal;
+        return $meal->id;
     }
 
-    public function saveAsIngredient(Meal $meal, int $userId, NutrientProfileService $nutrientProfileService): ?Ingredient {
+    public function saveAsIngredient(Meal $meal, int $userId, NutrientProfileService $nutrientProfileService): ?int {
 
         // Does a child ingredient for this meal already exist?
         $childIngredient = Ingredient::where('meal_id', $meal->id)->first();
@@ -151,10 +151,11 @@ class MealService
                 ]);
             }
         });
-        return $ingredient;
+        return $ingredient->id;
     }
 
-    public function updateChildIngredient(Meal $meal, Ingredient $ingredient, NutrientProfileService $nutrientProfileService): ?Ingredient {
+    public function updateChildIngredient(Meal $meal, Ingredient $ingredient, NutrientProfileService $nutrientProfileService): ?int
+    {
         DB::transaction(function () use ($meal, $ingredient, $nutrientProfileService) {
 
             // Update ingredient
@@ -169,10 +170,10 @@ class MealService
                 ]);
             }
         });
-        return $ingredient;
+        return $ingredient->id;
     }
 
-    public function storeAndLogMeal(array $data, int $userId): ?Meal
+    public function storeAndLogMeal(array $data, int $userId): ?int
     {
         $meal = null;
         DB::transaction(function () use ($data, $userId, &$meal) {
@@ -223,10 +224,11 @@ class MealService
             ]);
 
         });
-        return $meal;
+        return $meal->id;
     }
 
-    public function deleteMeal(Meal $meal) {
+    public function deleteMeal(Meal $meal): void
+    {
         $restricted = false;
         $success = false;
         $errors = [];
