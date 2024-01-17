@@ -18,7 +18,7 @@ class MealIntakeRecordService
 
     public function storeMealIntakeRecord(array $data, int $userId): ?int
     {
-        $mealIntakeRecord MealIntakeRecord::create([
+        $mealIntakeRecord = MealIntakeRecord::create([
             'amount' => $data['amount'],
             'meal_id' => $data['meal_id'],
             'unit_id' => $data['unit_id'],
@@ -40,7 +40,7 @@ class MealIntakeRecordService
         ]);
     }
 
-    public function deleteMealIntakeRecord(MealIntakeRecord $mealIntakeRecord): void
+    public function deleteMealIntakeRecord(MealIntakeRecord $mealIntakeRecord): array
     {
         $success = $mealIntakeRecord->delete();
         if ($success) $message = 'Success! Record deleted successfully.';

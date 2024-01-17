@@ -40,7 +40,7 @@ class IngredientIntakeRecordService
         ]);
     }
 
-    public function deleteIngredientIntakeRecord(IngredientIntakeRecord $ingredientIntakeRecord): void
+    public function deleteIngredientIntakeRecord(IngredientIntakeRecord $ingredientIntakeRecord): array
     {
         $success = $ingredientIntakeRecord->delete();
         if ($success) $message = 'Success! Record deleted successfully.';

@@ -118,7 +118,6 @@ class MealService
             if (!is_null($childIngredient)) $this->updateChildIngredient($meal, $childIngredient, $nutrientProfileService);
 
         });
-        return $meal->id;
     }
 
     public function saveAsIngredient(Meal $meal, int $userId, NutrientProfileService $nutrientProfileService): ?int {
@@ -227,7 +226,7 @@ class MealService
         return $meal->id;
     }
 
-    public function deleteMeal(Meal $meal): void
+    public function deleteMeal(Meal $meal): array
     {
         $restricted = false;
         $success = false;

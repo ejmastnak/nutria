@@ -52,7 +52,7 @@ class IntakeGuidelineService
         });
     }
 
-    public function deleteIntakeGuideline(IntakeGuideline $intakeGuideline): void
+    public function deleteIntakeGuideline(IntakeGuideline $intakeGuideline): array
     {
         $success = $intakeGuideline->delete();
         if ($success) $message = 'Success! Intake Guideline deleted successfully.';

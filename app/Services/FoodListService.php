@@ -165,7 +165,7 @@ class FoodListService
         });
     }
 
-    public function deleteFoodList(FoodList $foodList): void
+    public function deleteFoodList(FoodList $foodList): array
     {
         $success = $foodList->delete();
         if ($success) $message = 'Success! Food list deleted successfully.';

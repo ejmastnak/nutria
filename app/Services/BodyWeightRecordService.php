@@ -40,7 +40,7 @@ class BodyWeightRecordService
         ]);
     }
 
-    public function deleteBodyWeightRecord(BodyWeightRecord $bodyWeightRecord): void
+    public function deleteBodyWeightRecord(BodyWeightRecord $bodyWeightRecord): array
     {
         $success = $bodyWeightRecord->delete();
         if ($success) $message = 'Success! Record deleted successfully.';

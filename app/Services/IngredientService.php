@@ -185,7 +185,7 @@ class IngredientService
         });
     }
 
-    public function deleteIngredient(Ingredient $ingredient): void
+    public function deleteIngredient(Ingredient $ingredient): array
     {
         $restricted = false;
         $success = false;
