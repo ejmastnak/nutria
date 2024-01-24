@@ -9,6 +9,7 @@ use App\Http\Controllers\BodyWeightRecordController;
 use App\Http\Controllers\IngredientIntakeRecordController;
 use App\Http\Controllers\MealIntakeRecordController;
 use App\Http\Controllers\DataController;
+use App\Http\Controllers\RefreshCsrfTokenController;
 use App\Models\Ingredient;
 use App\Models\Meal;
 use App\Models\FoodList;
@@ -120,5 +121,8 @@ Route::middleware('auth')->group(function () {
 // "capture" e.g. ingredients/create and ingredients/export
 Route::get('ingredients/{ingredient}', [IngredientController::class, 'show'])->name('ingredients.show');
 Route::get('intake-guidelines/{intake_guideline}', [IntakeGuidelineController::class, 'show'])->name('intake-guidelines.show');
+
+// Refresh expired CSRF tokens
+Route::get('/csrf-token', RefreshCsrfTokenController::class);
 
 require __DIR__.'/auth.php';
