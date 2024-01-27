@@ -16,6 +16,7 @@ import { mealIntakeRecordsForm } from '@/Shared/store.js'
 
 const props = defineProps({
   food_intake_records: Array,
+  food_intake_records_paginator: Object,
   ingredients: Array,
   meals: Array,
   units: Array,
@@ -168,6 +169,10 @@ function getBgColorForFoodItemRow(idx) {
         </tr>
       </tbody>
     </table>
+
+    <pre>
+      {{food_intake_records_paginator}}
+    </pre>
 
     <LogIngredientIntakeRecordDialog
       :ingredients="ingredients"

@@ -12,6 +12,7 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 const props = defineProps({
   body_weight_records: Array,
   food_intake_records: Array,
+  food_intake_records_paginator: Object,
   user_ingredients: Array,
   meals: Array,
   units: Array,
@@ -106,6 +107,7 @@ export default {
           <FoodIntakeRecords
             class="rounded-md w-fit"
             :food_intake_records="food_intake_records"
+            :food_intake_records_paginator="food_intake_records_paginator"
             :ingredients="ingredients"
             :meals="meals"
             :units="units"
