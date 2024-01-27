@@ -165,11 +165,11 @@ function save() {
     mealIntakeRecordForm.date_time_utc = getUTCDateTime(mealIntakeRecordForm.date + " " + mealIntakeRecordForm.time + ":00")
 
     if (mealIntakeRecordForm.id) {
-      mealIntakeRecordForm.put(route('meal-intake-records.update', mealIntakeRecordForm.id), {
+      mealIntakeRecordForm.put(route('food-intake-records.update-meal', mealIntakeRecordForm.id), {
         onSuccess: () => close()
       })
     } else {
-      mealIntakeRecordForm.post(route('meal-intake-records.store'), {
+      mealIntakeRecordForm.post(route('food-intake-records.store-meal'), {
         onSuccess: () => close()
       })
     }

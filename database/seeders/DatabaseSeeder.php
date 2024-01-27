@@ -29,8 +29,7 @@ class DatabaseSeeder extends Seeder
                 MealSeeder::class,
                 FoodListSeeder::class,
                 BodyWeightRecordSeeder::class,
-                IngredientIntakeRecordSeeder::class,
-                MealIntakeRecordSeeder::class,
+                FoodIntakeRecordSeeder::class,
             ]);
         }
 

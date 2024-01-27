@@ -78,7 +78,7 @@ function submit() {
   mealIntakeRecordsForm.id_idx_mapping = {}
   mealIntakeRecordsForm.mealIntakeRecords.forEach((record, idx) => mealIntakeRecordsForm.id_idx_mapping[record.id] = idx)
   mealIntakeRecordsForm.meal_intake_records = mealIntakeRecordsForm.mealIntakeRecords.map(record => record.meal_intake_record)
-  mealIntakeRecordsForm.post(route('meal-intake-records.store-many'), {
+  mealIntakeRecordsForm.post(route('food-intake-records.store-meals'), {
     onSuccess: () => {
       mealIntakeRecordsForm.reset()
       mealIntakeRecordsForm.clearErrors()

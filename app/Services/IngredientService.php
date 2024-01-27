@@ -205,6 +205,13 @@ class IngredientService
             $errors[] = "Deleting the ingredient is intentionally restricted because the ingredient is used in one or more food lists (which you can check on the ingredient's page).";
         }
 
+        // Check for ingredient use in food intake records
+        if ($ingredient->food_intake_records->count() > 0) {
+            $restricted = true;
+            $message = "Failed to delete ingredient.";
+            $errors[] = "Deleting the ingredient is intentionally restricted because the ingredient is used in one or more food intake records.";
+        }
+
         if (!$restricted) $success = $ingredient->delete();
 
         if ($success) $message = 'Success! Ingredient deleted successfully.';

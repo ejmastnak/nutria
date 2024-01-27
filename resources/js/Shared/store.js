@@ -27,6 +27,7 @@ export const ingredientIntakeRecordForm = reactive(
     id: null,
     ingredient_id: null,
     ingredient: null,
+    meal_id: null,
     amount: null,
     unit_id: null,
     unit: null,
@@ -48,6 +49,7 @@ export const ingredientIntakeRecordsForm = reactive(
 export const mealIntakeRecordForm = reactive(
   useForm({
     id: null,
+    ingredient_id: null,
     meal_id: null,
     meal: null,
     amount: null,

@@ -3,21 +3,11 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Meal;
 use App\Rules\MealOwnedByUser;
 use App\Rules\MealUnitIsConsistent;
 
 class StoreManyMealIntakeRecordsRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        $user = $this->user();
-        return $user && $user->can('create', Meal::class);
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *

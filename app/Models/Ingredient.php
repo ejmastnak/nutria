@@ -201,4 +201,8 @@ class Ingredient extends Model
         return $this->belongsToMany(FoodList::class, 'food_list_ingredients', 'ingredient_id', 'food_list_id');
     }
 
+    public function food_intake_records() {
+        return $this->hasMany(FoodIntakeRecord::class, 'ingredient_id', 'id');
+    }
+
 }

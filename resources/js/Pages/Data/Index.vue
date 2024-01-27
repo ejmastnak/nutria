@@ -11,8 +11,7 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 const props = defineProps({
   body_weight_records: Array,
-  ingredient_intake_records: Array,
-  meal_intake_records: Array,
+  food_intake_records: Array,
   user_ingredients: Array,
   meals: Array,
   units: Array,
@@ -106,8 +105,7 @@ export default {
         <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded w-fit p-1">
           <FoodIntakeRecords
             class="rounded-md w-fit"
-            :ingredient_intake_records="ingredient_intake_records"
-            :meal_intake_records="meal_intake_records"
+            :food_intake_records="food_intake_records"
             :ingredients="ingredients"
             :meals="meals"
             :units="units"

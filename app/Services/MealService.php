@@ -8,7 +8,7 @@ use App\Models\Ingredient;
 use App\Models\IngredientNutrient;
 use App\Models\Unit;
 use App\Models\Nutrient;
-use App\Models\MealIntakeRecord;
+use App\Models\FoodIntakeRecord;
 use App\Services\UnitConversionService;
 use Illuminate\Support\Facades\DB;
 
@@ -211,11 +211,12 @@ class MealService
                 'custom_grams' => $mealMassInGrams,
             ]);
 
-            // Create a MealIntakeRecord to log meal intake
+            // Create a FoodIntakeRecord to log meal intake
             $amount = 1.0;
-            MealIntakeRecord::create([
-                'amount' => $amount,
+            FoodIntakeRecord::create([
+                'ingredient_id' => null,
                 'meal_id' => $meal->id,
+                'amount' => $amount,
                 'unit_id' => $mealUnit->id,
                 'mass_in_grams' => UnitConversionService::convertToGrams($amount, $mealUnit->id, null, $meal->id, null),
                 'date_time_utc' => $data['date_time_utc'],
@@ -237,6 +238,13 @@ class MealService
             $restricted = true;
             $message = "Failed to delete meal.";
             $errors[] = "Deleting the meal is intentionally restricted because the meal is used in one or more food lists (which you can check on the meals's page).";
+        }
+
+        // Check for meal use in food intake records
+        if ($meal->food_intake_records->count() > 0) {
+            $restricted = true;
+            $message = "Failed to delete meal.";
+            $errors[] = "Deleting the meal is intentionally restricted because the meal is used in one or more food intake records.";
         }
 
         // Check if the meal has a child ingredient used in meals or food lists

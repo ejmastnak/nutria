@@ -22,6 +22,7 @@ const emit = defineEmits(['cancel', 'confirm'])
 const ingredientIntakeRecord = ref({
   ingredient_id: null,
   ingredient: null,
+  meal_id: null,
   amount: null,
   unit_id: null,
   unit: null,

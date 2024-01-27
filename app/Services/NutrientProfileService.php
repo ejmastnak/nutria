@@ -305,29 +305,32 @@ class NutrientProfileService
           units.name as unit,
           round(sum(ingredient_nutrients.amount_per_100g * unioned_ingredients.mass_in_grams / nullif(intake_guideline_nutrients.rdi, 0)), 2) as pdv
         from (
+
           select
             ingredients.id as ingredient_id,
-            ingredient_intake_records.mass_in_grams
-          from ingredient_intake_records
+            food_intake_records.mass_in_grams
+          from food_intake_records
           inner join ingredients
             on ingredients.id
-            = ingredient_intake_records.ingredient_id
+            = food_intake_records.ingredient_id
           where
-            ingredient_intake_records.date_time_utc >= :from_date
+            food_intake_records.date_time_utc >= :from_date
             and
-            ingredient_intake_records.date_time_utc <= :to_date
+            food_intake_records.date_time_utc <= :to_date
             and
-            ingredient_intake_records.user_id = :user_id
+            food_intake_records.ingredient_id is not null
+            and
+            food_intake_records.user_id = :user_id
 
           union all
 
           select
             ingredients.id as ingredient_id,
-            round(meal_ingredients.mass_in_grams * (meal_intake_records.mass_in_grams / meals.mass_in_grams), 2) as mass_in_grams
-          from meal_intake_records
+            round(meal_ingredients.mass_in_grams * (food_intake_records.mass_in_grams / meals.mass_in_grams), 2) as mass_in_grams
+          from food_intake_records
           inner join meals
             on meals.id
-            = meal_intake_records.meal_id
+            = food_intake_records.meal_id
           inner join meal_ingredients
             on meal_ingredients.meal_id
             = meals.id
@@ -335,11 +338,14 @@ class NutrientProfileService
             on ingredients.id
             = meal_ingredients.ingredient_id
           where
-            meal_intake_records.date_time_utc >= :from_date
+            food_intake_records.date_time_utc >= :from_date
             and
-            meal_intake_records.date_time_utc <= :to_date
+            food_intake_records.date_time_utc <= :to_date
             and
-            meal_intake_records.user_id = :user_id
+            food_intake_records.meal_id is not null
+            and
+            food_intake_records.user_id = :user_id
+
         )
         as unioned_ingredients
         inner join ingredient_nutrients

@@ -15,22 +15,10 @@ import { ingredientIntakeRecordsForm } from '@/Shared/store.js'
 import { mealIntakeRecordsForm } from '@/Shared/store.js'
 
 const props = defineProps({
-  ingredient_intake_records: Array,
-  meal_intake_records: Array,
+  food_intake_records: Array,
   ingredients: Array,
   meals: Array,
   units: Array,
-})
-
-const INGREDIENT=0
-const MEAL=1
-
-const foodItems = computed(() => {
-  return props.ingredient_intake_records.map((record) => {record['type'] = INGREDIENT; return record}).concat(props.meal_intake_records.map((record) => {record['type'] = MEAL; return record})).sort((a, b) => {
-    if (a.date_time_utc > b.date_time_utc) return -1;
-    if (a.date_time_utc < b.date_time_utc) return 1;
-    return 0;
-  })
 })
 
 const logIngredientIntakeRecordDialogRef = ref(null)
@@ -38,11 +26,11 @@ const logIngredientIntakeRecordsDialogRef = ref(null)
 const logMealIntakeRecordDialogRef = ref(null)
 const logMealIntakeRecordsDialogRef = ref(null)
 
-function openUpdateDialog(foodItem) {
-  if (foodItem.type === INGREDIENT) {
-    logIngredientIntakeRecordDialogRef.value.open(foodItem)
-  } else if (foodItem.type === MEAL) {
-    logMealIntakeRecordDialogRef.value.open(foodItem)
+function openUpdateDialog(foodIntakeRecord) {
+  if (foodIntakeRecord.ingredient_id !== null) {
+    logIngredientIntakeRecordDialogRef.value.open(foodIntakeRecord)
+  } else if (foodIntakeRecord.meal_id !== null) {
+    logMealIntakeRecordDialogRef.value.open(foodIntakeRecord)
   }
 }
 
@@ -67,16 +55,16 @@ function logMealIntake() {
   }
 }
 
-function openDeleteDialog(foodItem) {
-  idToDelete.value = foodItem.id
-  if (foodItem.type === INGREDIENT) {
-    deleteRouteName.value = "ingredient-intake-records.destroy"
+function openDeleteDialog(foodIntakeRecord) {
+  idToDelete.value = foodIntakeRecord.id
+  if (foodIntakeRecord.ingredient_id !== null) {
+    deleteRouteName.value = "food-intake-records.destroy"
     thingToDelete.value = "ingredient intake record"
-    deleteDialogRef.value.open(foodItem)
-  } else if (foodItem.type === MEAL) {
-    deleteRouteName.value = "meal-intake-records.destroy"
+    deleteDialogRef.value.open(foodIntakeRecord)
+  } else if (foodIntakeRecord.meal_id !== null) {
+    deleteRouteName.value = "food-intake-records.destroy"
     thingToDelete.value = "meal intake record"
-    deleteDialogRef.value.open(foodItem)
+    deleteDialogRef.value.open(foodIntakeRecord)
   }
 }
 
@@ -91,14 +79,9 @@ function deleteBodyWeightRecord() {
 
 // Used to color different days with different background colors to better
 // distinguish different days.
-const bgColors = ['bg-gray-50', 'bg-white']
-var bgColorCounter = 0
+const bgColors = ['bg-white', 'bg-gray-50']
 function getBgColorForFoodItemRow(idx) {
-  if (idx === 0) return bgColors[0];
-  const prevItem = foodItems.value[idx - 1]
-  const thisItem = foodItems.value[idx]
-  if (thisItem.date_time_utc !== prevItem.date_time_utc) bgColorCounter += 1;
-  return bgColors[bgColorCounter % bgColors.length];
+  return bgColors[0];
 }
 
 </script>
@@ -106,7 +89,7 @@ function getBgColorForFoodItemRow(idx) {
 <template>
   <div>
 
-    <p v-if="foodItems.length === 0" class="mt-1 mb-2">
+    <p v-if="food_intake_records.length === 0" class="mt-1 mb-2">
       You haven't created any food intake records yet!
     </p>
 
@@ -119,7 +102,7 @@ function getBgColorForFoodItemRow(idx) {
       </SecondaryButton>
     </div>
 
-    <table v-if="foodItems.length" class="mt-2 text-sm sm:text-base text-left text-gray-500">
+    <table v-if="food_intake_records.length" class="mt-2 text-sm sm:text-base text-left text-gray-500">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
           <th scope="col" class="px-8 py-3 bg-blue-100">Food</th>
@@ -131,52 +114,52 @@ function getBgColorForFoodItemRow(idx) {
       </thead>
       <tbody>
         <tr
-          v-for="(foodItem, idx) in foodItems" :key="foodItem.id + '-' + foodItem.type"
+          v-for="(food_intake_record, idx) in food_intake_records" :key="food_intake_record.id"
           class="border-b hover:bg-gray-100 cursor-pointer"
           :class="getBgColorForFoodItemRow(idx)"
-          @click="openUpdateDialog(foodItem)"
+          @click="openUpdateDialog(food_intake_record)"
         >
           <td class="px-8 py-4">
-            <p v-if="foodItem.type === INGREDIENT" class="flex items-center whitespace-nowrap">
-              {{foodItem.ingredient.name}}
-              <MyLink @click.stop :href="route('ingredients.show', foodItem.ingredient.id)">
+            <p v-if="food_intake_record.ingredient_id !== null" class="flex items-center whitespace-nowrap">
+              {{food_intake_record.ingredient.name}}
+              <MyLink @click.stop :href="route('ingredients.show', food_intake_record.ingredient_id)">
                 <ArrowTopRightOnSquareIcon class="ml-0.5 w-5 h-5 text-gray-500" />
               </MyLink>
             </p>
-            <p v-if="foodItem.type === MEAL" class="flex items-center whitespace-nowrap">
-              {{foodItem.meal.name}}
-              <MyLink @click.stop :href="route('meals.show', foodItem.meal.id)">
+            <p v-if="food_intake_record.meal_id !== null" class="flex items-center whitespace-nowrap">
+              {{food_intake_record.meal.name}}
+              <MyLink @click.stop :href="route('meals.show', food_intake_record.meal_id)">
                 <ArrowTopRightOnSquareIcon class="ml-0.5 w-5 h-5 text-gray-500" />
               </MyLink>
             </p>
           </td>
           <td scope="row" class="pr-1 py-4 text-gray-900 text-right">
-            {{roundNonZero(Number(foodItem.amount), 2)}}
-            {{foodItem.unit.name}}
+            {{roundNonZero(Number(food_intake_record.amount), 2)}}
+            {{food_intake_record.unit.name}}
           </td>
           <td class="px-8 py-4 whitespace-nowrap">
             <span class="hidden md:inline">
-              {{getHumanReadableLocalDate(foodItem.date_time_utc)}}
+              {{getHumanReadableLocalDate(food_intake_record.date_time_utc)}}
             </span>
             <span class="md:hidden">
-              {{getHumanReadableLocalDate(foodItem.date_time_utc, shortMonth=true)}}
+              {{getHumanReadableLocalDate(food_intake_record.date_time_utc, shortMonth=true)}}
             </span>
           </td>
           <td class="px-4 py-4">
-            <p v-if="foodItem.type === INGREDIENT">Ingredient</p>
-            <p v-if="foodItem.type === MEAL">Meal</p>
+            <p v-if="food_intake_record.ingredient_id !== null">Ingredient</p>
+            <p v-if="food_intake_record.meal_id !== null">Meal</p>
           </td>
           <td class="flex items-center px-8 py-4 h-full">
             <button
               type="button"
-              @click.stop="openUpdateDialog(foodItem)"
+              @click.stop="openUpdateDialog(food_intake_record)"
               class="mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
             >
               <PencilSquareIcon class="w-5 h-5 hover:text-blue-600" />
             </button>
             <button
               type="button"
-              @click.stop="openDeleteDialog(foodItem)"
+              @click.stop="openDeleteDialog(food_intake_record)"
               class="ml-1 mx-auto p-px rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
             >
               <TrashIcon class="w-5 h-5 hover:text-red-700" />

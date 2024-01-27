@@ -9,16 +9,6 @@ use App\Rules\DataAwareMealUnitIsConsistent;
 class UpdateMealIntakeRecordRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        $mealIntakeRecord = $this->route('meal_intake_record');
-        $user = $this->user();
-        return $user && $user->can('update', $mealIntakeRecord);
-    }
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>

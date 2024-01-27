@@ -6,8 +6,7 @@ use App\Http\Controllers\MealController;
 use App\Http\Controllers\FoodListController;
 use App\Http\Controllers\IntakeGuidelineController;
 use App\Http\Controllers\BodyWeightRecordController;
-use App\Http\Controllers\IngredientIntakeRecordController;
-use App\Http\Controllers\MealIntakeRecordController;
+use App\Http\Controllers\FoodIntakeRecordController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\RefreshCsrfTokenController;
 use App\Models\Ingredient;
@@ -15,8 +14,7 @@ use App\Models\Meal;
 use App\Models\FoodList;
 use App\Models\IntakeGuideline;
 use App\Models\BodyWeightRecord;
-use App\Models\IngredientIntakeRecord;
-use App\Models\MealIntakeRecord;
+use App\Models\FoodIntakeRecord;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -96,17 +94,18 @@ Route::middleware('auth')->group(function () {
     Route::put('body-weight-records/{body_weight_record}', [BodyWeightRecordController::class, 'update'])->name('body-weight-records.update')->can('update', 'body_weight_record');
     Route::delete('body-weight-records/{body_weight_record}', [BodyWeightRecordController::class, 'destroy'])->name('body-weight-records.destroy')->can('delete', 'body_weight_record');
 
-    # IngredientIntakeRecords
-    Route::post('ingredient-intake-records', [IngredientIntakeRecordController::class, 'store'])->name('ingredient-intake-records.store')->can('create', IngredientIntakeRecord::class);
-    Route::post('ingredient-intake-records-many', [IngredientIntakeRecordController::class, 'storeMany'])->name('ingredient-intake-records.store-many')->can('createMany', IngredientIntakeRecord::class);
-    Route::put('ingredient-intake-records/{ingredient_intake_record}', [IngredientIntakeRecordController::class, 'update'])->name('ingredient-intake-records.update')->can('update', 'ingredient_intake_record');
-    Route::delete('ingredient-intake-records/{ingredient_intake_record}', [IngredientIntakeRecordController::class, 'destroy'])->name('ingredient-intake-records.destroy')->can('delete', 'ingredient_intake_record');
+    # Ingredient FoodIntakeRecords
+    Route::post('food-intake-records/ingredient', [FoodIntakeRecordController::class, 'storeIngredientIntakeRecord'])->name('food-intake-records.store-ingredient');
+    Route::post('food-intake-records/ingredients', [FoodIntakeRecordController::class, 'storeManyIngredientIntakeRecords'])->name('food-intake-records.store-ingredients');
+    Route::put('food-intake-records/{food_intake_record}/ingredient', [FoodIntakeRecordController::class, 'updateIngredientIntakeRecord'])->name('food-intake-records.update-ingredient');
 
-    # MealIntakeRecords
-    Route::post('meal-intake-records', [MealIntakeRecordController::class, 'store'])->name('meal-intake-records.store')->can('create', MealIntakeRecord::class);
-    Route::post('meal-intake-records-many', [MealIntakeRecordController::class, 'storeMany'])->name('meal-intake-records.store-many')->can('createMany', MealIntakeRecord::class);
-    Route::put('meal-intake-records/{meal_intake_record}', [MealIntakeRecordController::class, 'update'])->name('meal-intake-records.update')->can('update', 'meal_intake_record');
-    Route::delete('meal-intake-records/{meal_intake_record}', [MealIntakeRecordController::class, 'destroy'])->name('meal-intake-records.destroy')->can('delete', 'meal_intake_record');
+    # Meal FoodIntakeRecords
+    Route::post('food-intake-records/meal', [FoodIntakeRecordController::class, 'storeMealIntakeRecord'])->name('food-intake-records.store-meal');
+    Route::post('food-intake-records/meals', [FoodIntakeRecordController::class, 'storeManyMealIntakeRecords'])->name('food-intake-records.store-meals');
+    Route::put('food-intake-records/{food_intake_record}/meal', [FoodIntakeRecordController::class, 'updateMealIntakeRecord'])->name('food-intake-records.update-meal');
+
+    # Deleting FoodIntakeRecords
+    Route::delete('food-intake-records/{food_intake_record}', [FoodIntakeRecordController::class, 'destroy'])->name('food-intake-records.destroy');
 
     # Main page for logging data and viewing trends in data
     Route::get('/data', [DataController::class, 'index'])->name('data');

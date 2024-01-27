@@ -20,6 +20,7 @@ const props = defineProps({
 const emit = defineEmits(['cancel', 'confirm'])
 
 const mealIntakeRecord = ref({
+  ingredient_id: null,
   meal_id: null,
   meal: null,
   amount: null,

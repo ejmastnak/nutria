@@ -9,16 +9,6 @@ use App\Rules\DataAwareIngredientUnitIsConsistent;
 class UpdateIngredientIntakeRecordRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        $ingredientIntakeRecord = $this->route('ingredient_intake_record');
-        $user = $this->user();
-        return $user && $user->can('update', $ingredientIntakeRecord);
-    }
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>

@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BodyWeightRecord;
-use App\Models\IngredientIntakeRecord;
-use App\Models\MealIntakeRecord;
+use App\Models\FoodIntakeRecord;
 use App\Models\Ingredient;
 use App\Models\Meal;
 use App\Models\Unit;
@@ -27,8 +26,7 @@ class DataController extends Controller
         $userId = $user ? $user->id : null;
         return Inertia::render('Data/Index', [
             'body_weight_records' => BodyWeightRecord::getForUser($userId),
-            'ingredient_intake_records' => IngredientIntakeRecord::getForUser($userId),
-            'meal_intake_records' => MealIntakeRecord::getForUser($userId),
+            'food_intake_records' => FoodIntakeRecord::getForUser($userId),
             'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
             'meals' => Meal::getForUserWithUnit($userId),
             'units' => Unit::getMassAndVolume(),

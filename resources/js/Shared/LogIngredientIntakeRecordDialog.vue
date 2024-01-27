@@ -161,11 +161,11 @@ function save() {
     ingredientIntakeRecordForm.date_time_utc = getUTCDateTime(ingredientIntakeRecordForm.date + " " + ingredientIntakeRecordForm.time + ":00")
 
     if (ingredientIntakeRecordForm.id) {
-      ingredientIntakeRecordForm.put(route('ingredient-intake-records.update', ingredientIntakeRecordForm.id), {
+      ingredientIntakeRecordForm.put(route('food-intake-records.update-ingredient', ingredientIntakeRecordForm.id), {
         onSuccess: () => close()
       })
     } else {
-      ingredientIntakeRecordForm.post(route('ingredient-intake-records.store'), {
+      ingredientIntakeRecordForm.post(route('food-intake-records.store-ingredient'), {
         onSuccess: () => close()
       })
     }
