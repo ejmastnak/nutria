@@ -28,6 +28,7 @@ class StoreAndLogMealRequest extends FormRequest
         return [
             // Meal
             'name' => ['required', 'min:1', config('validation.max_name_length')],
+            'description' => ['nullable', 'min:1', config('validation.max_description_length')],
             'meal_ingredients' => ['required', 'array', 'min:1', config('validation.max_meal_ingredients')],
             'meal_ingredients.*.id' => ['nullable', 'integer', 'exists:meal_ingredients,id'],
             'meal_ingredients.*.ingredient_id' => ['required', 'integer', 'exists:ingredients,id', new IngredientOwnedByUser],

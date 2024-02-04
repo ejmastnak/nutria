@@ -24,6 +24,7 @@ class BodyWeightRecordService
             'kg' => UnitConversionService::convertToKilograms($data['amount'], $data['unit_id']),
             'lb' => UnitConversionService::convertToPounds($data['amount'], $data['unit_id']),
             'date_time_utc' => $data['date_time_utc'],
+            'description' => $data['description'],
             'user_id' => $userId,
         ]);
         return $bodyWeightRecord->id;
@@ -37,6 +38,7 @@ class BodyWeightRecordService
             'kg' => UnitConversionService::convertToKilograms($data['amount'], $data['unit_id']),
             'lb' => UnitConversionService::convertToPounds($data['amount'], $data['unit_id']),
             'date_time_utc' => $data['date_time_utc'],
+            'description' => $data['description'],
         ]);
     }
 

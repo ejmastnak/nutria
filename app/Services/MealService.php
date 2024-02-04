@@ -22,6 +22,7 @@ class MealService
             $mealMassInGrams = 0;
             $meal = Meal::create([
                 'name' => $data['name'],
+                'description' => $data['description'],
                 'mass_in_grams' => $mealMassInGrams,
                 'user_id' => $userId,
             ]);
@@ -110,6 +111,7 @@ class MealService
             // Update meal after MealIngredients, to allow calculating mass
             $meal->update([
                 'name' => $data['name'],
+                'description' => $data['description'],
                 'mass_in_grams' => $mealMassInGrams,
             ]);
 
@@ -132,6 +134,7 @@ class MealService
             // Create ingredient
             $ingredient = Ingredient::create([
                 'name' => $meal->name . ' (ingredient)',
+                'description' => $meal->description,
                 'ingredient_category_id' => IngredientCategory::otherCategory()->id,
                 'nutrient_content_unit_amount' => 100,
                 'nutrient_content_unit_id' => Unit::gramId(),
@@ -158,7 +161,10 @@ class MealService
         DB::transaction(function () use ($meal, $ingredient, $nutrientProfileService) {
 
             // Update ingredient
-            $ingredient->update([ 'name' => $meal->name . ' (ingredient)' ]);
+            $ingredient->update([
+                'name' => $meal->name . ' (ingredient)',
+                'description' => $meal->description,
+            ]);
 
             // Update ingredient's nutrients
             $nutrientProfile = $nutrientProfileService->getNutrientIndexedMealProfile($meal->id);
@@ -180,6 +186,7 @@ class MealService
             $mealMassInGrams = 0;
             $meal = Meal::create([
                 'name' => $data['name'],
+                'description' => $data['description'],
                 'mass_in_grams' => $mealMassInGrams,
                 'user_id' => $userId,
             ]);

@@ -19,6 +19,7 @@ class FoodListService
             $foodList = FoodList::create([
                 'name' => $data['name'],
                 'mass_in_grams' => $foodListMassInGrams,
+                'description' => $data['description'],
                 'user_id' => $userId,
             ]);
 
@@ -159,6 +160,7 @@ class FoodListService
             // calculating food list mass
             $foodList->update([
                 'name' => $data['name'],
+                'description' => $data['description'],
                 'mass_in_grams' => $foodListMassInGrams,
             ]);
 

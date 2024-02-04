@@ -31,6 +31,7 @@ class StoreFoodListRequest extends FormRequest
     {
         return [
             'name' => ['required', 'min:1', config('validation.max_name_length')],
+            'description' => ['nullable', 'min:1', config('validation.max_description_length')],
 
             // Food list ingredients
             'food_list_ingredients' => ['nullable', 'array', config('validation.max_food_list_ingredients'), new HasIngredientsIfNoMeals],

@@ -16,6 +16,7 @@ class IntakeGuidelineService
             $intakeGuideline = IntakeGuideline::create([
                 'name' => $data['name'],
                 'priority' => array_key_exists('priority', $data) ? $data['priority'] : null,
+                'description' => $data['description'],
                 'user_id' => $userId,
             ]);
 
@@ -40,6 +41,7 @@ class IntakeGuidelineService
             $intakeGuideline->update([
                 'name' => $data['name'],
                 'priority' => array_key_exists('priority', $data) ? $data['priority'] : null,
+                'description' => $data['description'],
             ]);
 
             // Update ingredient's nutrients

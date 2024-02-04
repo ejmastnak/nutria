@@ -32,6 +32,7 @@ class StoreIngredientRequest extends FormRequest
         return [
             'name' => ['required', 'min:1', config('validation.max_name_length')],
             'ingredient_category_id' => ['nullable', 'integer', 'exists:ingredient_categories,id'],
+            'description' => ['nullable', 'min:1', config('validation.max_description_length')],
             'nutrient_content_unit_amount' => ['required', 'numeric', 'gt:0', config('validation.max_ingredient_amount')],
             'nutrient_content_unit' => ['required', 'array', new NutrientContentUnitIsValid],
 

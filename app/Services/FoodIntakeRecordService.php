@@ -25,6 +25,7 @@ class FoodIntakeRecordService
             'unit_id' => $data['unit_id'],
             'mass_in_grams' => UnitConversionService::convertToGrams($data['amount'], $data['unit_id'], $data['ingredient_id'], null, null),
             'date_time_utc' => $data['date_time_utc'],
+            'description' => $data['description'],
             'user_id' => $userId,
         ]);
         return $ingredientIntakeRecord->id;
@@ -38,6 +39,7 @@ class FoodIntakeRecordService
             'unit_id' => $data['unit_id'],
             'mass_in_grams' => UnitConversionService::convertToGrams($data['amount'], $data['unit_id'], $data['ingredient_id'], null, null),
             'date_time_utc' => $data['date_time_utc'],
+            'description' => $data['description'],
         ]);
     }
 
@@ -59,6 +61,7 @@ class FoodIntakeRecordService
             'unit_id' => $data['unit_id'],
             'mass_in_grams' => UnitConversionService::convertToGrams($data['amount'], $data['unit_id'], null, $data['meal_id'], null),
             'date_time_utc' => $data['date_time_utc'],
+            'description' => $data['description'],
             'user_id' => $userId,
         ]);
         return $mealIntakeRecord->id;
@@ -72,6 +75,7 @@ class FoodIntakeRecordService
             'unit_id' => $data['unit_id'],
             'mass_in_grams' => UnitConversionService::convertToGrams($data['amount'], $data['unit_id'], null, $data['meal_id'], null),
             'date_time_utc' => $data['date_time_utc'],
+            'description' => $data['description'],
         ]);
     }
 

@@ -24,6 +24,7 @@ class StoreManyMealIntakeRecordsRequest extends FormRequest
             'meal_intake_records.*.date' => ['required', 'string', 'date_format:Y-m-d'],
             'meal_intake_records.*.time' => ['required', 'string', 'date_format:H:i,H:i:s'],
             'meal_intake_records.*.date_time_utc' => ['required', 'string', 'date_format:Y-m-d H:i,Y-m-d H:i:s'],
+            'meal_intake_records.*.description' => ['nullable', 'min:1', config('validation.max_description_length')],
         ];
     }
 
@@ -43,6 +44,7 @@ class StoreManyMealIntakeRecordsRequest extends FormRequest
             'meal_intake_records.*.date' => 'date',
             'meal_intake_records.*.time' => 'time',
             'meal_intake_records.*.date_time_utc' => 'combined date and time',
+            'meal_intake_records.*.description' => 'description',
         ];
     }
 

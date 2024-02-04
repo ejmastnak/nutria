@@ -24,6 +24,7 @@ class StoreManyIngredientIntakeRecordsRequest extends FormRequest
             'ingredient_intake_records.*.date' => ['required', 'string', 'date_format:Y-m-d'],
             'ingredient_intake_records.*.time' => ['required', 'string', 'date_format:H:i,H:i:s'],
             'ingredient_intake_records.*.date_time_utc' => ['required', 'string', 'date_format:Y-m-d H:i,Y-m-d H:i:s'],
+            'ingredient_intake_records.*.description' => ['nullable', 'min:1', config('validation.max_description_length')],
         ];
     }
 
@@ -43,6 +44,7 @@ class StoreManyIngredientIntakeRecordsRequest extends FormRequest
             'ingredient_intake_records.*.date' => 'date',
             'ingredient_intake_records.*.time' => 'time',
             'ingredient_intake_records.*.date_time_utc' => 'combined date and time',
+            'ingredient_intake_records.*.description' => 'description',
         ];
     }
 

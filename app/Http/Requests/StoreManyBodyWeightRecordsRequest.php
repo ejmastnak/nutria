@@ -32,6 +32,7 @@ class StoreManyBodyWeightRecordsRequest extends FormRequest
             'body_weight_records.*.date' => ['required', 'string', 'date_format:Y-m-d'],
             'body_weight_records.*.time' => ['required', 'string', 'date_format:H:i,H:i:s'],
             'body_weight_records.*.date_time_utc' => ['required', 'string', 'date_format:Y-m-d H:i,Y-m-d H:i:s'],
+            'body_weight_records.*.description' => ['nullable', 'min:1', config('validation.max_description_length')],
         ];
     }
 
@@ -50,6 +51,7 @@ class StoreManyBodyWeightRecordsRequest extends FormRequest
             'body_weight_records.*.date' => 'date',
             'body_weight_records.*.time' => 'time',
             'body_weight_records.*.date_time_utc' => 'combined date and time',
+            'body_weight_records.*.description' => 'description',
         ];
     }
 

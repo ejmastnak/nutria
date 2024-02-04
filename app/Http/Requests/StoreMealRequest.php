@@ -27,6 +27,7 @@ class StoreMealRequest extends FormRequest
     {
         return [
             'name' => ['required', 'min:1', config('validation.max_name_length')],
+            'description' => ['nullable', 'min:1', config('validation.max_description_length')],
 
             // Meal ingredients
             'meal_ingredients' => ['required', 'array', 'min:1', config('validation.max_meal_ingredients')],

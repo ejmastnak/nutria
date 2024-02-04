@@ -23,6 +23,7 @@ class IngredientService
                 'fdc_id' => null,
                 'name' => $data['name'],
                 'ingredient_category_id' => $data['ingredient_category_id'],
+                'description' => $data['description'],
                 'nutrient_content_unit_amount' => $data['nutrient_content_unit_amount'],
                 // If set to a to-be-created custom unit, set to grams for now
                 // (we need to use a non-null value because of foreign key
@@ -101,6 +102,7 @@ class IngredientService
             $ingredient->update([
                 'name' => $data['name'],
                 'ingredient_category_id' => $data['ingredient_category_id'],
+                'description' => $data['description'],
                 'nutrient_content_unit_amount' => $data['nutrient_content_unit_amount'],
                 // If set to a to-be-created custom unit, set to grams for now
                 // (we need to use a non-null value because of foreign key
