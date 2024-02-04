@@ -27,7 +27,7 @@ class StoreIntakeGuidelineRequest extends FormRequest
         $numNutrients = Nutrient::count();
         return [
             'name' => ['required', 'min:1', config('validation.max_name_length')],
-            'priority' => ['nullable', 'integer', config('validation.generic_max_amount')],
+            'priority' => ['nullable', 'integer', `min:1`, config('validation.generic_max_amount')],
 
             // Intake guideline nutrients
             'intake_guideline_nutrients' => ['required', 'array', 'min:' . $numNutrients, 'max:' . $numNutrients],
