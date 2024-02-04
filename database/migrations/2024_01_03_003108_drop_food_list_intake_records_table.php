@@ -19,6 +19,15 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::create('food_list_intake_records', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('food_list_id')->references('id')->on('food_lists');
+            $table->decimal('amount', 10, 4);
+            $table->foreignId('unit_id')->references('id')->on('units');
+            $table->decimal('mass_in_grams', 10, 4);
+            $table->dateTime('date_time_utc');
+            $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->timestamps();
+        });
     }
 };
