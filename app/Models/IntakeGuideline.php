@@ -36,6 +36,7 @@ class IntakeGuideline extends Model
             'id',
             'name',
             'priority',
+            'description',
             'intake_guideline_nutrients'
         ]);
     }
