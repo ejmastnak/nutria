@@ -69,6 +69,7 @@ class Ingredient extends Model
         return $this->only([
             'id',
             'name',
+            'description',
             'ingredient_category_id',
             'ingredient_category',
             'nutrient_content_unit_amount',
@@ -114,6 +115,7 @@ class Ingredient extends Model
         return $this->only([
             'id',
             'name',
+            'description',
             'ingredient_category_id',
             'ingredient_category',
             'nutrient_content_unit_amount',

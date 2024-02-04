@@ -32,7 +32,12 @@ class IntakeGuideline extends Model
             'intake_guideline_nutrients.nutrient:id,display_name,unit_id,nutrient_category_id,precision,seq_num',
             'intake_guideline_nutrients.nutrient.unit:id,name'
         ]);
-        return $this->only(['id', 'name', 'priority', 'intake_guideline_nutrients']);
+        return $this->only([
+            'id',
+            'name',
+            'priority',
+            'intake_guideline_nutrients'
+        ]);
     }
 
     public static function getForUser(?int $userId) {

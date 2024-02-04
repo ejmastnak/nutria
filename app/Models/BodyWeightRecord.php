@@ -31,7 +31,13 @@ class BodyWeightRecord extends Model
         return is_null($userId) ? [] : self::where('user_id', $userId)
             ->with('unit:id,name')
             ->orderBy('date_time_utc', 'desc')
-            ->get(['id', 'amount', 'unit_id', 'date_time_utc']);
+            ->get([
+                'id',
+                'amount',
+                'unit_id',
+                'date_time_utc',
+                'description'
+            ]);
     }
 
     public function unit() {

@@ -27,6 +27,7 @@ class Meal extends Model
         return $this->only([
             'id',
             'name',
+            'description',
             'mass_in_grams',
             'meal_ingredients',
             'ingredient',

@@ -54,6 +54,7 @@ class FoodIntakeRecord extends Model
                 'unit_id' => $foodIntakeRecord->unit_id,
                 'unit' => $foodIntakeRecord->unit,
                 'date_time_utc' => $foodIntakeRecord->date_time_utc,
+                'description' => $foodIntakeRecord->description,
             ]);
     }
 

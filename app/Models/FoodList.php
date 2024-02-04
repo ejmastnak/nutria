@@ -30,6 +30,7 @@ class FoodList extends Model
         return $this->only([
             'id',
             'name',
+            'description',
             'mass_in_grams',
             'food_list_ingredients',
             'food_list_meals',
