@@ -26,7 +26,6 @@ class DataController extends Controller
         $userId = $user ? $user->id : null;
         return Inertia::render('Data/Index', [
             'body_weight_records' => BodyWeightRecord::getForUser($userId),
-            'food_intake_records' => FoodIntakeRecord::getForUser($userId),
             'food_intake_records_paginator' => FoodIntakeRecord::getForUserPaginated($userId),
             'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
             'meals' => Meal::getForUserWithUnit($userId),

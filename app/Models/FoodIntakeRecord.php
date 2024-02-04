@@ -31,31 +31,29 @@ class FoodIntakeRecord extends Model
         );
     }
 
-    public static function getForUser(?int $userId) {
-        return is_null($userId) ? [] : self::where('user_id', $userId)
-            ->with([
-                'unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
-                'ingredient:id,name,density_g_ml',
-                'meal:id,name',
-                'ingredient.custom_units:id,name,g,ml,seq_num,ingredient_id,custom_grams',
-                'meal.meal_unit:id,name,g,ml,seq_num,meal_id,custom_grams',
-            ])
-            ->orderBy('date_time_utc', 'desc')
-            ->take(15)
-            ->get(['id', 'ingredient_id', 'meal_id', 'amount', 'unit_id', 'date_time_utc']);
-    }
-
     public static function getForUserPaginated(?int $userId) {
         return is_null($userId) ? [] : self::where('user_id', $userId)
             ->with([
                 'unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
                 'ingredient:id,name,density_g_ml',
-                'meal:id,name',
                 'ingredient.custom_units:id,name,g,ml,seq_num,ingredient_id,custom_grams',
+                'meal:id,name',
                 'meal.meal_unit:id,name,g,ml,seq_num,meal_id,custom_grams',
             ])
             ->orderBy('date_time_utc', 'desc')
-            ->paginate(3, ['id', 'ingredient_id', 'meal_id', 'amount', 'unit_id', 'date_time_utc']);
+            ->paginate(config('pagination.food_intake_records'))
+            ->withQueryString()
+            ->through(fn ($foodIntakeRecord) => [
+                'id' => $foodIntakeRecord->id,
+                'ingredient_id' => $foodIntakeRecord->ingredient_id,
+                'ingredient' => $foodIntakeRecord->ingredient,
+                'meal_id' => $foodIntakeRecord->meal_id,
+                'meal' => $foodIntakeRecord->meal,
+                'amount' => $foodIntakeRecord->amount,
+                'unit_id' => $foodIntakeRecord->unit_id,
+                'unit' => $foodIntakeRecord->unit,
+                'date_time_utc' => $foodIntakeRecord->date_time_utc,
+            ]);
     }
 
     public function ingredient() {

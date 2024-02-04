@@ -9,13 +9,13 @@ import LogMealIntakeRecordsDialog from '@/Shared/LogMealIntakeRecordsDialog.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 import MyLink from '@/Components/MyLink.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
+import Pagination from '@/Shared/Pagination.vue'
 import { roundNonZero, getHumanReadableLocalDate } from '@/utils/GlobalFunctions.js'
 
 import { ingredientIntakeRecordsForm } from '@/Shared/store.js'
 import { mealIntakeRecordsForm } from '@/Shared/store.js'
 
 const props = defineProps({
-  food_intake_records: Array,
   food_intake_records_paginator: Object,
   ingredients: Array,
   meals: Array,
@@ -90,7 +90,7 @@ function getBgColorForFoodItemRow(idx) {
 <template>
   <div>
 
-    <p v-if="food_intake_records.length === 0" class="mt-1 mb-2">
+    <p v-if="food_intake_records_paginator.data.length === 0" class="mt-1 mb-2">
       You haven't created any food intake records yet!
     </p>
 
@@ -103,7 +103,7 @@ function getBgColorForFoodItemRow(idx) {
       </SecondaryButton>
     </div>
 
-    <table v-if="food_intake_records.length" class="mt-2 text-sm sm:text-base text-left text-gray-500">
+    <table v-if="food_intake_records_paginator.data.length" class="mt-2 text-sm sm:text-base text-left text-gray-500">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
           <th scope="col" class="px-8 py-3 bg-blue-100">Food</th>
@@ -115,7 +115,7 @@ function getBgColorForFoodItemRow(idx) {
       </thead>
       <tbody>
         <tr
-          v-for="(food_intake_record, idx) in food_intake_records" :key="food_intake_record.id"
+          v-for="(food_intake_record, idx) in food_intake_records_paginator.data" :key="food_intake_record.id"
           class="border-b hover:bg-gray-100 cursor-pointer"
           :class="getBgColorForFoodItemRow(idx)"
           @click="openUpdateDialog(food_intake_record)"
@@ -170,9 +170,7 @@ function getBgColorForFoodItemRow(idx) {
       </tbody>
     </table>
 
-    <pre>
-      {{food_intake_records_paginator}}
-    </pre>
+    <Pagination class="mt-2" :links="food_intake_records_paginator.links" />
 
     <LogIngredientIntakeRecordDialog
       :ingredients="ingredients"
