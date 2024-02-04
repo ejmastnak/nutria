@@ -10,6 +10,7 @@ class Meal extends Model
     use HasFactory;
     protected $fillable = [
         'name',
+        'description',
         'mass_in_grams',
         'user_id',
     ];

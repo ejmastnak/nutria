@@ -13,6 +13,7 @@ class Ingredient extends Model
     protected $fillable = [
         'fdc_id',
         'name',
+        'description',
         'ingredient_category_id',
         'nutrient_content_unit_amount',
         'nutrient_content_unit_id',

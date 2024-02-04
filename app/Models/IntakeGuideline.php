@@ -11,6 +11,7 @@ class IntakeGuideline extends Model
     protected $fillable = [
         'name',
         'priority',
+        'description',
         'user_id',
     ];
 

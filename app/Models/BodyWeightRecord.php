@@ -16,6 +16,7 @@ class BodyWeightRecord extends Model
         'kg',
         'lb',
         'date_time_utc',
+        'description',
         'user_id',
     ];
 

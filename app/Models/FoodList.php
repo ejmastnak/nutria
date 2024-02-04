@@ -11,6 +11,7 @@ class FoodList extends Model
     protected $fillable = [
         'name',
         'mass_in_grams',
+        'description',
         'user_id',
     ];
 

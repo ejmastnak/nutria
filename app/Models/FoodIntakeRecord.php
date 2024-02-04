@@ -17,6 +17,7 @@ class FoodIntakeRecord extends Model
         'unit_id',
         'mass_in_grams',
         'date_time_utc',
+        'description',
         'user_id',
         'description',
         'created_at',
