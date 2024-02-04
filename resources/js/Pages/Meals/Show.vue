@@ -83,8 +83,16 @@ export default {
 
     </div>
 
+    <!-- Description -->
+    <div v-if="meal.description" class="mt-6">
+      <p class="font-medium text-gray-600">
+        Description
+      </p>
+      {{meal.description}}
+    </div>
+
     <!-- Table of meal ingredients -->
-    <div class="mt-8 text-gray-900">
+    <div class="mt-6 text-gray-900">
       <h2 class="text-lg">Meal ingredients</h2>
 
       <table v-if="meal.meal_ingredients.length" class="text-left w-full">

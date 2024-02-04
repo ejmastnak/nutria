@@ -4,6 +4,7 @@ import { Head, Link } from '@inertiajs/vue3'
 import { useForm } from '@inertiajs/vue3'
 import { round } from '@/utils/GlobalFunctions.js'
 import TextInput from '@/Components/TextInput.vue'
+import TextArea from '@/Components/TextArea.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
@@ -20,6 +21,7 @@ const props = defineProps({
 const form = useForm({
   id: props.intake_guideline ? props.intake_guideline.id : null,
   name: props.intake_guideline ? props.intake_guideline.name : "",
+  description: props.intake_guideline ? props.intake_guideline.description : null,
   priority: props.intake_guideline ? props.intake_guideline.priority : null,
   // Reset zero amounts to null, to make it easier for user to fill values in.
   intake_guideline_nutrients: props.intake_guideline
@@ -87,6 +89,17 @@ export default {
           v-model="form.priority"
         />
         <InputError class="mt-1" :message="form.errors.priority" />
+      </div>
+
+      <!-- Description -->
+      <div class="mt-3 w-full">
+        <InputLabel for="description" value="Description (optional)" />
+        <TextArea
+          id="description"
+          class="block w-full h-36 sm:h-44 md:h-48 max-w-xl"
+          v-model="form.description"
+        />
+        <InputError class="mt-2" :message="form.errors.description" />
       </div>
 
     </section>

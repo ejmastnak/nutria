@@ -108,6 +108,14 @@ export default {
       </div>
     </div>
 
+    <!-- Description -->
+    <div v-if="ingredient.description" class="mt-4">
+      <p class="font-medium text-sm text-gray-600">
+        Description
+      </p>
+      {{ingredient.description}}
+    </div>
+
     <NutrientProfile
       class="mt-6"
       :defaultUnit="units.find(unit => unit.name === 'g')"

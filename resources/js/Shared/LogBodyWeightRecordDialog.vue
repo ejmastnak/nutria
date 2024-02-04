@@ -7,6 +7,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import PlainButton from '@/Components/PlainButton.vue'
 import TextInput from '@/Components/TextInput.vue'
+import TextArea from '@/Components/TextArea.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import InputError from '@/Components/InputError.vue'
 import SimpleCombobox from '@/Components/SimpleCombobox.vue'
@@ -34,6 +35,7 @@ function open(record) {
   bodyWeightRecordForm.unit = record ? cloneDeep(record.unit) : props.units.find(unit => unit.name === 'kg')
   bodyWeightRecordForm.date = record ? getLocalYYYYMMDD(record.date_time_utc) : getCurrentLocalYYYYMMDD()
   bodyWeightRecordForm.time = record ? getLocalHHMM(record.date_time_utc) : getCurrentLocalHHmm()
+  bodyWeightRecordForm.description = record ? record.description : null
   isOpen.value = true
 }
 
@@ -162,6 +164,7 @@ function addMore() {
         date: bodyWeightRecordForm.date,
         time: bodyWeightRecordForm.time,
         date_time_utc: getUTCDateTime(bodyWeightRecordForm.date + " " + bodyWeightRecordForm.time + ":00"),
+        description: bodyWeightRecordForm.description,
       },
     }
     bodyWeightRecordsForm.nextId += 1
@@ -274,6 +277,17 @@ function addMore() {
 
           <div class="mt-2">
             <InputError :message="bodyWeightRecordForm.errors.date_time_utc" />
+          </div>
+
+          <!-- Description -->
+          <div class="mt-3 w-full">
+            <InputLabel for="description" value="Description (optional)" />
+            <TextArea
+              id="description"
+              class="block w-full h-32 sm:h-36 max-w-xl"
+              v-model="bodyWeightRecordForm.description"
+            />
+            <InputError class="mt-2" :message="bodyWeightRecordForm.errors.description" />
           </div>
 
           <!-- Cancel/Confirm buttons -->

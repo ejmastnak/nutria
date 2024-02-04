@@ -7,6 +7,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import PlainButton from '@/Components/PlainButton.vue'
 import TextInput from '@/Components/TextInput.vue'
+import TextArea from '@/Components/TextArea.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import InputError from '@/Components/InputError.vue'
 import FuzzyCombobox from '@/Components/FuzzyCombobox.vue'
@@ -38,6 +39,7 @@ function open(record) {
   ingredientIntakeRecordForm.unit = record ? cloneDeep(record.unit) : props.units.find(unit => unit.name === 'g')
   ingredientIntakeRecordForm.date = record ? getLocalYYYYMMDD(record.date_time_utc) : getCurrentLocalYYYYMMDD()
   ingredientIntakeRecordForm.time = record ? getLocalHHMM(record.date_time_utc) : getCurrentLocalHHmm()
+  ingredientIntakeRecordForm.description = record ? record.description : null
   isOpen.value = true
 }
 
@@ -192,6 +194,7 @@ function addMore() {
         date: ingredientIntakeRecordForm.date,
         time: ingredientIntakeRecordForm.time,
         date_time_utc: getUTCDateTime(ingredientIntakeRecordForm.date + " " + ingredientIntakeRecordForm.time + ":00"),
+        description: ingredientIntakeRecordForm.description,
       },
     }
     ingredientIntakeRecordsForm.nextId += 1
@@ -317,6 +320,17 @@ function addMore() {
 
           <div class="mt-2">
             <InputError :message="ingredientIntakeRecordForm.errors.date_time_utc" />
+          </div>
+
+          <!-- Description -->
+          <div class="mt-3 w-full">
+            <InputLabel for="description" value="Description (optional)" />
+            <TextArea
+              id="description"
+              class="block w-full h-32 sm:h-36 max-w-xl"
+              v-model="ingredientIntakeRecordForm.description"
+            />
+            <InputError class="mt-2" :message="ingredientIntakeRecordForm.errors.description" />
           </div>
 
           <!-- Cancel/Confirm buttons -->

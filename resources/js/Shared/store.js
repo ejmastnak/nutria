@@ -10,6 +10,7 @@ export const bodyWeightRecordForm = reactive(
     date: null,
     time: null,
     date_time_utc: null,
+    description: null,
   }),
 )
 
@@ -34,6 +35,7 @@ export const ingredientIntakeRecordForm = reactive(
     date: null,
     time: null,
     date_time_utc: null,
+    description: null,
   }),
 )
 
@@ -58,6 +60,7 @@ export const mealIntakeRecordForm = reactive(
     date: null,
     time: null,
     date_time_utc: null,
+    description: null,
   }),
 )
 

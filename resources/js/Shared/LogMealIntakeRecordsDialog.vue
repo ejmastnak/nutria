@@ -50,6 +50,7 @@ function editMealIntakeRecord(mealIntakeRecord, idx) {
     date: mealIntakeRecordsForm.errors['meal_intake_records.' + mealIntakeRecordsForm.id_idx_mapping[mealIntakeRecord.id] + '.date'],
     time: mealIntakeRecordsForm.errors['meal_intake_records.' + mealIntakeRecordsForm.id_idx_mapping[mealIntakeRecord.id] + '.time'],
     date_time_utc: mealIntakeRecordsForm.errors['meal_intake_records.' + mealIntakeRecordsForm.id_idx_mapping[mealIntakeRecord.id] + '.date_time_utc'],
+    description: mealIntakeRecordsForm.errors['meal_intake_records.' + mealIntakeRecordsForm.id_idx_mapping[mealIntakeRecord.id] + '.description'],
   })
 }
 
@@ -131,6 +132,7 @@ function submit() {
                   <InputError :message="mealIntakeRecordsForm.errors['meal_intake_records.' + mealIntakeRecordsForm.id_idx_mapping[mealIntakeRecord.id] + '.date']" />
                   <InputError :message="mealIntakeRecordsForm.errors['meal_intake_records.' + mealIntakeRecordsForm.id_idx_mapping[mealIntakeRecord.id] + '.time']" />
                   <InputError :message="mealIntakeRecordsForm.errors['meal_intake_records.' + mealIntakeRecordsForm.id_idx_mapping[mealIntakeRecord.id] + '.date_time_utc']" />
+                  <InputError :message="mealIntakeRecordsForm.errors['meal_intake_records.' + mealIntakeRecordsForm.id_idx_mapping[mealIntakeRecord.id] + '.description']" />
                 </div>
               </div>
 

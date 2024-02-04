@@ -7,6 +7,7 @@ import SimpleCombobox from '@/Components/SimpleCombobox.vue'
 import FuzzyCombobox from '@/Components/FuzzyCombobox.vue'
 import { PlusCircleIcon, TrashIcon, CalendarIcon, ClockIcon } from '@heroicons/vue/24/outline'
 import TextInput from '@/Components/TextInput.vue'
+import TextArea from '@/Components/TextArea.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
@@ -25,6 +26,7 @@ const props = defineProps({
 const form = useForm({
   id: props.meal ? props.meal.id : null,
   name: props.meal ? props.meal.name : "",
+  description: props.meal ? props.meal.description : null,
   meal_ingredients: [],  // filled in on submit
   // For createAndLog
   date: getCurrentLocalYYYYMMDD(),
@@ -202,6 +204,18 @@ export default {
           <InputError :message="form.errors.date_time_utc" />
         </div>
       </div>
+
+      <!-- Description -->
+      <div class="mt-3 w-full">
+        <InputLabel for="description" value="Description (optional)" />
+        <TextArea
+          id="description"
+          class="block w-full h-36 sm:h-44 md:h-48 max-w-xl"
+          v-model="form.description"
+        />
+        <InputError class="mt-2" :message="form.errors.description" />
+      </div>
+
 
     </section>
 

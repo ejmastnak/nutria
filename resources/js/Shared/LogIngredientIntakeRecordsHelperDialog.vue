@@ -6,6 +6,7 @@ import { ClockIcon, CalendarIcon } from '@heroicons/vue/24/outline'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
+import TextArea from '@/Components/TextArea.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import InputError from '@/Components/InputError.vue'
 import SimpleCombobox from '@/Components/SimpleCombobox.vue'
@@ -29,6 +30,7 @@ const ingredientIntakeRecord = ref({
   date: null,
   time: null,
   date_time_utc: null,
+  description: null,
 })
 
 defineExpose({ open })
@@ -46,6 +48,7 @@ function open(passedIngredientIntakeRecord, passedErrors) {
   ingredientIntakeRecord.value.unit = passedIngredientIntakeRecord ? cloneDeep(passedIngredientIntakeRecord.unit) : props.units.find(unit => unit.name === 'g')
   ingredientIntakeRecord.value.date = passedIngredientIntakeRecord ? getLocalYYYYMMDD(passedIngredientIntakeRecord.date_time_utc) : getCurrentLocalYYYYMMDD()
   ingredientIntakeRecord.value.time = passedIngredientIntakeRecord ? getLocalHHMM(passedIngredientIntakeRecord.date_time_utc) : getCurrentLocalHHmm()
+  ingredientIntakeRecord.value.description = passedIngredientIntakeRecord ? passedIngredientIntakeRecord.description : null
   errors.value = passedErrors
   isOpen.value = true
 }
@@ -257,6 +260,17 @@ function confirm() {
 
         <div class="mt-2">
           <InputError :message="errors.date_time_utc" />
+        </div>
+
+        <!-- Description -->
+        <div class="mt-3 w-full">
+          <InputLabel for="description" value="Description (optional)" />
+          <TextArea
+            id="description"
+            class="block w-full h-32 sm:h-36 max-w-xl"
+            v-model="ingredientIntakeRecord.description"
+          />
+          <InputError class="mt-2" :message="errors.description" />
         </div>
 
         <!-- Cancel/Confirm buttons -->

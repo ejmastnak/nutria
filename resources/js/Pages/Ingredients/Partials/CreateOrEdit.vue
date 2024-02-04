@@ -10,6 +10,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue'
 import PlainButton from '@/Components/PlainButton.vue'
 import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
 import TextInput from '@/Components/TextInput.vue'
+import TextArea from '@/Components/TextArea.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import InputError from '@/Components/InputError.vue'
 import DensityDialog from './DensityDialog.vue'
@@ -27,6 +28,7 @@ const props = defineProps({
 const form = useForm({
   id: props.ingredient ? props.ingredient.id : null,
   name: props.ingredient ? props.ingredient.name : "",
+  description: props.ingredient ? props.ingredient.description : null,
   ingredient_category_id: props.ingredient ? props.ingredient.ingredient_category_id : null,
   ingredient_category: props.ingredient ? props.ingredient.ingredient_category : null,
   density_mass_amount: props.ingredient ? props.ingredient.density_mass_amount : null,
@@ -312,6 +314,17 @@ export default {
           />
 
         </div>
+      </div>
+
+      <!-- Description -->
+      <div class="mt-3 w-full">
+        <InputLabel for="description" value="Description (optional)" />
+        <TextArea
+          id="description"
+          class="block w-full h-36 sm:h-44 md:h-48 max-w-xl"
+          v-model="form.description"
+        />
+        <InputError class="mt-2" :message="form.errors.description" />
       </div>
 
     </section>

@@ -51,18 +51,26 @@ export default {
 
       <!-- Food List name and mass pillbox labels -->
       <div class="flex mt-2">
-        <div class="bg-blue-50 px-3 py-1 roundNonZeroed-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
+        <div class="bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
           Food List
         </div>
-        <div class="ml-2 bg-blue-50 px-3 py-1 roundNonZeroed-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
+        <div class="ml-2 bg-blue-50 px-3 py-1 rounded-xl font-medium border border-gray-300 text-gray-800 text-sm w-fit">
           {{roundNonZero(Number(food_list.mass_in_grams))}} g
         </div>
       </div>
 
     </div>
 
+    <!-- Description -->
+    <div v-if="food_list.description" class="mt-6">
+      <p class="font-medium text-gray-600">
+        Description
+      </p>
+      {{food_list.description}}
+    </div>
+
     <!-- Table of food list ingredients and meals -->
-    <div class="mt-8 text-gray-900">
+    <div class="mt-6 text-gray-900">
 
       <!-- Table of food list ingredients -->
       <div v-if="food_list.food_list_ingredients.length" >

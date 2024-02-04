@@ -50,6 +50,7 @@ function editIngredientIntakeRecord(ingredientIntakeRecord, idx) {
     date: ingredientIntakeRecordsForm.errors['ingredient_intake_records.' + ingredientIntakeRecordsForm.id_idx_mapping[ingredientIntakeRecord.id] + '.date'],
     time: ingredientIntakeRecordsForm.errors['ingredient_intake_records.' + ingredientIntakeRecordsForm.id_idx_mapping[ingredientIntakeRecord.id] + '.time'],
     date_time_utc: ingredientIntakeRecordsForm.errors['ingredient_intake_records.' + ingredientIntakeRecordsForm.id_idx_mapping[ingredientIntakeRecord.id] + '.date_time_utc'],
+    description: ingredientIntakeRecordsForm.errors['ingredient_intake_records.' + ingredientIntakeRecordsForm.id_idx_mapping[ingredientIntakeRecord.id] + '.description'],
   })
 }
 
@@ -131,6 +132,7 @@ function submit() {
                   <InputError :message="ingredientIntakeRecordsForm.errors['ingredient_intake_records.' + ingredientIntakeRecordsForm.id_idx_mapping[ingredientIntakeRecord.id] + '.date']" />
                   <InputError :message="ingredientIntakeRecordsForm.errors['ingredient_intake_records.' + ingredientIntakeRecordsForm.id_idx_mapping[ingredientIntakeRecord.id] + '.time']" />
                   <InputError :message="ingredientIntakeRecordsForm.errors['ingredient_intake_records.' + ingredientIntakeRecordsForm.id_idx_mapping[ingredientIntakeRecord.id] + '.date_time_utc']" />
+                  <InputError :message="ingredientIntakeRecordsForm.errors['ingredient_intake_records.' + ingredientIntakeRecordsForm.id_idx_mapping[ingredientIntakeRecord.id] + '.description']" />
                 </div>
               </div>
 

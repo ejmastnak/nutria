@@ -65,8 +65,17 @@ export default {
       <p class="max-w-md text-gray-700 text-sm">
         This page shows the recommended daily intakes (RDIs) for macronutrients, minerals, and vitamins for this intake guideline.
       </p>
+
+      <!-- Description -->
+      <div v-if="intake_guideline.description" class="mt-4">
+        <p class="font-medium text-gray-600">
+          Description
+        </p>
+        {{intake_guideline.description}}
+      </div>
+
       <IntakeGuideline
-        class="w-full mt-4"
+        class="w-full mt-6"
         :intake_guideline_nutrients="intake_guideline.intake_guideline_nutrients"
         :nutrient_categories="nutrient_categories"
       />

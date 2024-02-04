@@ -48,6 +48,7 @@ function editBodyWeightRecord(bodyWeightRecord, idx) {
     date: bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id] + '.date'],
     time: bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id] + '.time'],
     date_time_utc: bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id] + '.date_time_utc'],
+    description: bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id] + '.description'],
   })
 }
 
@@ -129,6 +130,7 @@ function submit() {
                     <InputError :message="bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id] + '.date']" />
                     <InputError :message="bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id] + '.time']" />
                     <InputError :message="bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id] + '.date_time_utc']" />
+                    <InputError :message="bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id] + '.description']" />
                   </div>
                 </div>
 
