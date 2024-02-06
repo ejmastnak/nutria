@@ -214,24 +214,24 @@ export default {
       </div>
 
       <!-- Description -->
-      <PlainButton @click="toggleDescription" class="mt-4 flex items-center text-sm">
-        <PencilSquareIcon v-if="!showDescription" class="-ml-1 w-5 h-5 text-gray-500" />
-        <XMarkIcon v-else class="-ml-1 w-5 h-5 text-gray-600" />
-        <p class="ml-1.5 whitespace-nowrap">
-          {{showDescription ? "Hide description" : (form.description ? "Edit" : "Add") + " description" + (form.description ? "" : " (optional)")}}
-        </p>
-      </PlainButton>
-      <div v-show="showDescription" class="mt-2 w-full">
+      <div class="mt-4 w-full">
         <InputLabel for="description" value="Description (optional)" />
+        <PlainButton @click="toggleDescription" class="mt-0.5 flex items-center text-sm">
+          <PencilSquareIcon v-if="!showDescription" class="-ml-1 w-5 h-5 text-gray-500" />
+          <XMarkIcon v-else class="-ml-1 w-5 h-5 text-gray-600" />
+          <p class="ml-1.5 whitespace-nowrap">
+            {{showDescription ? "Hide description" : (form.description ? "Edit" : "Add") + " description"}}
+          </p>
+        </PlainButton>
         <TextArea
+          v-show="showDescription" 
           id="description"
           ref="descriptionInputRef"
-          class="block w-full h-36 sm:h-44 md:h-48 max-w-xl"
+          class="mt-1 block w-full h-36 sm:h-44 md:h-48 max-w-xl"
           v-model="form.description"
         />
         <InputError class="mt-2" :message="form.errors.description" />
       </div>
-
 
     </section>
 

@@ -167,7 +167,7 @@ function confirm() {
   >
     <div class="fixed inset-0 flex items-center justify-center p-4 bg-blue-50/80">
 
-      <DialogPanel class="px-6 pt-6 w-full max-w-md rounded-lg bg-white shadow max-h-[600px] overflow-auto">
+      <DialogPanel class="px-6 pt-6 w-full max-w-md rounded-lg bg-white shadow overflow-auto" :class="showDescription ? 'max-h-[700px] ' : 'max-h-[600px]'">
 
         <DialogTitle class="text-lg font-bold text-gray-600">
           Log ingredient intake
@@ -273,19 +273,20 @@ function confirm() {
         </div>
 
         <!-- Description -->
-        <PlainButton @click="toggleDescription" class="mt-3 flex items-center text-sm">
-          <PencilSquareIcon v-if="!showDescription" class="-ml-1 w-5 h-5 text-gray-500" />
-          <XMarkIcon v-else class="-ml-1 w-5 h-5 text-gray-600" />
-          <p class="ml-1.5 whitespace-nowrap">
-            {{showDescription ? "Hide description" : (ingredientIntakeRecord.description ? "Edit" : "Add") + " description" + (ingredientIntakeRecord.description ? "" : " (optional)")}}
-          </p>
-        </PlainButton>
-        <div v-show="showDescription" class="mt-2 w-full">
+        <div class="mt-4 w-full">
           <InputLabel for="description" value="Description (optional)" />
+          <PlainButton @click="toggleDescription" class="mt-0.5 flex items-center text-sm">
+            <PencilSquareIcon v-if="!showDescription" class="-ml-1 w-5 h-5 text-gray-500" />
+            <XMarkIcon v-else class="-ml-1 w-5 h-5 text-gray-600" />
+            <p class="ml-1.5 whitespace-nowrap">
+              {{showDescription ? "Hide description" : (ingredientIntakeRecord.description ? "Edit" : "Add") + " description" + (ingredientIntakeRecord.description ? "" : " (optional)")}}
+            </p>
+          </PlainButton>
           <TextArea
+            v-show="showDescription" 
             id="description"
             ref="descriptionInputRef"
-            class="block w-full h-32 sm:h-36 max-w-xl"
+            class="mt-1 block w-full h-32 sm:h-36 max-w-xl"
             v-model="ingredientIntakeRecord.description"
           />
           <InputError class="mt-2" :message="errors.description" />
