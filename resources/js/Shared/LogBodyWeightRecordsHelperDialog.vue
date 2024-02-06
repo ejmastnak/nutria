@@ -2,9 +2,10 @@
 import { ref, computed } from 'vue'
 import cloneDeep from "lodash/cloneDeep"
 import { getCurrentLocalYYYYMMDD, getCurrentLocalHHmm, getLocalYYYYMMDD, getLocalHHMM, getUTCDateTime } from '@/utils/GlobalFunctions.js'
-import { ClockIcon, CalendarIcon } from '@heroicons/vue/24/outline'
+import { ClockIcon, CalendarIcon, PencilSquareIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
+import PlainButton from '@/Components/PlainButton.vue'
 import TextInput from '@/Components/TextInput.vue'
 import TextArea from '@/Components/TextArea.vue'
 import InputLabel from '@/Components/InputLabel.vue'
@@ -36,6 +37,13 @@ const isOpen = ref(false)
 const errors = ref({})
 const clientSideErrors = ref({})
 
+const showDescription = ref(false)
+const descriptionInputRef = ref(null)
+function toggleDescription() {
+  if (!showDescription.value) descriptionInputRef.value.focus();
+  showDescription.value = !showDescription.value;
+}
+
 function open(passedBodyWeightRecord, passedErrors) {
   bodyWeightRecord.value.amount = passedBodyWeightRecord ? passedBodyWeightRecord.amount : null
   bodyWeightRecord.value.unit_id = passedBodyWeightRecord ? passedBodyWeightRecord.unit_id : props.units.find(unit => unit.name === 'kg').id
@@ -43,6 +51,8 @@ function open(passedBodyWeightRecord, passedErrors) {
   bodyWeightRecord.value.date = passedBodyWeightRecord ? getLocalYYYYMMDD(passedBodyWeightRecord.date_time_utc) : getCurrentLocalYYYYMMDD()
   bodyWeightRecord.value.time = passedBodyWeightRecord ? getLocalHHMM(passedBodyWeightRecord.date_time_utc) : getCurrentLocalHHmm()
   bodyWeightRecord.value.description = passedBodyWeightRecord ? passedBodyWeightRecord.description : null
+
+  showDescription.value = passedBodyWeightRecord ? (!!passedBodyWeightRecord.description) : false
   errors.value = passedErrors
   isOpen.value = true
 }
@@ -224,10 +234,18 @@ function confirm() {
         </div>
 
         <!-- Description -->
-        <div class="mt-3 w-full">
+        <PlainButton @click="toggleDescription" class="mt-3 flex items-center text-sm">
+          <PencilSquareIcon v-if="!showDescription" class="-ml-1 w-5 h-5 text-gray-500" />
+          <XMarkIcon v-else class="-ml-1 w-5 h-5 text-gray-600" />
+          <p class="ml-1.5 whitespace-nowrap">
+            {{showDescription ? "Hide description" : (bodyWeightRecord.description ? "Edit" : "Add") + " description" + (bodyWeightRecord.description ? "" : " (optional)")}}
+          </p>
+        </PlainButton>
+        <div v-show="showDescription" class="mt-2 w-full">
           <InputLabel for="description" value="Description (optional)" />
           <TextArea
             id="description"
+            ref="descriptionInputRef"
             class="block w-full h-32 sm:h-36 max-w-xl"
             v-model="bodyWeightRecord.description"
           />

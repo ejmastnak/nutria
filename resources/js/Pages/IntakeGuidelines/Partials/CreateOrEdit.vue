@@ -3,10 +3,12 @@ import { ref, onMounted } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
 import { useForm } from '@inertiajs/vue3'
 import { round } from '@/utils/GlobalFunctions.js'
+import { PencilSquareIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import TextInput from '@/Components/TextInput.vue'
 import TextArea from '@/Components/TextArea.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
+import PlainButton from '@/Components/PlainButton.vue'
 import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import InputError from '@/Components/InputError.vue'
@@ -36,6 +38,13 @@ const form = useForm({
       nutrient: nutrient
     })),
 })
+
+const showDescription = ref(props.intake_guideline ? (!!props.intake_guideline.description) : false)
+const descriptionInputRef = ref(null)
+function toggleDescription() {
+  if (!showDescription.value) descriptionInputRef.value.focus();
+  showDescription.value = !showDescription.value;
+}
 
 const nameInput = ref(null)
 onMounted(() => {
@@ -92,10 +101,18 @@ export default {
       </div>
 
       <!-- Description -->
-      <div class="mt-3 w-full">
+      <PlainButton @click="toggleDescription" class="mt-4 flex items-center text-sm">
+        <PencilSquareIcon v-if="!showDescription" class="-ml-1 w-5 h-5 text-gray-500" />
+        <XMarkIcon v-else class="-ml-1 w-5 h-5 text-gray-600" />
+        <p class="ml-1.5 whitespace-nowrap">
+          {{showDescription ? "Hide description" : (form.description ? "Edit" : "Add") + " description" + (form.description ? "" : " (optional)")}}
+        </p>
+      </PlainButton>
+      <div v-show="showDescription" class="mt-2 w-full">
         <InputLabel for="description" value="Description (optional)" />
         <TextArea
           id="description"
+          ref="descriptionInputRef"
           class="block w-full h-36 sm:h-44 md:h-48 max-w-xl"
           v-model="form.description"
         />

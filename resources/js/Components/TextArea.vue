@@ -15,7 +15,13 @@ onMounted(() => {
     }
 });
 
-defineExpose({ focus: () => input.value.focus() });
+function focus() {
+  setTimeout(() => {
+    input.value.focus()  
+  }, 0);
+}
+
+defineExpose({focus});
 </script>
 
 <template>

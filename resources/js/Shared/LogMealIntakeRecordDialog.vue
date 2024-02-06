@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import cloneDeep from "lodash/cloneDeep"
 import { getCurrentLocalYYYYMMDD, getCurrentLocalHHmm, getLocalYYYYMMDD, getLocalHHMM, getUTCDateTime } from '@/utils/GlobalFunctions.js'
-import { ClockIcon, CalendarIcon, PlusCircleIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
+import { ClockIcon, CalendarIcon, PlusCircleIcon, PencilSquareIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import SecondaryLinkButton from '@/Components/SecondaryLinkButton.vue'
@@ -32,6 +32,13 @@ const isOpen = ref(false)
 const errors = ref({})
 const clientSideErrors = ref({})
 
+const showDescription = ref(false)
+const descriptionInputRef = ref(null)
+function toggleDescription() {
+  if (!showDescription.value) descriptionInputRef.value.focus();
+  showDescription.value = !showDescription.value;
+}
+
 function open(record) {
   mealIntakeRecordForm.id = record ? record.id : null
   mealIntakeRecordForm.meal_id = record ? record.meal_id : null
@@ -42,6 +49,8 @@ function open(record) {
   mealIntakeRecordForm.date = record ? getLocalYYYYMMDD(record.date_time_utc) : getCurrentLocalYYYYMMDD()
   mealIntakeRecordForm.time = record ? getLocalHHMM(record.date_time_utc) : getCurrentLocalHHmm()
   mealIntakeRecordForm.description = record ? record.description : null
+
+  showDescription.value = record ? (!!record.description) : false
   isOpen.value = true
 }
 
@@ -340,15 +349,25 @@ function addMore() {
           </div>
 
           <!-- Description -->
-          <div class="mt-3 w-full">
+          <PlainButton @click="toggleDescription" class="mt-3 flex items-center text-sm">
+            <PencilSquareIcon v-if="!showDescription" class="-ml-1 w-5 h-5 text-gray-500" />
+            <XMarkIcon v-else class="-ml-1 w-5 h-5 text-gray-600" />
+            <p class="ml-1.5 whitespace-nowrap">
+              {{showDescription ? "Hide description" : (mealIntakeRecordForm.description ? "Edit" : "Add") + " description" + (mealIntakeRecordForm.description ? "" : " (optional)")}}
+            </p>
+          </PlainButton>
+          <div v-show="showDescription" class="mt-2 w-full">
             <InputLabel for="description" value="Description (optional)" />
             <TextArea
               id="description"
+              ref="descriptionInputRef"
               class="block w-full h-32 sm:h-36 max-w-xl"
               v-model="mealIntakeRecordForm.description"
             />
             <InputError class="mt-2" :message="mealIntakeRecordForm.errors.description" />
           </div>
+
+
 
           <!-- Cancel/Confirm buttons -->
           <div class="flex mt-5 -mx-6 px-4 py-3 bg-gray-50">
