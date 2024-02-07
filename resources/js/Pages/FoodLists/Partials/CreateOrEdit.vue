@@ -123,6 +123,15 @@ function updateFoodListIngredient(idx, newIngredient) {
     foodListIngredients.value[idx].food_list_ingredient.amount = null
   }
 
+  // Focus ingredient amount input for convenience
+  setTimeout(() => {
+    const wrapper = document.getElementById('food-list-ingredient-amount-wrapper-' + idx)
+    if (wrapper) {
+      const input = wrapper.querySelectorAll('input')[0];
+      if (input) input.focus();
+    }
+  }, 0);
+
 }
 
 function updateFoodListMeal(idx, newMeal) {
@@ -137,6 +146,16 @@ function updateFoodListMeal(idx, newMeal) {
     foodListMeals.value[idx].food_list_meal.unit = newMeal.meal_unit
     if (foodListMeals.value[idx].food_list_meal.amount === null) foodListMeals.value[idx].food_list_meal.amount = 1;
   }
+
+  // Focus meal amount input for convenience
+  setTimeout(() => {
+    const wrapper = document.getElementById('food-list-meal-amount-wrapper-' + idx)
+    if (wrapper) {
+      const input = wrapper.querySelectorAll('input')[0];
+      if (input) input.focus();
+    }
+  }, 0);
+
 }
 
 function deleteFoodListIngredient(idx) {
@@ -246,7 +265,7 @@ export default {
           </div>
           <!-- Amount input -->
           <div class="col-span-3 text-right">
-            <div class="w-full ml-auto">
+            <div :id="'food-list-ingredient-amount-wrapper-' + idx" class="w-full ml-auto">
               <TextInput
                 type="number"
                 placeholder="0"
@@ -331,7 +350,7 @@ export default {
           </div>
           <!-- Amount input -->
           <div class="col-span-3 text-right">
-            <div class="w-full ml-auto">
+            <div :id="'food-list-meal-amount-wrapper-' + idx" class="w-full ml-auto">
               <TextInput
                 type="number"
                 placeholder="0"

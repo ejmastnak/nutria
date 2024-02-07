@@ -91,6 +91,15 @@ function updateMealIngredient(idx, newIngredient) {
     mealIngredients.value[idx].meal_ingredient.amount = null
   }
 
+  // Focus ingredient amount input for convenience
+  setTimeout(() => {
+    const wrapper = document.getElementById('meal-ingredient-amount-wrapper-' + idx)
+    if (wrapper) {
+      const input = wrapper.querySelectorAll('input')[0];
+      if (input) input.focus();
+    }
+  }, 0);
+
 }
 
 function deleteMealIngredient(idx) {
@@ -270,7 +279,7 @@ export default {
           </div>
           <!-- Amount input -->
           <div class="col-span-3 text-right">
-            <div class="w-full ml-auto">
+            <div :id="'meal-ingredient-amount-wrapper-' + idx" class="w-full ml-auto">
               <TextInput
                 type="number"
                 placeholder="0"
