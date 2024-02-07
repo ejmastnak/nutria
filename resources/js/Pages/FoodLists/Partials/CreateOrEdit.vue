@@ -171,7 +171,7 @@ export default {
 
 <template>
 
-  <form @submit.prevent="submit">
+  <form @submit.prevent="submit" class="mb-56 sm:mb-16">
 
     <!-- Name -->
     <section class="mt-4">
@@ -234,9 +234,10 @@ export default {
           <div :id="'food-list-ingredient-input-wrapper-' + food_list_ingredient.id" class="col-span-9">
             <FuzzyCombobox
               :options="ingredients"
-                :modelValue="food_list_ingredient.food_list_ingredient.ingredient"
+              :modelValue="food_list_ingredient.food_list_ingredient.ingredient"
               :showIcon="false"
-                @update:modelValue="newValue => updateFoodListIngredient(idx, newValue)"
+              :fuzzyLimit="6"
+              @update:modelValue="newValue => updateFoodListIngredient(idx, newValue)"
             />
             <div class="text-left">
               <InputError :message="form.errors['food_list_ingredients.' + idx + '.id']" />
@@ -251,7 +252,7 @@ export default {
                 placeholder="0"
                 class="w-full text-right"
                 step="any"
-                  v-model="food_list_ingredient.food_list_ingredient.amount"
+                v-model="food_list_ingredient.food_list_ingredient.amount"
                 required
               />
               <InputError class="text-left" :message="form.errors['food_list_ingredients.' + idx + '.amount']" />
@@ -260,9 +261,9 @@ export default {
           <!-- Unit combobox -->
           <div class="col-span-3 text-right">
             <SimpleCombobox
-                :options="units.filter(unit => unit.g || (unit.ml && (food_list_ingredient.food_list_ingredient.ingredient && food_list_ingredient.food_list_ingredient.ingredient.density_g_ml))).concat(food_list_ingredient.food_list_ingredient.ingredient.custom_units ? food_list_ingredient.food_list_ingredient.ingredient.custom_units : [])"
-                :modelValue="food_list_ingredient.food_list_ingredient.unit"
-                @update:modelValue="newValue => (food_list_ingredient.food_list_ingredient.unit_id = newValue.id, food_list_ingredient.food_list_ingredient.unit = newValue)"
+              :options="units.filter(unit => unit.g || (unit.ml && (food_list_ingredient.food_list_ingredient.ingredient && food_list_ingredient.food_list_ingredient.ingredient.density_g_ml))).concat(food_list_ingredient.food_list_ingredient.ingredient.custom_units ? food_list_ingredient.food_list_ingredient.ingredient.custom_units : [])"
+              :modelValue="food_list_ingredient.food_list_ingredient.unit"
+              @update:modelValue="newValue => (food_list_ingredient.food_list_ingredient.unit_id = newValue.id, food_list_ingredient.food_list_ingredient.unit = newValue)"
             />
             <div class="text-left">
               <InputError :message="form.errors['food_list_ingredients.' + idx + '.unit_id']" />
@@ -320,6 +321,7 @@ export default {
               :options="meals"
               :modelValue="food_list_meal.food_list_meal.meal"
               :showIcon="false"
+              :fuzzyLimit="6"
               @update:modelValue="newValue => updateFoodListMeal(idx, newValue)"
             />
             <div class="text-left">

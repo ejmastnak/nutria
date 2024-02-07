@@ -145,7 +145,7 @@ export default {
 
 <template>
 
-  <form @submit.prevent="submit">
+  <form @submit.prevent="submit" class="mb-56 sm:mb-16">
 
     <section class="mt-4">
       <!-- Name -->
@@ -260,6 +260,7 @@ export default {
               :options="ingredients"
               :modelValue="meal_ingredient.meal_ingredient.ingredient"
               :showIcon="false"
+              :fuzzyLimit="6"
               @update:modelValue="newValue => updateMealIngredient(idx, newValue)"
             />
             <div class="text-left">
