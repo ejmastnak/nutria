@@ -1,8 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useForm } from '@inertiajs/vue3'
-import { round } from '@/utils/GlobalFunctions.js'
-import { getCurrentLocalYYYYMMDD, getCurrentLocalHHmm, getUTCDateTime } from '@/utils/GlobalFunctions.js'
+import { round, getCurrentLocalYYYYMMDD, getCurrentLocalHHmm, getUTCDateTime } from '@/utils/GlobalFunctions.js'
 import SimpleCombobox from '@/Components/SimpleCombobox.vue'
 import FuzzyCombobox from '@/Components/FuzzyCombobox.vue'
 import { PlusCircleIcon, PencilSquareIcon, TrashIcon, CalendarIcon, ClockIcon, XMarkIcon } from '@heroicons/vue/24/outline'
@@ -112,7 +111,6 @@ const mealNameBeginsWithDate = computed(() => {
 })
 
 function prependDateToMealName() {
-  // Do nothing if meal name begin with yyyy-mm-dd, skip
   if (mealNameBeginsWithDate.value) {
     const regexp = new RegExp("^[0-9]{4}-[0-9]{2}-[0-9]{2}");
     form.name = form.name.trim().replace(regexp, "").trim()
