@@ -39,6 +39,14 @@ function toggleDescription() {
   showDescription.value = !showDescription.value;
 }
 
+const mealInputWrapperRef = ref(null)
+const amountInputRef = ref(null)
+const unitInputWrapperRef = ref(null)
+const dateInputRef = ref(null)
+const timeInputRef = ref(null)
+const logMealIntakeRecordsDialogRef = ref(null)
+const mealCreateAndLogChooserDialogRef = ref(null)
+
 function open(record) {
   mealIntakeRecordForm.id = record ? record.id : null
   mealIntakeRecordForm.meal_id = record ? record.meal_id : null
@@ -52,15 +60,17 @@ function open(record) {
 
   showDescription.value = record ? (!!record.description) : false
   isOpen.value = true
-}
 
-const mealInputWrapperRef = ref(null)
-const amountInputRef = ref(null)
-const unitInputWrapperRef = ref(null)
-const dateInputRef = ref(null)
-const timeInputRef = ref(null)
-const logMealIntakeRecordsDialogRef = ref(null)
-const mealCreateAndLogChooserDialogRef = ref(null)
+  // Autofocus meal input (and not "New Meal" button) for new meals
+  if (mealIntakeRecordForm.id === null) {
+    setTimeout(() => {
+      if (mealInputWrapperRef) {
+        mealInputWrapperRef.value.querySelectorAll('input')[0].focus()
+      }
+    }, 0);
+  }
+
+}
 
 function passesValidation() {
 
