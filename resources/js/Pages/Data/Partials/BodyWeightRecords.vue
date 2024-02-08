@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { getLocalYYYYMMDD, getLocalHHMM, getHumanReadableLocalDate } from '@/utils/GlobalFunctions.js'
+import Pagination from '@/Shared/Pagination.vue'
 import { TrashIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import LogBodyWeightRecordDialog from '@/Shared/LogBodyWeightRecordDialog.vue'
 import LogBodyWeightRecordsDialog from '@/Shared/LogBodyWeightRecordsDialog.vue'
@@ -11,7 +12,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue'
 import { bodyWeightRecordsForm } from '@/Shared/store.js'
 
 const props = defineProps({
-  body_weight_records: Array,
+  body_weight_records_paginator: Object,
   units: Array,
 })
 
@@ -40,7 +41,7 @@ function logBodyWeight() {
 <template>
   <div>
 
-    <p v-if="body_weight_records.length === 0" class="mt-1 mb-2">
+    <p v-if="body_weight_records_paginator.data.length === 0" class="mt-1 mb-2">
       You haven't created any body weight records yet!
     </p>
 
@@ -48,7 +49,7 @@ function logBodyWeight() {
       Log body weight
     </SecondaryButton>
 
-    <table v-if="body_weight_records.length" class="mt-2 text-sm sm:text-base text-left text-gray-500">
+    <table v-if="body_weight_records_paginator.data.length" class="mt-2 text-sm sm:text-base text-left text-gray-500">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
           <th scope="col" class="px-8 py-3 bg-blue-100 w-16">
@@ -62,7 +63,7 @@ function logBodyWeight() {
       </thead>
       <tbody>
         <tr
-          v-for="body_weight_record in body_weight_records" :key="body_weight_record.id"
+          v-for="body_weight_record in body_weight_records_paginator.data" :key="body_weight_record.id"
           class="border-b hover:bg-gray-100 cursor-pointer"
           @click.stop="logBodyWeightRecordDialogRef.open(body_weight_record)"
         >
@@ -94,6 +95,8 @@ function logBodyWeight() {
         </tr>
       </tbody>
     </table>
+
+    <Pagination class="mt-2" :links="body_weight_records_paginator.links" />
 
     <LogBodyWeightRecordDialog :units="units" ref="logBodyWeightRecordDialogRef" />
     <LogBodyWeightRecordsDialog :units="units" ref="logBodyWeightRecordsDialogRef" />

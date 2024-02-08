@@ -39,6 +39,22 @@ class BodyWeightRecord extends Model
                 'description'
             ]);
     }
+    
+    public static function getForUserPaginated(?int $userId) {
+        return is_null($userId) ? [] : self::where('user_id', $userId)
+            ->with('unit:id,name')
+            ->orderBy('date_time_utc', 'desc')
+            ->paginate(config('pagination.body_weight_records'))
+            ->withQueryString()
+            ->through(fn ($record) => [
+                'id' => $record->id,
+                'amount' => $record->amount,
+                'unit_id' => $record->unit_id,
+                'unit' => $record->unit,
+                'date_time_utc' => $record->date_time_utc,
+                'description' => $record->description,
+            ]);
+    }
 
     public function unit() {
         return $this->belongsTo(Unit::class, 'unit_id', 'id');

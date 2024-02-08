@@ -10,8 +10,7 @@ import SidebarLayout from "@/Layouts/SidebarLayout.vue";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 const props = defineProps({
-  body_weight_records: Array,
-  food_intake_records: Array,
+  body_weight_records_paginator: Object,
   food_intake_records_paginator: Object,
   user_ingredients: Array,
   meals: Array,
@@ -106,7 +105,6 @@ export default {
         <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded w-fit p-1">
           <FoodIntakeRecords
             class="rounded-md w-fit"
-            :food_intake_records="food_intake_records"
             :food_intake_records_paginator="food_intake_records_paginator"
             :ingredients="ingredients"
             :meals="meals"
@@ -118,7 +116,7 @@ export default {
         <TabPanel class="focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-md w-fit p-1">
           <BodyWeightRecords
             class="rounded-md w-fit"
-            :body_weight_records="body_weight_records"
+            :body_weight_records_paginator="body_weight_records_paginator"
             :units="units"
           />
         </TabPanel>
