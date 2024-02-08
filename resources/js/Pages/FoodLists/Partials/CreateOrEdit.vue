@@ -1,7 +1,7 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useForm } from '@inertiajs/vue3'
-import { round } from '@/utils/GlobalFunctions.js'
+import { round, getCurrentLocalYYYYMMDD } from '@/utils/GlobalFunctions.js'
 import SimpleCombobox from '@/Components/SimpleCombobox.vue'
 import FuzzyCombobox from '@/Components/FuzzyCombobox.vue'
 import { PlusCircleIcon, TrashIcon, PencilSquareIcon, XMarkIcon } from '@heroicons/vue/24/outline'
@@ -53,7 +53,7 @@ const foodListMeals = ref(
   }))
   : [])
 
-const nameInput = ref(null)
+const nameInputRef = ref(null)
 
 var nextIngredientId = props.food_list ? props.food_list.food_list_ingredients.length + 1 : 1
 function addFoodListIngredient() {
@@ -166,6 +166,21 @@ function deleteFoodListMeal(idx) {
   if (idx >= 0 && idx < foodListMeals.value.length) foodListMeals.value.splice(idx, 1)
 }
 
+const foodListNameBeginsWithDate = computed(() => {
+  const regexp = new RegExp("^[0-9]{4}-[0-9]{2}-[0-9]{2}");
+  return regexp.test(form.name.trim())
+})
+
+function prependDateToFoodListName() {
+  if (foodListNameBeginsWithDate.value) {
+    const regexp = new RegExp("^[0-9]{4}-[0-9]{2}-[0-9]{2}");
+    form.name = form.name.trim().replace(regexp, "").trim()
+  } else {
+    form.name = getCurrentLocalYYYYMMDD() + " " + form.name.trim()
+    nameInputRef.value.focus()
+  }
+}
+
 function submit() {
   // Drop empty ingredients/meals and unpack nested food_list_ingredient and
   // food_list_meals object
@@ -178,6 +193,12 @@ function submit() {
     form.put(route('food-lists.update', props.food_list.id))
   }
 }
+
+onMounted(() => {
+  if (props.meal === null) {
+    nameInputRef.value.focus()
+  }
+})
 
 </script>
 
@@ -192,18 +213,24 @@ export default {
 
   <form @submit.prevent="submit" class="mb-56 sm:mb-16">
 
-    <!-- Name -->
     <section class="mt-4">
-      <div class="w-96">
+      <!-- Name -->
+      <div>
         <InputLabel for="name" value="Name" />
-        <TextInput
-          id="name"
-          ref="nameInput"
-          type="text"
-          class="mt-1 block w-full"
-          v-model="form.name"
-          required
-        />
+        <div class="flex flex-wrap gap-1">
+          <TextInput
+            id="name"
+            ref="nameInputRef"
+            type="text"
+            class="min-w-[28rem] mr-2"
+            v-model="form.name"
+            required
+          />
+          <SecondaryButton @click="prependDateToFoodListName">
+            <p v-if="!foodListNameBeginsWithDate">Prepend today's date</p>
+            <p v-else>Strip leading date</p>
+          </SecondaryButton>
+        </div>
         <InputError class="mt-2" :message="form.errors.name" />
       </div>
 
@@ -234,7 +261,7 @@ export default {
 
       <h2 class="text-lg">Food List Ingredients</h2>
       <InputError :message="form.errors.food_list_ingredients" />
-      
+
       <div v-if="foodListIngredients.length" class="mt-1 grid grid-cols-16 min-w-[600px] gap-y-1.5 gap-x-1">
 
         <!-- Header -->

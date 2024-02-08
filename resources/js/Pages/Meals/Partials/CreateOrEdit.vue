@@ -169,7 +169,7 @@ export default {
             v-model="form.name"
             required
           />
-          <SecondaryButton v-if="log" @click="prependDateToMealName">
+          <SecondaryButton @click="prependDateToMealName">
             <p v-if="!mealNameBeginsWithDate">Prepend today's date</p>
             <p v-else>Strip leading date</p>
           </SecondaryButton>
