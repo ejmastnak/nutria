@@ -376,4 +376,31 @@ class NutrientProfileService
         return $result;
     }
 
+    /**
+     *  Used to check how many days in an inclusive date range have food intake
+     *  records. Motivation: when computing average daily nutrient profile over
+     *  a given date range, only count days with food intake records, because
+     *  the user might not have logged food intake on every day in the date
+     *  range.
+     */
+    public function getDaysWithFoodIntakeRecordsInDateRange(array $data, int $userId): int {
+        $fromDate = $data['from_date_time_utc'];
+        $toDate = $data['to_date_time_utc'];
+
+        $query = "
+        SELECT COUNT(DISTINCT DATE(date_time_utc))
+        FROM food_intake_records
+        WHERE DATE(date_time_utc) BETWEEN DATE(:from_date) AND DATE(:to_date)
+        AND user_id = :user_id;
+        ";
+
+        $result = DB::select($query, [
+            'from_date' => $fromDate,
+            'to_date' => $toDate,
+            'user_id' => $userId,
+        ]);
+
+        return $result[0]->count;
+    }
+
 }

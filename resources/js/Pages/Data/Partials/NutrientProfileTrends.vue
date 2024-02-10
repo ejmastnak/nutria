@@ -82,6 +82,7 @@ function passesValidation() {
 }
 
 const nutrientProfiles = ref([])
+const daysWithRecords = ref(1)
 const showProfile = ref(false)
 const processing = ref(false)
 
@@ -98,6 +99,7 @@ function submit() {
     })
       .then((response) => {
         nutrientProfiles.value = response.data.nutrient_profiles ? response.data.nutrient_profiles : []
+        daysWithRecords.value = response.data.days_with_records ? response.data.days_with_records : 1
         clientSideErrors.value = {}
         errors.value = {}
         processing.value = false
@@ -200,6 +202,7 @@ function submit() {
       :intakeGuidelines="intake_guidelines"
       :nutrientCategories="nutrient_categories"
       :nutrientProfiles="nutrientProfiles"
+      :daysWithRecords="daysWithRecords"
       :fromDate="fromDate"
       :toDate="toDate"
     />

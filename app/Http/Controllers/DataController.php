@@ -38,6 +38,7 @@ class DataController extends Controller
     public function nutrientProfileForDateRange(NutrientProfileForDateRangeRequest $request, NutrientProfileService $nutrientProfileService) {
         return Response::json([
             'nutrient_profiles' => $nutrientProfileService->getNutrientProfilesForDateRange($request->validated(), $request->user()->id),
+            'days_with_records' => $nutrientProfileService->getDaysWithFoodIntakeRecordsInDateRange($request->validated(), $request->user()->id),
         ]);
     }
 

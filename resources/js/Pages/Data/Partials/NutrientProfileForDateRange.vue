@@ -14,6 +14,7 @@ import NutrientProfileOptionsForDateRange from './NutrientProfileOptionsForDateR
 const props = defineProps({
   intakeGuidelines: Array,
   nutrientProfiles: Array,
+  daysWithRecords: Number,
   nutrientCategories: Array,
   fromDate: String,
   toDate: String,
@@ -29,7 +30,7 @@ const nutrientProfileIsEmpty = computed(() => {
   return !(props.nutrientProfiles.length && props.nutrientProfiles[0].nutrient_profile && props.nutrientProfiles[0].nutrient_profile.length)
 })
 
-const days = computed(() => {
+const daysInRange = computed(() => {
   const fromDate = new Date(props.fromDate)
   const toDate = new Date(props.toDate)
   return Math.round((toDate.getTime() - fromDate.getTime())/86400000) + 1
@@ -56,6 +57,8 @@ const days = computed(() => {
       :intakeGuidelines="intakeGuidelines"
       :fromDate="fromDate"
       :toDate="toDate"
+      :daysInRange="daysInRange"
+      :daysWithRecords="daysWithRecords"
     />
 
     <NutrientProfileTables
@@ -63,7 +66,7 @@ const days = computed(() => {
       v-if="!nutrientProfileIsEmpty"
       :nutrientProfile="selectedNutrientProfile"
       :nutrientCategories="nutrientCategories"
-      :scaleFactor="1/days"
+      :scaleFactor="1/daysWithRecords"
     />
 
   </section>

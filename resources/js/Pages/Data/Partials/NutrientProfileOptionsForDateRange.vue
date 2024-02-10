@@ -12,6 +12,8 @@ const props = defineProps({
   intakeGuidelines: Array,
   fromDate: String,
   toDate: String,
+  daysInRange: Number,
+  daysWithRecords: Number,
 })
 
 const emit = defineEmits([
@@ -31,6 +33,7 @@ function updateSelectedIntakeGuideline(newValue) {
 
     <p class="max-w-sm md:max-w-md text-gray-700 leading-snug">
       Average daily nutrient profile for food consumed from <span class="font-semibold">{{getHumanReadableDate(fromDate)}}</span> to <span class="font-semibold">{{getHumanReadableDate(toDate)}}</span>, using <span class="font-semibold">{{localSelectedIntakeGuideline.name}}</span> to compute percent daily value.
+      <span v-if="daysWithRecords < daysInRange">(You only have food intake records for <span class="font-semibold">{{daysWithRecords}}</span> out of the <span class="font-semibold">{{daysInRange}}</span> days in this range.)</span>
     </p>
 
     <Popover class="relative z-50">
