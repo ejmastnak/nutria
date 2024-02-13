@@ -26,6 +26,7 @@ class NutrientProfileForDateRangeRequest extends FormRequest
         return [
             'from_date_time_utc' => ['required', 'string', 'date_format:Y-m-d H:i:s'],
             'to_date_time_utc' => ['required', 'string', 'date_format:Y-m-d H:i:s', new ToDateAfterFromDate],
+            'time_zone' => ['required', 'string', 'timezone:all'],
         ];
     }
 

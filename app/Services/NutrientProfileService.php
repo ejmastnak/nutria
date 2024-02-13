@@ -377,26 +377,29 @@ class NutrientProfileService
     }
 
     /**
-     *  Used to check how many days in an inclusive date range have food intake
-     *  records. Motivation: when computing average daily nutrient profile over
-     *  a given date range, only count days with food intake records, because
+     *  Used to check how many days (from the perspective of the client's
+     *  time zone) in an inclusive date range have food intake records.
+     *  Motivation: when computing average daily nutrient profile over a
+     *  given date range, only count days with food intake records, because
      *  the user might not have logged food intake on every day in the date
      *  range.
      */
     public function getDaysWithFoodIntakeRecordsInDateRange(array $data, int $userId): int {
-        $fromDate = $data['from_date_time_utc'];
-        $toDate = $data['to_date_time_utc'];
+        $fromDateTimeUtc = $data['from_date_time_utc'];
+        $toDateTimeUtc = $data['to_date_time_utc'];
+        $timeZone = $data['time_zone'];
 
         $query = "
-        SELECT COUNT(DISTINCT DATE(date_time_utc))
+        SELECT COUNT(DISTINCT DATE(date_time_utc AT TIME ZONE 'UTC' AT TIME ZONE :client_time_zone))
         FROM food_intake_records
-        WHERE DATE(date_time_utc) BETWEEN DATE(:from_date) AND DATE(:to_date)
+        WHERE date_time_utc BETWEEN :from_date_time_utc AND :to_date_time_utc
         AND user_id = :user_id;
         ";
 
         $result = DB::select($query, [
-            'from_date' => $fromDate,
-            'to_date' => $toDate,
+            'from_date_time_utc' => $fromDateTimeUtc,
+            'to_date_time_utc' => $toDateTimeUtc,
+            'client_time_zone' => $timeZone,
             'user_id' => $userId,
         ]);
 

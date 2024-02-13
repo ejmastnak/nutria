@@ -96,6 +96,7 @@ function submit() {
     axios.post(route('nutrient-profile-for-date-range'), {
       from_date_time_utc: getUTCDateTime(form.value.from_date + " 00:00:00"),
       to_date_time_utc: getUTCDateTime(form.value.to_date + " 23:59:59"),
+      time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     })
       .then((response) => {
         nutrientProfiles.value = response.data.nutrient_profiles ? response.data.nutrient_profiles : []
@@ -170,6 +171,9 @@ function submit() {
         <InputError :message="clientSideErrors.to_date" />
         <InputError v-for="error in errors.to_date_time_utc" :message="error" />
       </div>
+
+      <!-- Client never interacts with timezone but better to show error anyway. -->
+      <InputError v-for="error in errors.time_zone" :message="error" />
 
     </div>
 
