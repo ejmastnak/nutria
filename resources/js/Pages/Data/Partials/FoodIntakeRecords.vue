@@ -10,7 +10,7 @@ import DeleteDialog from "@/Components/DeleteDialog.vue";
 import MyLink from '@/Components/MyLink.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import Pagination from '@/Shared/Pagination.vue'
-import { roundNonZero, getHumanReadableLocalDate } from '@/utils/GlobalFunctions.js'
+import { roundNonZero, utcTimestampToLocalHumanReadableDate } from '@/utils/GlobalFunctions.js'
 
 import { ingredientIntakeRecordsForm } from '@/Shared/store.js'
 import { mealIntakeRecordsForm } from '@/Shared/store.js'
@@ -140,10 +140,10 @@ function getBgColorForFoodItemRow(idx) {
           </td>
           <td class="px-8 py-4 whitespace-nowrap">
             <span class="hidden md:inline">
-              {{getHumanReadableLocalDate(food_intake_record.date_time_utc)}}
+              {{utcTimestampToLocalHumanReadableDate(food_intake_record.date_time_utc)}}
             </span>
             <span class="md:hidden">
-              {{getHumanReadableLocalDate(food_intake_record.date_time_utc, shortMonth=true)}}
+              {{utcTimestampToLocalHumanReadableDate(food_intake_record.date_time_utc, shortMonth=true)}}
             </span>
           </td>
           <td class="px-4 py-4">

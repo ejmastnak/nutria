@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import cloneDeep from "lodash/cloneDeep"
-import { getCurrentLocalYYYYMMDD, getCurrentLocalHHmm, getLocalYYYYMMDD, getLocalHHMM, getUTCDateTime } from '@/utils/GlobalFunctions.js'
+import { currentLocalDate, currentLocalTime, utcTimestampToLocalDate, utcTimestampToLocalTime, localTimestampToUtcTimestamp } from '@/utils/GlobalFunctions.js'
 import { ClockIcon, CalendarIcon, PencilSquareIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -40,8 +40,8 @@ function open(record) {
   bodyWeightRecordForm.amount = record ? record.amount : null
   bodyWeightRecordForm.unit_id = record ? record.unit_id : props.units.find(unit => unit.name === 'kg').id
   bodyWeightRecordForm.unit = record ? cloneDeep(record.unit) : props.units.find(unit => unit.name === 'kg')
-  bodyWeightRecordForm.date = record ? getLocalYYYYMMDD(record.date_time_utc) : getCurrentLocalYYYYMMDD()
-  bodyWeightRecordForm.time = record ? getLocalHHMM(record.date_time_utc) : getCurrentLocalHHmm()
+  bodyWeightRecordForm.date = record ? utcTimestampToLocalDate(record.date_time_utc) : currentLocalDate()
+  bodyWeightRecordForm.time = record ? utcTimestampToLocalTime(record.date_time_utc) : currentLocalTime()
   bodyWeightRecordForm.description = record ? record.description : null
 
   showDescription.value = record ? (!!record.description) : false
@@ -141,7 +141,7 @@ function close() {
 
 function save() {
   if (passesValidation()) {
-    bodyWeightRecordForm.date_time_utc = getUTCDateTime(bodyWeightRecordForm.date + " " + bodyWeightRecordForm.time + ":00")
+    bodyWeightRecordForm.date_time_utc = localTimestampToUtcTimestamp(bodyWeightRecordForm.date + " " + bodyWeightRecordForm.time)
 
     if (bodyWeightRecordForm.id) {
       bodyWeightRecordForm.put(route('body-weight-records.update', bodyWeightRecordForm.id), {
@@ -172,7 +172,7 @@ function addMore() {
         unit: cloneDeep(bodyWeightRecordForm.unit),
         date: bodyWeightRecordForm.date,
         time: bodyWeightRecordForm.time,
-        date_time_utc: getUTCDateTime(bodyWeightRecordForm.date + " " + bodyWeightRecordForm.time + ":00"),
+        date_time_utc: localTimestampToUtcTimestamp(bodyWeightRecordForm.date + " " + bodyWeightRecordForm.time),
         description: bodyWeightRecordForm.description,
       },
     }
@@ -257,7 +257,7 @@ function addMore() {
               />
               <InputError :message="bodyWeightRecordForm.errors.date" />
             </div>
-            <SecondaryButton @click="bodyWeightRecordForm.date = getCurrentLocalYYYYMMDD()" class="ml-2 h-fit">
+            <SecondaryButton @click="bodyWeightRecordForm.date = currentLocalDate()" class="ml-2 h-fit">
               <CalendarIcon class="w-5 h-5 -ml-1 w-6 h-6 text-gray-600 shrink-0"/>
               <p class="ml-1">Today</p>
             </SecondaryButton>
@@ -278,7 +278,7 @@ function addMore() {
               />
               <InputError :message="bodyWeightRecordForm.errors.time" />
             </div>
-            <SecondaryButton @click="bodyWeightRecordForm.time = getCurrentLocalHHmm()" class="ml-2 h-fit">
+            <SecondaryButton @click="bodyWeightRecordForm.time = currentLocalTime()" class="ml-2 h-fit">
               <ClockIcon class="w-5 h-5 -ml-1 w-6 h-6 text-gray-600 shrink-0"/>
               <p class="ml-1">Now</p>
             </SecondaryButton>

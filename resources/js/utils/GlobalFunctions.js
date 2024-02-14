@@ -1,3 +1,9 @@
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc)
+dayjs.extend(timezone)
+
 // Rounds inputted number to the given precision
 export const round = (number, precision=0) => {
     if (number === null) return null;
@@ -62,142 +68,44 @@ export const gramAmountOfUnit = function(amount, unit, densityGMl) {
   }
 }
 
-// Returns current local date in YYYY-MM-DD format
-export const getCurrentLocalYYYYMMDD = function() {
-  const date = new Date()
-  var month = String((date.getMonth() + 1))
-  var day = String(date.getDate())
-  var year = date.getFullYear()
-
-  if (month.length < 2) month = '0' + month;
-  if (day.length < 2) day = '0' + day;
-
-  return [year, month, day].join('-');
+// Outputs the current local date in "YYYY-MM-DD" format
+export const currentLocalDate = () => {
+  return dayjs().format("YYYY-MM-DD");
 }
 
-
-// Returns current local time in HH-mm format
-export const getCurrentLocalHHmm = function() {
-  const date = new Date()
-  var h = String(date.getHours())
-  var m = String(date.getMinutes())
-  if (h.length < 2) h = '0' + h;
-  if (m.length < 2) m = '0' + m;
-  return h + ':' + m
+// Outputs the current local time in "HH:mm" format
+export const currentLocalTime = () => {
+  return dayjs().format("HH:mm");
 }
 
-// Input a "YYYY-MM-DD HH:mm:ss" string representing a UTC date time.
-// Output a "YYYY-MM-DD" string representing date in local time.
-// Yes it is a bit ridiculous doing this manually, but I prefer not to rely on
-// Date.toLocaleDateString().
-export const getLocalYYYYMMDD = function (dateTimeUTC) {
-    const y = dateTimeUTC.substring(0, 4)
-    const mo = Number(dateTimeUTC.substring(5, 7)) - 1
-    const d = dateTimeUTC.substring(8, 10)
-    const h = dateTimeUTC.substring(11, 13)
-    const min = dateTimeUTC.substring(14, 16)
-    const s = dateTimeUTC.substring(17, 19)
-    const localDate = new Date(Date.UTC(y, mo, d, h, min, s))
-
-    const localYYYY = String(localDate.getFullYear())
-    var localMM = String(localDate.getMonth() + 1)
-    var localDD = String(localDate.getDate())
-    if (localMM.length < 2) localMM = '0' + localMM;
-    if (localDD.length < 2) localDD = '0' + localDD;
-
-    return localYYYY + "-" + localMM + "-" + localDD
+// Input "YYYY-MM-DD HH:mm:ss" timestamp in UTC, output "YYYY-MM-DD" in the
+// browser's local timezone.
+export const utcTimestampToLocalDate = (utcTimestamp, tz) => {
+  return dayjs.utc(utcTimestamp).local().format("YYYY-MM-DD");
 }
 
-// Input a "YYYY-MM-DD HH:mm:ss" string representing a UTC date time.
-// Output a "HH:mm" string representing time in local time.
-// Yes it is a bit ridiculous doing this manually, but I prefer not to rely on
-// Date.toLocaleTimeString().
-export const getLocalHHMM = function (dateTimeUTC) {
-    const y = dateTimeUTC.substring(0, 4)
-    const mo = Number(dateTimeUTC.substring(5, 7)) - 1
-    const d = dateTimeUTC.substring(8, 10)
-    const h = dateTimeUTC.substring(11, 13)
-    const min = dateTimeUTC.substring(14, 16)
-    const s = dateTimeUTC.substring(17, 19)
-    const localDate = new Date(Date.UTC(y, mo, d, h, min, s))
-
-    var localHH = String(localDate.getHours())
-    var localMM = String(localDate.getMinutes())
-    if (localHH.length < 2) localHH = '0' + localHH;
-    if (localMM.length < 2) localMM = '0' + localMM;
-
-    return localHH + ":" + localMM
+// Input "YYYY-MM-DD HH:mm:ss" timestamp in UTC, output "HH:mm"
+// in the browser's local timezone.
+export const utcTimestampToLocalTime = (utcTimestamp, tz) => {
+  return dayjs.utc(utcTimestamp).local().format("HH:mm");
 }
 
 // Input a "YYYY-MM-DD HH:mm:ss" string. Output a human-readable representation
-// of the date in a format similar to en-GB, e.g. "1 January 1970".
-export const getHumanReadableDate = function (dateTimeString, shortMonth=false) {
-    const y = dateTimeString.substring(0, 4)
-    const mo = Number(dateTimeString.substring(5, 7)) - 1
-    const d = Number(dateTimeString.substring(8, 10))
-
-    const months = shortMonth
-        ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-    return d + " " + months[mo] + " " + y
+// of the date in a format similar to en-GB, e.g. "1 January 1970", without any
+// consideration of time zones.
+export const timestampToHumanReadableDate = (timestamp, shortMonth=false) => {
+  return dayjs(timestamp).format("D " + (shortMonth ? "MMM" : "MMMM") + " YYYY");
 }
 
-// Input a "YYYY-MM-DD HH:mm:ss" string representing a UTC date time.
-// Output a human-readable representation of the date (the date only, not also
-// the time) in a format similar to en-GB, e.g. "1 January 1970".
-export const getHumanReadableLocalDate = function (dateTimeUTC, shortMonth=false) {
-    const y = dateTimeUTC.substring(0, 4)
-    const mo = Number(dateTimeUTC.substring(5, 7)) - 1
-    const d = dateTimeUTC.substring(8, 10)
-    const h = dateTimeUTC.substring(11, 13)
-    const min = dateTimeUTC.substring(14, 16)
-    const s = dateTimeUTC.substring(17, 19)
-    const localDate = new Date(Date.UTC(y, mo, d, h, min, s))
-
-    const months = shortMonth
-        ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-    return localDate.getDate() + " " + months[localDate.getMonth()] + " " + localDate.getFullYear()
-}
-
-export const getHumanReadableLocalTime = function (dateTimeUTC) {
-    const y = dateTimeUTC.substring(0, 4)
-    const mo = Number(dateTimeUTC.substring(5, 7)) - 1
-    const d = dateTimeUTC.substring(8, 10)
-    const h = dateTimeUTC.substring(11, 13)
-    const min = dateTimeUTC.substring(14, 16)
-    const s = dateTimeUTC.substring(17, 19)
-    const localDate = new Date(Date.UTC(y, mo, d, h, min, s))
-
-    return localDate.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
+// Input "YYYY-MM-DD HH:mm:ss" timestamp in UTC, output a human-readable string
+// of the form "1 January 1970" in the browser's local timezone.
+export const utcTimestampToLocalHumanReadableDate = (utcTimestamp, shortMonth=false) => {
+  return dayjs.utc(utcTimestamp).local().format("D " + (shortMonth ? "MMM" : "MMMM") + " YYYY");
 }
 
 // Input a "YYYY-MM-DD HH:mm:ss" string representing a local date time.
 // Output a "YYYY-MM-DD HH:mm:ss" string representing the corresponding UTC
 // date time.
-export const getUTCDateTime = function (localDateTimeString) {
-    const y = localDateTimeString.substring(0, 4)
-    const mo = Number(localDateTimeString.substring(5, 7)) - 1
-    const d = localDateTimeString.substring(8, 10)
-    const h = localDateTimeString.substring(11, 13)
-    const min = localDateTimeString.substring(14, 16)
-    const s = localDateTimeString.substring(17, 19)
-    const localDate = new Date(y, mo, d, h, min, s)
-
-    const utcY = String(localDate.getUTCFullYear())
-    var utcMo = String(localDate.getUTCMonth() + 1)
-    var utcD = String(localDate.getUTCDate())
-    var utcH = String(localDate.getUTCHours())
-    var utcMin = String(localDate.getUTCMinutes())
-    var utcS = String(localDate.getUTCSeconds())
-
-    if (utcMo.length < 2) utcMo = '0' + utcMo;
-    if (utcD.length < 2) utcD = '0' + utcD;
-    if (utcH.length < 2) utcH = '0' + utcH;
-    if (utcMin.length < 2) utcMin = '0' + utcMin;
-    if (utcS.length < 2) utcS = '0' + utcS;
-
-    return utcY + "-" + utcMo + "-" + utcD + " " + utcH + ":" + utcMin + ":" + utcS
+export const localTimestampToUtcTimestamp = function (timestamp) {
+  return dayjs(timestamp).utc().format("YYYY-MM-DD HH:mm:ss");
 }

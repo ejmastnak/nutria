@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import cloneDeep from "lodash/cloneDeep"
-import { getHumanReadableLocalDate } from '@/utils/GlobalFunctions.js'
+import { utcTimestampToLocalHumanReadableDate } from '@/utils/GlobalFunctions.js'
 import { PlusCircleIcon, TrashIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -121,7 +121,7 @@ function submit() {
                     class="hover:underline text-left"
                   >
                     <span class="font-medium mr-px">{{Number(bodyWeightRecord.body_weight_record.amount).toFixed(1)}} {{bodyWeightRecord.body_weight_record.unit.name}}</span>
-                    ({{getHumanReadableLocalDate(bodyWeightRecord.body_weight_record.date_time_utc, shortMonth=true)}})
+                    ({{utcTimestampToLocalHumanReadableDate(bodyWeightRecord.body_weight_record.date_time_utc, shortMonth=true)}})
                   </button>
                   <div class="mt-1">
                     <InputError :message="bodyWeightRecordsForm.errors['body_weight_records.' + bodyWeightRecordsForm.id_idx_mapping[bodyWeightRecord.id]]" />

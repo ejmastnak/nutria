@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive } from 'vue'
-import { getCurrentLocalYYYYMMDD, getUTCDateTime } from '@/utils/GlobalFunctions.js'
+import { currentLocalDate, localTimestampToUtcTimestamp } from '@/utils/GlobalFunctions.js'
 import { CalendarIcon } from '@heroicons/vue/24/outline'
 import TextInput from '@/Components/TextInput.vue'
 import InputLabel from '@/Components/InputLabel.vue'
@@ -37,8 +37,8 @@ const clientSideErrors = ref({})
 const errors = ref({})
 
 function setDateRangeToToday() {
-  form.value.from_date = getCurrentLocalYYYYMMDD()
-  form.value.to_date = getCurrentLocalYYYYMMDD()
+  form.value.from_date = currentLocalDate()
+  form.value.to_date = currentLocalDate()
 }
 
 function setDateRangeToThisWeek() {
@@ -94,8 +94,8 @@ function submit() {
 
     processing.value = true
     axios.post(route('nutrient-profile-for-date-range'), {
-      from_date_time_utc: getUTCDateTime(form.value.from_date + " 00:00:00"),
-      to_date_time_utc: getUTCDateTime(form.value.to_date + " 23:59:59"),
+      from_date_time_utc: localTimestampToUtcTimestamp(form.value.from_date + " 00:00:00"),
+      to_date_time_utc: localTimestampToUtcTimestamp(form.value.to_date + " 23:59:59"),
       time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     })
       .then((response) => {

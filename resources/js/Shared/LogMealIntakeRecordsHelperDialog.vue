@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import cloneDeep from "lodash/cloneDeep"
-import { getCurrentLocalYYYYMMDD, getCurrentLocalHHmm, getLocalYYYYMMDD, getLocalHHMM, getUTCDateTime } from '@/utils/GlobalFunctions.js'
+import { currentLocalDate, currentLocalTime, utcTimestampToLocalDate, utcTimestampToLocalTime, localTimestampToUtcTimestamp } from '@/utils/GlobalFunctions.js'
 import { ClockIcon, CalendarIcon, PencilSquareIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -54,8 +54,8 @@ function open(passedMealIntakeRecord, passedErrors) {
   mealIntakeRecord.value.amount = passedMealIntakeRecord ? passedMealIntakeRecord.amount : null
   mealIntakeRecord.value.unit_id = passedMealIntakeRecord ? passedMealIntakeRecord.unit_id : null
   mealIntakeRecord.value.unit = passedMealIntakeRecord ? cloneDeep(passedMealIntakeRecord.unit) : null
-  mealIntakeRecord.value.date = passedMealIntakeRecord ? getLocalYYYYMMDD(passedMealIntakeRecord.date_time_utc) : getCurrentLocalYYYYMMDD()
-  mealIntakeRecord.value.time = passedMealIntakeRecord ? getLocalHHMM(passedMealIntakeRecord.date_time_utc) : getCurrentLocalHHmm()
+  mealIntakeRecord.value.date = passedMealIntakeRecord ? utcTimestampToLocalDate(passedMealIntakeRecord.date_time_utc) : currentLocalDate()
+  mealIntakeRecord.value.time = passedMealIntakeRecord ? utcTimestampToLocalTime(passedMealIntakeRecord.date_time_utc) : currentLocalTime()
   mealIntakeRecord.value.description = passedMealIntakeRecord ? passedMealIntakeRecord.description : null
 
   showDescription.value = passedMealIntakeRecord ? (!!passedMealIntakeRecord.description) : false
@@ -151,7 +151,7 @@ function checkAndConfirm() {
 }
 
 function confirm() {
-  mealIntakeRecord.value.date_time_utc = getUTCDateTime(mealIntakeRecord.value.date + " " + mealIntakeRecord.value.time + ":00")
+  mealIntakeRecord.value.date_time_utc = localTimestampToUtcTimestamp(mealIntakeRecord.value.date + " " + mealIntakeRecord.value.time)
   emit('confirm', mealIntakeRecord.value)
   isOpen.value = false
   clientSideErrors.value = {}
@@ -242,7 +242,7 @@ function confirm() {
             />
             <InputError :message="errors.date" />
           </div>
-          <SecondaryButton @click="mealIntakeRecord.date = getCurrentLocalYYYYMMDD()" class="ml-2 h-fit">
+          <SecondaryButton @click="mealIntakeRecord.date = currentLocalDate()" class="ml-2 h-fit">
             <CalendarIcon class="w-5 h-5 -ml-1 w-6 h-6 text-gray-600 shrink-0"/>
             <p class="ml-1">Today</p>
           </SecondaryButton>
@@ -263,7 +263,7 @@ function confirm() {
             />
             <InputError :message="errors.time" />
           </div>
-          <SecondaryButton @click="mealIntakeRecord.time = getCurrentLocalHHmm()" class="ml-2 h-fit">
+          <SecondaryButton @click="mealIntakeRecord.time = currentLocalTime()" class="ml-2 h-fit">
             <ClockIcon class="w-5 h-5 -ml-1 w-6 h-6 text-gray-600 shrink-0"/>
             <p class="ml-1">Now</p>
           </SecondaryButton>

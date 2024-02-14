@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useForm } from '@inertiajs/vue3'
-import { round, getCurrentLocalYYYYMMDD } from '@/utils/GlobalFunctions.js'
+import { round, currentLocalDate } from '@/utils/GlobalFunctions.js'
 import SimpleCombobox from '@/Components/SimpleCombobox.vue'
 import FuzzyCombobox from '@/Components/FuzzyCombobox.vue'
 import { PlusCircleIcon, TrashIcon, PencilSquareIcon, XMarkIcon } from '@heroicons/vue/24/outline'
@@ -176,7 +176,7 @@ function prependDateToFoodListName() {
     const regexp = new RegExp("^[0-9]{4}-[0-9]{2}-[0-9]{2}");
     form.name = form.name.trim().replace(regexp, "").trim()
   } else {
-    form.name = getCurrentLocalYYYYMMDD() + " " + form.name.trim()
+    form.name = currentLocalDate() + " " + form.name.trim()
     nameInputRef.value.focus()
   }
 }

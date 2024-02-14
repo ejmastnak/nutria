@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useForm } from '@inertiajs/vue3'
-import { round, getCurrentLocalYYYYMMDD, getCurrentLocalHHmm, getUTCDateTime } from '@/utils/GlobalFunctions.js'
+import { round, currentLocalDate, currentLocalTime, localTimestampToUtcTimestamp } from '@/utils/GlobalFunctions.js'
 import SimpleCombobox from '@/Components/SimpleCombobox.vue'
 import FuzzyCombobox from '@/Components/FuzzyCombobox.vue'
 import { PlusCircleIcon, PencilSquareIcon, TrashIcon, CalendarIcon, ClockIcon, XMarkIcon } from '@heroicons/vue/24/outline'
@@ -29,8 +29,8 @@ const form = useForm({
   description: props.meal ? props.meal.description : null,
   meal_ingredients: [],  // filled in on submit
   // For createAndLog
-  date: getCurrentLocalYYYYMMDD(),
-  time: getCurrentLocalHHmm(),
+  date: currentLocalDate(),
+  time: currentLocalTime(),
   date_time_utc: null,  // filled in on submit
 })
 
@@ -115,7 +115,7 @@ function prependDateToMealName() {
     const regexp = new RegExp("^[0-9]{4}-[0-9]{2}-[0-9]{2}");
     form.name = form.name.trim().replace(regexp, "").trim()
   } else {
-    form.name = getCurrentLocalYYYYMMDD() + " " + form.name.trim()
+    form.name = currentLocalDate() + " " + form.name.trim()
     nameInputRef.value.focus()
   }
 }
@@ -123,7 +123,7 @@ function prependDateToMealName() {
 function submit() {
   // Drop empty ingredients and unpack nested meal_ingredient object
   form.meal_ingredients = mealIngredients.value.filter(mi => mi.meal_ingredient.ingredient).map(mi => mi.meal_ingredient)
-  form.date_time_utc = getUTCDateTime(form.date + " " + form.time + ":00")
+  form.date_time_utc = localTimestampToUtcTimestamp(form.date + " " + form.time)
 
   if (props.create) {
     if (props.log) form.post(route('meals.store-and-log'));
@@ -190,7 +190,7 @@ export default {
             />
             <InputError :message="form.errors.date" />
           </div>
-          <SecondaryButton @click="form.date = getCurrentLocalYYYYMMDD()" class="ml-2 h-fit">
+          <SecondaryButton @click="form.date = currentLocalDate()" class="ml-2 h-fit">
             <CalendarIcon class="w-5 h-5 -ml-1 w-6 h-6 text-gray-600 shrink-0"/>
             <p class="ml-1">Today</p>
           </SecondaryButton>
@@ -209,7 +209,7 @@ export default {
             />
             <InputError :message="form.errors.time" />
           </div>
-          <SecondaryButton @click="form.time = getCurrentLocalHHmm()" class="ml-2 h-fit">
+          <SecondaryButton @click="form.time = currentLocalTime()" class="ml-2 h-fit">
             <ClockIcon class="w-5 h-5 -ml-1 w-6 h-6 text-gray-600 shrink-0"/>
             <p class="ml-1">Now</p>
           </SecondaryButton>

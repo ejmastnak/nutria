@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import cloneDeep from "lodash/cloneDeep"
-import { getCurrentLocalYYYYMMDD, getCurrentLocalHHmm, getLocalYYYYMMDD, getLocalHHMM, getUTCDateTime } from '@/utils/GlobalFunctions.js'
+import { currentLocalDate, currentLocalTime, utcTimestampToLocalDate, utcTimestampToLocalTime, localTimestampToUtcTimestamp } from '@/utils/GlobalFunctions.js'
 import { ClockIcon, CalendarIcon, PencilSquareIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -54,8 +54,8 @@ function open(passedIngredientIntakeRecord, passedErrors) {
   ingredientIntakeRecord.value.amount = passedIngredientIntakeRecord ? passedIngredientIntakeRecord.amount : null
   ingredientIntakeRecord.value.unit_id = passedIngredientIntakeRecord ? passedIngredientIntakeRecord.unit_id : props.units.find(unit => unit.name === 'g').id
   ingredientIntakeRecord.value.unit = passedIngredientIntakeRecord ? cloneDeep(passedIngredientIntakeRecord.unit) : props.units.find(unit => unit.name === 'g')
-  ingredientIntakeRecord.value.date = passedIngredientIntakeRecord ? getLocalYYYYMMDD(passedIngredientIntakeRecord.date_time_utc) : getCurrentLocalYYYYMMDD()
-  ingredientIntakeRecord.value.time = passedIngredientIntakeRecord ? getLocalHHMM(passedIngredientIntakeRecord.date_time_utc) : getCurrentLocalHHmm()
+  ingredientIntakeRecord.value.date = passedIngredientIntakeRecord ? utcTimestampToLocalDate(passedIngredientIntakeRecord.date_time_utc) : currentLocalDate()
+  ingredientIntakeRecord.value.time = passedIngredientIntakeRecord ? utcTimestampToLocalTime(passedIngredientIntakeRecord.date_time_utc) : currentLocalTime()
   ingredientIntakeRecord.value.description = passedIngredientIntakeRecord ? passedIngredientIntakeRecord.description : null
 
   showDescription.value = passedIngredientIntakeRecord ? (!!passedIngredientIntakeRecord.description) : false
@@ -150,7 +150,7 @@ function checkAndConfirm() {
 }
 
 function confirm() {
-  ingredientIntakeRecord.value.date_time_utc = getUTCDateTime(ingredientIntakeRecord.value.date + " " + ingredientIntakeRecord.value.time + ":00")
+  ingredientIntakeRecord.value.date_time_utc = localTimestampToUtcTimestamp(ingredientIntakeRecord.value.date + " " + ingredientIntakeRecord.value.time)
   emit('confirm', ingredientIntakeRecord.value)
   isOpen.value = false
   clientSideErrors.value = {}
@@ -241,7 +241,7 @@ function confirm() {
             />
             <InputError :message="errors.date" />
           </div>
-          <SecondaryButton @click="ingredientIntakeRecord.date = getCurrentLocalYYYYMMDD()" class="ml-2 h-fit">
+          <SecondaryButton @click="ingredientIntakeRecord.date = currentLocalDate()" class="ml-2 h-fit">
             <CalendarIcon class="w-5 h-5 -ml-1 w-6 h-6 text-gray-600 shrink-0"/>
             <p class="ml-1">Today</p>
           </SecondaryButton>
@@ -262,7 +262,7 @@ function confirm() {
             />
             <InputError :message="errors.time" />
           </div>
-          <SecondaryButton @click="ingredientIntakeRecord.time = getCurrentLocalHHmm()" class="ml-2 h-fit">
+          <SecondaryButton @click="ingredientIntakeRecord.time = currentLocalTime()" class="ml-2 h-fit">
             <ClockIcon class="w-5 h-5 -ml-1 w-6 h-6 text-gray-600 shrink-0"/>
             <p class="ml-1">Now</p>
           </SecondaryButton>

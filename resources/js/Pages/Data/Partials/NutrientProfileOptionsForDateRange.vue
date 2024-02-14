@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { getHumanReadableDate } from '@/utils/GlobalFunctions.js'
+import { timestampToHumanReadableDate } from '@/utils/GlobalFunctions.js'
 import { Popover, PopoverButton, PopoverPanel, PopoverOverlay } from '@headlessui/vue'
 import { EllipsisHorizontalCircleIcon } from '@heroicons/vue/24/outline'
 import PlainButton from '@/Components/PlainButton.vue'
@@ -32,7 +32,7 @@ function updateSelectedIntakeGuideline(newValue) {
   <div class="flex">
 
     <p class="max-w-sm md:max-w-md text-gray-700 leading-snug">
-      Average daily nutrient profile for food consumed from <span class="font-semibold">{{getHumanReadableDate(fromDate)}}</span> to <span class="font-semibold">{{getHumanReadableDate(toDate)}}</span>, using <span class="font-semibold">{{localSelectedIntakeGuideline.name}}</span> to compute percent daily value.
+      Average daily nutrient profile for food consumed from <span class="font-semibold">{{timestampToHumanReadableDate(fromDate)}}</span> to <span class="font-semibold">{{timestampToHumanReadableDate(toDate)}}</span>, using <span class="font-semibold">{{localSelectedIntakeGuideline.name}}</span> to compute percent daily value.
       <span v-if="daysWithRecords < daysInRange">(You only have food intake records for <span class="font-semibold">{{daysWithRecords}}</span> out of the <span class="font-semibold">{{daysInRange}}</span> days in this range.)</span>
     </p>
 

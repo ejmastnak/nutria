@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import cloneDeep from "lodash/cloneDeep"
-import { getCurrentLocalYYYYMMDD, getCurrentLocalHHmm, getLocalYYYYMMDD, getLocalHHMM, getUTCDateTime } from '@/utils/GlobalFunctions.js'
+import { currentLocalDate, currentLocalTime, utcTimestampToLocalDate, utcTimestampToLocalTime, localTimestampToUtcTimestamp } from '@/utils/GlobalFunctions.js'
 import { ClockIcon, CalendarIcon, PencilSquareIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
@@ -48,8 +48,8 @@ function open(passedBodyWeightRecord, passedErrors) {
   bodyWeightRecord.value.amount = passedBodyWeightRecord ? passedBodyWeightRecord.amount : null
   bodyWeightRecord.value.unit_id = passedBodyWeightRecord ? passedBodyWeightRecord.unit_id : props.units.find(unit => unit.name === 'kg').id
   bodyWeightRecord.value.unit = passedBodyWeightRecord ? cloneDeep(passedBodyWeightRecord.unit) : props.units.find(unit => unit.name === 'kg')
-  bodyWeightRecord.value.date = passedBodyWeightRecord ? getLocalYYYYMMDD(passedBodyWeightRecord.date_time_utc) : getCurrentLocalYYYYMMDD()
-  bodyWeightRecord.value.time = passedBodyWeightRecord ? getLocalHHMM(passedBodyWeightRecord.date_time_utc) : getCurrentLocalHHmm()
+  bodyWeightRecord.value.date = passedBodyWeightRecord ? utcTimestampToLocalDate(passedBodyWeightRecord.date_time_utc) : currentLocalDate()
+  bodyWeightRecord.value.time = passedBodyWeightRecord ? utcTimestampToLocalTime(passedBodyWeightRecord.date_time_utc) : currentLocalTime()
   bodyWeightRecord.value.description = passedBodyWeightRecord ? passedBodyWeightRecord.description : null
 
   showDescription.value = passedBodyWeightRecord ? (!!passedBodyWeightRecord.description) : false
@@ -124,7 +124,7 @@ function checkAndConfirm() {
 }
 
 function confirm() {
-  bodyWeightRecord.value.date_time_utc = getUTCDateTime(bodyWeightRecord.value.date + " " + bodyWeightRecord.value.time + ":00")
+  bodyWeightRecord.value.date_time_utc = localTimestampToUtcTimestamp(bodyWeightRecord.value.date + " " + bodyWeightRecord.value.time)
   emit('confirm', bodyWeightRecord.value)
   isOpen.value = false
   clientSideErrors.value = {}
@@ -202,7 +202,7 @@ function confirm() {
             />
             <InputError :message="errors.date" />
           </div>
-          <SecondaryButton @click="bodyWeightRecord.date = getCurrentLocalYYYYMMDD()" class="ml-2 h-fit">
+          <SecondaryButton @click="bodyWeightRecord.date = currentLocalDate()" class="ml-2 h-fit">
             <CalendarIcon class="w-5 h-5 -ml-1 w-6 h-6 text-gray-600 shrink-0"/>
             <p class="ml-1">Today</p>
           </SecondaryButton>
@@ -223,7 +223,7 @@ function confirm() {
             />
             <InputError :message="errors.time" />
           </div>
-          <SecondaryButton @click="bodyWeightRecord.time = getCurrentLocalHHmm()" class="ml-2 h-fit">
+          <SecondaryButton @click="bodyWeightRecord.time = currentLocalTime()" class="ml-2 h-fit">
             <ClockIcon class="w-5 h-5 -ml-1 w-6 h-6 text-gray-600 shrink-0"/>
             <p class="ml-1">Now</p>
           </SecondaryButton>

@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
-import { getLocalYYYYMMDD, getLocalHHMM, getHumanReadableLocalDate } from '@/utils/GlobalFunctions.js'
+import { utcTimestampToLocalHumanReadableDate } from '@/utils/GlobalFunctions.js'
 import Pagination from '@/Shared/Pagination.vue'
 import { TrashIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import LogBodyWeightRecordDialog from '@/Shared/LogBodyWeightRecordDialog.vue'
@@ -72,7 +72,7 @@ function logBodyWeight() {
             {{body_weight_record.unit.name}}
           </td>
           <td class="px-8 py-4">
-            {{getHumanReadableLocalDate(body_weight_record.date_time_utc)}}
+            {{utcTimestampToLocalHumanReadableDate(body_weight_record.date_time_utc)}}
           </td>
           <td>
             <div class="flex items-center px-8">
