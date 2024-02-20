@@ -69,7 +69,7 @@ watch(computedOptions, () => { search() })
     <div class="relative">
 
       <div>
-        <ComboboxLabel class="text-sm font-medium text-gray-600" :class="labelClasses">
+        <ComboboxLabel class="text-sm font-medium text-gray-700 w-full" :class="labelClasses">
           {{labelText}}
         </ComboboxLabel>
 
