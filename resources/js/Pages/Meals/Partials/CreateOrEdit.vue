@@ -250,7 +250,7 @@ export default {
       <div v-if="mealIngredients.length" class="mt-1 sm:min-w-[600px] gap-y-6 sm:gap-y-1.5 grid">
 
         <!-- Header -->
-        <div class="hidden sm:grid sm:grid-cols-16 sm:gap-x-1">
+        <div class="hidden sm:grid sm:grid-cols-16 sm:gap-x-1 border">
           <p class="col-span-9 px-3 py-3 -mx-1 bg-blue-50">Ingredient</p>
           <p class="col-span-3 px-3 py-3 -mx-1 bg-blue-100 text-right">Amount</p>
           <p class="col-span-3 px-3 py-3 -mx-1 bg-blue-50">Unit</p>
