@@ -247,27 +247,30 @@ export default {
 
       <h2 class="text-lg">Meal ingredients</h2>
       <InputError :message="form.errors.meal_ingredients" />
-
-      <div v-if="mealIngredients.length" class="mt-1 grid grid-cols-16 min-w-[600px] gap-y-1.5 gap-x-1">
+      <div v-if="mealIngredients.length" class="mt-1 sm:min-w-[600px] gap-y-6 sm:gap-y-1.5 grid">
 
         <!-- Header -->
-        <p class="col-span-9 px-3 py-3 -mx-1 bg-blue-50">Ingredient</p>
-        <p class="col-span-3 px-3 py-3 -mx-1 bg-blue-100 text-right">Amount</p>
-        <p class="col-span-3 px-3 py-3 -mx-1 bg-blue-50">Unit</p>
-        <p class="col-span-1 px-3 py-3 -mx-1 bg-blue-100" />
+        <div class="hidden sm:grid sm:grid-cols-16 sm:gap-x-1">
+          <p class="col-span-9 px-3 py-3 -mx-1 bg-blue-50">Ingredient</p>
+          <p class="col-span-3 px-3 py-3 -mx-1 bg-blue-100 text-right">Amount</p>
+          <p class="col-span-3 px-3 py-3 -mx-1 bg-blue-50">Unit</p>
+          <p class="col-span-1 px-3 py-3 -mx-1 bg-blue-100" />
+        </div>
 
         <!-- Meal ingredients -->
-        <template
+        <div
           v-for="(meal_ingredient, idx) in mealIngredients"
           :key="meal_ingredient.id"
+          class="grid grid-cols-16 gap-x-1"
         >
           <!-- Ingredient input -->
-          <div :id="'meal-ingredient-input-wrapper-' + meal_ingredient.id" class="col-span-9">
+          <div :id="'meal-ingredient-input-wrapper-' + meal_ingredient.id" class="col-span-16 sm:col-span-9">
             <FuzzyCombobox
               :options="ingredients"
               :modelValue="meal_ingredient.meal_ingredient.ingredient"
               :showIcon="false"
               :fuzzyLimit="6"
+              labelText="Ingredient"
               @update:modelValue="newValue => updateMealIngredient(idx, newValue)"
             />
             <div class="text-left">
@@ -276,10 +279,13 @@ export default {
             </div>
           </div>
           <!-- Amount input -->
-          <div class="col-span-3 text-right">
-            <div :id="'meal-ingredient-amount-wrapper-' + idx" class="w-full ml-auto">
+          <div class="col-span-6 sm:col-span-3 text-right -mt-0.5 sm:mt-0">
+            <!-- mt-1 needed to align labels and inputs with comboboxes -->
+            <div :id="'meal-ingredient-amount-wrapper-' + idx" class="w-full ml-auto mt-1">
+              <InputLabel :for="'meal-ingredient-amount-input-' + idx" value="Amount" />
               <TextInput
                 type="number"
+                :id="'meal-ingredient-amount-input-' + idx"
                 placeholder="0"
                 class="w-full text-right"
                 step="any"
@@ -290,31 +296,40 @@ export default {
             </div>
           </div>
           <!-- Unit combobox -->
-          <div class="col-span-3 text-right">
+          <div class="col-span-8 sm:col-span-3 text-right -mt-0.5 sm:mt-0">
             <SimpleCombobox
               :options="units.filter(unit => unit.g || (unit.ml && (meal_ingredient.meal_ingredient.ingredient && meal_ingredient.meal_ingredient.ingredient.density_g_ml))).concat(meal_ingredient.meal_ingredient.ingredient.custom_units ? meal_ingredient.meal_ingredient.ingredient.custom_units : [])"
               :modelValue="meal_ingredient.meal_ingredient.unit"
               @update:modelValue="newValue => (meal_ingredient.meal_ingredient.unit_id = newValue.id, meal_ingredient.meal_ingredient.unit = newValue)"
+              labelText="Unit"
+              labelClasses="text-right w-full"
             />
             <div class="text-left">
               <InputError :message="form.errors['meal_ingredients.' + idx + '.unit_id']" />
               <InputError :message="form.errors['meal_ingredients.' + idx]" />
             </div>
           </div>
-          <div class="col-span-1 place-self-center">
-            <button
+          <div class="col-span-2 sm:col-span-1 mt-0.5 sm:mt-1">
+            <InputLabel :for="'meal-ingredient-delete-' + idx" class="sr-only" value="Delete" />
+            <!-- mt-5 makes up for lack of visible label -->
+            <PlainButton
               type="button"
+              :id="'meal-ingredient-delete-' + idx"
               @click="deleteMealIngredient(idx)"
-              class="text-gray-600 hover:text-red-700"
+              class="!block mt-5 h-[2.6rem] text-gray-600 hover:text-red-700 !px-0 !w-full"
             >
-              <TrashIcon class="w-6 h-6" />
-            </button>
+              <TrashIcon class="w-5 h-5 mx-auto block" />
+            </PlainButton>
           </div>
-        </template>
+        </div>
       </div>
 
       <!-- New ingredient button -->
-      <div class="mt-2">
+      <div :class="{
+        'mt-1': !mealIngredients.length,
+        'mt-5': !!mealIngredients.length,
+        'sm:mt-4': !!mealIngredients.length,
+      }" >
         <PlainButton
           @click="addMealIngredient"
           class="flex items-center mt-1 text-sm"
