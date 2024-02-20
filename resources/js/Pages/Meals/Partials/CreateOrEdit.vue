@@ -261,7 +261,7 @@ export default {
         <div
           v-for="(meal_ingredient, idx) in mealIngredients"
           :key="meal_ingredient.id"
-          class="grid grid-cols-16 gap-x-1"
+          class="grid grid-cols-16 gap-x-1 bg-gray-50 -mx-1 px-2 py-1 rounded border border-gray-100"
         >
           <!-- Ingredient input -->
           <div :id="'meal-ingredient-input-wrapper-' + meal_ingredient.id" class="col-span-16 sm:col-span-9">
