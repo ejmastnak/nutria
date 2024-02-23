@@ -172,9 +172,6 @@ function submit() {
         <InputError v-for="error in errors.to_date_time_utc" :message="error" />
       </div>
 
-      <!-- Client never interacts with timezone but better to show error anyway. -->
-      <InputError v-for="error in errors.time_zone" :message="error" />
-
     </div>
 
     <div class="mt-4">

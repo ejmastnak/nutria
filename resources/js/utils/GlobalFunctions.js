@@ -1,8 +1,6 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
 dayjs.extend(utc)
-dayjs.extend(timezone)
 
 // Rounds inputted number to the given precision
 export const round = (number, precision=0) => {
@@ -80,13 +78,13 @@ export const currentLocalTime = () => {
 
 // Input "YYYY-MM-DD HH:mm:ss" timestamp in UTC, output "YYYY-MM-DD" in the
 // browser's local timezone.
-export const utcTimestampToLocalDate = (utcTimestamp, tz) => {
+export const utcTimestampToLocalDate = (utcTimestamp) => {
   return dayjs.utc(utcTimestamp).local().format("YYYY-MM-DD");
 }
 
 // Input "YYYY-MM-DD HH:mm:ss" timestamp in UTC, output "HH:mm"
 // in the browser's local timezone.
-export const utcTimestampToLocalTime = (utcTimestamp, tz) => {
+export const utcTimestampToLocalTime = (utcTimestamp) => {
   return dayjs.utc(utcTimestamp).local().format("HH:mm");
 }
 
