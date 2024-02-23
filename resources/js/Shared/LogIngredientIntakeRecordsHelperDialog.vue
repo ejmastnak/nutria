@@ -177,7 +177,7 @@ function confirm() {
           <div ref="ingredientInputWrapperRef">
             <FuzzyCombobox
               labelText="Ingredient"
-              :options="ingredients"
+              :targets="ingredients"
               :modelValue="ingredientIntakeRecord.ingredient"
               :showIcon="false"
               @update:modelValue="newValue => updateIngredient(newValue)"

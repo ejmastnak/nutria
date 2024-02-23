@@ -280,7 +280,7 @@ export default {
           <!-- Ingredient input -->
           <div :id="'food-list-ingredient-input-wrapper-' + food_list_ingredient.id" class="col-span-16 sm:col-span-9">
             <FuzzyCombobox
-              :options="ingredients"
+              :targets="ingredients"
               :modelValue="food_list_ingredient.food_list_ingredient.ingredient"
               :showIcon="false"
               :fuzzyLimit="6"
@@ -379,7 +379,7 @@ export default {
           <!-- Meal input -->
           <div :id="'food-list-meal-input-wrapper-' + food_list_meal.id" class="col-span-16 sm:col-span-9">
             <FuzzyCombobox
-              :options="meals"
+              :targets="meals"
               :modelValue="food_list_meal.food_list_meal.meal"
               :showIcon="false"
               :fuzzyLimit="6"

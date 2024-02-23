@@ -262,7 +262,7 @@ function addMore() {
             <div ref="mealInputWrapperRef">
               <FuzzyCombobox
                 labelText="Meal"
-                :options="meals"
+                :targets="meals"
                 :modelValue="mealIntakeRecordForm.meal"
                 :showIcon="false"
                 @update:modelValue="newValue => updateMeal(newValue)"

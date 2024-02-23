@@ -19,7 +19,7 @@ function focus() {
 }
 
 const props = defineProps({
-  options: Array,
+  targets: Array,
   labelText: String,
   modelValue: Object,
   searchKey: {
@@ -52,14 +52,14 @@ const selectedValue = computed({
   get() {
     return props.modelValue;
   },
-  set(option) {
-    emit('update:modelValue', option.obj)
+  set(result) {
+    emit('update:modelValue', result)
   }
 })
 
-// For fuzzy search over option names
+// For fuzzy search over targets
 const query = ref("")
-const filteredOptions = ref([])
+const filteredTargets = ref([])
 const fuzzyOptions = {
   key: props.searchKey,
   limit: props.fuzzyLimit,
@@ -67,7 +67,7 @@ const fuzzyOptions = {
 }
 
 watch(query, throttle(function (value) {
-  filteredOptions.value = fuzzysort.go(value.trim(), props.options, fuzzyOptions)
+  filteredTargets.value = fuzzysort.go(value.trim(), props.targets, fuzzyOptions)
 }, props.throttlems))
 
 </script>
@@ -85,7 +85,7 @@ watch(query, throttle(function (value) {
           <ComboboxInput
             class="w-full border border-gray-300 rounded-md shadow-sm focus:border focus:border-blue-500 text-ellipsis"
             @change="query = $event.target.value"
-            :displayValue="(option) => option ? option[searchKey] : ''"
+            :displayValue="(result) => result ? result[searchKey] : ''"
           />
           <ComboboxButton v-if="showIcon" tabindex="0" class="absolute right-0 px-4 rounded-md h-full focus:outline-none focus:border-2 focus:border-blue-500 active:border-0" >
             <ChevronDownIcon class="w-5 h-5 text-gray-600 shrink-0"/>
@@ -97,9 +97,9 @@ watch(query, throttle(function (value) {
       <ComboboxOptions class="absolute z-50 overflow-hidden mt-0.5 bg-white border border-gray-300 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
         <!-- Options passed as props -->
         <ComboboxOption
-          v-for="option in filteredOptions"
-          :key="option.id"
-          :value="option"
+          v-for="target in filteredTargets"
+          :key="target.obj.id"
+          :value="target.obj"
           class="text-left cursor-pointer"
           v-slot="{ active, selected }"
         >
@@ -111,7 +111,7 @@ watch(query, throttle(function (value) {
             'font-bold': selected,
           }"
           >
-            {{ option.obj[searchKey] }}
+            {{ target.obj[searchKey] }}
           </li>
         </ComboboxOption>
       </ComboboxOptions>

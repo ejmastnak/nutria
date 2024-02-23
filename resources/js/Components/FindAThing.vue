@@ -59,7 +59,7 @@ function confirm() {
         <FuzzyCombobox
           :labelText="input_label"
           :searchKey="search_key"
-          :options="things"
+          :targets="things"
           :modelValue="thing"
           @update:modelValue="newValue => selectAThing(newValue)"
         />

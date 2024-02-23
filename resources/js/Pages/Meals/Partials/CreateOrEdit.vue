@@ -266,7 +266,7 @@ export default {
           <!-- Ingredient input -->
           <div :id="'meal-ingredient-input-wrapper-' + meal_ingredient.id" class="col-span-16 sm:col-span-9">
             <FuzzyCombobox
-              :options="ingredients"
+              :targets="ingredients"
               :modelValue="meal_ingredient.meal_ingredient.ingredient"
               :showIcon="false"
               :fuzzyLimit="6"
