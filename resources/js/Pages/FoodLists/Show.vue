@@ -36,7 +36,7 @@ export default {
     route_basename="food-lists"
     :id="food_list.id"
     :things="food_lists"
-    thing="food_list"
+    thing="food list"
     :can_view="can_view"
     :can_create="can_create"
     :can_clone="can_clone"

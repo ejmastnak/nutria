@@ -32,7 +32,7 @@ export default {
     route_basename="intake-guidelines"
     :id="intake_guideline ? intake_guideline.id : null"
     :things="intake_guidelines"
-    thing="intake guidelines"
+    thing="intake guideline"
     :can_view="can_view"
     :can_create="can_create"
     :can_clone="can_clone"

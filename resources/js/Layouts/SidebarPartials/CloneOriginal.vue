@@ -6,6 +6,7 @@ import SidebarIcon from './SidebarIcon.vue'
 
 const props = defineProps({
   href: String,
+  thing: String,
   enabled: Boolean,
 })
 </script>
@@ -15,7 +16,7 @@ const props = defineProps({
     <SidebarIcon :enabled="enabled">
       <DocumentDuplicateIcon />
     </SidebarIcon>
-    <p class="ml-1.5">Clone</p>
+    <p class="ml-1.5">Clone this {{thing}}</p>
   </SidebarLink>
 </template>
 

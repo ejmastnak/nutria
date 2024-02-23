@@ -6,6 +6,7 @@ import SidebarIcon from './SidebarIcon.vue'
 
 const props = defineProps({
   href: String,
+  thing: String,
 })
 </script>
 
@@ -14,7 +15,7 @@ const props = defineProps({
     <SidebarIcon>
       <HomeIcon />
     </SidebarIcon>
-    <p class="ml-1.5">All</p>
+    <p class="ml-1.5">All {{thing}}s</p>
   </SidebarLink>
 </template>
 

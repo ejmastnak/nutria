@@ -26,7 +26,7 @@ function search(thing) {
     <SidebarIcon>
       <MagnifyingGlassIcon />
     </SidebarIcon>
-    <p class="ml-1.5">Find another</p>
+    <p class="ml-1.5">Find another {{thing}}</p>
   </SidebarButton>
 
   <FindAThing

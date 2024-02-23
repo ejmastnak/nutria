@@ -39,14 +39,14 @@ const showingNavigationDropdown = ref(false);
     <!-- -mt-4 to compensate for pt-4 in AppLayout -->
     <nav class="-mt-4">
       <!-- Desktop navigation menu -->
-      <div class="fixed hidden md:block left-0 w-48 pt-3 p-2 bg-[#fefefe] border-r border-gray-300 flex flex-col min-h-screen whitespace-nowrap z-40">
+      <div class="fixed hidden md:block left-0 w-52 pt-3 p-2 bg-[#fefefe] border-r border-gray-300 flex flex-col min-h-screen z-40">
 
         <!-- For all CRUD pages -->
         <div v-if="(page === 'index' || page === 'create' || page === 'show' || page === 'edit' || page === 'clone')" >
-          <All :href="route(route_basename + '.index')" />
+          <All :href="route(route_basename + '.index')" :thing="thing" />
           <FindAnother :things="things" :thing="thing" :route_basename="route_basename" />
           <CloneAnother :things="things" :thing="thing" :route_basename="route_basename" :enabled="can_create" />
-          <New :href="route(route_basename + '.create')" :enabled="can_create" />
+          <New :href="route(route_basename + '.create')" :thing="thing" :enabled="can_create" />
         </div>
 
         <!-- For Show, Edit, Clone pages -->
@@ -56,15 +56,18 @@ const showingNavigationDropdown = ref(false);
         >
           <ShowOriginal
             :href="route(route_basename + '.show', id)"
+            :thing="thing"
             :enabled="can_view"
           />
           <CloneOriginal
             :href="route(route_basename + '.clone', id)"
+            :thing="thing"
             :enabled="can_clone"
           />
           <EditOriginal
             v-if="can_update"
             :href="route(route_basename + '.edit', id)"
+            :thing="thing"
             :enabled="can_update"
           />
           <DeleteOriginal
@@ -106,10 +109,10 @@ const showingNavigationDropdown = ref(false);
       >
         <!-- For all CRUD pages -->
         <div v-if="(page === 'index' || page === 'create' || page === 'show' || page === 'edit' || page === 'clone')" >
-          <All :href="route(route_basename + '.index')" />
+          <All :href="route(route_basename + '.index')" :thing="thing" />
           <FindAnother :things="things" :thing="thing" :route_basename="route_basename" />
           <CloneAnother :things="things" :thing="thing" :route_basename="route_basename" :enabled="can_create" />
-          <New :href="route(route_basename + '.create')" :enabled="can_create" />
+          <New :href="route(route_basename + '.create')" :thing="thing" :enabled="can_create" />
         </div>
 
         <!-- For Show, Edit, Clone pages -->
@@ -119,15 +122,18 @@ const showingNavigationDropdown = ref(false);
         >
           <ShowOriginal
             :href="route(route_basename + '.show', id)"
+            :thing="thing"
             :enabled="can_view"
           />
           <CloneOriginal
             :href="route(route_basename + '.clone', id)"
+            :thing="thing"
             :enabled="can_clone"
           />
           <EditOriginal
             v-if="can_update"
             :href="route(route_basename + '.edit', id)"
+            :thing="thing"
             :enabled="can_update"
           />
           <DeleteOriginal
@@ -143,6 +149,7 @@ const showingNavigationDropdown = ref(false);
           <LogFoodIntake
             :units="units"
             :ingredients="ingredients"
+            :thing="thing"
             :meals="meals"
           />
           <LogBodyWeight :units="units" />

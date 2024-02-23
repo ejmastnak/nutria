@@ -92,7 +92,7 @@ export default {
     route_basename="intake-guidelines"
     :id="null"
     :things="intake_guidelines"
-    thing="intake guidelines"
+    thing="intake guideline"
     :can_create="can_create"
   >
     <Head title="Intake Guidelines" />

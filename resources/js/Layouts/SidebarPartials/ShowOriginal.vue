@@ -6,6 +6,7 @@ import SidebarIcon from './SidebarIcon.vue'
 
 const props = defineProps({
   href: String,
+  thing: String,
   enabled: Boolean,
 })
 </script>

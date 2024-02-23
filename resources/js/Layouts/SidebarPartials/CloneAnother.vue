@@ -30,7 +30,7 @@ function search(thing) {
     <SidebarIcon :enabled="enabled">
       <MagnifyingGlassPlusIcon />
     </SidebarIcon>
-      <p class="ml-1.5">Clone another</p>
+    <p class="ml-1.5">Clone an existing {{thing}}</p>
   </SidebarButton>
 
   <FindAThing

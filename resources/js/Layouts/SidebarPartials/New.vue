@@ -6,6 +6,7 @@ import SidebarIcon from './SidebarIcon.vue'
 
 const props = defineProps({
   href: String,
+  thing: String,
   enabled: Boolean,
 })
 </script>
@@ -15,7 +16,7 @@ const props = defineProps({
     <SidebarIcon :enabled="enabled">
       <PlusCircleIcon />
     </SidebarIcon>
-    <p class="ml-1.5">Create new</p>
+    <p class="ml-1.5">Create a new {{thing}}</p>
   </SidebarLink>
 </template>
 
