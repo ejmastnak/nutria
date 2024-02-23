@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Http\Request;
 
 class FoodIntakeRecord extends Model
 {
@@ -32,7 +33,7 @@ class FoodIntakeRecord extends Model
         );
     }
 
-    public static function getForUserPaginated(?int $userId) {
+    public static function getForUserPaginated(?int $userId, Request $request) {
         return is_null($userId) ? [] : self::where('user_id', $userId)
             ->with([
                 'unit:id,name,g,ml,seq_num,ingredient_id,meal_id,custom_grams',
@@ -41,6 +42,7 @@ class FoodIntakeRecord extends Model
                 'meal:id,name',
                 'meal.meal_unit:id,name,g,ml,seq_num,meal_id,custom_grams',
             ])
+            ->filter($request->only(['food_intake_records_from_date_time_utc', 'food_intake_records_to_date_time_utc']))
             ->orderBy('date_time_utc', 'desc')
             ->paginate(config('pagination.food_intake_records'))
             ->withQueryString()
@@ -56,6 +58,15 @@ class FoodIntakeRecord extends Model
                 'date_time_utc' => $foodIntakeRecord->date_time_utc,
                 'description' => $foodIntakeRecord->description,
             ]);
+    }
+
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['food_intake_records_from_date_time_utc'] ?? null, function ($query, $fromDateTimeUtc) {
+            $query->where('date_time_utc', '>=', $fromDateTimeUtc);
+        })->when($filters['food_intake_records_to_date_time_utc'] ?? null, function ($query, $toDateTimeUtc) {
+            $query->where('date_time_utc', '<=', $toDateTimeUtc);
+        });
     }
 
     public function ingredient() {

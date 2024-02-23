@@ -13,6 +13,7 @@ use App\Http\Requests\NutrientProfileForDateRangeRequest;
 use App\Services\NutrientProfileService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class DataController extends Controller
@@ -20,13 +21,13 @@ class DataController extends Controller
     /**
      * Show the overview page for trends in logged data
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $userId = $user ? $user->id : null;
         return Inertia::render('Data/Index', [
-            'body_weight_records_paginator' => BodyWeightRecord::getForUserPaginated($userId),
-            'food_intake_records_paginator' => FoodIntakeRecord::getForUserPaginated($userId),
+            'body_weight_records_paginator' => BodyWeightRecord::getForUserPaginated($userId, $request),
+            'food_intake_records_paginator' => FoodIntakeRecord::getForUserPaginated($userId, $request),
             'user_ingredients' => Ingredient::getForUserWithCategoryAndUnits($userId),
             'meals' => Meal::getForUserWithUnit($userId),
             'units' => Unit::getMassAndVolume(),

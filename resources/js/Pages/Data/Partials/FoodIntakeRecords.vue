@@ -1,7 +1,7 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
-import { TrashIcon, PencilSquareIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
+import { TrashIcon, PencilSquareIcon, ArrowTopRightOnSquareIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import LogIngredientIntakeRecordDialog from '@/Shared/LogIngredientIntakeRecordDialog.vue'
 import LogIngredientIntakeRecordsDialog from '@/Shared/LogIngredientIntakeRecordsDialog.vue'
 import LogMealIntakeRecordDialog from '@/Shared/LogMealIntakeRecordDialog.vue'
@@ -10,7 +10,8 @@ import DeleteDialog from "@/Components/DeleteDialog.vue";
 import MyLink from '@/Components/MyLink.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import Pagination from '@/Shared/Pagination.vue'
-import { roundNonZero, utcTimestampToLocalHumanReadableDate } from '@/utils/GlobalFunctions.js'
+import DateFilterDialog from './DateFilterDialog.vue'
+import { roundNonZero, utcTimestampToLocalHumanReadableDate, localTimestampToUtcTimestamp } from '@/utils/GlobalFunctions.js'
 
 import { ingredientIntakeRecordsForm } from '@/Shared/store.js'
 import { mealIntakeRecordsForm } from '@/Shared/store.js'
@@ -21,6 +22,28 @@ const props = defineProps({
   meals: Array,
   units: Array,
 })
+
+function applyFilters(dates) {
+  router.get(route('data'), {
+    food_intake_records_from_date_time_utc: dates.fromDate ? localTimestampToUtcTimestamp(dates.fromDate + " 00:00:00") : null,
+    food_intake_records_to_date_time_utc: dates.toDate ? localTimestampToUtcTimestamp(dates.toDate + " 23:59:59") : null,
+  }, { 
+      preserveState: true,
+      only: ['food_intake_records_paginator'] ,
+      replace: true,
+    })
+}
+
+function clearFilters() {
+  router.get(route('data'), {
+    food_intake_records_from_date_time_utc: null,
+    food_intake_records_to_date_time_utc: null,
+  }, { 
+      preserveState: true,
+      only: ['food_intake_records_paginator'] ,
+      replace: true,
+    })
+}
 
 const logIngredientIntakeRecordDialogRef = ref(null)
 const logIngredientIntakeRecordsDialogRef = ref(null)
@@ -39,6 +62,7 @@ const idToDelete = ref(null)
 const deleteRouteName = ref(null)
 const thingToDelete = ref(null)
 const deleteDialogRef = ref(null)
+const dateFilterDialogRef = ref(null)
 
 function logIngredientIntake() {
   if (ingredientIntakeRecordsForm.ingredientIntakeRecords.length >= 1) {
@@ -71,7 +95,7 @@ function openDeleteDialog(foodIntakeRecord) {
 
 function deleteBodyWeightRecord() {
   if (idToDelete.value && deleteRouteName.value) {
-      router.delete(route(deleteRouteName.value, idToDelete.value));
+    router.delete(route(deleteRouteName.value, idToDelete.value));
   }
   idToDelete.value = null
   deleteRouteName.value = null
@@ -90,20 +114,29 @@ function getBgColorForFoodItemRow(idx) {
 <template>
   <div>
 
-    <p v-if="food_intake_records_paginator.data.length === 0" class="mt-1 mb-2">
-      You haven't created any food intake records yet!
+    <p v-if="food_intake_records_paginator.data.length === 0" class="mt-1 mb-2 max-w-lg">
+      There are no food intake records to display—either you haven't created any or are using a too restrictive filter.
     </p>
 
-    <div class="flex gap-x-1.5">
+    <div class="mt-1 flex gap-x-1.5">
       <SecondaryButton @click="logMealIntake" >
-        Log Meals
+        <PencilSquareIcon class="-ml-1 w-6 h-6 text-gray-600 shrink-0"/>
+        <p class="ml-1">Log Meals</p>
       </SecondaryButton>
+
       <SecondaryButton @click="logIngredientIntake" >
-        Log Ingredients
+        <PencilSquareIcon class="-ml-1 w-6 h-6 text-gray-600 shrink-0"/>
+        <p class="ml-1">Log Ingredients</p>
       </SecondaryButton>
+
+      <SecondaryButton @click="dateFilterDialogRef.open()">
+        <MagnifyingGlassIcon class="-ml-1 w-6 h-6 text-gray-600 shrink-0"/>
+        <p class="ml-1">Filter by date</p>
+      </SecondaryButton>
+
     </div>
 
-    <table v-if="food_intake_records_paginator.data.length" class="mt-2 text-sm sm:text-base text-left text-gray-500">
+    <table v-if="food_intake_records_paginator.data.length" class="mt-5 text-sm sm:text-base text-left text-gray-500">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
           <th scope="col" class="px-8 py-3 bg-blue-100">Food</th>
@@ -199,6 +232,12 @@ function getBgColorForFoodItemRow(idx) {
       :description="thingToDelete"
       @delete="deleteBodyWeightRecord"
       @cancel="idToDelete = null; typeToDelete = null"
+    />
+
+    <DateFilterDialog
+      ref="dateFilterDialogRef"
+      @search="applyFilters"
+      @clear="clearFilters"
     />
 
   </div>

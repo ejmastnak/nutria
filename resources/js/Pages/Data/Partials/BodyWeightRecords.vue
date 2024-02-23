@@ -1,13 +1,14 @@
 <script setup>
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
-import { utcTimestampToLocalHumanReadableDate } from '@/utils/GlobalFunctions.js'
 import Pagination from '@/Shared/Pagination.vue'
-import { TrashIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
+import { TrashIcon, PencilSquareIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import LogBodyWeightRecordDialog from '@/Shared/LogBodyWeightRecordDialog.vue'
 import LogBodyWeightRecordsDialog from '@/Shared/LogBodyWeightRecordsDialog.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 import SecondaryButton from '@/Components/SecondaryButton.vue'
+import DateFilterDialog from './DateFilterDialog.vue'
+import { utcTimestampToLocalHumanReadableDate, localTimestampToUtcTimestamp } from '@/utils/GlobalFunctions.js'
 
 import { bodyWeightRecordsForm } from '@/Shared/store.js'
 
@@ -16,8 +17,31 @@ const props = defineProps({
   units: Array,
 })
 
+function applyFilters(dates) {
+  router.get(route('data'), {
+    body_weight_records_from_date_time_utc: dates.fromDate ? localTimestampToUtcTimestamp(dates.fromDate + " 00:00:00") : null,
+    body_weight_records_to_date_time_utc: dates.toDate ? localTimestampToUtcTimestamp(dates.toDate + " 23:59:59") : null,
+  }, { 
+      preserveState: true,
+      only: ['body_weight_records_paginator'] ,
+      replace: true,
+    })
+}
+
+function clearFilters() {
+  router.get(route('data'), {
+    body_weight_records_from_date_time_utc: null,
+    body_weight_records_to_date_time_utc: null,
+  }, { 
+      preserveState: true,
+      only: ['body_weight_records_paginator'] ,
+      replace: true,
+    })
+}
+
 const logBodyWeightRecordDialogRef = ref(null)
 const logBodyWeightRecordsDialogRef = ref(null)
+const dateFilterDialogRef = ref(null)
 
 let idToDelete = ref(null)
 const deleteDialog = ref(null)
@@ -42,14 +66,23 @@ function logBodyWeight() {
   <div>
 
     <p v-if="body_weight_records_paginator.data.length === 0" class="mt-1 mb-2">
-      You haven't created any body weight records yet!
+      There are no body weight records to display—either you haven't created any or are using a too restrictive filter.
     </p>
 
-    <SecondaryButton @click="logBodyWeight" >
-      Log body weight
-    </SecondaryButton>
+    <div class="mt-1 flex gap-x-1.5">
+      <SecondaryButton @click="logBodyWeight" >
+        <PencilSquareIcon class="-ml-1 w-6 h-6 text-gray-600 shrink-0"/>
+        <p class="ml-1">Log body weight</p>
+      </SecondaryButton>
 
-    <table v-if="body_weight_records_paginator.data.length" class="mt-2 text-sm sm:text-base text-left text-gray-500">
+      <SecondaryButton @click="dateFilterDialogRef.open()">
+        <MagnifyingGlassIcon class="-ml-1 w-6 h-6 text-gray-600 shrink-0"/>
+        <p class="ml-1">Filter by date</p>
+      </SecondaryButton>
+    </div>
+
+
+    <table v-if="body_weight_records_paginator.data.length" class="mt-5 text-sm sm:text-base text-left text-gray-500">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
           <th scope="col" class="px-8 py-3 bg-blue-100 w-16">
@@ -106,6 +139,12 @@ function logBodyWeight() {
       description="body weight record"
       @delete="deleteBodyWeightRecord"
       @cancel="idToDelete = null"
+    />
+
+    <DateFilterDialog
+      ref="dateFilterDialogRef"
+      @search="applyFilters"
+      @clear="clearFilters"
     />
 
   </div>

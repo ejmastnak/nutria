@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class BodyWeightRecord extends Model
 {
@@ -40,9 +41,10 @@ class BodyWeightRecord extends Model
             ]);
     }
     
-    public static function getForUserPaginated(?int $userId) {
+    public static function getForUserPaginated(?int $userId, Request $request) {
         return is_null($userId) ? [] : self::where('user_id', $userId)
             ->with('unit:id,name')
+            ->filter($request->only(['body_weight_records_from_date_time_utc', 'body_weight_records_to_date_time_utc']))
             ->orderBy('date_time_utc', 'desc')
             ->paginate(config('pagination.body_weight_records'))
             ->withQueryString()
@@ -54,6 +56,15 @@ class BodyWeightRecord extends Model
                 'date_time_utc' => $record->date_time_utc,
                 'description' => $record->description,
             ]);
+    }
+
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['body_weight_records_from_date_time_utc'] ?? null, function ($query, $fromDateTimeUtc) {
+            $query->where('date_time_utc', '>=', $fromDateTimeUtc);
+        })->when($filters['body_weight_records_to_date_time_utc'] ?? null, function ($query, $toDateTimeUtc) {
+            $query->where('date_time_utc', '<=', $toDateTimeUtc);
+        });
     }
 
     public function unit() {
